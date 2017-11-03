@@ -1,0 +1,497 @@
+<?php
+/*
+*custom helper, made by Beni at 2016-11-22, the principal porpouse is to bind DFP html from array.
+*/
+
+if(!function_exists("requestToModel")){
+	/**
+	 * load data only if exist, this function is necesary, because when request->field recibe an empty
+	 * data, and it is assigned to a numeric field, php change the value to 0. other ways if you need to save
+	 * a field not present in the request has a null or has empty string, you can then use the anonnymouse function
+	 *
+	 * @author	Beni (benomas@gmail.com) 2016-12-22
+	 *
+	 * @param	array	instances	the collection of the instances to check and assign from the request
+	 * @param	moderlObject	modelObject, this params is necesary for update purposes
+	 *
+	 * @return  object or array
+	 */
+	function requestToModel($instances){
+		$data=[];
+		foreach($instances AS $intance){
+			if(is_callable($intance)){
+				$intance($data);
+			}
+			else{
+				$segments = explode(".",$intance);
+				$field = $segments[count($segments)-1];
+				if(\Illuminate\Support\Facades\Input::has($intance)){
+					$data[$field]=Input::get($intance);
+				}
+			}
+		}
+
+		return $data;
+	}
+}
+
+if(!function_exists("toModelWithRequest")){
+	/**
+	 * load data only if exist, this function is necesary, because when request->field recive an empty
+	 * data, and it is assigned to a numeric field, php change the value to 0. other ways if you need to save
+	 * a field not present in the request has a null or has empty string, you can then use the anonnymouse function
+	 *
+	 * @author	Beni (benomas@gmail.com) 2016-12-22
+	 *
+	 * @param	array	instances	the collection of the instances to check and assign from the request
+	 * @param	moderlObject	modelObject, this params is necesary for update purposes
+	 *
+	 * @return  object or array
+	 */
+	function toModelWithRequest($instances,$request){
+		$data=[];
+		foreach($instances AS $intance){
+			if(is_callable($intance)){
+				$intance($data);
+			}
+			else{
+				$segments = explode(".",$intance);
+				$field = $segments[count($segments)-1];
+				if($request->has($intance)){
+					$data[$field]=$request->get($intance);
+				}
+			}
+		}
+
+		return $data;
+	}
+}
+
+if(!function_exists("factorial")){
+
+	/**
+	 * calculate factorial of n
+	 *
+	 * @author	Beni (benomas@gmail.com) 2017-01-18
+	 *
+	 * @param	iny	n	number for calculate the factorial
+	 *
+	 * @return  int factorial
+	 */
+	function factorial($n)
+	{
+		if($n===1)
+			return 1;
+		return $n * factorial($n-1);
+	}
+}
+
+
+if(!function_exists("dateFormatSwitch")){
+
+	/**
+	 * switch between date format
+	 *
+	 * @author	Beni (benomas@gmail.com) 2017-01-18
+	 *
+	 * @param	string	date	date to convert
+	 * @param	string	originFormant	format origin of the date
+	 * @param	string	destineFormat	format destine of the date
+	 *
+	 * @return  string converted date
+	 */
+	function dateFormatSwitch($date,$originFormant="Y/m/d", $destineFormat="Y-m-d"){
+		if( !isset($date) || !$date)
+			return null;
+		return \Carbon\Carbon::createFromFormat($originFormant,$date)->format($destineFormat);
+	}
+}
+
+/**
+ * check current role
+ *
+ * @param array    roles  list of target roles to compare
+ *
+ * @author Benomas benomas@gmail.com
+ * @date   2017-05-24
+ * @return boolean
+ */
+if(!function_exists("inRoles")){
+
+	function inRoles(...$roles){
+		return !($user = \Cartalyst\Sentinel\Laravel\Facades\Sentinel::getUser())?
+			0:
+			$user->roles()->whereIn("roles.slug",$roles)->count();
+	}
+}
+
+if(!function_exists("customLog")){
+	function customLog(...$params){
+		$params = json_encode($params);
+		$backtrace = debug_backtrace();
+		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]["file"]." - ".$backtrace[1]["function"]." in the line: ".$backtrace[0]["line"]." with message: ".$params);
+	}
+}
+
+if(!function_exists("ffDebugg")){
+	function ffDebugg(...$params){
+		dd($params);
+	}
+}
+
+//alias of ffDebugg for fast call
+if(!function_exists("audit")){
+	function audit(...$params){
+		dd($params);
+	}
+}
+
+//alias of ffDebugg for fast call
+if(!function_exists("capitalizeWithAccents")){
+	function capitalizeWithAccents($originalString){
+
+		if(!$originalString)
+			return null;
+
+		return str_replace(
+			"á","Á",
+			str_replace(
+				"é","É",
+				str_replace(
+					"í","Í",
+					str_replace(
+						"ó","Ó",
+						str_replace(
+							"ú","Ú",
+							str_replace(
+								"ñ","Ñ",
+								strtoupper($originalString)
+							)
+						)
+					)
+				)
+			)
+		);
+
+	}
+}
+
+if(!function_exists("renameValidationKey")){
+	function renameValidationKey(&$rules, $oldKey,$newKey){
+
+		if(is_array($rules) && isset($rules[$oldKey]) && !isset($rules[$newKey])){
+			$rules[$newKey] =  $rules[$oldKey];
+			unset($rules[$oldKey]);
+		}
+	}
+}
+
+if(!function_exists("reloadFormValue")){
+	function reloadFormValue($inputName,$model=null,$columnName=null,$otherValue=null){
+
+		if($otherValue)
+			return $otherValue;
+
+		if(\Input::old($inputName)!==null)
+			return \Input::old($inputName);
+
+		if($model){
+			if($columnName && isset($model->$columnName))
+				return $model->$columnName;
+
+			if($inputName && isset($model->$inputName))
+				return $model->$inputName;
+		}
+
+		return "";
+	}
+}
+
+if(!function_exists("customNonEmptyArray")){
+	/**
+	 * Verifica si el parametro mandado es diferente de null, es un array, y tiene almenos un elemento
+	 *
+	 * @param array   testArray  la variable a probar
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return boolean
+	 */
+	function customNonEmptyArray($testArray){
+		return $testArray && is_array($testArray) && count($testArray);
+	}
+}
+
+if(!function_exists("arrayIntersect")){
+	/**
+	 * Si los dos parametros pasados son customNonEmptyArrays, entonces
+	 * retorna un arreglo con solo los elementos que se repiten en ambos arreglos,
+	 * si el primer parametro no es un customNonEmptyArray pero el segundo si, entonces,
+	 * regresa un arreglo con todos los elementos del segundo arreglo, si ninguno de los arreglos
+	 * es un customNonEmptyArray, entonces regresa null
+	 *
+	 * @param array   array1  primer arreglo
+	 *
+	 * @param array   array2  segundo arreglo
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array or null
+	 */
+	function arrayIntersect($array1=null,$array2=null){
+		//si el primer parametro no es un customNonEmptyArray
+		if(!customNonEmptyArray($array2))
+			return customNonEmptyArray($array1)? $array1:null;
+		//si el segundo parametro no es un customNonEmptyArray
+		if(!customNonEmptyArray($array1))
+			return null;
+
+		//si ambos parametros son customNonEmptyArrays
+		$result = [];
+		foreach ($array1 as $key=>$value) {
+			if(isset($array2[$key]))
+				$result[$key]=$value;
+		}
+		return $result;
+	}
+}
+
+if(!function_exists("optionalColumn")){
+	function optionalColumn($context,$column){
+		return !($colConfiguration = config("project.optional_columns"))
+		|| !isset($colConfiguration[$context])
+		|| !isset($colConfiguration[$context][$column])
+		|| $colConfiguration[$context][$column];
+	}
+}
+
+if(!function_exists("countOptionalColumns")){
+	function countOptionalColumns($context,...$columns){
+		$total = 0;
+		foreach ($columns as $value) {
+			if(optionalColumn($context,$value))
+				$total++;
+		}
+		return $total;
+	}
+}
+
+if(!function_exists("concatToArray")){
+	/**
+	 * Concatena un prefijo a cada elemento del array
+	 *
+	 * @param string   prefix  string con el valor a concatenar
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array
+	 */
+	function concatToArray($prefix=null,$baseArray=null){
+
+		if(!customNonEmptyArray($baseArray))
+			return $baseArray;
+
+		foreach ($baseArray as $key=>$column) {
+
+		}
+	}
+}
+
+if(!function_exists("versionedAsset")){
+	/**
+	 * Genera la ruta para un asset, agregando su fecha de creacion, lo que permite controlar la forma como el navegador maneja el cache
+	 *
+	 * @param string   file  string con el valor a concatenar
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array
+	 */
+
+	function versionedAsset($file){
+		return asset($file)."?creation=".filemtime("../public/".$file);
+	}
+}
+
+if(!function_exists("trueCount")){
+	/**
+	 * Cuenta los valores true al evaluar un array de expresiones
+	 *
+	 * @param string   expresions  array con expresiones logicas
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array
+	 */
+
+	function trueCount(...$expresions){
+		$trues=0;
+		foreach ($expresions as $expresion) {
+			if($expresion)
+				$trues++;
+		}
+		return $trues;
+	}
+}
+
+if(!function_exists("classTrans")){
+	/**
+	 * Cuenta los valores true al evaluar un array de expresiones
+	 *
+	 * @param string   expresions  array con expresiones logicas
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array
+	 */
+
+	function classTrans($person,$gender,$quantity,$lenguage="es"){
+		switch($lenguage){
+			case "es":
+				$gender = strtolower($gender);
+				switch ($person."-".$gender[0]."-".$quantity) {
+					case "1-f-1":
+						return "Yo";
+					case "2-f-1":
+						return "Tu";
+					case "3-f-1":
+						return "Ella";
+					case "4-f-1":
+						return "La";
+					case "1-f-n":
+						return "Nosotras";
+					case "2-f-n":
+						return "Ustedes";
+					case "3-f-n":
+						return "Ellas";
+					case "4-f-n":
+						return "Las";
+					case "1-m-1":
+						return "Yo";
+					case "2-m-1":
+						return "Tu";
+					case "3-m-1":
+						return "El";
+					case "4-m-1":
+						return "El";
+					case "1-m-n":
+						return "Nosotros";
+					case "2-m-n":
+						return "Ustedes";
+					case "3-m-n":
+						return "Ellos";
+					case "4-m-n":
+						return "Los";
+				}
+				return "";
+		}
+		return "";
+	}
+}
+
+if(!function_exists("instanceTrans")){
+	/**
+	 * Cuenta los valores true al evaluar un array de expresiones
+	 *
+	 * @param string   expresions  array con expresiones logicas
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array
+	 */
+
+	function instanceTrans($instance,$gender,$quantity,$lenguage="es"){
+		switch($lenguage){
+			case "es":
+				$gender = strtolower($gender);
+				switch ($instance."-".$gender[0]."-".$quantity) {
+					case "new-f-1":
+						return "Nueva";
+					case "new-m-1":
+						return "Nuevo";
+					case "new-f-n":
+						return "Nuevas";
+					case "new-m-n":
+						return "Nuevos";
+					case "some-f-1":
+						return "Alguna";
+					case "some-m-1":
+						return "Algun";
+					case "some-f-n":
+						return "Algunas";
+					case "some-m-n":
+						return "Algun";
+					case "any-f-1":
+						return "Ninguna";
+					case "any-m-1":
+						return "Ningun";
+					case "any-f-n":
+						return "Ningunas";
+					case "any-m-n":
+						return "Ningunos";
+				}
+				return $instance;
+		}
+		return $instance;
+	}
+}
+
+if(!function_exists("resourceAccess")){
+	/**
+	 * Cuenta los valores true al evaluar un array de expresiones
+	 *
+	 * @param string   expresions  array con expresiones logicas
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array
+	 */
+
+	function resourceAccess($userInstace,$resourceAction){
+
+		if(empty($userInstace))
+            return false;
+
+		$newUserInstace = new \Illuminate\Database\Eloquent\Builder(clone $userInstace->getQuery());
+		$newUserInstace->setModel($userInstace->getModel());
+
+		if(!($user = $newUserInstace->first()))
+		    return false;
+
+		if($user->isRoot())
+		    return true;
+
+		if(!\App\Models\Permission::actionResource($resourceAction)->count())
+		    return true;
+		$newUserInstace->resourceActionPermission($resourceAction)->count();
+
+		return $newUserInstace->resourceActionPermission($resourceAction)->count();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
