@@ -2,7 +2,7 @@
 namespace Crudvel\Requests;
 
 use Crudvel\Traits\CrudTrait;
-use Crudvel\AuthorizationException;
+use Crudvel\Exceptions\AuthorizationException;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
@@ -68,7 +68,7 @@ class CrudRequest extends FormRequest
     }
 
     public function unautorizedRedirect(){
-        return $this->expectsJson()?$this->apiUnautorized():$this->webUnauthorized();
+        return $this->wantsJson()?$this->apiUnautorized():$this->webUnauthorized();
     }
 
     public function failedAuthorization(){

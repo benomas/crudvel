@@ -170,16 +170,16 @@ trait CrudTrait {
      * @return redirector
      */
     public function webUnauthorized($responseProperty=[]){
-        $responseProperty["status"]=$responseProperty["status"]?
+        $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:
             "danger";
-        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]?
+        $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
             $responseProperty["statusMessage"]:
             trans('web.unautorized');
-        $responseProperty["redirector"]=$responseProperty["redirector"]?
+        $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:
             null;
-        $responseProperty["errors"]=$responseProperty["errors"]?
+        $responseProperty["errors"]=!empty($responseProperty["errors"]?
             $responseProperty["errors"]:[];
         return $this->autoResponder($responseProperty);
     }
