@@ -47,13 +47,17 @@ class CustomController extends BaseController {
     }
 
     public function setModelInstance(){
-        $model = $this->modelSource??"App\Models\\".$this->mainEntityName;
+        $model = $this->modelSource?
+            $this->modelSource:
+            "App\Models\\".$this->mainEntityName;
         if(is_callable(array($model, 'noFilters')))
             $this->modelInstance = $model::noFilters();
     }
 
     public function setRequestInstance(){
-        $request = $this->requestSource??"App\Http\Requests\\".$this->mainEntityName."Request";
+        $request = $this->requestSource?
+            $this->requestSource:
+            "App\Http\Requests\\".$this->mainEntityName."Request";
         if(is_callable([$request,"capture"])){
             $this->request = app($request);
         }
