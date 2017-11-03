@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\View;
 
 class WebController extends CustomController
 {
-    public $resoure;
-    public $resourceActions;
 	public $singularLabel;
 	public $pluralLabel;
+    public $singularSlug;
+    public $pluralSlug;
 	public $viewFolder;
     public $listItems;
     public $item;
@@ -27,7 +27,7 @@ class WebController extends CustomController
     }
 
     public function  callAction($method, $parameters=[]){
-        $next = empty($this->modelInstance)?$this->redirectBackWithInput():parent::callAction($method,$parameters);
+        $next = empty($this->model)?$this->redirectBackWithInput():parent::callAction($method,$parameters);
         if(!empty($this->currentUser))
             View::share("currentUser", $this->currentUser);
         if(!empty($this->request->baseName)){
@@ -42,9 +42,20 @@ class WebController extends CustomController
     public function preConstructor(){}
 
     public function globalViewShare(){
+        if(empty($this->singularSlug))
+            $this->singularSlug = str_slug($this->singularLabel);
+        if(empty($this->pluralSlug))
+            $this->pluralSlug = str_slug($this->pluralLabel);
+        if(empty($this->viewFolder))
+            $this->viewFolder = $this->pluralSlug;
+        if(empty($this->resoure))
+            $this->resoure = $this->viewFolder;
+
         $properties=[
             "singularLabel",
             "pluralLabel",
+            "singularSlug",
+            "pluralSlug",
             "genderLabel",
             "resoure",
             "viewFolder",

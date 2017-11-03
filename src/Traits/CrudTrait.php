@@ -10,27 +10,28 @@ use App\Models\User;
 trait CrudTrait {
 
     public function setEntityName(){
-        if(!empty($this->mainEntityName))
+        if(!empty($this->crudObjectName))
             return false;
+        
         $classType = $this->getClassType();
         $entitySegments = [];
         preg_match("/(.*)?\\\(.*)?".$classType."$/",(get_class($this)),$entitySegments);
         
         if(!empty($entitySegments[2])){
-            $this->mainEntityName = $entitySegments[2];
+            $this->crudObjectName = $entitySegments[2];
         }
         else{
             $entitySegments=[];
             preg_match("/(.*)?".$classType."$/",(get_class($this)),$entitySegments);
-            $this->mainEntityName = $entitySegments[1];
+            $this->crudObjectName = $entitySegments[1];
         }
     }
 
     public function mainArgumentName(){
-        if(empty($this->mainEntityName))
+        if(empty($this->crudObjectName))
             $this->setEntityName();
 
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $this->mainEntityName));
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $this->crudObjectName));
     }
 
     public function autoSetPropertys(...$propertyRewriter){

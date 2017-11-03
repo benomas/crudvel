@@ -35,7 +35,9 @@ class CrudRequest extends FormRequest
     public function rules()
     {
         $this->setCurrentUser();
-        $this->baseName = $this->customBaseName??basename($this->path());
+        $this->baseName = $this->customBaseName?
+            $this->customBaseName:
+            basename($this->path());
         $this->currentAction   = explode('@', $this->route()->getActionName())[1];
         $this->currentActionId = $this->route($this->mainArgumentName());
         $this->rules           = [];

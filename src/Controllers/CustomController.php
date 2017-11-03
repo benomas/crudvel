@@ -12,6 +12,8 @@ use Illuminate\Routing\Controller as BaseController;
 */
 class CustomController extends BaseController {
 
+    public $resoure;
+    public $resourceActions;
     protected $transStatus;
     protected $committer;
     protected $crudObjectName;
@@ -30,13 +32,13 @@ class CustomController extends BaseController {
     protected $dirtyPropertys;
     protected $actions             = ["index","show","create","store","edit","update","destroy"];
     protected $actionsLangs        = [
-        "index"   =>"Listado",
-        "show",   =>"Ver",
-        "create", =>"Crear",
-        "store",  =>"Crear",
-        "edit",   =>"Editar",
-        "update", =>"Editar",
-        "destroy" =>"Eliminar",
+        "index"   => "Listado",
+        "show"    => "Ver",
+        "create"  => "Crear",
+        "store"   => "Crear",
+        "edit"    => "Editar",
+        "update"  => "Editar",
+        "destroy" => "Eliminar",
     ];
     protected $singleObjectActions = ["show","update","destroy"];
     use CrudTrait;
@@ -48,7 +50,7 @@ class CustomController extends BaseController {
         $this->actionId=null;
     }
 
-    public function setCrudObjectName(){
+    public function setCrudObjectName(){        
         if(empty($this->crudObjectName))
             $this->setEntityName();
     }

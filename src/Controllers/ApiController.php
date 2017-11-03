@@ -41,7 +41,7 @@ class ApiController extends CustomController
     //arreglo de columnas a seleccionar
     protected $selectQuery;
 
-    //public function __construct($request,$modelInstance){
+    //public function __construct($request,$model){
     public function __construct(...$propertyRewriter){
         parent::__construct(...$propertyRewriter);
         $this->paginable           = true;
@@ -50,10 +50,10 @@ class ApiController extends CustomController
         $this->orderables          = null;
     }
 
-    public function modelator($action){} //$this->modelInstance
+    public function modelator($action){} //$this->model
 
     public function callAction($method,$parameters=[]){
-        return empty($this->modelInstance)?$this->apiNotFound():parent::callAction($method,$parameters);
+        return empty($this->model)?$this->apiNotFound():parent::callAction($method,$parameters);
     }
     //web routes
     /**
@@ -66,7 +66,7 @@ class ApiController extends CustomController
         $this->modelator(__FUNCTION__);
         return ($paginable = $this->paginable && $this->extractPaginate())?
             $this->paginatedResponse():
-            $this->apiSuccessResponse($this->modelInstance->get());
+            $this->apiSuccessResponse($this->model->get());
     }
 
     /**
@@ -101,9 +101,9 @@ class ApiController extends CustomController
     public function show($id)
     {
         $this->modelator(__FUNCTION__);
-        return !$this->modelInstance->count()?
+        return !$this->model->count()?
             $this->apiNotFound():
-            $this->apiSuccessResponse($this->modelInstance->first());
+            $this->apiSuccessResponse($this->model->first());
     }
 
     /**
@@ -144,7 +144,7 @@ class ApiController extends CustomController
         $this->resetTransaction();
         $this->startTranstaction();
         $this->testTransaction(function(){
-            return $this->modelInstance->first()->delete();
+            return $this->model->first()->delete();
         });
         $this->transactionComplete();
         return $this->isTransactionCompleted()?
@@ -154,9 +154,9 @@ class ApiController extends CustomController
 
     public function select(){
         $this->modelator(__FUNCTION__);
-        return !$this->modelInstance->count()?
+        return !$this->model->count()?
             $this->apiNotFound():
-            $this->apiSuccessResponse(['data'=>$this->modelInstance->get()]);
+            $this->apiSuccessResponse(['data'=>$this->model->get()]);
     }
 
     protected function setStamps(){
@@ -189,11 +189,11 @@ class ApiController extends CustomController
     protected function paginatedResponse($callBacks=null) {
 
         //si el modelo no esta definido o es nulo
-        if(!isset($this->modelInstance) || $this->modelInstance===null)
+        if(!isset($this->model) || $this->model===null)
             return ['data'=>[],'count'=>0];
 
         //se define tabla principal de la consulta, necesario para cuando la consulta incluye joins
-        $mainTableName = $this->modelInstance->getModel()->getTable().'.';
+        $mainTableName = $this->model->getModel()->getTable().'.';
 
         //si existe un array de columnas a seleccionar
         if(customNonEmptyArray($this->selectQuery)){
@@ -203,7 +203,7 @@ class ApiController extends CustomController
                 is_callable($callBacks['selectQuery'])
             )
                 $callBacks['selectQuery']();
-            $this->modelInstance->select($this->selectQuery);
+            $this->model->select($this->selectQuery);
         }
 
         //si existe un array de columnas a filtrar
@@ -212,14 +212,14 @@ class ApiController extends CustomController
                 $this->filterByColumn($mainTableName,$callBacks):
                 $this->filter($mainTableName,$callBacks);
 
-        $count = $this->modelInstance->count();
+        $count = $this->model->count();
 
         //si se solicita limitar el numero de resultados
         if(isset($this->limit) && $this->limit){
-            $this->modelInstance->limit($this->limit);
+            $this->model->limit($this->limit);
             //si se especifica una pagina a regresar
             if(isset($this->page) && $this->page)
-                $this->modelInstance->skip($this->limit * ($this->page-1));
+                $this->model->skip($this->limit * ($this->page-1));
         }
 
         if (isset($this->orderBy) && $this->orderBy){
@@ -233,17 +233,17 @@ class ApiController extends CustomController
                 $callBacks['orderBy'][$this->orderBy]($direction);
             }
             else
-                $this->modelInstance->orderBy($mainTableName.$this->orderBy,$direction);
+                $this->model->orderBy($mainTableName.$this->orderBy,$direction);
         }
 
-        return ['data'=>$this->modelInstance->get(),'count'=>$count];
+        return ['data'=>$this->model->get(),'count'=>$count];
     }
 
     protected function filterByColumn($mainTableName,$callBacks) {
 
         if(isset($callBacks) && isset($callBacks['filters']) && is_callable($callBacks['filters']) ){
             $callBacks['filters']();
-            return $this->modelInstance;
+            return $this->model;
         }
 
         foreach ($this->filterQuery as $field=>$query){
@@ -251,27 +251,27 @@ class ApiController extends CustomController
                 continue;
 
             if (is_string($query))
-                $this->modelInstance->where($mainTableName.$field,'LIKE',"%{$query}%");
+                $this->model->where($mainTableName.$field,'LIKE',"%{$query}%");
             else{
                 $start = Carbon::createFromFormat('Y-m-d',$query['start'])->startOfDay();
                 $end   = Carbon::createFromFormat('Y-m-d',$query['end'])->endOfDay();
-                $this->modelInstance->whereBetween($mainTableName.$field,[$start, $end]);
+                $this->model->whereBetween($mainTableName.$field,[$start, $end]);
             }
         }
     }
 
     protected function filter($mainTableName,$callBacks) {
         if(!isset($this->generalSearch) || !$this->generalSearch)
-            return $this->modelInstance;
+            return $this->model;
 
         if(isset($callBacks) && isset($callBacks['generalFilter']) && is_callable($callBacks['generalFilter']) ){
             $callBacks['generalFilter']();
-            return $this->modelInstance;
+            return $this->model;
         }
 
         foreach ($this->filterQuery as $field=>$query){
             $method=!isset($method)?"where":"orWhere";
-            $this->modelInstance->{$method}($mainTableName.$field,'LIKE',"%{$this->generalSearch}%");
+            $this->model->{$method}($mainTableName.$field,'LIKE',"%{$this->generalSearch}%");
         }
     }
 
