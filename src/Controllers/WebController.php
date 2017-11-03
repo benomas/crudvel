@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\View;
 
 class WebController extends CustomController
 {
-	public $singularViewLabel;
-	public $pluralViewLabel;
-	public $objectViewFolder;
-    public $objectViewVariable;
-	public $genderViewLabel;
-    public $storeAction;
-    public $updateAction;
-    public $deleteAction;
+    public $resoure;
+    public $resourceActions;
+	public $singularLabel;
+	public $pluralLabel;
+	public $viewFolder;
+    public $listItems;
+    public $item;
+	public $genderLabel;
     public $selectColumns;
     public $actionResponse;
     //nombre de la clase del controller actual
@@ -23,12 +23,6 @@ class WebController extends CustomController
     public function __construct(...$propertyRewriter){
         parent::__construct(...$propertyRewriter);
         $this->preConstructor();
-        $this->storeAction    = "store";
-        $this->updateAction   = "update";
-        $this->deleteAction   = "destroy";
-        $this->storeLabel     = "registrar";
-        $this->updateLabel    = "editar";
-        $this->deleteLabel    = "eliminar";
         $this->globalViewShare();
     }
 
@@ -37,9 +31,9 @@ class WebController extends CustomController
         if(!empty($this->currentUser))
             View::share("currentUser", $this->currentUser);
         if(!empty($this->request->baseName)){
-            if(empty($this->resursePrefix)){
-                $this->resursePrefix = $this->request->baseName;
-                View::share("resursePrefix", $this->resursePrefix);
+            if(empty($this->resoure)){
+                $this->resoure = $this->request->baseName;
+                View::share("resoure", $this->resoure);
             }
         }
         return $next;
@@ -49,19 +43,13 @@ class WebController extends CustomController
 
     public function globalViewShare(){
         $properties=[
-            "singularViewLabel",
-            "pluralViewLabel",
-            "genderViewLabel",
-            "resursePrefix",
-            "objectViewFolder",
-            "objectPluralViewVariable",
-            "objectSingularViewVariable",
-            "storeAction",
-            "updateAction",
-            "deleteAction",
-            "storeLabel",
-            "updateLabel",
-            "deleteLabel",
+            "singularLabel",
+            "pluralLabel",
+            "genderLabel",
+            "resoure",
+            "viewFolder",
+            "listItems",
+            "item"
         ];
 
         foreach ($properties as $property)
@@ -125,37 +113,37 @@ class WebController extends CustomController
         return $this->failRequirements(
             $message?
                 $message:
-                "No se ha podido <b>".$this->translateAction()."</b> ".$this->singularViewLabel().", intente nuevamente.","redirectBackWithInput");
+                "No se ha podido <b>".$this->translateAction()."</b> ".$this->singularLabel().", intente nuevamente.","redirectBackWithInput");
     }
 
     public function successOperation($message=null){
         return $this->success(
             $message?
             $message:
-            "Se ha <b>".$this->translateAction("success")."</b> ".$this->singularViewLabel()." correctamente.","redirectBack");
+            "Se ha <b>".$this->translateAction("success")."</b> ".$this->singularLabel()." correctamente.","redirectBack");
     }
 
-    public function singularViewLabel(){
-    	if($this->genderViewLabel==="M")
-    		return "El ".$this->singularViewLabel;
-        if($this->genderViewLabel==="F")
-            return "La ".$this->singularViewLabel;
-    	return $this->singularViewLabel;
+    public function singularLabel(){
+    	if($this->genderLabel==="M")
+    		return "El ".$this->singularLabel;
+        if($this->genderLabel==="F")
+            return "La ".$this->singularLabel;
+    	return $this->singularLabel;
     }
 
-    public function pluralViewLabel(){
-    	if($this->genderViewLabel==="M")
-    		return "Los ".$this->pluralViewLabel;
-        if($this->genderViewLabel==="M")
-    	   return "Las ".$this->pluralViewLabel;
-       return $this->pluralViewLabel;
+    public function pluralLabel(){
+    	if($this->genderLabel==="M")
+    		return "Los ".$this->pluralLabel;
+        if($this->genderLabel==="M")
+    	   return "Las ".$this->pluralLabel;
+       return $this->pluralLabel;
 
     }
 
     public function index(){
-        View::share("page_title", "Listado de ".$this->pluralViewLabel);
-		View::share($this->objectPluralViewVariable, $this->modelInstance->get());
-        return view("backend.".$this->objectViewFolder.".index");
+        View::share("page_title", "Listado de ".$this->pluralLabel);
+		View::share($this->listItems, $this->modelInstance->get());
+        return view("backend.".$this->viewFolder.".index");
     }
 
     public function store(){
@@ -165,10 +153,10 @@ class WebController extends CustomController
     public function view($id){
         $this->modelInstance->id($id);
     	if( ( $currentModel = $this->modelInstance->first() ) ){
-   			View::share($this->objectSingularViewVariable, $currentModel);
+   			View::share($this->item, $currentModel);
    			return $currentModel;
     	}
-        $this->failRequirements($this->singularViewLabel().' no existe en la base de datos.','redirectBack');
+        $this->failRequirements($this->singularLabel().' no existe en la base de datos.','redirectBack');
     }
 
     public function update($id){

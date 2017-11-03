@@ -13,15 +13,13 @@ use Illuminate\Routing\Controller as BaseController;
 class CustomController extends BaseController {
 
     protected $transStatus;
-    protected $generalActionAfterFail;
-    protected $generalActionAfterComplete;
     protected $committer;
-    protected $mainEntityName;
+    protected $crudObjectName;
     protected $modelSource;
     protected $requestSource;
-
+    
     //modelo cargado en memoria
-    protected $modelInstance;
+    protected $model;
     //validador autorizador anonimo de peticiones http
     protected $request;
     protected $currentAction;
@@ -30,34 +28,43 @@ class CustomController extends BaseController {
     //Acciones que se basan en un solo elemento
     protected $currentUser;
     protected $dirtyPropertys;
-    protected $actions = ["index","show","store","update","destroy"];
-    protected $singleObjectActions=["show","update","destroy"];
+    protected $actions             = ["index","show","create","store","edit","update","destroy"];
+    protected $actionsLangs        = [
+        "index"   =>"Listado",
+        "show",   =>"Ver"
+        "create", =>"Crear"
+        "store",  =>"Crear"
+        "edit",   =>"Editar"
+        "update", =>"Editar"
+        "destroy" =>"Eliminar",
+    ];
+    protected $singleObjectActions = ["show","update","destroy"];
     use CrudTrait;
 
     public function __construct(...$propertyRewriter){
         $this->autoSetPropertys(...$propertyRewriter);
-        $this->setMainEntityName();
+        $this->setCrudObjectName();
         $this->setModelInstance();
         $this->actionId=null;
     }
 
-    public function setMainEntityName(){
-        if(empty($this->mainEntityName))
+    public function setCrudObjectName(){
+        if(empty($this->crudObjectName))
             $this->setEntityName();
     }
 
     public function setModelInstance(){
         $model = $this->modelSource?
             $this->modelSource:
-            "App\Models\\".$this->mainEntityName;
+            "App\Models\\".$this->crudObjectName;
         if(is_callable(array($model, 'noFilters')))
-            $this->modelInstance = $model::noFilters();
+            $this->model = $model::noFilters();
     }
 
     public function setRequestInstance(){
         $request = $this->requestSource?
             $this->requestSource:
-            "App\Http\Requests\\".$this->mainEntityName."Request";
+            "App\Http\Requests\\".$this->crudObjectName."Request";
         if(is_callable([$request,"capture"])){
             $this->request = app($request);
         }
@@ -72,7 +79,7 @@ class CustomController extends BaseController {
 
         $this->setCurrentUser();
         if(!resourceAccess($this->currentUser,"inactives"))
-            $this->modelInstance->actives();
+            $this->model->actives();
         $preactionResponse = $this->preAction($method,$parameters);
         if($preactionResponse)
             return $preactionResponse;
@@ -82,7 +89,7 @@ class CustomController extends BaseController {
                 return $this->request->expectsJson()?$this->apiNotFound():$this->webNotFound();
             $keys = array_keys($parameters);
             $this->actionId=$parameters[$this->mainArgumentName()];
-            if(!$this->modelInstance->id($this->actionId)->count())
+            if(!$this->model->id($this->actionId)->count())
                 return $this->request->expectsJson()?$this->apiNotFound():$this->webNotFound();
         }
 
@@ -97,7 +104,7 @@ class CustomController extends BaseController {
         return $next;
     }
 
-    public function modelator($action){} //$this->modelInstance
+    public function modelator($action){} //$this->model
 
     protected function resetTransaction(){
         $this->committer   = null;
@@ -140,10 +147,6 @@ class CustomController extends BaseController {
 
         if($cBFail && is_callable($cBFail))
             $cBFail();
-        if(is_callable($this->generalActionAfterFail)){
-            $anonymousFunction = $this->generalActionAfterFail;
-            $anonymousFunction();
-        }
     }
 
     /**
@@ -164,10 +167,6 @@ class CustomController extends BaseController {
             DB::commit();
 
             $this->transStatus='transaction-completed';
-            if(is_callable($this->generalActionAfterComplete)){
-                $anonymousFunction = $this->generalActionAfterComplete;
-                return $anonymousFunction();
-            }
         }
         else
             $this->transStatus='transaction-completed-with-error';
@@ -231,10 +230,10 @@ class CustomController extends BaseController {
         $this->resetTransaction();
         $this->startTranstaction();
         $this->testTransaction(function() use($callBack){
-            $this->modelInstance = $this->modelInstance->findOrNew($this->actionId);
-            $this->modelInstance->fill($this->fields);
-            $this->dirtyPropertys = $this->modelInstance->getDirty();
-            if(!$this->modelInstance->fill($this->fields)->save())
+            $this->model = $this->model->findOrNew($this->actionId);
+            $this->model->fill($this->fields);
+            $this->dirtyPropertys = $this->model->getDirty();
+            if(!$this->model->fill($this->fields)->save())
                 return false;
             if($callBack && is_callable($callBack))
                 return $callBack();
