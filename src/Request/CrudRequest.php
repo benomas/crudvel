@@ -1,7 +1,7 @@
 <?php
-namespace Frontface\Requests;
+namespace Crudvel\Requests;
 
-use Frontface\Traits\CrudTrait;
+use Crudvel\Traits\CrudTrait;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
