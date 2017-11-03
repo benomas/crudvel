@@ -42,7 +42,12 @@ trait CrudTrait {
     }
 
     public function setCurrentUser(){
-        $this->currentUser=($user = ($this->getClassType()==="Request"?$this:$this->request)->user())?User::id($user->id):null;
+        $user = $this->getClassType()==="Request"?
+            $this->user():
+            $this->request->user();
+        $user?
+            User::id($user->id):
+            null;
     }
 
     public function getClassType(){
@@ -50,27 +55,50 @@ trait CrudTrait {
     }
 
     public function loadFields(){
-        $this->fields = ($this->getClassType()==="Request"?$this:$this->request)->all();
+        $this->fields = $this->getClassType()==="Request"?
+            $this->all():
+            $this->request->all();
     }
 
     public function apiAlreadyExist($data=null){
-        return response()->json($data??["status"=>trans('api.already_exist')],409);
+        return response()->json(
+            $data?
+                $data:
+                ["status"=>trans('api.already_exist')],
+            409
+        );
     }
 
     public function apiUnautorized($data=null){
-        return response()->json($data??["status"=>trans('api.unautorized')],403);
+        return response()->json($data?
+            $data:
+            ["status"=>trans('api.unautorized')]
+            ,403
+        );
     }
 
     public function apiNotFound($data=null){
-        return response()->json($data??["status"=>trans('api.not_found')],404);
+        return response()->json($data?
+            $data:
+            ["status"=>trans('api.not_found')]
+            ,404
+        );
     }
 
     public function apiSuccessResponse($data=null){
-        return response()->json($data??["status"=>trans('api.success')],200);
+        return response()->json($data?
+            $data:
+            ["status"=>trans('api.success')]
+            ,200
+        );
     }
 
     public function apiFailResponse($data=null){
-        return  response()->json($data??["status"=>trans('api.transaction-error'),"error-message"=>trans('api.operation_error')],400);
+        return  response()->json($data?
+            $data:
+            ["status"=>trans('api.transaction-error'),"error-message"=>trans('api.operation_error')]
+            ,400
+        );
     }
 
     /**
@@ -87,15 +115,43 @@ trait CrudTrait {
 
         if(empty($responseProperty))
             return \Illuminate\Support\Facades\Redirect::back()->withInput($this->fields);
-        \Illuminate\Support\Facades\Session::flash($responseProperty["status"]??"success",$responseProperty["statusMessage"]??"Correcto");
-        \Illuminate\Support\Facades\Session::flash("statusMessage",$responseProperty["statusMessage"]??"Correcto");
+        \Illuminate\Support\Facades\Session::flash(
+            $responseProperty["status"]?
+                $responseProperty["status"]:
+                "success",
+                $responseProperty["statusMessage"]?
+                    $responseProperty["statusMessage"]:
+                    "Correcto"
+        );
+        \Illuminate\Support\Facades\Session::flash(
+            "statusMessage",
+            $responseProperty["statusMessage"]?
+                $responseProperty["statusMessage"]:
+                "Correcto"
+            );
         if(isset($responseProperty["withInput"])){
-            $redirector=($responseProperty["redirector"]??\Illuminate\Support\Facades\Redirect::back());
+            $redirector=(
+                $responseProperty["redirector"]?
+                    $responseProperty["redirector"]:
+                    \Illuminate\Support\Facades\Redirect::back()
+            );
             if($responseProperty["withInput"])
-                $redirector->withInput($redirector["inputs"]??$this->fields);
+                $redirector->withInput(
+                    $redirector["inputs"]?
+                        $redirector["inputs"]:
+                        $this->fields
+                );
         }
         else
-            $redirector=($responseProperty["redirector"]??\Illuminate\Support\Facades\Redirect::back())->withInput($redirector["inputs"]??$this->fields);
+            $redirector=$responseProperty["redirector"]?
+                $responseProperty["redirector"]:
+                \Illuminate\Support\Facades\Redirect::back();
+
+            $redirector->withInput(
+                        $redirector["inputs"]?
+                            $redirector["inputs"]:
+                            $this->fields
+                    );
         if(!empty($responseProperty["errors"]))
             \Illuminate\Support\Facades\Session::flash($errors, $responseProperty["errors"]);
 
@@ -113,10 +169,17 @@ trait CrudTrait {
      * @return redirector
      */
     public function webUnauthorized($responseProperty=[]){
-        $responseProperty["status"]=$responseProperty["status"]??"danger";
-        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]??trans('web.unautorized');
-        $responseProperty["redirector"]=$responseProperty["redirector"]??null;
-        $responseProperty["errors"]=$responseProperty["errors"]??[];
+        $responseProperty["status"]=$responseProperty["status"]?
+            $responseProperty["status"]:
+            "danger";
+        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]?
+            $responseProperty["statusMessage"]:
+            trans('web.unautorized');
+        $responseProperty["redirector"]=$responseProperty["redirector"]?
+            $responseProperty["redirector"]:
+            null;
+        $responseProperty["errors"]=$responseProperty["errors"]?
+            $responseProperty["errors"]:[];
         return $this->autoResponder($responseProperty);
     }
 
@@ -131,10 +194,14 @@ trait CrudTrait {
      * @return redirector
      */
     public function webNotFound($responseProperty=[]){
-        $responseProperty["status"]=$responseProperty["status"]??"warning";
-        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]??trans('web.not_found');
-        $responseProperty["redirector"]=$responseProperty["redirector"]??null;
-        $responseProperty["errors"]=$responseProperty["errors"]??[];
+        $responseProperty["status"]=$responseProperty["status"]?
+            $responseProperty["status"]:"warning";
+        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]?
+            $responseProperty["statusMessage"]:trans('web.not_found');
+        $responseProperty["redirector"]=$responseProperty["redirector"]?
+            $responseProperty["redirector"]:null;
+        $responseProperty["errors"]=$responseProperty["errors"]?
+            $responseProperty["errors"]:[];
         return $this->autoResponder($responseProperty);
     }
     /**
@@ -148,10 +215,14 @@ trait CrudTrait {
      * @return redirector
      */
     public function webSuccessResponse($responseProperty=[]){
-        $responseProperty["status"]=$responseProperty["status"]??"success";
-        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]??trans('web.success');
-        $responseProperty["redirector"]=$responseProperty["redirector"]??null;
-        $responseProperty["errors"]=$responseProperty["errors"]??[];
+        $responseProperty["status"]=$responseProperty["status"]?
+            $responseProperty["status"]:"success";
+        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]?
+            $responseProperty["statusMessage"]:trans('web.success');
+        $responseProperty["redirector"]=$responseProperty["redirector"]?
+            $responseProperty["redirector"]:null;
+        $responseProperty["errors"]=$responseProperty["errors"]?
+            $responseProperty["errors"]:[];
         return $this->autoResponder($responseProperty);
     }
     /**
@@ -165,10 +236,14 @@ trait CrudTrait {
      * @return redirector
      */
     public function webFailResponse($responseProperty=[]){
-        $responseProperty["status"]=$responseProperty["status"]??"danger";
-        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]??trans('web.transaction-error');
-        $responseProperty["redirector"]=$responseProperty["redirector"]??null;
-        $responseProperty["errors"]=$responseProperty["errors"]??[];
+        $responseProperty["status"]=$responseProperty["status"]?
+            $responseProperty["status"]:"danger";
+        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]?
+            $responseProperty["statusMessage"]:trans('web.transaction-error');
+        $responseProperty["redirector"]=$responseProperty["redirector"]?
+            $responseProperty["redirector"]:null;
+        $responseProperty["errors"]=$responseProperty["errors"]?
+            $responseProperty["errors"]:[];
         return $this->autoResponder($responseProperty);
     }
 }

@@ -49,7 +49,8 @@ class WebController extends CustomController
             "resoure",
             "viewFolder",
             "listItems",
-            "item"
+            "item",
+            "actionsLangs",
         ];
 
         foreach ($properties as $property)
