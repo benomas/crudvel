@@ -2,6 +2,7 @@
 namespace Crudvel\Requests;
 
 use Crudvel\Traits\CrudTrait;
+use Crudvel\AuthorizationException;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
@@ -71,7 +72,7 @@ class CrudRequest extends FormRequest
     }
 
     public function failedAuthorization(){
-        $unauthorizedException = new \Illuminate\Auth\Access\AuthorizationException('This action is unauthorized.');
+        $unauthorizedException = new AuthorizationException('This action is unauthorized.');
         $unauthorizedException->redirect   = $this->unautorizedRedirect();
         $unauthorizedException->dontFlash  = $this->dontFlash;  
         throw $unauthorizedException;
