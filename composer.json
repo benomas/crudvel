@@ -1,0 +1,19 @@
+{
+    "name"       : "benomas/crudvel",
+    "description": "Laravel clases customization for cruds",
+    "type"       : "library",
+    "license"    : "MIT",
+    "authors"    : [
+        {
+            "name" : "Afdael Benigno Michel Velasco",
+            "email": "benomas@gmail.com",
+            "role" : "Developer"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "src",
+        ]
+    },
+    "require": {}
+}
