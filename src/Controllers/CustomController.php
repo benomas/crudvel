@@ -31,11 +31,11 @@ class CustomController extends BaseController {
     protected $actions             = ["index","show","create","store","edit","update","destroy"];
     protected $actionsLangs        = [
         "index"   =>"Listado",
-        "show",   =>"Ver"
-        "create", =>"Crear"
-        "store",  =>"Crear"
-        "edit",   =>"Editar"
-        "update", =>"Editar"
+        "show",   =>"Ver",
+        "create", =>"Crear",
+        "store",  =>"Crear",
+        "edit",   =>"Editar",
+        "update", =>"Editar",
         "destroy" =>"Eliminar",
     ];
     protected $singleObjectActions = ["show","update","destroy"];
