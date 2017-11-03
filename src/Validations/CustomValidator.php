@@ -1,5 +1,5 @@
 <?php 
-namespace Frontface\Validations;
+namespace Crudvel\Validations;
 
 use Illuminate\Validation\Validator;
 

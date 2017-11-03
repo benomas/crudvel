@@ -5,7 +5,7 @@
  * @author Benomas benomas@gmail.com
  * @date   2017-05-08
  */
-namespace Frontface\Controllers;
+namespace Crudvel\Controllers;
 
 //Se extiende transactionController, para manejo de transacciones
 use Carbon\Carbon;
