@@ -1,6 +1,6 @@
 <?php
 
-namespace Frontface\Observers;
+namespace Crudvel\Observers;
 
 class GlobalModelObserver
 {
