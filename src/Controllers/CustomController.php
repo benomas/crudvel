@@ -1,8 +1,8 @@
 <?php 
-namespace Frontface\Controllers;
+namespace Crudvel\Controllers;
 
 use DB;
-use Frontface\Traits\CrudTrait;
+use Crudvel\Traits\CrudTrait;
 use App\Models\User;
 use Illuminate\Routing\Controller as BaseController;
 /*

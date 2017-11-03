@@ -1,9 +1,9 @@
 <?php 
-namespace Frontface\Models;;
+namespace Crudvel\Models;;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Frontface\Traits\CrudTrait;
+use Crudvel\Traits\CrudTrait;
 
 class BaseModel extends Model {
     use Notifiable;
