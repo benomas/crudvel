@@ -122,11 +122,11 @@ class WebController extends CustomController
     }
 
     public function failOperation($message=null){
-        return $this->failRequirements($message??"No se ha podido <b>".$this->translateAction()."</b> ".$this->singularViewLabel().", intente nuevamente.","redirectBackWithInput");
+        return $this->failRequirements($message?$message:"No se ha podido <b>".$this->translateAction()."</b> ".$this->singularViewLabel().", intente nuevamente.","redirectBackWithInput");
     }
 
     public function successOperation($message=null){
-        return $this->success($message??"Se ha <b>".$this->translateAction("success")."</b> ".$this->singularViewLabel()." correctamente.","redirectBack");
+        return $this->success($message?$message:"Se ha <b>".$this->translateAction("success")."</b> ".$this->singularViewLabel()." correctamente.","redirectBack");
     }
 
     public function singularViewLabel(){
