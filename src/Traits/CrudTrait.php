@@ -46,7 +46,7 @@ trait CrudTrait {
         $user = $this->getClassType()==="Request"?
             $this->user():
             $this->request->user();
-        $user?
+        $this->currentUser=$user?
             User::id($user->id):
             null;
     }
@@ -138,8 +138,8 @@ trait CrudTrait {
             );
             if($responseProperty["withInput"])
                 $redirector->withInput(
-                    $redirector["inputs"]?
-                        $redirector["inputs"]:
+                    !empty($responseProperty["inputs"])?
+                        $responseProperty["inputs"]:
                         $this->fields
                 );
         }
@@ -147,10 +147,9 @@ trait CrudTrait {
             $redirector=$responseProperty["redirector"]?
                 $responseProperty["redirector"]:
                 \Illuminate\Support\Facades\Redirect::back();
-
             $redirector->withInput(
-                        $redirector["inputs"]?
-                            $redirector["inputs"]:
+                    !empty($responseProperty["inputs"])?
+                            $responseProperty["inputs"]:
                             $this->fields
                     );
         if(!empty($responseProperty["errors"]))
@@ -179,7 +178,7 @@ trait CrudTrait {
         $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:
             null;
-        $responseProperty["errors"]=!empty($responseProperty["errors"]?
+        $responseProperty["errors"]=!empty($responseProperty["errors"])?
             $responseProperty["errors"]:[];
         return $this->autoResponder($responseProperty);
     }

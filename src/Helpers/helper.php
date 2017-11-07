@@ -448,7 +448,6 @@ if(!function_exists("resourceAccess")){
 	 */
 
 	function resourceAccess($userInstace,$resourceAction){
-
 		if(empty($userInstace))
             return false;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Crudvel\Migrations;
+namespace Crudvel\Database\Migrations;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,7 +17,11 @@ class BaseMigration extends Migration
 
     public function down()
     {
-        Schema::drop($this->mainTable);
+        if(Schema::hasTable($this->mainTable)){            
+            Schema::disableForeignKeyConstraints();
+            Schema::drop($this->mainTable);
+            Schema::enableForeignKeyConstraints();
+        }
     }
 
     public function makeStylesColumns($table){
