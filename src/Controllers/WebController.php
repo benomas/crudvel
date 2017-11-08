@@ -31,9 +31,9 @@ class WebController extends CustomController
         if(!empty($this->currentUser))
             View::share("currentUser", $this->currentUser);
         if(!empty($this->request->baseName)){
-            if(empty($this->resoure)){
-                $this->resoure = $this->request->baseName;
-                View::share("resoure", $this->resoure);
+            if(empty($this->resource)){
+                $this->resource = $this->request->baseName;
+                View::share("resource", $this->resource);
             }
         }
         return $next;
@@ -48,8 +48,8 @@ class WebController extends CustomController
             $this->pluralSlug = str_slug($this->pluralLabel);
         if(empty($this->viewFolder))
             $this->viewFolder = $this->pluralSlug;
-        if(empty($this->resoure))
-            $this->resoure = $this->viewFolder;
+        if(empty($this->resource))
+            $this->resource = $this->viewFolder;
 
         $properties=[
             "singularLabel",
@@ -57,7 +57,7 @@ class WebController extends CustomController
             "singularSlug",
             "pluralSlug",
             "genderLabel",
-            "resoure",
+            "resource",
             "viewFolder",
             "actionsLangs",
             "crudvel"
@@ -151,10 +151,28 @@ class WebController extends CustomController
 
     }
 
+    public function singleRowViewAction($action){
+        View::share("page_title", trans("crud.show.".$action)." ".$this->singularLabel);
+        View::share("row", $this->model->first());
+        return view("backend.".$this->viewFolder.".".$action);
+    }
+
     public function index(){
-        View::share("page_title", "Listado de ".$this->pluralLabel);
+        View::share("page_title", trans("crud.index.end")." ".$this->pluralLabel);
 		View::share("rows", $this->model->get());
         return view("backend.".$this->viewFolder.".index");
+    }
+
+    public function show($id){
+        return $this->singleRowViewAction(__FUNCTION__);
+    }
+    
+    public function create(){
+        return $this->singleRowViewAction(__FUNCTION__);
+    }
+
+    public function edit($id){
+        return $this->singleRowViewAction(__FUNCTION__);
     }
 
     public function store(){

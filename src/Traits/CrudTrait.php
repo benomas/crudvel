@@ -12,9 +12,6 @@ trait CrudTrait {
     public function setEntityName(){
         if(!empty($this->crudObjectName))
             return false;
-
-        $this->crudObjectName = str_replace("-", "_", $this->resoure);
-        dd($this->crudObjectName);
         
         $classType = $this->getClassType();
         $entitySegments = [];

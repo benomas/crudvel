@@ -14,7 +14,7 @@ class CustomController extends BaseController {
 
     protected $crudvel=true;
     protected $prefix = "admin";
-    public $resoure;
+    public $resource;
     public $resourceActions;
     protected $transStatus;
     protected $committer;
@@ -33,15 +33,6 @@ class CustomController extends BaseController {
     protected $currentUser;
     protected $dirtyPropertys;
     protected $actions             = ["index","show","create","store","edit","update","destroy"];
-    protected $actionsLangs        = [
-        "index"   => "Listado",
-        "show"    => "Ver",
-        "create"  => "Crear",
-        "store"   => "Crear",
-        "edit"    => "Editar",
-        "update"  => "Editar",
-        "destroy" => "Eliminar",
-    ];
     protected $singleObjectActions = ["show","update","destroy"];
     use CrudTrait;
 
@@ -244,27 +235,6 @@ class CustomController extends BaseController {
         });
         $this->transactionComplete();
         return $this->isTransactionCompleted();
-    }
-
-    public function testConection(){
-
-        $serviceCredentials=[
-            'cmd'=>'login',
-            'usuario'=>'z100',
-            'password'=>'153759',
-        ];
-
-        $client = curl_init("http://34.194.56.184:8000/ws");
-        curl_setopt($client,CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($client,CURLOPT_POST,true);
-        curl_setopt($client, CURLOPT_POSTFIELDS,$serviceCredentials);
-
-        //paso 5
-        $response = curl_exec($client);
-        $json     = json_decode($response);
-        dd($response);
-        if(empty($json->data->token) && 0)
-            return null;
     }
 
 }

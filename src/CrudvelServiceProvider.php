@@ -14,6 +14,10 @@ class CrudvelServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->publishes([
+            __DIR__.'/resources/lang/es' => base_path('resources/lang/es'),
+            __DIR__.'/resources/lang/en' => base_path('resources/lang/en'),
+        ]);
     }
     /**
      * Register the application services.
