@@ -1,6 +1,6 @@
 <?php 
-namespace App\Models;
-use Frontface\Models\BaseModel;
+namespace Crudvel\Models;
+use Crudvel\Models\BaseModel;
 
 class Role extends BaseModel{
 
@@ -15,15 +15,15 @@ class Role extends BaseModel{
 //Relationships
 
     public function users(){
-        return $this->belongsToMany("App\Models\User", "role_users");
+        return $this->belongsToMany("Crudvel\Models\User", "role_users");
     }
 
     public function permissions(){
-        return $this->belongsToMany("App\Models\Permission", "permission_role");
+        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role");
     }
 
     public function sublevels(){
-        return $this->belongsToMany("App\Models\Sublevel");
+        return $this->belongsToMany("Crudvel\Models\Sublevel");
     }
 
 //End Relationships

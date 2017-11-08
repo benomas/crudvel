@@ -3,7 +3,7 @@ namespace Crudvel\Controllers;
 
 use DB;
 use Crudvel\Traits\CrudTrait;
-use App\Models\User;
+use Crudvel\Models\User;
 use Illuminate\Routing\Controller as BaseController;
 /*
     This is a customization of the controller, some controllers needs to save multiple data on different tables in one step, doing that without transaction is a bad idea.
@@ -12,6 +12,8 @@ use Illuminate\Routing\Controller as BaseController;
 */
 class CustomController extends BaseController {
 
+    protected $crudvel=true;
+    protected $prefix = "admin";
     public $resoure;
     public $resourceActions;
     protected $transStatus;
@@ -89,7 +91,6 @@ class CustomController extends BaseController {
         if(in_array($method,$this->singleObjectActions)){
             if(empty($parameters))
                 return $this->request->expectsJson()?$this->apiNotFound():$this->webNotFound();
-            $keys = array_keys($parameters);
             $this->actionId=$parameters[$this->mainArgumentName()];
             if(!$this->model->id($this->actionId)->count())
                 return $this->request->expectsJson()?$this->apiNotFound():$this->webNotFound();

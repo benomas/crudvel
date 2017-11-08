@@ -6,12 +6,15 @@ namespace Crudvel\Traits;
     so the options is to doing it manually, but it is a lot of code, and it is always the same, to i get that code and put it togheter as methods, so now with the support of
     the anonymous functions, all this code can be reused, saving a lot of time.
 */
-use App\Models\User;
+use Crudvel\Models\User;
 trait CrudTrait {
 
     public function setEntityName(){
         if(!empty($this->crudObjectName))
             return false;
+
+        $this->crudObjectName = str_replace("-", "_", $this->resoure);
+        dd($this->crudObjectName);
         
         $classType = $this->getClassType();
         $entitySegments = [];

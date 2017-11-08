@@ -13,7 +13,7 @@ class WebController extends CustomController
     public $singularSlug;
     public $pluralSlug;
 	public $viewFolder;
-    public $listItems;
+    public $rows;
     public $item;
 	public $genderLabel;
     public $selectColumns;
@@ -59,9 +59,8 @@ class WebController extends CustomController
             "genderLabel",
             "resoure",
             "viewFolder",
-            "listItems",
-            "item",
             "actionsLangs",
+            "crudvel"
         ];
 
         foreach ($properties as $property)
@@ -154,7 +153,7 @@ class WebController extends CustomController
 
     public function index(){
         View::share("page_title", "Listado de ".$this->pluralLabel);
-		View::share($this->listItems, $this->modelInstance->get());
+		View::share("rows", $this->model->get());
         return view("backend.".$this->viewFolder.".index");
     }
 
@@ -163,8 +162,8 @@ class WebController extends CustomController
     }
 
     public function view($id){
-        $this->modelInstance->id($id);
-    	if( ( $currentModel = $this->modelInstance->first() ) ){
+        $this->model->id($id);
+    	if( ( $currentModel = $this->model->first() ) ){
    			View::share($this->item, $currentModel);
    			return $currentModel;
     	}
@@ -176,7 +175,7 @@ class WebController extends CustomController
     }
 
     public function destroy($id){
-        return !$this->modelInstance->delete()?$this->failOperation():$this->successOperation();
+        return !$this->model->delete()?$this->failOperation():$this->successOperation();
     }
 
     //to depreciate
@@ -189,6 +188,6 @@ class WebController extends CustomController
     }
 
     public function apiIndex(){
-        return response()->json(['data'=>$this->modelInstance->get()],200);
+        return response()->json(['data'=>$this->model->get()],200);
     }
 }

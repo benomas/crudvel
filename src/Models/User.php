@@ -1,14 +1,19 @@
 <?php
 
-namespace App\Models;
+namespace Crudvel\Models;
 
 use Carbon\Carbon;
-use Cartalyst\Sentinel\Checkpoints\{NotActivatedException,ThrottlingException};
-use Cartalyst\Sentinel\Laravel\Facades\{Activation,Sentinel};
-use Frontface\Models\BaseModel;
-use Illuminate\Support\Facades\{View,App,Session,Validator,Response};
+use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
+use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
+use Cartalyst\Sentinel\Laravel\Facades\Activation;
+use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use Crudvel\Models\BaseModel;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
-use App\Models\{ActivityType, Document, Gender, Infogram, Level, Review, Sublevel, SublevelType, Video};
 use HTML2PDF;
 
 class User extends BaseModel{
@@ -29,7 +34,7 @@ class User extends BaseModel{
 //Relationships
 
     public function roles(){
-        return $this->belongsToMany("App\Models\Role", "role_users");
+        return $this->belongsToMany("Crudvel\Models\Role", "role_users");
     }
 //End Relationships
 
@@ -37,15 +42,15 @@ class User extends BaseModel{
 
     public function rolesPermissions()
     {
-        return $this->manyToManyToMany("roles","permissions","App\Models\Permission");
+        return $this->manyToManyToMany("roles","permissions","Crudvel\Models\Permission");
     }
 
     public function activityUser(){
-        return $this->hasMany("App\Models\ActivityUser");
+        return $this->hasMany("Crudvel\Models\ActivityUser");
     }
 
     public function sublevelUsers(){
-        return $this->hasMany("App\Models\SublevelUser");
+        return $this->hasMany("Crudvel\Models\SublevelUser");
     }
 
 //End Non standar Relationships
@@ -103,10 +108,6 @@ class User extends BaseModel{
         return $loginTest;
     }
 
-    public function payment() {
-        return Payment::where('user_id', $this->id)->orderBy('id', 'desc')->first();
-    }
-
     public static function addNormal($data){
         $validation = Validator::make($data, [
             "username" => "required_without:email|unique:users,email|unique:users,username",
@@ -146,48 +147,6 @@ class User extends BaseModel{
         }
     }
 
-    public static function addFacebook($data){
-        if(!isset($data["password"]) || !$data["password"]){
-            $data["password"] = Str::random(12);
-        }
-
-        $validation = Validator::make($data, User::facebook_rules());
-
-        if($validation->fails())
-            return $validation->errors()->getMessages();
-
-        if(!isset($data["deadline"])){
-            $date = Carbon::now();
-            $date = $date->addMonths(3);
-
-            $data["deadline"] = $date->toDateString();
-        }
-
-        try{
-            $user = Sentinel::register($data);
-
-            $activation = Activation::create($user);
-
-            Activation::complete($user, $activation->code);
-
-            $user = User::find($user->id);
-            $user->is_manager = 0;
-            $user->is_facebook = 1;
-            $user->facebook_id = $data["facebook_id"];
-            $user->deadline = $data["deadline"];
-
-            $now = Carbon::now();
-            $last_login = $now->subMinute(5);
-
-            $user->last_login = $last_login;
-            $user->save();
-
-            return $user;
-        }catch (\Exception $e){
-            return false;
-        }
-    }
-
     public static function normalLogin($email, $password){
         $credentials = [
             'email'    => $email,
@@ -216,105 +175,6 @@ class User extends BaseModel{
         }
     }
 
-    public static function betterwareLogin($user, $password){
-
-        $data_login = [
-           'cmd'      => 'login',
-           'usuario'  => strtolower($user),  // USUARIO
-           'password' => $password            // PASSWORD DEL USUARIO
-        ];
-        $client = curl_init(config("project.betterwareUrlApi"));
-        curl_setopt($client,CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($client,CURLOPT_POST,true);
-        curl_setopt($client, CURLOPT_POSTFIELDS,$data_login);
-
-        $response = curl_exec($client);
-        $json     = json_decode($response);
-        return empty($json->data->token)?null:$json->data->token;
-    }
-
-    public static function facebookLogin($facebook_id){
-        $user = User::where("facebook_id", $facebook_id)->first();
-
-        if(!$user){
-            return false;
-        }
-
-        $sentinel_user = Sentinel::findById($user->id);
-
-        Sentinel::login($sentinel_user);
-
-        $user->token = Str::random(16);
-        $user->save();
-
-        Session::put("user", $user);
-
-        return $user;
-    }
-
-    public function progress(){
-        return 0;
-        $nd = Document::where("id", ">", 0)->count();
-        $ni = Infogram::where("id", ">", 0)->count();
-        $nv = Video::where("id", ">", 0)->count();
-        $nr = Review::where("id", ">", 0)->count();
-
-        $np = Progress::where("user_id", $this->id)->count();
-
-        $this->advance = round($np * 100 / ($nd + $ni + $nv + $nr));
-        $this->save();
-
-        return round($np * 100 / ($nd + $ni + $nv + $nr));
-    }
-
-    public function createPDF($sublevelId,$mode="file"){
-
-        if(!($sublevel = Sublevel::id($sublevelId)->generateConstancy()->actives())->count())
-            return $this->webNotFound();
-
-        $sublevelsUsers=[];
-        $user    = $this;
-        $role_id = $user->roles()->first()->id;
-        $sublevel=$sublevel->first();
-        $sublevelTree= $sublevel->getChildrenTree($user,$role_id,$sublevelsUsers);
-        
-        if(!$sublevelTree || !count($sublevelTree))
-            return $this->webNotFound();
-
-        $sublevelTree=$sublevelTree[$sublevel->sublevel_slug];
-        
-        if($sublevelTree["cAct"]<$sublevelTree["tAct"])
-            return $this->webFailResponse(["status"=>"No completado aun","statusMessage"=>"no se ha completado aun el ".$sublevel->level->singular_name]);
-        
-        if(file_exists(($fullPath=($path=public_path()."/diplomas/".$user->roles()->first()->slug."/$user->id/contancy/".$sublevelTree["level"]["level_slug"])."/".$sublevelTree["sublevel_slug"].".pdf")))
-            return $mode==="file"?Response::download($fullPath):$fullPath;
-        
-        $html = View::make("public.diploma",[
-            "user"            =>$user,
-            "sublevel"        =>$sublevel,
-            "sublevelTree"    =>$sublevelTree,
-            "imgBackground"   =>asset("/img/constancy/".$user->roles()->first()->slug."-".$sublevelTree["sublevel_slug"].".jpg"),
-        ]);
-
-        $html2pdf = new HTML2PDF('L','A4','fr', true, 'UTF-8',  array(0, 0, 0, 0));
-
-        $html2pdf->setDefaultFont('Helvetica');
-        if(!file_exists($path))
-            mkdir($path, 0775, true);
-        $html2pdf->WriteHTML($html);
-        $html2pdf->Output($fullPath,'F');
-        return $mode==="file"?Response::download($fullPath):$fullPath;
-    }
-
-// validations
-    public static function facebook_rules(){
-        return [
-            "email"       => "required|email",
-            "first_name"  => "required",
-            "facebook_id" => "required"
-        ];
-    }
-//End validations
 // Others
 
     public function isRoot(){
@@ -323,14 +183,6 @@ class User extends BaseModel{
 
     public function isAdmin(){
         return $this->roles()->withAdmin()->count();
-    }
-
-    public function isManager(){
-        return $this->roles()->withManager()->count();
-    }
-
-    public function isDistribuitor(){
-        return $this->roles()->withDistribuitor()->count();
     }
 
     public function inRoles(...$roles){

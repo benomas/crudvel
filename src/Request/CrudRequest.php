@@ -3,8 +3,8 @@ namespace Crudvel\Requests;
 
 use Crudvel\Traits\CrudTrait;
 use Crudvel\Exceptions\AuthorizationException;
-use App\Models\Permission;
-use App\Models\Role;
+use Crudvel\Models\Permission;
+use Crudvel\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 class CrudRequest extends FormRequest
 {

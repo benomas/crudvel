@@ -1,12 +1,10 @@
 <?php 
-namespace Crudvel\Models;;
+namespace Crudvel\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Crudvel\Traits\CrudTrait;
 
 class BaseModel extends Model {
-    use Notifiable;
     use CrudTrait;
     protected $schema;
     protected $hasPropertyActive;
@@ -90,7 +88,7 @@ class BaseModel extends Model {
 // Others
 
     public function getTable(){
-        return ($this->schema ?? "").parent::getTable();
+        return ($this->schema?$this->schema:"").parent::getTable();
     }
 
     public function manyToManyToMany($firstLevelRelation,$secondLevelRelation,$secondLevelModel){

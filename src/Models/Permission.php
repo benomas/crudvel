@@ -1,7 +1,7 @@
 <?php 
-namespace App\Models;
+namespace Crudvel\Models;
 
-use Frontface\Models\BaseModel;
+use Crudvel\Models\BaseModel;
 class Permission extends BaseModel{
 
     protected $fillable = [
@@ -14,7 +14,7 @@ class Permission extends BaseModel{
 //Relationships
 
     public function roles(){
-        return $this->belongsToMany("App\Models\Role", "permission_role");
+        return $this->belongsToMany("Crudvel\Models\Role", "permission_role");
     }
 
 //End Relationships
