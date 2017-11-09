@@ -13,29 +13,47 @@ class WebController extends CustomController
     public $singularSlug;
     public $pluralSlug;
 	public $viewFolder;
-    public $rows;
-    public $item;
 	public $genderLabel;
     public $selectColumns;
     public $actionResponse;
+    public $menu;
+    public $submenu;
+    public $viewSharedPropertys = [
+        "actionsLangs",
+        "crudvel",
+        "currentAction",
+        "currentActionId",
+        "genderLabel",
+        "pluralLabel",
+        "pluralSlug",
+        "prefix",
+        "resource",
+        "rowName",
+        "rowsName",
+        "singularLabel",
+        "singularSlug",
+        "viewFolder",
+        "menu",
+        "submenu",
+    ];
     //nombre de la clase del controller actual
 
     public function __construct(...$propertyRewriter){
         parent::__construct(...$propertyRewriter);
-        $this->preConstructor();
-        $this->globalViewShare();
     }
 
     public function  callAction($method, $parameters=[]){
         $next = empty($this->model)?$this->redirectBackWithInput():parent::callAction($method,$parameters);
         if(!empty($this->currentUser))
-            View::share("currentUser", $this->currentUser);
+            $this->viewSharedPropertys[]="currentUser";
         if(!empty($this->request->baseName)){
             if(empty($this->resource)){
                 $this->resource = $this->request->baseName;
-                View::share("resource", $this->resource);
+                $this->baseResourceUrl =  (!empty($this->prefix)?$this->prefix."/":"").$this->resource;
             }
         }
+        if(in_array($method,$this->loadViewActions))
+            $this->globalViewShare();
         return $next;
     }
 
@@ -51,22 +69,9 @@ class WebController extends CustomController
         if(empty($this->resource))
             $this->resource = $this->viewFolder;
 
-        $properties=[
-            "singularLabel",
-            "pluralLabel",
-            "singularSlug",
-            "pluralSlug",
-            "genderLabel",
-            "resource",
-            "viewFolder",
-            "actionsLangs",
-            "crudvel"
-        ];
-
-        foreach ($properties as $property)
+        foreach ($this->viewSharedPropertys as $property)
             if(isset($this->{$property}) && $this->{$property})
                 View::share($property, $this->{$property});
-        View::share("prefix", env("PREFIX", ""));
     }
 
     public function failRequirements($message,$redirect){
@@ -152,13 +157,18 @@ class WebController extends CustomController
     }
 
     public function singleRowViewAction($action){
-        View::share("page_title", trans("crud.show.".$action)." ".$this->singularLabel);
-        View::share("row", $this->model->first());
+        View::share("page_title", trans("crud.actions.".$action.".called_message")." ".$this->singularLabel);
+        View::share("row",$this->model->first() );
         return view("backend.".$this->viewFolder.".".$action);
     }
 
     public function index(){
-        View::share("page_title", trans("crud.index.end")." ".$this->pluralLabel);
+        View::share("page_title", 
+            trans("crud.actions.index.called_message").
+            " ".
+            trans("crud.actions.common.of").
+            " ".
+            $this->pluralLabel);
 		View::share("rows", $this->model->get());
         return view("backend.".$this->viewFolder.".index");
     }
@@ -168,24 +178,17 @@ class WebController extends CustomController
     }
     
     public function create(){
+        View::share("method","post" );
         return $this->singleRowViewAction(__FUNCTION__);
     }
 
     public function edit($id){
+        View::share("method","put" );
         return $this->singleRowViewAction(__FUNCTION__);
     }
 
     public function store(){
         return $this->persist()?$this->successOperation():$this->failOperation();
-    }
-
-    public function view($id){
-        $this->model->id($id);
-    	if( ( $currentModel = $this->model->first() ) ){
-   			View::share($this->item, $currentModel);
-   			return $currentModel;
-    	}
-        $this->failRequirements($this->singularLabel().' no existe en la base de datos.','redirectBack');
     }
 
     public function update($id){

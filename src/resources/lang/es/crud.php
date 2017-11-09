@@ -3,28 +3,34 @@
 return [
     'actions' => [
         "index"  => [
-            "start" =>"Listar",
-            "end"   =>"Listado de"
+            "call_message"   =>"Listar",
+            "called_message" =>"Listado"
         ],
         "show"   => [
-            "start" =>"Ver",                                                 
-            "end"   =>"Vista",
+            "call_message"   =>"Ver",                                                 
+            "called_message" =>"Vista",
         ],
         "create" => [
-            "start" =>"Crear",
+            "call_message"   =>"Crear",
+            "called_message" =>"Creando",
+            "next_message"   =>"Guardar",
         ],
         "store"  => [
-            "start" =>"Guardar",
         ],
         "edit"   => [
-            "start" =>"Editar",
+            "call_message"   =>"Editar",
+            "called_message" =>"Editando",
+            "next_message"   =>"Actualizar",
         ],
         "update" => [
-            "start" =>"Actualizar",
         ],
         "delete" => [
-            "start"   =>"Eliminar",
-            "confirm" =>"Estas seguro de eliminar el registro?",
+            "call_message"   =>"Eliminar",
+        ],
+        "common"=>[
+            "cancel"  => "Cancelar",
+            "back"    => "Regresar",
+            "confirm" => "Estas seguro de",
         ]
     ]
 ];

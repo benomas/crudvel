@@ -21,7 +21,10 @@ class CustomController extends BaseController {
     protected $crudObjectName;
     protected $modelSource;
     protected $requestSource;
-    
+    public $rows;
+    public $row;
+    public $rowName;
+    public $rowsName;
     //modelo cargado en memoria
     protected $model;
     //validador autorizador anonimo de peticiones http
@@ -33,14 +36,15 @@ class CustomController extends BaseController {
     protected $currentUser;
     protected $dirtyPropertys;
     protected $actions             = ["index","show","create","store","edit","update","destroy"];
-    protected $singleObjectActions = ["show","update","destroy"];
+    protected $singleObjectActions = ["show","create","store","edit","update","destroy"];
+    protected $loadViewActions     = ["index","show","create","edit"];
     use CrudTrait;
 
     public function __construct(...$propertyRewriter){
         $this->autoSetPropertys(...$propertyRewriter);
         $this->setCrudObjectName();
         $this->setModelInstance();
-        $this->actionId=null;
+        $this->currentActionId=null;
     }
 
     public function setCrudObjectName(){        
@@ -60,9 +64,9 @@ class CustomController extends BaseController {
         $request = $this->requestSource?
             $this->requestSource:
             "App\Http\Requests\\".$this->crudObjectName."Request";
-        if(is_callable([$request,"capture"])){
+        
+        if(is_callable([$request,"capture"]))
             $this->request = app($request);
-        }
     }
 
     public function callAction($method,$parameters=[]){
@@ -82,8 +86,8 @@ class CustomController extends BaseController {
         if(in_array($method,$this->singleObjectActions)){
             if(empty($parameters))
                 return $this->request->expectsJson()?$this->apiNotFound():$this->webNotFound();
-            $this->actionId=$parameters[$this->mainArgumentName()];
-            if(!$this->model->id($this->actionId)->count())
+            $this->currentActionId=$parameters[$this->mainArgumentName()];
+            if(!$this->model->id($this->currentActionId)->count())
                 return $this->request->expectsJson()?$this->apiNotFound():$this->webNotFound();
         }
 
@@ -224,7 +228,7 @@ class CustomController extends BaseController {
         $this->resetTransaction();
         $this->startTranstaction();
         $this->testTransaction(function() use($callBack){
-            $this->model = $this->model->findOrNew($this->actionId);
+            $this->model = $this->model->findOrNew($this->currentActionId);
             $this->model->fill($this->fields);
             $this->dirtyPropertys = $this->model->getDirty();
             if(!$this->model->fill($this->fields)->save())

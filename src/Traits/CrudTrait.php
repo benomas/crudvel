@@ -31,6 +31,9 @@ trait CrudTrait {
         if(empty($this->crudObjectName))
             $this->setEntityName();
 
+        if(!empty($this->rowName))
+            return $this->rowName;
+
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $this->crudObjectName));
     }
 
