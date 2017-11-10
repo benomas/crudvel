@@ -57,8 +57,6 @@ class WebController extends CustomController
         return $next;
     }
 
-    public function preConstructor(){}
-
     public function globalViewShare(){
         if(empty($this->singularSlug))
             $this->singularSlug = str_slug($this->singularLabel);
@@ -129,14 +127,14 @@ class WebController extends CustomController
         return $this->failRequirements(
             $message?
                 $message:
-                "No se ha podido <b>".$this->translateAction()."</b> ".$this->singularLabel().", intente nuevamente.","redirectBackWithInput");
+                "No se ha podido ".$this->translateAction()." ".$this->singularLabel().", intente nuevamente.","redirectBackWithInput");
     }
 
     public function successOperation($message=null){
         return $this->success(
-            $message?
-            $message:
-            "Se ha <b>".$this->translateAction("success")."</b> ".$this->singularLabel()." correctamente.","redirectBack");
+            $message?$message:"Se ha ".$this->translateAction("success")." ".$this->singularLabel()." correctamente.",
+            "redirectBack"
+        );
     }
 
     public function singularLabel(){
@@ -158,7 +156,7 @@ class WebController extends CustomController
 
     public function singleRowViewAction($action){
         View::share("page_title", trans("crud.actions.".$action.".called_message")." ".$this->singularLabel);
-        View::share("row",$this->model->first() );
+        View::share("row",$this->model->first());
         return view("backend.".$this->viewFolder.".".$action);
     }
 
@@ -178,7 +176,8 @@ class WebController extends CustomController
     }
     
     public function create(){
-        View::share("method","post" );
+        $this->model->nullFilter();
+        View::share("method","post");
         return $this->singleRowViewAction(__FUNCTION__);
     }
 
@@ -188,10 +187,12 @@ class WebController extends CustomController
     }
 
     public function store(){
+        $this->modelInstance = $this->modelInstanciator(true);
         return $this->persist()?$this->successOperation():$this->failOperation();
     }
 
     public function update($id){
+        $this->modelInstance = $this->model->first();
         return $this->persist()?$this->successOperation():$this->failOperation();
     }
 

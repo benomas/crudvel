@@ -62,6 +62,10 @@ trait CrudTrait {
         $this->fields = $this->getClassType()==="Request"?
             $this->all():
             $this->request->all();
+        if(!empty($this->defaultFields))
+            foreach ($this->defaultFields as $field => $value)
+                if(empty($this->fields[$field]))
+                    $this->fields[$field]=$value;
     }
 
     public function apiAlreadyExist($data=null){
@@ -197,13 +201,13 @@ trait CrudTrait {
      * @return redirector
      */
     public function webNotFound($responseProperty=[]){
-        $responseProperty["status"]=$responseProperty["status"]?
+        $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:"warning";
-        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]?
+        $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
             $responseProperty["statusMessage"]:trans('web.not_found');
-        $responseProperty["redirector"]=$responseProperty["redirector"]?
+        $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:null;
-        $responseProperty["errors"]=$responseProperty["errors"]?
+        $responseProperty["errors"]=!empty($responseProperty["errors"])?
             $responseProperty["errors"]:[];
         return $this->autoResponder($responseProperty);
     }
@@ -218,13 +222,13 @@ trait CrudTrait {
      * @return redirector
      */
     public function webSuccessResponse($responseProperty=[]){
-        $responseProperty["status"]=$responseProperty["status"]?
+        $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:"success";
-        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]?
+        $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
             $responseProperty["statusMessage"]:trans('web.success');
-        $responseProperty["redirector"]=$responseProperty["redirector"]?
+        $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:null;
-        $responseProperty["errors"]=$responseProperty["errors"]?
+        $responseProperty["errors"]=!empty($responseProperty["errors"])?
             $responseProperty["errors"]:[];
         return $this->autoResponder($responseProperty);
     }
@@ -239,13 +243,13 @@ trait CrudTrait {
      * @return redirector
      */
     public function webFailResponse($responseProperty=[]){
-        $responseProperty["status"]=$responseProperty["status"]?
+        $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:"danger";
-        $responseProperty["statusMessage"]=$responseProperty["statusMessage"]?
+        $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
             $responseProperty["statusMessage"]:trans('web.transaction-error');
-        $responseProperty["redirector"]=$responseProperty["redirector"]?
+        $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:null;
-        $responseProperty["errors"]=$responseProperty["errors"]?
+        $responseProperty["errors"]=!empty($responseProperty["errors"])?
             $responseProperty["errors"]:[];
         return $this->autoResponder($responseProperty);
     }
