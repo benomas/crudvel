@@ -200,6 +200,16 @@ class WebController extends CustomController
         return !$this->model->delete()?$this->failOperation():$this->successOperation();
     }
 
+    public function active($id){
+        $this->fields["status"]=1;
+        return $this->update($id);
+    }
+
+    public function deactive($id){
+        $this->fields["status"]=0;
+        return $this->update($id);
+    }
+
     //to depreciate
     public function formatSelectParams($selects =[],$default='',$currents=''){
         return [

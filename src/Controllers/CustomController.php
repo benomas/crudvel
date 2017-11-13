@@ -37,9 +37,31 @@ class CustomController extends BaseController {
     //Acciones que se basan en un solo elemento
     protected $currentUser;
     protected $dirtyPropertys;
-    protected $actions             = ["index","show","create","store","edit","update","destroy"];
-    protected $singleObjectActions = ["show","edit","update","destroy"];
-    protected $loadViewActions     = ["index","show","create","edit"];
+    protected $actions             = [
+        "index",
+        "show",
+        "create",
+        "store",
+        "edit",
+        "update",
+        "destroy",
+        "active",
+        "deactive"
+    ];
+    protected $singleObjectActions = [
+        "show",
+        "edit",
+        "update",
+        "destroy",
+        "active",
+        "deactive"
+    ];
+    protected $loadViewActions     = [
+        "index",
+        "show",
+        "create",
+        "edit"
+    ];
     use CrudTrait;
 
     public function __construct(...$propertyRewriter){
