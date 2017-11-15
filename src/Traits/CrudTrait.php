@@ -6,6 +6,7 @@ namespace Crudvel\Traits;
     so the options is to doing it manually, but it is a lot of code, and it is always the same, to i get that code and put it togheter as methods, so now with the support of
     the anonymous functions, all this code can be reused, saving a lot of time.
 */
+use Illuminate\Support\Facades\Session;
 use Crudvel\Models\User;
 trait CrudTrait {
 
@@ -72,7 +73,7 @@ trait CrudTrait {
         return response()->json(
             $data?
                 $data:
-                ["status"=>trans('crud.api.already_exist')],
+                ["status"=>trans('crudvel.api.already_exist')],
             409
         );
     }
@@ -80,7 +81,7 @@ trait CrudTrait {
     public function apiUnautorized($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans('crud.api.unautorized')]
+            ["status"=>trans('crudvel.api.unautorized')]
             ,403
         );
     }
@@ -88,7 +89,7 @@ trait CrudTrait {
     public function apiNotFound($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans('crud.api.not_found')]
+            ["status"=>trans('crudvel.api.not_found')]
             ,404
         );
     }
@@ -96,7 +97,7 @@ trait CrudTrait {
     public function apiSuccessResponse($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans('crud.api.success')]
+            ["status"=>trans('crudvel.api.success')]
             ,200
         );
     }
@@ -104,7 +105,7 @@ trait CrudTrait {
     public function apiFailResponse($data=null){
         return  response()->json($data?
             $data:
-            ["status"=>trans('crud.api.transaction-error'),"error-message"=>trans('crud.api.operation_error')]
+            ["status"=>trans('crudvel.api.transaction-error'),"error-message"=>trans('crudvel.api.operation_error')]
             ,400
         );
     }
@@ -123,7 +124,7 @@ trait CrudTrait {
 
         if(empty($responseProperty))
             return \Illuminate\Support\Facades\Redirect::back()->withInput($this->fields);
-        \Illuminate\Support\Facades\Session::flash(
+        Session::flash(
             $responseProperty["status"]?
                 $responseProperty["status"]:
                 "success",
@@ -131,7 +132,7 @@ trait CrudTrait {
                     $responseProperty["statusMessage"]:
                     "Correcto"
         );
-        \Illuminate\Support\Facades\Session::flash(
+        Session::flash(
             "statusMessage",
             $responseProperty["statusMessage"]?
                 $responseProperty["statusMessage"]:
@@ -160,7 +161,7 @@ trait CrudTrait {
                             $this->fields
                     );
         if(!empty($responseProperty["errors"]))
-            \Illuminate\Support\Facades\Session::flash($errors, $responseProperty["errors"]);
+            Session::flash($errors, $responseProperty["errors"]);
 
         return $redirector;
     }
@@ -181,7 +182,7 @@ trait CrudTrait {
             "danger";
         $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
             $responseProperty["statusMessage"]:
-            trans('crud.web.unautorized');
+            trans('crudvel.web.unautorized');
         $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:
             null;
@@ -204,7 +205,7 @@ trait CrudTrait {
         $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:"warning";
         $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
-            $responseProperty["statusMessage"]:trans('crud.web.not_found');
+            $responseProperty["statusMessage"]:trans('crudvel.web.not_found');
         $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:null;
         $responseProperty["errors"]=!empty($responseProperty["errors"])?
@@ -225,7 +226,7 @@ trait CrudTrait {
         $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:"success";
         $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
-            $responseProperty["statusMessage"]:"Se ha ".trans("crud.actions.".$this->currentAction.".success")." ".$this->singularLabel()." correctamente.";
+            $responseProperty["statusMessage"]:"Se ha ".trans("crudvel.actions.".$this->currentAction.".success")." ".$this->rowLabelTrans()." ".trans("crudvel.actions.common.correctly");
         $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:null;
         $responseProperty["errors"]=!empty($responseProperty["errors"])?
@@ -246,7 +247,7 @@ trait CrudTrait {
         $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:"danger";
         $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
-            $responseProperty["statusMessage"]:trans('crud.web.transaction-error');
+            $responseProperty["statusMessage"]:trans('crudvel.web.transaction-error');
         $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:null;
         $responseProperty["errors"]=!empty($responseProperty["errors"])?

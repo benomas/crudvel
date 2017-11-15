@@ -6,6 +6,10 @@ use Crudvel\Exceptions\AuthorizationException;
 use Crudvel\Models\Permission;
 use Crudvel\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Exception\HttpResponseException;
+use Lang;
+
 class CrudRequest extends FormRequest
 {
     protected $rules;
@@ -16,6 +20,7 @@ class CrudRequest extends FormRequest
     public $fields;
     protected $unauthorizedException;
     protected $customBaseName;
+    protected $langName;
     use CrudTrait;
 
     /**
@@ -39,6 +44,9 @@ class CrudRequest extends FormRequest
         $this->baseName = $this->customBaseName?
             $this->customBaseName:
             basename($this->path());
+        if(empty($this->langName))
+            $this->langName=$this->baseName;
+
         $this->currentAction   = explode('@', $this->route()->getActionName())[1];
         $this->currentActionId = $this->route($this->mainArgumentName());
         $this->rules           = [];
@@ -77,4 +85,26 @@ class CrudRequest extends FormRequest
         $unauthorizedException->dontFlash  = $this->dontFlash;  
         throw $unauthorizedException;
     }
+
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return mixed
+     */
+    protected function failedValidation(\Illuminate\Validation\Validator $validator)
+    {
+        if(!$this->wantsJson())
+            Session::flash("error", trans("crudvel.web.validation_errors"));
+
+        throw new HttpResponseException($this->response(
+            $this->formatErrors($validator)
+        ));
+    }
+
+    public function attributes()
+    {
+        return !empty($fields = Lang::get("crudvel/".$this->langName.".fields"))?$fields:[];
+    }
+
 }
