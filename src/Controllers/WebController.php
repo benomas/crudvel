@@ -49,7 +49,7 @@ class WebController extends CustomController
         if(!empty($this->request->baseName)){
             if(empty($this->resource)){
                 $this->resource = $this->request->baseName;
-                $this->baseResourceUrl =  (!empty($this->prefix)?$this->prefix."/":"").$this->resource;
+                //$this->baseResourceUrl =  (!empty($this->prefix)?$this->prefix."/":"").$this->resource;
             }
         }
         if(in_array($method,$this->loadViewActions))
@@ -72,71 +72,6 @@ class WebController extends CustomController
                 View::share($property, $this->{$property});
     }
 
-    public function failRequirements($message,$redirect){
-        Session::flash("error", $message);
-        if(is_callable($redirect))
-            return $redirect();
-        if(is_callable([$this,$redirect]))
-            return $this->{$redirect}();
-
-        return Redirect::to($redirect)->withInput();
-    }
-
-    public function success($message,$redirect){
-        Session::flash("success", $message);
-        if(is_callable($redirect))
-            return $redirect();
-        if(is_callable([$this,$redirect]))
-            return $this->{$redirect}();
-
-        return Redirect::to($redirect);
-    }
-
-    public function redirectBack(){
-        return Redirect::back();
-    }
-
-    public function redirectBackWithInput(){
-        $allInputs = $this->request->all();
-        $allInputs["lastAction"] = $this->currentAction;
-        if($this->currentAction ==="update")
-            $allInputs["lastActionId"] = $this->request->route('id');
-        return Redirect::back()->withInput($allInputs);
-    }
-
-    public function translateAction($result=false){
-    	switch($this->currentAction){
-    		case "store":
-    			if($result==='success')
-    				return "Creado";
-				return "Crear";
-    		case "update":
-    			if($result==='success')
-    				return "Editado";
-    			return "Editar";
-    		case "destroy":
-    			if($result==='success')
-    				return "Eliminado";
-    			return "Eliminar";
-    	}
-
-    	return "";
-    }
-
-    public function failOperation($message=null){
-        return $this->failRequirements(
-            $message?
-                $message:
-                "No se ha podido ".$this->translateAction()." ".$this->singularLabel().", intente nuevamente.","redirectBackWithInput");
-    }
-
-    public function successOperation($message=null){
-        return $this->success(
-            $message?$message:"Se ha ".$this->translateAction("success")." ".$this->singularLabel()." correctamente.",
-            "redirectBack"
-        );
-    }
-
     public function singularLabel(){
     	if($this->genderLabel==="M")
     		return "El ".$this->singularLabel;
@@ -154,6 +89,12 @@ class WebController extends CustomController
 
     }
 
+    public function createEditAction($action){
+        View::share("page_title", trans("crud.actions.".$action.".called_message")." ".$this->singularLabel);
+        View::share("row",$this->model->first());
+        return view("backend.layout.partials.actions.create-edit");
+    }
+
     public function singleRowViewAction($action){
         View::share("page_title", trans("crud.actions.".$action.".called_message")." ".$this->singularLabel);
         View::share("row",$this->model->first());
@@ -162,13 +103,13 @@ class WebController extends CustomController
 
     public function index(){
         View::share("page_title", 
-            trans("crud.actions.index.called_message").
+            trans("crud.actions.".$this->currentAction.".called_message").
             " ".
             trans("crud.actions.common.of").
             " ".
             $this->pluralLabel);
 		View::share("rows", $this->model->get());
-        return view("backend.".$this->viewFolder.".index");
+        return view("backend.".$this->viewFolder.".".$this->currentAction);
     }
 
     public function show($id){
@@ -178,26 +119,27 @@ class WebController extends CustomController
     public function create(){
         $this->model->nullFilter();
         View::share("method","post");
-        return $this->singleRowViewAction(__FUNCTION__);
+        return $this->createEditAction(__FUNCTION__);
     }
 
     public function edit($id){
         View::share("method","put" );
-        return $this->singleRowViewAction(__FUNCTION__);
+        return $this->createEditAction(__FUNCTION__);
     }
 
     public function store(){
         $this->modelInstance = $this->modelInstanciator(true);
-        return $this->persist()?$this->successOperation():$this->failOperation();
+        return $this->persist()?$this->webSuccessResponse([
+            "redirector"=>Redirect::to($this->prefix."/".$this->resource)
+        ]):$this->webFailResponse();
     }
 
     public function update($id){
-        $this->modelInstance = $this->model->first();
-        return $this->persist()?$this->successOperation():$this->failOperation();
+        return $this->persist()?$this->webSuccessResponse():$this->webFailResponse();
     }
 
     public function destroy($id){
-        return !$this->model->delete()?$this->failOperation():$this->successOperation();
+        return !$this->model->delete()?$this->webSuccessResponse():$this->webFailResponse();
     }
 
     public function active($id){
@@ -208,6 +150,15 @@ class WebController extends CustomController
     public function deactive($id){
         $this->fields["status"]=0;
         return $this->update($id);
+    }
+
+    public function import(){
+        View::share("page_title", 
+            trans("crud.actions.".$this->currentAction.".called_message").
+            " ".
+            $this->pluralLabel);
+        View::share("method","post");
+        return view("backend.layout.partials.actions.".$this->currentAction);
     }
 
     //to depreciate
@@ -222,4 +173,15 @@ class WebController extends CustomController
     public function apiIndex(){
         return response()->json(['data'=>$this->model->get()],200);
     }
+
+    public function failRequirements($message,$redirect){
+        Session::flash("error", $message);
+        if(is_callable($redirect))
+            return $redirect();
+        if(is_callable([$this,$redirect]))
+            return $this->{$redirect}();
+
+        return Redirect::to($redirect)->withInput();
+    }
+
 }

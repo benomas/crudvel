@@ -72,7 +72,7 @@ trait CrudTrait {
         return response()->json(
             $data?
                 $data:
-                ["status"=>trans('api.already_exist')],
+                ["status"=>trans('crud.api.already_exist')],
             409
         );
     }
@@ -80,7 +80,7 @@ trait CrudTrait {
     public function apiUnautorized($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans('api.unautorized')]
+            ["status"=>trans('crud.api.unautorized')]
             ,403
         );
     }
@@ -88,7 +88,7 @@ trait CrudTrait {
     public function apiNotFound($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans('api.not_found')]
+            ["status"=>trans('crud.api.not_found')]
             ,404
         );
     }
@@ -96,7 +96,7 @@ trait CrudTrait {
     public function apiSuccessResponse($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans('api.success')]
+            ["status"=>trans('crud.api.success')]
             ,200
         );
     }
@@ -104,7 +104,7 @@ trait CrudTrait {
     public function apiFailResponse($data=null){
         return  response()->json($data?
             $data:
-            ["status"=>trans('api.transaction-error'),"error-message"=>trans('api.operation_error')]
+            ["status"=>trans('crud.api.transaction-error'),"error-message"=>trans('crud.api.operation_error')]
             ,400
         );
     }
@@ -181,7 +181,7 @@ trait CrudTrait {
             "danger";
         $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
             $responseProperty["statusMessage"]:
-            trans('web.unautorized');
+            trans('crud.web.unautorized');
         $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:
             null;
@@ -204,7 +204,7 @@ trait CrudTrait {
         $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:"warning";
         $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
-            $responseProperty["statusMessage"]:trans('web.not_found');
+            $responseProperty["statusMessage"]:trans('crud.web.not_found');
         $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:null;
         $responseProperty["errors"]=!empty($responseProperty["errors"])?
@@ -225,7 +225,7 @@ trait CrudTrait {
         $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:"success";
         $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
-            $responseProperty["statusMessage"]:trans('web.success');
+            $responseProperty["statusMessage"]:"Se ha ".trans("crud.actions.".$this->currentAction.".success")." ".$this->singularLabel()." correctamente.";
         $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:null;
         $responseProperty["errors"]=!empty($responseProperty["errors"])?
@@ -246,7 +246,7 @@ trait CrudTrait {
         $responseProperty["status"]=!empty($responseProperty["status"])?
             $responseProperty["status"]:"danger";
         $responseProperty["statusMessage"]=!empty($responseProperty["statusMessage"])?
-            $responseProperty["statusMessage"]:trans('web.transaction-error');
+            $responseProperty["statusMessage"]:trans('crud.web.transaction-error');
         $responseProperty["redirector"]=!empty($responseProperty["redirector"])?
             $responseProperty["redirector"]:null;
         $responseProperty["errors"]=!empty($responseProperty["errors"])?

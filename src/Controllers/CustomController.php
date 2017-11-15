@@ -15,7 +15,7 @@ class CustomController extends BaseController {
     protected $crudvel=true;
     protected $prefix = "admin";
     public $resource;
-    public $resourceActions;
+    //public $baseResourceUrl;
     protected $transStatus;
     protected $committer;
     protected $crudObjectName;
@@ -46,7 +46,9 @@ class CustomController extends BaseController {
         "update",
         "destroy",
         "active",
-        "deactive"
+        "deactive",
+        "import",
+        "export",
     ];
     protected $singleObjectActions = [
         "show",
@@ -60,7 +62,8 @@ class CustomController extends BaseController {
         "index",
         "show",
         "create",
-        "edit"
+        "edit",
+        "import",
     ];
     use CrudTrait;
 
@@ -118,6 +121,7 @@ class CustomController extends BaseController {
             $this->currentActionId=$parameters[$this->mainArgumentName()];
             if(!$this->model->id($this->currentActionId)->count())
                 return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
+            $this->modelInstance =  $this->model->first();
         }
 
         if(in_array($this->request->method(),["POST","PUT"]))
