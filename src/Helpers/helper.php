@@ -468,6 +468,12 @@ if(!function_exists("resourceAccess")){
 	}
 }
 
+if(!function_exists("errorClass")){
+	function errorClass($errors,$cField){
+		return $errors->first($cField)?'has-error':'';
+	}
+}
+
 
 
 

@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\View;
 
 class WebController extends CustomController
 {
-	public $singularLabel;
-	public $pluralLabel;
+	public $rowLabel;
+	public $rowsLabel;
     public $singularSlug;
     public $pluralSlug;
 	public $viewFolder;
-	public $genderLabel;
+	public $rowGender;
     public $selectColumns;
     public $actionResponse;
     public $menu;
@@ -23,14 +23,14 @@ class WebController extends CustomController
         "crudvel",
         "currentAction",
         "currentActionId",
-        "genderLabel",
-        "pluralLabel",
+        "rowGender",
+        "rowsLabel",
         "pluralSlug",
         "prefix",
         "resource",
         "rowName",
         "rowsName",
-        "singularLabel",
+        "rowLabel",
         "singularSlug",
         "viewFolder",
         "menu",
@@ -43,6 +43,20 @@ class WebController extends CustomController
     }
 
     public function  callAction($method, $parameters=[]){
+
+        if(empty($this->rowLabel))
+            $this->rowLabel = trans("crudvel/".$this->langName.".row_label");
+        if(empty($this->rowsLabel))
+            $this->rowsLabel = trans("crudvel/".$this->langName.".rows_label");
+        if(empty($this->singularSlug))
+            $this->singularSlug = str_slug($this->rowLabel);
+        if(empty($this->pluralSlug))
+            $this->pluralSlug = str_slug($this->rowsLabel);
+        if(empty($this->viewFolder))
+            $this->viewFolder = $this->langName;
+        if(empty($this->resource))
+            $this->resource = $this->viewFolder;
+
         $next = empty($this->model)?$this->redirectBackWithInput():parent::callAction($method,$parameters);
         if(!empty($this->currentUser))
             $this->viewSharedPropertys[]="currentUser";
@@ -58,56 +72,47 @@ class WebController extends CustomController
     }
 
     public function globalViewShare(){
-        if(empty($this->singularSlug))
-            $this->singularSlug = str_slug($this->singularLabel);
-        if(empty($this->pluralSlug))
-            $this->pluralSlug = str_slug($this->pluralLabel);
-        if(empty($this->viewFolder))
-            $this->viewFolder = $this->pluralSlug;
-        if(empty($this->resource))
-            $this->resource = $this->viewFolder;
-
         foreach ($this->viewSharedPropertys as $property)
             if(isset($this->{$property}) && $this->{$property})
                 View::share($property, $this->{$property});
     }
 
-    public function singularLabel(){
-    	if($this->genderLabel==="M")
-    		return "El ".$this->singularLabel;
-        if($this->genderLabel==="F")
-            return "La ".$this->singularLabel;
-    	return $this->singularLabel;
+    public function rowLabelTrans(){
+    	if($this->rowGender==="M")
+    		return "El ".$this->rowLabel;
+        if($this->rowGender==="F")
+            return "La ".$this->rowLabel;
+    	return $this->rowLabel;
     }
 
-    public function pluralLabel(){
-    	if($this->genderLabel==="M")
-    		return "Los ".$this->pluralLabel;
-        if($this->genderLabel==="M")
-    	   return "Las ".$this->pluralLabel;
-       return $this->pluralLabel;
+    public function rowsLabelTrans(){
+    	if($this->rowGender==="M")
+    		return "Los ".$this->rowsLabel;
+        if($this->rowGender==="M")
+    	   return "Las ".$this->rowsLabel;
+       return $this->rowsLabel;
 
     }
 
     public function createEditAction($action){
-        View::share("page_title", trans("crud.actions.".$action.".called_message")." ".$this->singularLabel);
+        View::share("page_title", trans("crudvel.actions.".$action.".called_message")." ".$this->rowLabel);
         View::share("row",$this->model->first());
         return view("backend.layout.partials.actions.create-edit");
     }
 
     public function singleRowViewAction($action){
-        View::share("page_title", trans("crud.actions.".$action.".called_message")." ".$this->singularLabel);
+        View::share("page_title", trans("crudvel.actions.".$action.".called_message")." ".$this->rowLabel);
         View::share("row",$this->model->first());
         return view("backend.".$this->viewFolder.".".$action);
     }
 
     public function index(){
         View::share("page_title", 
-            trans("crud.actions.".$this->currentAction.".called_message").
+            trans("crudvel.actions.".$this->currentAction.".called_message").
             " ".
-            trans("crud.actions.common.of").
+            trans("crudvel.actions.common.of").
             " ".
-            $this->pluralLabel);
+            $this->rowsLabel);
 		View::share("rows", $this->model->get());
         return view("backend.".$this->viewFolder.".".$this->currentAction);
     }
@@ -139,7 +144,7 @@ class WebController extends CustomController
     }
 
     public function destroy($id){
-        return !$this->model->delete()?$this->webSuccessResponse():$this->webFailResponse();
+        return $this->model->delete()?$this->webSuccessResponse():$this->webFailResponse();
     }
 
     public function active($id){
@@ -154,9 +159,9 @@ class WebController extends CustomController
 
     public function import(){
         View::share("page_title", 
-            trans("crud.actions.".$this->currentAction.".called_message").
+            trans("crudvel.actions.".$this->currentAction.".called_message").
             " ".
-            $this->pluralLabel);
+            $this->rowsLabel);
         View::share("method","post");
         return view("backend.layout.partials.actions.".$this->currentAction);
     }

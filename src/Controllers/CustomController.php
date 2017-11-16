@@ -37,6 +37,7 @@ class CustomController extends BaseController {
     //Acciones que se basan en un solo elemento
     protected $currentUser;
     protected $dirtyPropertys;
+    protected $langName;
     protected $actions             = [
         "index",
         "show",
@@ -114,7 +115,6 @@ class CustomController extends BaseController {
         $preactionResponse = $this->preAction($method,$parameters);
         if($preactionResponse)
             return $preactionResponse;
-
         if(in_array($method,$this->singleObjectActions)){
             if(empty($parameters))
                 return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
