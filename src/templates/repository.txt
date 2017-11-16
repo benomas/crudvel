@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Persistence\Repository\$ENTITYSEGMENTS$;
+use App\Persistence\Models\$ENTITYSEGMENTS$\$ENTITY$;
+use App\Persistence\Repository\BaseRepository;
+
+class $ENTITY$Repository extends BaseRepository
+{
+    public function __construct(){
+        parent::__construct("App\Persistence\Models\$ENTITYSEGMENTS$\$ENTITY$");
+    }
+}

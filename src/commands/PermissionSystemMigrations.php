@@ -28,7 +28,8 @@ class PermissionSystemMigrations extends Command {
 
             if(!Schema::hasTable("roles"))
                 $migrations[]= "create_roles_table";
-            $migrations[]= "alter_role_users_table";
+            if(!Schema::hasTable("role_users"))
+                $migrations[]= "create_role_users_table";
             if(!Schema::hasTable("permissions"))
                 $migrations[]= "create_permissions_table";
             if(!Schema::hasTable("permission_role"))
@@ -65,5 +66,6 @@ class PermissionSystemMigrations extends Command {
         
         if(!file_exists(($fileName=$this->migrationsPath."/".($leftNow)."_".$baseName."_".$rightNow.".php")))
             file_put_contents($fileName, $migration);
+        shell_exec('composer dump-autoload');
     }
 }

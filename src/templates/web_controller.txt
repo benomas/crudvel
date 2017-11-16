@@ -1,0 +1,19 @@
+<?php namespace App\Http\Controllers$ENTITYSEGMENTS$;
+
+use Crudvel\Controllers\WebController;
+
+class $ENTITY$Controller extends WebController {
+    $TRAITS$;
+    
+    public $langName      = $SLUGENTITY$;
+    public $viewFolder    = $SLUGENTITY$;
+    public $rowGender     = $GENDER$;
+    public $rowName       = $SNACKENTITY$;
+    public $menu          = $MENU$;
+    public $submenu       = $SUBMENU$;
+    public $defaultFields = $DEFAULTS$;
+
+    public function __construct(){
+        parent::__construct();
+    }
+}

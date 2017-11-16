@@ -4,6 +4,7 @@ namespace Crudvel\Database\Migrations;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class BaseMigration extends Migration
 {
@@ -18,9 +19,9 @@ class BaseMigration extends Migration
     public function down()
     {
         if(Schema::hasTable($this->mainTable)){            
-            Schema::disableForeignKeyConstraints();
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             Schema::drop($this->mainTable);
-            Schema::enableForeignKeyConstraints();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }
     }
 

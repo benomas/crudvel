@@ -4,6 +4,8 @@ namespace Benomas\Crudvel;
 
 use Illuminate\Support\ServiceProvider;
 use Benomas\Crudvel\Commands\PermissionSystemMigrations;
+use Benomas\Crudvel\Commands\ScaffoldingCommand;
+
 
 class CrudvelServiceProvider extends ServiceProvider
 {
@@ -31,5 +33,10 @@ class CrudvelServiceProvider extends ServiceProvider
             return new PermissionSystemMigrations();
         });
         $this->commands('make.permission');
+        $this->app['make.scaffold'] = $this->app->share(function($app)
+        {
+            return new ScaffoldingCommand();
+        });
+        $this->commands('make.scaffold');
     }
 }
