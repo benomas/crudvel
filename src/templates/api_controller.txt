@@ -4,9 +4,9 @@ use Crudvel\Controllers\ApiController;
 
 class $ENTITY$Controller extends ApiController {
     
-    public $langName      = $SLUGENTITY$;
-    public $rowGender     = $GENDER$;
-    public $rowName       = $SNACKENTITY$;
+    public $langName      = "$SLUGENTITY$";
+    public $rowGender     = "$GENDER$";
+    public $rowName       = "$SNACKENTITY$";
 
     public function __construct(){
         parent::__construct();

@@ -5,10 +5,9 @@ namespace App\Http\Requests$ENTITYSEGMENTS$;
 use Crudvel\Requests\CrudRequest;
 class $ENTITY$Request extends CrudRequest
 {
-
-    public $rowName        = $SNACKENTITY$;
-    public $langName       = $SLUGENTITY$;
-    public $customBaseName = $SLUGENTITY$;
+    public $rowName        = "$SNACKENTITY$";
+    public $langName       = "$SLUGENTITY$";
+    public $customBaseName = "$SLUGENTITY$";
     
     /**
      * Determine if the user is authorized to make this request.

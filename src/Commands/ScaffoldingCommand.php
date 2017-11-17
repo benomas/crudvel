@@ -5,11 +5,12 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Carbon\Carbon;
 
 class ScaffoldingCommand extends Command {
 
     protected $signature   = 
-    'scaffold {modo} {classes} {entity_segments} {api_segments} {web_segments} {entity} {maintable} {gender} {slug_entity} {snack_entity} {menu} {submenu} {defaults} {traits} {model_traits}';
+    'scaffold {modo} {classes} {entity} {gender} {menu} {defaults} {web_traits} {model_traits} {entity_segments} {api_segments} {web_segments}  ';
     protected $name        = "scaffold";
     protected $description = 'Command description.';
     protected $controller_template;
@@ -21,7 +22,6 @@ class ScaffoldingCommand extends Command {
     
     protected $classes=[];
     protected $entity="";
-    protected $maintable="";
     protected $gender="";
     protected $slug_entity="";
     protected $snack_entity="";
@@ -29,9 +29,8 @@ class ScaffoldingCommand extends Command {
     protected $api_segments="";
     protected $web_segments="";
     protected $menu="";
-    protected $submenu="";
     protected $defaults="";
-    protected $traits="";
+    protected $web_traits="";
     protected $model_traits="";
 
     public function __construct()
@@ -79,14 +78,14 @@ class ScaffoldingCommand extends Command {
                 file_put_contents($fileName, $this->request_template);
         }
         if(in_array("model",$this->classes)){
-            $modelPath       = app_path()."/Persistence/Models/".$fixedEntitySegments;
+            $modelPath       = app_path()."/Models/".$fixedEntitySegments;
             if(!file_exists($modelPath))
                 mkdir($modelPath);
             if(!file_exists(($fileName=$modelPath."/".($this->entity).".php")))
                 file_put_contents($fileName, $this->model_template);
         }
         if(in_array("repository",$this->classes)){
-            $repositoreyPath = app_path()."/Persistence/Repository/".$fixedEntitySegments;
+            $repositoreyPath = app_path()."/Repository/".$fixedEntitySegments;
             if(!file_exists($repositoreyPath))
                 mkdir($repositoreyPath);
             if(!file_exists(($fileName=$repositoreyPath."/".($this->entity)."Repository.php")))
@@ -101,77 +100,90 @@ class ScaffoldingCommand extends Command {
 
         if(in_array("controller",$this->classes)){
             $controllerPath  = app_path()."/Http/Controllers/".$fixedEntitySegments."/".($this->entity)."Controller.php";
-            unlink($controllerPath);
+
+            if(file_exists(($controllerPath)))
+                unlink($controllerPath);
         }
         if(in_array("api_controller",$this->classes)){
             $apiControllerPath  = app_path()."/Http/Controllers/".$apiSegment.$fixedEntitySegments."/".($this->entity)."Controller.php";
-            unlink($apiControllerPath);
+
+            if(file_exists(($apiControllerPath)))
+                unlink($apiControllerPath);
         }
         if(in_array("web_controller",$this->classes)){
             $webControllerPath  = app_path()."/Http/Controllers/".$webSegment.$fixedEntitySegments."/".($this->entity)."Controller.php";
-            unlink($webControllerPath);
+            
+            if(file_exists(($webControllerPath)))
+                unlink($webControllerPath);
         }
         if(in_array("request",$this->classes)){
             $requestPath     = app_path()."/Http/Requests/".$fixedEntitySegments."/".($this->entity)."Request.php";
-            unlink($requestPath);
+            
+            if(file_exists(($requestPath)))
+                unlink($requestPath);
         }
         if(in_array("model",$this->classes)){
             $modelPath       = app_path()."/Persistence/Models/".$fixedEntitySegments."/".($this->entity).".php";
-            unlink($modelPath);
+            
+            if(file_exists(($modelPath)))
+                unlink($modelPath);
         }
         if(in_array("repository",$this->classes)){
             $repositoreyPath = app_path()."/Persistence/Repository/".$fixedEntitySegments."/".($this->entity)."Repository.php";
-            unlink($repositoreyPath);
+            
+            if(file_exists(($repositoreyPath)))
+                unlink($repositoreyPath);
+
         }
     }
 
     public function makeController(){
-        $this->controller_template = str_replace('$ENTITY$', Str::title($this->entity), $this->controller_template);
+        $this->controller_template = str_replace('$ENTITY$', $this->entity, $this->controller_template);
         $this->controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->controller_template);
-        $this->controller_template = str_replace('$MAINTABLE$', Str::title($this->maintable), $this->controller_template);
+        $this->controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->controller_template);
     }
 
     public function makeApiController(){
-        $this->controller_template = str_replace('$ENTITY$', Str::title($this->entity), $this->api_controller_template);
-        $this->controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->api_controller_template);
-        $this->controller_template = str_replace('$MAINTABLE$', Str::title($this->maintable), $this->api_controller_template);
-        $this->controller_template = str_replace('$GENDER$', Str::title($this->gender), $this->api_controller_template);
-        $this->controller_template = str_replace('$SLUGENTITY$', Str::title($this->slug_entity), $this->api_controller_template);
-        $this->controller_template = str_replace('$SNACKENTITY$', Str::title($this->snack_entity), $this->api_controller_template);
+        $this->api_controller_template = str_replace('$ENTITY$', $this->entity, $this->api_controller_template);
+        $this->api_controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->api_controller_template);
+        $this->api_controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->api_controller_template);
+        $this->api_controller_template = str_replace('$GENDER$', Str::title($this->gender), $this->api_controller_template);
+        $this->api_controller_template = str_replace('$SLUGENTITY$', $this->slug_entity, $this->api_controller_template);
+        $this->api_controller_template = str_replace('$SNACKENTITY$', $this->snack_entity, $this->api_controller_template);
     }
 
     public function makeWebController(){
-        $this->controller_template = str_replace('$ENTITY$', Str::title($this->entity), $this->web_controller_template);
-        $this->controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->web_controller_template);
-        $this->controller_template = str_replace('$MAINTABLE$', Str::title($this->maintable), $this->web_controller_template);
-        $this->controller_template = str_replace('$TRAITS$', Str::title($this->web_traits), $this->web_controller_template);
-        $this->controller_template = str_replace('$GENDER$', Str::title($this->gender), $this->web_controller_template);
-        $this->controller_template = str_replace('$SLUGENTITY$', Str::title($this->slug_entity), $this->web_controller_template);
-        $this->controller_template = str_replace('$SNACKENTITY$', Str::title($this->snack_entity), $this->web_controller_template);
-        $this->controller_template = str_replace('$MENU$', Str::title($this->menu), $this->web_controller_template);
-        $this->controller_template = str_replace('$SUBMENU$', Str::title($this->submenu), $this->web_controller_template);
-        $this->controller_template = str_replace('$DEFAULTS$', Str::title($this->defaults), $this->web_controller_template);
+        $this->web_controller_template = str_replace('$ENTITY$', $this->entity, $this->web_controller_template);
+        $this->web_controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->web_controller_template);
+        $this->web_controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->web_controller_template);
+        $this->web_controller_template = str_replace('$TRAITS$', $this->web_traits, $this->web_controller_template);
+        $this->web_controller_template = str_replace('$GENDER$', Str::title($this->gender), $this->web_controller_template);
+        $this->web_controller_template = str_replace('$SLUGENTITY$', $this->slug_entity, $this->web_controller_template);
+        $this->web_controller_template = str_replace('$SNACKENTITY$', $this->snack_entity, $this->web_controller_template);
+        $this->web_controller_template = str_replace('$MENU$', $this->menu, $this->web_controller_template);
+        $this->web_controller_template = str_replace('$SUBMENU$', $this->slug_entity, $this->web_controller_template);
+        $this->web_controller_template = str_replace('$DEFAULTS$', $this->defaults, $this->web_controller_template);
     }
 
     public function makeRequest(){
-        $this->request_template = str_replace('$ENTITY$', Str::title($this->entity), $this->request_template);
+        $this->request_template = str_replace('$ENTITY$', $this->entity, $this->request_template);
         $this->request_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->request_template);
-        $this->request_template = str_replace('$MAINTABLE$', Str::title($this->maintable), $this->request_template);
-        $this->controller_template = str_replace('$SLUGENTITY$', Str::title($this->slug_entity), $this->request_template);
-        $this->controller_template = str_replace('$SNACKENTITY$', Str::title($this->snack_entity), $this->request_template);
+        $this->request_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->request_template);
+        $this->request_template = str_replace('$SLUGENTITY$', $this->slug_entity, $this->request_template);
+        $this->request_template = str_replace('$SNACKENTITY$', $this->snack_entity, $this->request_template);
     }
 
     public function makeModel(){
-        $this->model_template = str_replace('$ENTITY$', Str::title($this->entity), $this->model_template);
+        $this->model_template = str_replace('$ENTITY$', $this->entity, $this->model_template);
         $this->model_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->model_template);
-        $this->model_template = str_replace('$MAINTABLE$', Str::title($this->maintable), $this->model_template);
-        $this->controller_template = str_replace('$TRAITS$', Str::title($this->model_traits), $this->web_controller_template);
+        $this->model_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->model_template);
+        $this->model_template = str_replace('$TRAITS$', $this->model_traits, $this->model_template);
     }
 
     public function makeRepository(){
-        $this->repository_template = str_replace('$ENTITY$', Str::title($this->entity), $this->repository_template);
+        $this->repository_template = str_replace('$ENTITY$', $this->entity, $this->repository_template);
         $this->repository_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->repository_template);
-        $this->repository_template = str_replace('$MAINTABLE$', Str::title($this->maintable), $this->repository_template);
+        $this->repository_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->repository_template);
     }
 
     public function handle()
@@ -179,42 +191,41 @@ class ScaffoldingCommand extends Command {
         $modo                  = $this->argument("modo");
         $classes               = $this->argument("classes");
         $this->classes         = explode(",", $classes);
-        $this->entity          =$this->argument("entity");
-        $this->maintable       =$this->argument("maintable");
-        $this->gender          =$this->argument("gender");
-        $this->slug_entity     =$this->argument("slug_entity");
-        $this->snack_entity    =$this->argument("snack_entity");
-        $this->entity_segments =$this->argument("entity_segments");
-        $this->api_segments    =$this->argument("api_segments");
-        $this->web_segments    =$this->argument("web_segments");
-        $this->menu            =$this->argument("menu");
-        $this->submenu         =$this->argument("submenu");
-        $this->defaults        =$this->argument("defaults");
-        $this->traits          =$this->argument("traits");
-        $this->model_traits    =$this->argument("model_traits");
-/*
+        $this->entity          = $this->argument("entity");
+        $this->snack_entity    = str_plural(snake_case($this->entity));
+        $this->gender          = $this->argument("gender");
+        $this->slug_entity     = str_slug($this->snack_entity);
+        $this->entity_segments = $this->argument("entity_segments");
+        $this->api_segments    = $this->argument("api_segments");
+        $this->web_segments    = $this->argument("web_segments");
+        $this->menu            = $this->argument("menu");
+        $this->defaults        = $this->argument("defaults");
+        $this->web_traits      = $this->argument("web_traits");
+        $this->model_traits    = $this->argument("model_traits");
+        /*
         dd([
-            $this->classes,
-            $this->entity,
-            $this->maintable,
-            $this->gender,
-            $this->slug_entity,
-            $this->snack_entity,
-            $this->entity_segments,
-            $this->api_segments,
-            $this->web_segments,
-            $this->menu,
-            $this->submenu,
-            $this->defaults,
-            $this->traits,
-            $this->model_traits,
-        ]);*/
-
+            "classes"         =>$this->classes,
+            "entity"          =>$this->entity,
+            "gender"          =>$this->gender,
+            "slug_entity"     =>$this->slug_entity,
+            "snack_entity"    =>$this->snack_entity,
+            "entity_segments" =>$this->entity_segments,
+            "api_segments"    =>$this->api_segments,
+            "web_segments"    =>$this->web_segments,
+            "menu"            =>$this->menu,
+            "defaults"        =>$this->defaults,
+            "web_traits"      =>$this->web_traits,
+            "model_traits"    =>$this->model_traits,
+        ]);
+        */
         if($modo==="create"){
-            $this->maintable = $this->argument("maintable");
-            //try{
+            try{
                 if(in_array("controller",$this->classes))
                     $this->makeController();
+                if(in_array("api_controller",$this->classes))
+                    $this->makeApiController();
+                if(in_array("web_controller",$this->classes))
+                    $this->makeWebController();
                 if(in_array("request",$this->classes))
                     $this->makeRequest();
                 if(in_array("model",$this->classes))
@@ -222,13 +233,15 @@ class ScaffoldingCommand extends Command {
                 if(in_array("repository",$this->classes))
                     $this->makeRepository();
                 $this->saveFiles();
+                if(in_array("migration",$this->classes))
+                    shell_exec('php artisan make:migration create_'.$this->snack_entity.'_table'.str_slug(Carbon::today()->toDateString(),""));
                 shell_exec('composer dump-autoload');
             
-            /*}
+            }
             catch(\Exception $e){
                 echo "Exception, the proccess fail.";
                 return false;
-            }*/
+            }
         }
         if($modo==="delete"){
             try{
@@ -251,46 +264,34 @@ class ScaffoldingCommand extends Command {
                 "modo", InputArgument::REQUIRED, "modo is required (create,delete)",
             ],
             [
-                "classes", InputArgument::REQUIRED, "classes are required (controller, api_controller, web_controller,request,repository,model)",
+                "classes", InputArgument::REQUIRED, "classes are required (controller, api_controller, web_controller,request,repository,model,migration)",
             ],
             [
                 "entity", InputArgument::REQUIRED, "Entidy is required",
             ],
             [
-                "maintable", InputArgument::REQUIRED, "Entidy is required",
-            ],
-            [
                 "gender", InputArgument::REQUIRED, "gender is required (F,M)",
             ],
             [
-                "slug_entity", InputArgument::REQUIRED, "slug_entity is required",
+                "menu", InputArgument::OPTIONAL,
             ],
             [
-                "snack_entity", InputArgument::REQUIRED, "snack_entity is required",
+                "defaults", InputArgument::OPTIONAL,
             ],
             [
-                "entity_segments", InputArgument::OPTIONAL, "specificPath is required",
+                "web_traits", InputArgument::OPTIONAL,
             ],
             [
-                "api_segments", InputArgument::OPTIONAL, "apiController specificPath is required",
+                "model_traits", InputArgument::OPTIONAL,
             ],
             [
-                "web_segments", InputArgument::OPTIONAL, "webController specificPath is required",
+                "entity_segments", InputArgument::OPTIONAL,
             ],
             [
-                "menu", InputArgument::OPTIONAL, "menu is required",
+                "api_segments", InputArgument::OPTIONAL,
             ],
             [
-                "defaults", InputArgument::OPTIONAL, "defaults is required (['field'=>'value'])",
-            ],
-            [
-                "submenu", InputArgument::OPTIONAL, "submenu is required",
-            ],
-            [
-                "traits", InputArgument::OPTIONAL, "traits is required",
-            ],
-            [
-                "model_traits", InputArgument::OPTIONAL, "model_traits is required",
+                "web_segments", InputArgument::OPTIONAL,
             ],
         ];
     }
