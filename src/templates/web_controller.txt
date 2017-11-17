@@ -5,7 +5,7 @@ use Crudvel\Controllers\WebController;
 class $ENTITY$Controller extends WebController {
     $TRAITS$;
     
-    public $langName      = "$SLUGENTITY$";
+    public $langName      = "$SNACKENTITY$";
     public $viewFolder    = "$SLUGENTITY$";
     public $rowGender     = "$GENDER$";
     public $rowName       = "$SNACKENTITY$";

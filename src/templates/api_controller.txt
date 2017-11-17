@@ -4,7 +4,7 @@ use Crudvel\Controllers\ApiController;
 
 class $ENTITY$Controller extends ApiController {
     
-    public $langName      = "$SLUGENTITY$";
+    public $langName      = "$SNACKENTITY$";
     public $rowGender     = "$GENDER$";
     public $rowName       = "$SNACKENTITY$";
 

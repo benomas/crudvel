@@ -6,7 +6,7 @@ use Crudvel\Requests\CrudRequest;
 class $ENTITY$Request extends CrudRequest
 {
     public $rowName        = "$SNACKENTITY$";
-    public $langName       = "$SLUGENTITY$";
+    public $langName       = "$SNACKENTITY$";
     public $customBaseName = "$SLUGENTITY$";
     
     /**

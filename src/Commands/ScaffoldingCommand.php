@@ -123,13 +123,13 @@ class ScaffoldingCommand extends Command {
                 unlink($requestPath);
         }
         if(in_array("model",$this->classes)){
-            $modelPath       = app_path()."/Persistence/Models/".$fixedEntitySegments."/".($this->entity).".php";
+            $modelPath       = app_path()."/Models/".$fixedEntitySegments."/".($this->entity).".php";
             
             if(file_exists(($modelPath)))
                 unlink($modelPath);
         }
         if(in_array("repository",$this->classes)){
-            $repositoreyPath = app_path()."/Persistence/Repository/".$fixedEntitySegments."/".($this->entity)."Repository.php";
+            $repositoreyPath = app_path()."/Repository/".$fixedEntitySegments."/".($this->entity)."Repository.php";
             
             if(file_exists(($repositoreyPath)))
                 unlink($repositoreyPath);
@@ -234,7 +234,7 @@ class ScaffoldingCommand extends Command {
                     $this->makeRepository();
                 $this->saveFiles();
                 if(in_array("migration",$this->classes))
-                    shell_exec('php artisan make:migration create_'.$this->snack_entity.'_table'.str_slug(Carbon::today()->toDateString(),""));
+                    shell_exec('php artisan make:migration create_'.$this->snack_entity.'_table_'.str_slug(Carbon::today()->toDateString(),""));
                 shell_exec('composer dump-autoload');
             
             }
