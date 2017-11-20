@@ -2,9 +2,14 @@
 namespace Crudvel\Requests;
 
 use Crudvel\Traits\CrudTrait;
-use App\Models\Permission;
-use App\Models\Role;
+use Crudvel\Exceptions\AuthorizationException;
+use Crudvel\Models\Permission;
+use Crudvel\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Lang;
+
 class CrudRequest extends FormRequest
 {
     protected $rules;
@@ -15,6 +20,7 @@ class CrudRequest extends FormRequest
     public $fields;
     protected $unauthorizedException;
     protected $customBaseName;
+    protected $langName;
     use CrudTrait;
 
     /**
@@ -35,7 +41,12 @@ class CrudRequest extends FormRequest
     public function rules()
     {
         $this->setCurrentUser();
-        $this->baseName = $this->customBaseName??basename($this->path());
+        $this->baseName = $this->customBaseName?
+            $this->customBaseName:
+            basename($this->path());
+        if(empty($this->langName))
+            $this->langName=$this->baseName;
+
         $this->currentAction   = explode('@', $this->route()->getActionName())[1];
         $this->currentActionId = $this->route($this->mainArgumentName());
         $this->rules           = [];
@@ -65,13 +76,35 @@ class CrudRequest extends FormRequest
     }
 
     public function unautorizedRedirect(){
-        return $this->expectsJson()?$this->apiUnautorized():$this->webUnauthorized();
+        return $this->wantsJson()?$this->apiUnautorized():$this->webUnauthorized();
     }
 
     public function failedAuthorization(){
-        $unauthorizedException = new \Illuminate\Auth\Access\AuthorizationException('This action is unauthorized.');
+        $unauthorizedException = new AuthorizationException('This action is unauthorized.');
         $unauthorizedException->redirect   = $this->unautorizedRedirect();
         $unauthorizedException->dontFlash  = $this->dontFlash;  
         throw $unauthorizedException;
     }
+
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return mixed
+     */
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        if(!$this->wantsJson())
+            Session::flash("error", trans("crudvel.web.validation_errors"));
+
+        throw new HttpResponseException($this->response(
+            $this->formatErrors($validator)
+        ));
+    }
+
+    public function attributes()
+    {
+        return !empty($fields = Lang::get("crudvel/".$this->langName.".fields"))?$fields:[];
+    }
+
 }
