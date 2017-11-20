@@ -1,0 +1,29 @@
+<?php namespace App\Models$ENTITYSEGMENTS$;
+
+use Crudvel\Models\BaseModel;
+
+class $ENTITY$ extends BaseModel {
+    $TRAITS$;
+
+    protected $fillable = [
+    ];
+
+//Relationships
+
+
+
+//End Relationships
+
+//Scopes
+
+
+
+// End Scopes
+
+//Others
+
+
+
+//End Others
+
+}

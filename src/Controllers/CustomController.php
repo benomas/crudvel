@@ -3,7 +3,7 @@ namespace Crudvel\Controllers;
 
 use DB;
 use Crudvel\Traits\CrudTrait;
-use App\Models\User;
+use Crudvel\Models\User;
 use Illuminate\Routing\Controller as BaseController;
 /*
     This is a customization of the controller, some controllers needs to save multiple data on different tables in one step, doing that without transaction is a bad idea.
@@ -12,51 +12,94 @@ use Illuminate\Routing\Controller as BaseController;
 */
 class CustomController extends BaseController {
 
+    protected $crudvel=true;
+    protected $prefix = "admin";
+    public $resource;
+    //public $baseResourceUrl;
     protected $transStatus;
-    protected $generalActionAfterFail;
-    protected $generalActionAfterComplete;
     protected $committer;
-    protected $mainEntityName;
+    protected $crudObjectName;
     protected $modelSource;
     protected $requestSource;
-
+    public $rows;
+    public $row;
+    public $rowName;
+    public $rowsName;
     //modelo cargado en memoria
+    protected $model;
     protected $modelInstance;
-    //validador autorizador anonimo de peticiones http
+    //validador autorizador anonimo
     protected $request;
     protected $currentAction;
     protected $currentActionId;
     protected $fields;
+    protected $defaultFields;
     //Acciones que se basan en un solo elemento
     protected $currentUser;
     protected $dirtyPropertys;
-    protected $actions = ["index","show","store","update","destroy"];
-    protected $singleObjectActions=["show","update","destroy"];
+    protected $langName;
+    protected $actions             = [
+        "index",
+        "show",
+        "create",
+        "store",
+        "edit",
+        "update",
+        "destroy",
+        "active",
+        "deactive",
+        "import",
+        "export",
+    ];
+    protected $singleObjectActions = [
+        "show",
+        "edit",
+        "update",
+        "destroy",
+        "active",
+        "deactive"
+    ];
+    protected $loadViewActions     = [
+        "index",
+        "show",
+        "create",
+        "edit",
+        "import",
+    ];
     use CrudTrait;
 
     public function __construct(...$propertyRewriter){
         $this->autoSetPropertys(...$propertyRewriter);
-        $this->setMainEntityName();
+        $this->setCrudObjectName();
         $this->setModelInstance();
-        $this->actionId=null;
+        $this->currentActionId=null;
     }
 
-    public function setMainEntityName(){
-        if(empty($this->mainEntityName))
+    public function setCrudObjectName(){        
+        if(empty($this->crudObjectName))
             $this->setEntityName();
     }
 
+    public function modelInstanciator($new=false){
+        $model = $this->modelSource = $this->modelSource?
+            $this->modelSource:
+            "App\Models\\".$this->crudObjectName;
+        if($new)
+            return new $model();
+        return $model::noFilters();
+    }
+
     public function setModelInstance(){
-        $model = $this->modelSource??"App\Models\\".$this->mainEntityName;
-        if(is_callable(array($model, 'noFilters')))
-            $this->modelInstance = $model::noFilters();
+        $this->model = $this->modelInstanciator();
     }
 
     public function setRequestInstance(){
-        $request = $this->requestSource??"App\Http\Requests\\".$this->mainEntityName."Request";
-        if(is_callable([$request,"capture"])){
+        $request = $this->requestSource?
+            $this->requestSource:
+            "App\Http\Requests\\".$this->crudObjectName."Request";
+        
+        if(is_callable([$request,"capture"]))
             $this->request = app($request);
-        }
     }
 
     public function callAction($method,$parameters=[]){
@@ -64,22 +107,21 @@ class CustomController extends BaseController {
         $this->setRequestInstance();
 
         if(!in_array($this->currentAction,$this->actions))
-            return $this->request->expectsJson()?$this->apiNotFound():$this->webNotFound();
+            return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
 
         $this->setCurrentUser();
         if(!resourceAccess($this->currentUser,"inactives"))
-            $this->modelInstance->actives();
+            $this->model->actives();
         $preactionResponse = $this->preAction($method,$parameters);
         if($preactionResponse)
             return $preactionResponse;
-
         if(in_array($method,$this->singleObjectActions)){
             if(empty($parameters))
-                return $this->request->expectsJson()?$this->apiNotFound():$this->webNotFound();
-            $keys = array_keys($parameters);
-            $this->actionId=$parameters[$this->mainArgumentName()];
-            if(!$this->modelInstance->id($this->actionId)->count())
-                return $this->request->expectsJson()?$this->apiNotFound():$this->webNotFound();
+                return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
+            $this->currentActionId=$parameters[$this->mainArgumentName()];
+            if(!$this->model->id($this->currentActionId)->count())
+                return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
+            $this->modelInstance =  $this->model->first();
         }
 
         if(in_array($this->request->method(),["POST","PUT"]))
@@ -93,7 +135,7 @@ class CustomController extends BaseController {
         return $next;
     }
 
-    public function modelator($action){} //$this->modelInstance
+    public function modelator($action){} //$this->model
 
     protected function resetTransaction(){
         $this->committer   = null;
@@ -136,10 +178,6 @@ class CustomController extends BaseController {
 
         if($cBFail && is_callable($cBFail))
             $cBFail();
-        if(is_callable($this->generalActionAfterFail)){
-            $anonymousFunction = $this->generalActionAfterFail;
-            $anonymousFunction();
-        }
     }
 
     /**
@@ -160,10 +198,6 @@ class CustomController extends BaseController {
             DB::commit();
 
             $this->transStatus='transaction-completed';
-            if(is_callable($this->generalActionAfterComplete)){
-                $anonymousFunction = $this->generalActionAfterComplete;
-                return $anonymousFunction();
-            }
         }
         else
             $this->transStatus='transaction-completed-with-error';
@@ -227,10 +261,9 @@ class CustomController extends BaseController {
         $this->resetTransaction();
         $this->startTranstaction();
         $this->testTransaction(function() use($callBack){
-            $this->modelInstance = $this->modelInstance->findOrNew($this->actionId);
             $this->modelInstance->fill($this->fields);
             $this->dirtyPropertys = $this->modelInstance->getDirty();
-            if(!$this->modelInstance->fill($this->fields)->save())
+            if(!$this->modelInstance->save())
                 return false;
             if($callBack && is_callable($callBack))
                 return $callBack();
@@ -238,27 +271,6 @@ class CustomController extends BaseController {
         });
         $this->transactionComplete();
         return $this->isTransactionCompleted();
-    }
-
-    public function testConection(){
-
-        $serviceCredentials=[
-            'cmd'=>'login',
-            'usuario'=>'z100',
-            'password'=>'153759',
-        ];
-
-        $client = curl_init("http://34.194.56.184:8000/ws");
-        curl_setopt($client,CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($client,CURLOPT_POST,true);
-        curl_setopt($client, CURLOPT_POSTFIELDS,$serviceCredentials);
-
-        //paso 5
-        $response = curl_exec($client);
-        $json     = json_decode($response);
-        dd($response);
-        if(empty($json->data->token) && 0)
-            return null;
     }
 
 }

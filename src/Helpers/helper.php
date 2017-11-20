@@ -448,7 +448,6 @@ if(!function_exists("resourceAccess")){
 	 */
 
 	function resourceAccess($userInstace,$resourceAction){
-
 		if(empty($userInstace))
             return false;
 
@@ -461,11 +460,17 @@ if(!function_exists("resourceAccess")){
 		if($user->isRoot())
 		    return true;
 
-		if(!\App\Models\Permission::actionResource($resourceAction)->count())
+		if(!\Crudvel\Models\Permission::actionResource($resourceAction)->count())
 		    return true;
 		$newUserInstace->resourceActionPermission($resourceAction)->count();
 
 		return $newUserInstace->resourceActionPermission($resourceAction)->count();
+	}
+}
+
+if(!function_exists("errorClass")){
+	function errorClass($errors,$cField){
+		return $errors->first($cField)?'has-error':'';
 	}
 }
 
