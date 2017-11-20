@@ -196,33 +196,37 @@ class ScaffoldingCommand extends Command {
         $classes                     = $this->argument("classes");
         $this->classes               = explode(",", $classes);
         $this->entity                = $this->argument("entity");
-        $this->singular_snack_entity = snake_case($this->entity);
-        $this->snack_entity          = str_plural($this->singular_snack_entity);
         $this->gender                = $this->argument("gender");
-        $this->slug_entity           = str_slug($this->snack_entity);
-        $this->entity_segments       = $this->argument("entity_segments");
-        $this->api_segments          = $this->argument("api_segments");
-        $this->web_segments          = $this->argument("web_segments");
         $this->menu                  = $this->argument("menu");
         $this->defaults              = $this->argument("defaults");
         $this->web_traits            = $this->argument("web_traits");
         $this->model_traits          = $this->argument("model_traits");
+        $this->entity_segments       = $this->argument("entity_segments");
+        $this->api_segments          = $this->argument("api_segments");
+        $this->web_segments          = $this->argument("web_segments");
+        $this->singular_snack_entity = snake_case($this->entity);
+        $this->snack_entity          = str_plural($this->singular_snack_entity);
+        $this->slug_entity           = str_slug($this->snack_entity);
+        
         /*
         dd([
-            "classes"         =>$this->classes,
-            "entity"          =>$this->entity,
-            "gender"          =>$this->gender,
-            "slug_entity"     =>$this->slug_entity,
-            "snack_entity"    =>$this->snack_entity,
-            "entity_segments" =>$this->entity_segments,
-            "api_segments"    =>$this->api_segments,
-            "web_segments"    =>$this->web_segments,
-            "menu"            =>$this->menu,
-            "defaults"        =>$this->defaults,
-            "web_traits"      =>$this->web_traits,
-            "model_traits"    =>$this->model_traits,
+            "classes"               =>$this->classes,
+            "entity"                =>$this->entity,
+            "gender"                =>$this->gender,
+            "singular_snack_entity" =>$this->singular_snack_entity,
+            "slug_entity"           =>$this->slug_entity,
+            "snack_entity"          =>$this->snack_entity,
+            "entity_segments"       =>$this->entity_segments,
+            "api_segments"          =>$this->api_segments,
+            "web_segments"          =>$this->web_segments,
+            "menu"                  =>$this->menu,
+            "defaults"              =>$this->defaults,
+            "web_traits"            =>$this->web_traits,
+            "model_traits"          =>$this->model_traits,
         ]);
+        die();
         */
+
         if($modo==="create"){
             try{
                 if(in_array("controller",$this->classes))
