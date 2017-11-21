@@ -31,7 +31,6 @@ trait CrudTrait {
     public function mainArgumentName(){
         if(empty($this->crudObjectName))
             $this->setEntityName();
-
         if(!empty($this->rowName))
             return $this->rowName;
 

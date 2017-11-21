@@ -1,4 +1,34 @@
 <?php
+
+
+
+if ( ! function_exists('array_fetch'))
+{
+    /**
+     * Fetch a flattened array of a nested array element.
+     *
+     * @param  array   $array
+     * @param  string  $key
+     * @return array
+     */
+    function array_fetch($array, $key)
+    {
+        $results = array();
+        foreach (explode('.', $key) as $segment)
+        {
+            foreach ($array as $value)
+            {
+                if (array_key_exists($segment, $value = (array) $value))
+                {
+                    $results[] = $value[$segment];
+                }
+            }
+            $array = array_values($results);
+        }
+        return collect(array_values($results));
+    }
+}
+
 /*
 *custom helper, made by Beni at 2016-11-22, the principal porpouse is to bind DFP html from array.
 */
