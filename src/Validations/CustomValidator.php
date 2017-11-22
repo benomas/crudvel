@@ -321,4 +321,17 @@ class CustomValidator extends Validator {
     	return preg_match('/^[a-zA-Z0-9_\-\.@]+?$/',$value);
 
     }
+
+    /**
+     * Validate that a unique combination of keys
+     *
+     * @author	Beni (beni@intagono.com) 2016-12-05
+     *
+     * @return  boolean
+     */
+    function validateRfc($attribute, $value, $parameters)
+    {
+    	return preg_match('/^\w{3,3}\d{6,6}\w{2,3}$/',$value);
+
+    }
 }
