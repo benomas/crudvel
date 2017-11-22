@@ -504,6 +504,28 @@ if(!function_exists("errorClass")){
 	}
 }
 
+if(!function_exists("crudvelResource")){
+	function crudvelResource($resource,$controller=null){
+		$rowName = str_slug(str_singular($resource),"_");
+		if(!$controller)
+			$controller=studly_case($rowName)."Controller";
+        Route::resource($resource, $controller);
+        Route::get($resource."/import", $controller."@import");
+        Route::get($resource."/{".$rowName."}/active", $controller."@active");
+        Route::get($resource."/{".$rowName."}/deactive", $controller."@deactive");
+	}
+}
+
+if(!function_exists("crudvelResources")){
+	function crudvelResources($resources){
+		foreach ($resources as $resource) {
+			crudvelResource($resource);
+		}
+	}
+}
+
+
+
 
 
 
