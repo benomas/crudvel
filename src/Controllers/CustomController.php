@@ -268,7 +268,7 @@ class CustomController extends BaseController {
             if($callBack && is_callable($callBack))
                 return $callBack();
             return true;
-        });
+        },null,false);
         $this->transactionComplete();
         return $this->isTransactionCompleted();
     }
