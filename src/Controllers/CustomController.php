@@ -38,7 +38,7 @@ class CustomController extends BaseController {
     protected $currentUser;
     protected $dirtyPropertys;
     protected $langName;
-    protected $actions             = [
+    protected $actions = [
         "index",
         "show",
         "create",
@@ -53,7 +53,7 @@ class CustomController extends BaseController {
         "export",
         "exporting",
     ];
-    protected $singleObjectActions = [
+    protected $keyActions = [
         "show",
         "edit",
         "update",
@@ -61,12 +61,19 @@ class CustomController extends BaseController {
         "active",
         "deactive"
     ];
-    protected $loadViewActions     = [
+    protected $viewActions = [
         "index",
         "show",
         "create",
         "edit",
         "import",
+    ];
+    protected $rowsActions = [
+        "index",
+        "import",
+        "importing",
+        "export",
+        "exporting",
     ];
     use CrudTrait;
 
@@ -117,7 +124,7 @@ class CustomController extends BaseController {
         $preactionResponse = $this->preAction($method,$parameters);
         if($preactionResponse)
             return $preactionResponse;
-        if(in_array($method,$this->singleObjectActions)){
+        if(in_array($method,$this->keyActions)){
             if(empty($parameters))
                 return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
             $this->currentActionId=$parameters[$this->mainArgumentName()];
