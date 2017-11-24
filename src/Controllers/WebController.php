@@ -67,7 +67,7 @@ class WebController extends CustomController
                 //$this->baseResourceUrl =  (!empty($this->prefix)?$this->prefix."/":"").$this->resource;
             }
         }
-        if(in_array($method,$this->loadViewActions))
+        if(in_array($method,$this->viewActions))
             $this->globalViewShare();
         return $next;
     }
