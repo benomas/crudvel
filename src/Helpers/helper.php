@@ -146,6 +146,7 @@ if(!function_exists("dateFormatSwitch")){
  * @date   2017-05-24
  * @return boolean
  */
+/*
 if(!function_exists("inRoles")){
 
 	function inRoles(...$roles){
@@ -154,6 +155,7 @@ if(!function_exists("inRoles")){
 			$user->roles()->whereIn("roles.slug",$roles)->count();
 	}
 }
+*/
 
 if(!function_exists("customLog")){
 	function customLog(...$params){

@@ -5,7 +5,7 @@ use Crudvel\Models\BaseModel;
 class Role extends BaseModel{
 
     protected $fillable = [
-        "slug", "name", "description","approving_grade", "active","singularity"
+        "slug", "name", "description","active"
     ];
 
     public function __construct($attributes = array())  {
@@ -20,10 +20,6 @@ class Role extends BaseModel{
 
     public function permissions(){
         return $this->belongsToMany("Crudvel\Models\Permission", "permission_role");
-    }
-
-    public function sublevels(){
-        return $this->belongsToMany("Crudvel\Models\Sublevel");
     }
 
 //End Relationships

@@ -3,7 +3,6 @@ namespace Crudvel\Controllers;
 
 use DB;
 use Crudvel\Traits\CrudTrait;
-use Crudvel\Models\User;
 use Illuminate\Routing\Controller as BaseController;
 /*
     This is a customization of the controller, some controllers needs to save multiple data on different tables in one step, doing that without transaction is a bad idea.

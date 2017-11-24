@@ -19,7 +19,7 @@ use HTML2PDF;
 class User extends BaseModel{
 
     protected $fillable = [
-        'username','first_name', 'last_name', 'email', 'password', 'deadline','photo',"tree"
+        'username','first_name', 'last_name', 'email', 'password'
     ]; 
 
     protected $dates = [
@@ -43,14 +43,6 @@ class User extends BaseModel{
     public function rolesPermissions()
     {
         return $this->manyToManyToMany("roles","permissions","Crudvel\Models\Permission");
-    }
-
-    public function activityUser(){
-        return $this->hasMany("Crudvel\Models\ActivityUser");
-    }
-
-    public function sublevelUsers(){
-        return $this->hasMany("Crudvel\Models\SublevelUser");
     }
 
 //End Non standar Relationships
@@ -106,73 +98,6 @@ class User extends BaseModel{
             }
         }
         return $loginTest;
-    }
-
-    public static function addNormal($data){
-        $validation = Validator::make($data, [
-            "username" => "required_without:email|unique:users,email|unique:users,username",
-            "email"    => "required_without:username|email|unique:users,username|unique:users,email",
-            "active"   => "boolean",
-        ]);
-
-        if($validation->fails()){
-            $errors = $validation->errors()->getMessages();
-
-            return $errors;
-        }
-
-        if(!isset($data["deadline"])){
-            $date = Carbon::now();
-            $date = $date->addMonths(3);
-
-            $data["deadline"] = $date->toDateString();
-        }
-
-        try{
-            $user = Sentinel::register($data);
-
-            $activation = Activation::create($user);
-
-            Activation::complete($user, $activation->code);
-
-            $user = User::find($user->id);
-            $user->is_manager = 0;
-            $user->is_facebook = 0;
-            $user->deadline = $data["deadline"];
-            $user->save();
-
-            return $user;
-        }catch (\Exception $e){
-            return false;
-        }
-    }
-
-    public static function normalLogin($email, $password){
-        $credentials = [
-            'email'    => $email,
-            'password' => $password,
-        ];
-
-        try{
-            $authenticate = Sentinel::authenticate($credentials);
-
-            if($authenticate){
-                $user = User::find($authenticate->id);
-
-                $user->token = Str::random(16);
-                $user->save();
-
-                Session::put("user", $user);
-
-                return $user;
-            }
-
-            return false;
-        }catch (NotActivatedException $e){
-            return false;
-        }catch (ThrottlingException $e){
-            return false;
-        }
     }
 
 // Others

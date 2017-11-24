@@ -12,7 +12,7 @@ use Lang;
 
 class CrudRequest extends FormRequest
 {
-    public $rules;
+    protected $rules;
     public $currentAction;
     public $currentActionId;
     public $currentUser;
@@ -30,6 +30,8 @@ class CrudRequest extends FormRequest
      */
     public function authorize()
     {
+        if(!$this->currentAction)
+            return true;
         return resourceAccess($this->currentUser,$this->baseName."_".$this->currentAction);
     }
 
@@ -47,9 +49,11 @@ class CrudRequest extends FormRequest
         if(empty($this->langName))
             $this->langName=$this->baseName;
 
-        $this->currentAction   = explode('@', $this->route()->getActionName())[1];
+        $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
         $this->currentActionId = $this->route($this->mainArgumentName());
         $this->rules           = [];
+        if(!$this->currentAction)
+            return $this->rules;
         if(in_array($this->method(),["POST","PUT"])){
             $this->loadFields();
             $this->defaultRules();
