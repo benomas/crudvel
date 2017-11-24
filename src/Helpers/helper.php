@@ -509,10 +509,13 @@ if(!function_exists("crudvelResource")){
 		$rowName = str_slug(str_singular($resource),"_");
 		if(!$controller)
 			$controller=studly_case($rowName)."Controller";
-        Route::resource($resource, $controller);
         Route::get($resource."/import", $controller."@import");
+        Route::get($resource."/export", $controller."@export");
+        Route::post($resource."/import", $controller."@importing");
+        Route::post($resource."/export", $controller."@exporting");
         Route::get($resource."/{".$rowName."}/active", $controller."@active");
         Route::get($resource."/{".$rowName."}/deactive", $controller."@deactive");
+        Route::resource($resource, $controller);
 	}
 }
 
