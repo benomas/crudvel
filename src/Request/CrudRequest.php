@@ -12,7 +12,7 @@ use Lang;
 
 class CrudRequest extends FormRequest
 {
-    protected $rules;
+    public $rules;
     public $currentAction;
     public $currentActionId;
     public $currentUser;

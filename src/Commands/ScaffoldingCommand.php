@@ -147,6 +147,7 @@ class ScaffoldingCommand extends Command {
     public function makeApiController(){
         $this->api_controller_template = str_replace('$ENTITY$', $this->entity, $this->api_controller_template);
         $this->api_controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->api_controller_template);
+        $this->api_controller_template = str_replace('$APIENTITYSEGMENTS$', Str::title($this->api_segments), $this->api_controller_template);
         $this->api_controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->api_controller_template);
         $this->api_controller_template = str_replace('$GENDER$', Str::title($this->gender), $this->api_controller_template);
         $this->api_controller_template = str_replace('$SLUGENTITY$', $this->slug_entity, $this->api_controller_template);
@@ -157,6 +158,7 @@ class ScaffoldingCommand extends Command {
     public function makeWebController(){
         $this->web_controller_template = str_replace('$ENTITY$', $this->entity, $this->web_controller_template);
         $this->web_controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->web_controller_template);
+        $this->web_controller_template = str_replace('$WEBENTITYSEGMENTS$', Str::title($this->web_segments), $this->web_controller_template);
         $this->web_controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->web_controller_template);
         $this->web_controller_template = str_replace('$TRAITS$', $this->web_traits, $this->web_controller_template);
         $this->web_controller_template = str_replace('$GENDER$', Str::title($this->gender), $this->web_controller_template);

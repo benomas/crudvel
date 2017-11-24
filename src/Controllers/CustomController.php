@@ -49,7 +49,9 @@ class CustomController extends BaseController {
         "active",
         "deactive",
         "import",
+        "importing",
         "export",
+        "exporting",
     ];
     protected $singleObjectActions = [
         "show",
@@ -268,7 +270,7 @@ class CustomController extends BaseController {
             if($callBack && is_callable($callBack))
                 return $callBack();
             return true;
-        });
+        },null,false);
         $this->transactionComplete();
         return $this->isTransactionCompleted();
     }
