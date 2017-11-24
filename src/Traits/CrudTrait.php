@@ -50,8 +50,9 @@ trait CrudTrait {
         $user = $this->getClassType()==="Request"?
             $this->user():
             $this->request->user();
+        $userModelSource = config("auth.providers.users.model","Crudvel\Models\User");
         $this->currentUser=$user?
-            User::id($user->id):
+            $userModelSource::id($user->id):
             null;
     }
 
