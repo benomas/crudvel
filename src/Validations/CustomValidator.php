@@ -331,7 +331,7 @@ class CustomValidator extends Validator {
      */
     function validateRfc($attribute, $value, $parameters)
     {
-    	return preg_match('/^\w{3,3}\d{6,6}\w{2,3}$/',$value);
+    	return preg_match('/^\w{3,4}\d{6,6}\w{2,3}$/',$value);
 
     }
 }
