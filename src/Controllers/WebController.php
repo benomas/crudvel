@@ -136,7 +136,7 @@ class WebController extends CustomController
     public function store(){
         $this->modelInstance = $this->modelInstanciator(true);
         return $this->persist()?$this->webSuccessResponse([
-            "redirector"=>Redirect::to($this->prefix."/".$this->resource)
+            "redirector"=>Redirect::to($this->request->fullUrl())
         ]):$this->webFailResponse();
     }
 
