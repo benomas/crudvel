@@ -120,6 +120,8 @@ class CustomController extends BaseController {
         $this->setCurrentUser();
         if(!resourceAccess($this->currentUser,"inactives"))
             $this->model->actives();
+        if(in_array($this->request->method(),["POST","PUT"]))
+            $this->loadFields();
         $preactionResponse = $this->preAction($method,$parameters);
         if($preactionResponse)
             return $preactionResponse;
@@ -132,8 +134,6 @@ class CustomController extends BaseController {
             $this->modelInstance =  $this->model->first();
         }
 
-        if(in_array($this->request->method(),["POST","PUT"]))
-            $this->loadFields();
 
         return parent::callAction($method,$parameters);
     }
