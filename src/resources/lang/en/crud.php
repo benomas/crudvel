@@ -16,7 +16,7 @@ return [
             "next_message"   =>"Guardar",
         ],
         "store"  => [
-            "success"      =>"Creado",
+            "success"      =>"Se ha Creado",
         ],
         "edit"   => [
             "call_message"   =>"Editar",
@@ -24,7 +24,7 @@ return [
             "next_message"   =>"Actualizar",
         ],
         "update" => [
-            "success"      =>"Actualizado",
+            "success"      =>"Se ha Actualizado",
         ],
         "destroy" => [
             "call_message"       =>"Eliminar",
@@ -33,11 +33,11 @@ return [
         ],
         "active" => [
             "call_message" =>"Activar",
-            "success"      =>"Activado",
+            "success"      =>"Se ha Activado",
         ],
         "deactive" => [
             "call_message" =>"Desactivar",
-            "success"      =>"Desactivado",
+            "success"      =>"Se ha Desactivado",
         ],
         "import" => [
             "call_message"   =>"Importar",
@@ -45,14 +45,14 @@ return [
             "main_label"     =>"Archivo a Importar (Excel)",
             "next_message"   =>"Importar",
         ],
-        "import_result" => [
-            "success"        =>"Importado", 
+        "importing" => [
+            "success"        =>"Se han Importado", 
         ],
         "export" => [
             "call_message"   =>"Exportar",
             "called_message" =>"Exportando",
             "next_message"   =>"Generar excel de exportación",
-            "success"        =>"Exportado",
+            "success"        =>"Se han Exportado",
         ],
         "common"=>[
             "cancel"    => "Cancelar",
