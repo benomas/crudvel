@@ -538,14 +538,14 @@ if(!function_exists("crudvelResource")){
         else{
 			$only     = empty($conditionals["only"])?[]:$conditionals["only"];
 			$excludes = empty($conditionals["excludes"])?[]:$conditionals["excludes"];
-	        if(validateGetActionResource("active",$only,$excludes)) Route::get($resource."/{id}/active", $controller."@active");
+	        if(validateGetActionResource("active",$only,$excludes)) Route::get($resource."/{".$rowName."}/active", $controller."@active");
 	        if(validateGetActionResource("create",$only,$excludes)) Route::get($resource."/create", $controller."@create");
-	        if(validateGetActionResource("deactive",$only,$excludes)) Route::get($resource."/{id}/deactive", $controller."@deactive");
-	        if(validateGetActionResource("edit",$only,$excludes)) Route::get($resource."/{id}/edit", $controller."@edit");
+	        if(validateGetActionResource("deactive",$only,$excludes)) Route::get($resource."/{".$rowName."}/deactive", $controller."@deactive");
+	        if(validateGetActionResource("edit",$only,$excludes)) Route::get($resource."/{".$rowName."}/edit", $controller."@edit");
 	        if(validateGetActionResource("export",$only,$excludes)) Route::get($resource."/export", $controller."@export");
 	        if(validateGetActionResource("import",$only,$excludes)) Route::get($resource."/import", $controller."@import");
 	        if(validateGetActionResource("index",$only,$excludes)) Route::get($resource, $controller."@index");
-	        if(validateGetActionResource("show",$only,$excludes)) Route::get($resource, $controller."@show");
+	        if(validateGetActionResource("show",$only,$excludes)) Route::get($resource."/{".$rowName."}/show", $controller."@show");
 
 	        if(validatePostActionResource("destroy",$only,$excludes)) Route::delete($resource."/delete", $controller."@destroy");
 	        if(validatePostActionResource("exporting",$only,$excludes)) Route::post($resource."/export", $controller."@exporting");

@@ -44,7 +44,6 @@ class WebController extends CustomController
     }
 
     public function  callAction($method, $parameters=[]){
-
         if(empty($this->rowLabel))
             $this->rowLabel = trans("crudvel/".$this->langName.".row_label");
         if(empty($this->rowsLabel))
