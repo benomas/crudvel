@@ -4,8 +4,8 @@
  *
  * @author Benomas benomas@gmail.com
  * @date   2017-05-08
- * modificable BaseModel
+ * modificable Role
  */
-use Crudvel\Models\BaseModel AS defaultModel;
-class BaseModel extends defaultModel {
+use Crudvel\Models\User AS UserModel;
+class User extends UserModel {
 }
