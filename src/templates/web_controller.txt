@@ -1,9 +1,8 @@
 <?php namespace App\Http\Controllers$ENTITYSEGMENTS$$WEBENTITYSEGMENTS$;
 
-use Crudvel\Controllers\WebController;
+use Crudvel\Customs\Controllers\WebController;
 
 class $ENTITY$Controller extends WebController {
-    $TRAITS$;
     
     public $langName      = "$SNACKENTITY$";
     public $viewFolder    = "$SLUGENTITY$";

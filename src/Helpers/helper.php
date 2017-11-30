@@ -564,6 +564,14 @@ if(!function_exists("crudvelResources")){
 	}
 }
 
+if(!function_exists("resourceByForeingKey")){
+	function resourceByForeingKey($foreingKey){
+		$foreingKey = str_replace("_id","",$foreingKey);
+		return str_slug(str_plural($foreingKey));
+	}
+}
+
+
 
 
 
