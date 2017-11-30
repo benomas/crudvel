@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests$ENTITYSEGMENTS$;
 
-use Crudvel\Requests\CrudRequest;
+use Crudvel\Customs\Requests\CrudRequest;
 class $ENTITY$Request extends CrudRequest
 {
     public $rowName        = "$SINGULARSNACKENTITY$";
