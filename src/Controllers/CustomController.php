@@ -106,8 +106,9 @@ class CustomController extends BaseController {
             $this->requestSource:
             "App\Http\Requests\\".$this->crudObjectName."Request";
         
-        if(is_callable([$request,"capture"]))
+        if(is_callable([$request,"capture"])){
             $this->request = app($request);
+        }
     }
 
     public function callAction($method,$parameters=[]){

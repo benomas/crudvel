@@ -523,7 +523,11 @@ if(!function_exists("validatePostActionResource")){
 
 if(!function_exists("crudvelResource")){
 	function crudvelResource($resource,$controller=null,$conditionals=[]){
-		$rowName = str_slug(str_singular($resource),"_");
+		if(empty($resource))
+			return false;
+
+		$rowName = str_slug(str_singular(end((explode("/",$resource)))),"_");
+		
 		if(!$controller)
 			$controller=studly_case($rowName)."Controller";
         if(!count($conditionals)){
@@ -547,11 +551,11 @@ if(!function_exists("crudvelResource")){
 	        if(validateGetActionResource("index",$only,$excludes)) Route::get($resource, $controller."@index");
 	        if(validateGetActionResource("show",$only,$excludes)) Route::get($resource."/{".$rowName."}/show", $controller."@show");
 
-	        if(validatePostActionResource("destroy",$only,$excludes)) Route::delete($resource."/delete", $controller."@destroy");
+	        if(validatePostActionResource("destroy",$only,$excludes)) Route::delete($resource."/{".$rowName."}", $controller."@destroy");
 	        if(validatePostActionResource("exporting",$only,$excludes)) Route::post($resource."/export", $controller."@exporting");
 	        if(validatePostActionResource("importing",$only,$excludes)) Route::post($resource."/import", $controller."@importing");
-	        if(validatePostActionResource("store",$only,$excludes)) Route::post($resource."/store", $controller."@store");
-	        if(validatePostActionResource("update",$only,$excludes)) Route::put($resource."/update", $controller."@update");
+	        if(validatePostActionResource("store",$only,$excludes)) Route::post($resource, $controller."@store");
+	        if(validatePostActionResource("update",$only,$excludes)) Route::put($resource."/{".$rowName."}", $controller."@update");
         }
 	}
 }
