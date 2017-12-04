@@ -32,7 +32,7 @@ class CustomController extends BaseController {
     //validador autorizador anonimo
     protected $request;
     protected $currentAction;
-    protected $currentActionId;
+    protected $currentActionId=null;
     protected $fields;
     protected $defaultFields;
     //Acciones que se basan en un solo elemento
@@ -82,7 +82,6 @@ class CustomController extends BaseController {
         $this->autoSetPropertys(...$propertyRewriter);
         $this->explodeClass();
         $this->setModelInstance();
-        $this->currentActionId=null;
     }
 
     public function modelInstanciator($new=false){

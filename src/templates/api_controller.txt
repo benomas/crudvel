@@ -3,10 +3,6 @@
 use Crudvel\Customs\Controllers\ApiController;
 
 class $ENTITY$Controller extends ApiController {
-    
-    public $langName      = "$SNACKENTITY$";
-    public $rowGender     = "$GENDER$";
-    public $rowName       = "$SINGULARSNACKENTITY$";
 
     public function __construct(){
         parent::__construct();

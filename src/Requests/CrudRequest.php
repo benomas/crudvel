@@ -12,6 +12,7 @@ use Lang;
 
 class CrudRequest extends FormRequest
 {
+    protected $crudObjectName;
     protected $rules;
     public $currentAction;
     public $currentActionId;
@@ -21,7 +22,15 @@ class CrudRequest extends FormRequest
     protected $unauthorizedException;
     protected $customBaseName;
     protected $langName;
+    protected $rowName;
     use CrudTrait;
+
+    public function resourcesExplode(){
+        if(empty($this->langName))
+            $this->langName = snake_case($this->getCrudObjectName());
+        if(empty($this->rowName))
+            $this->rowName = camel_case($this->getCrudObjectName());
+    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -42,6 +51,7 @@ class CrudRequest extends FormRequest
      */
     public function rules()
     {
+        $this->resourcesExplode();
         $this->setCurrentUser();
         $this->baseName = $this->customBaseName?
             $this->customBaseName:
