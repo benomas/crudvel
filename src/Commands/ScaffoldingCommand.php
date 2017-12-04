@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class ScaffoldingCommand extends Command {
 
     protected $signature   = 
-    'scaffold {modo} {classes} {entity} {gender} {menu} {defaults} {web_traits} {model_traits} {entity_segments} {api_segments} {web_segments}  ';
+    'scaffold {modo} {classes} {entity} {gender} {menu} {defaults} {entity_segments} {api_segments} {web_segments}  ';
     protected $name        = "scaffold";
     protected $description = 'Command description.';
     protected $controller_template;
@@ -31,8 +31,6 @@ class ScaffoldingCommand extends Command {
     protected $web_segments="";
     protected $menu="";
     protected $defaults="";
-    protected $web_traits="";
-    protected $model_traits="";
 
     public function __construct()
     {
@@ -160,7 +158,6 @@ class ScaffoldingCommand extends Command {
         $this->web_controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->web_controller_template);
         $this->web_controller_template = str_replace('$WEBENTITYSEGMENTS$', Str::title($this->web_segments), $this->web_controller_template);
         $this->web_controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->web_controller_template);
-        $this->web_controller_template = str_replace('$TRAITS$', $this->web_traits, $this->web_controller_template);
         $this->web_controller_template = str_replace('$GENDER$', Str::title($this->gender), $this->web_controller_template);
         $this->web_controller_template = str_replace('$SLUGENTITY$', $this->slug_entity, $this->web_controller_template);
         $this->web_controller_template = str_replace('$SNACKENTITY$', $this->snack_entity, $this->web_controller_template);
@@ -183,7 +180,6 @@ class ScaffoldingCommand extends Command {
         $this->model_template = str_replace('$ENTITY$', $this->entity, $this->model_template);
         $this->model_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->model_template);
         $this->model_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->model_template);
-        $this->model_template = str_replace('$TRAITS$', $this->model_traits, $this->model_template);
     }
 
     public function makeRepository(){
@@ -201,8 +197,6 @@ class ScaffoldingCommand extends Command {
         $this->gender                = $this->argument("gender");
         $this->menu                  = $this->argument("menu");
         $this->defaults              = $this->argument("defaults");
-        $this->web_traits            = $this->argument("web_traits");
-        $this->model_traits          = $this->argument("model_traits");
         $this->entity_segments       = $this->argument("entity_segments");
         $this->api_segments          = $this->argument("api_segments");
         $this->web_segments          = $this->argument("web_segments");
@@ -223,8 +217,6 @@ class ScaffoldingCommand extends Command {
             "web_segments"          =>$this->web_segments,
             "menu"                  =>$this->menu,
             "defaults"              =>$this->defaults,
-            "web_traits"            =>$this->web_traits,
-            "model_traits"          =>$this->model_traits,
         ]);
         die();
         */
@@ -288,12 +280,6 @@ class ScaffoldingCommand extends Command {
             ],
             [
                 "defaults", InputArgument::OPTIONAL,
-            ],
-            [
-                "web_traits", InputArgument::OPTIONAL,
-            ],
-            [
-                "model_traits", InputArgument::OPTIONAL,
             ],
             [
                 "entity_segments", InputArgument::OPTIONAL,

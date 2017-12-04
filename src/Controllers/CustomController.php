@@ -11,8 +11,10 @@ use Illuminate\Routing\Controller as BaseController;
 */
 class CustomController extends BaseController {
 
-    protected $crudvel=true;
-    protected $prefix = "admin";
+    protected $crudvel       = true;
+    protected $prefix        = "";
+    protected $classType     = "Controller";
+    protected $baseClass     = "";
     public $resource;
     //public $baseResourceUrl;
     protected $transStatus;
@@ -78,20 +80,15 @@ class CustomController extends BaseController {
 
     public function __construct(...$propertyRewriter){
         $this->autoSetPropertys(...$propertyRewriter);
-        $this->setCrudObjectName();
+        $this->explodeClass();
         $this->setModelInstance();
         $this->currentActionId=null;
-    }
-
-    public function setCrudObjectName(){        
-        if(empty($this->crudObjectName))
-            $this->setEntityName();
     }
 
     public function modelInstanciator($new=false){
         $model = $this->modelSource = $this->modelSource?
             $this->modelSource:
-            "App\Models\\".$this->crudObjectName;
+            "App\Models\\".$this->getCrudObjectName();
         if($new)
             return new $model();
         return $model::noFilters();
@@ -104,10 +101,11 @@ class CustomController extends BaseController {
     public function setRequestInstance(){
         $request = $this->requestSource?
             $this->requestSource:
-            "App\Http\Requests\\".$this->crudObjectName."Request";
+            "App\Http\Requests\\".$this->getCrudObjectName()."Request";
         
-        if(is_callable([$request,"capture"]))
+        if(is_callable([$request,"capture"])){
             $this->request = app($request);
+        }
     }
 
     public function callAction($method,$parameters=[]){
