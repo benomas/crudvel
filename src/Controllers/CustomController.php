@@ -131,8 +131,6 @@ class CustomController extends BaseController {
                 return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
             $this->modelInstance =  $this->model->first();
         }
-
-
         return parent::callAction($method,$parameters);
     }
 
