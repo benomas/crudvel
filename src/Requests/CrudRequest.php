@@ -47,7 +47,7 @@ class CrudRequest extends FormRequest
             $this->customBaseName:
             basename($this->path());
         if(empty($this->langName))
-            $this->langName=$this->baseName;
+            $this->langName=str_slug($this->baseName,"_");
 
         $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
         $this->currentActionId = $this->route($this->mainArgumentName());

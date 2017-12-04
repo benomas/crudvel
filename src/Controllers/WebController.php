@@ -41,9 +41,12 @@ class WebController extends CustomController
 
     public function __construct(...$propertyRewriter){
         parent::__construct(...$propertyRewriter);
+        $this->resourcesExplode();
     }
 
-    public function  callAction($method, $parameters=[]){
+    public function resourcesExplode(){
+        if(empty($this->langName))
+            $this->langName = snake_case($this->getCrudObjectName());
         if(empty($this->rowLabel))
             $this->rowLabel = trans("crudvel/".$this->langName.".row_label");
         if(empty($this->rowsLabel))
@@ -53,21 +56,26 @@ class WebController extends CustomController
         if(empty($this->pluralSlug))
             $this->pluralSlug = str_slug($this->rowsLabel);
         if(empty($this->viewFolder))
-            $this->viewFolder = $this->langName;
-        if(empty($this->resource))
-            $this->resource = $this->viewFolder;
+            $this->viewFolder = snake_case($this->getCrudObjectName());
+        if(empty($this->rowName))
+            $this->rowName = camel_case($this->crudObjectName);
+    }
+
+    public function  callAction($method, $parameters=[]){
 
         $next = empty($this->model)?$this->redirectBackWithInput():parent::callAction($method,$parameters);
         if(!empty($this->currentUser))
             $this->viewSharedPropertys[]="currentUser";
-        if(!empty($this->request->baseName)){
-            if(empty($this->resource)){
+        if(empty($this->resource)){
+            if(!empty($this->request->baseName))
                 $this->resource = $this->request->baseName;
-                //$this->baseResourceUrl =  (!empty($this->prefix)?$this->prefix."/":"").$this->resource;
-            }
+            else
+                $this->resource = str_slug(str_plural($this->getCrudObjectName()));
         }
+
         if(in_array($method,$this->viewActions))
             $this->globalViewShare();
+
         return $next;
     }
 

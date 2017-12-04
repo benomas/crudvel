@@ -11,31 +11,50 @@ use Illuminate\Support\Facades\Redirect;
 use Crudvel\Models\User;
 trait CrudTrait {
 
-    public function setEntityName(){
-        if(!empty($this->crudObjectName))
-            return false;
-        
-        $classType = $this->getClassType();
-        $entitySegments = [];
-        preg_match("/(.*)?\\\(.*)?".$classType."$/",(get_class($this)),$entitySegments);
-        
-        if(!empty($entitySegments[2])){
-            $this->crudObjectName = $entitySegments[2];
-        }
-        else{
-            $entitySegments=[];
-            preg_match("/(.*)?".$classType."$/",(get_class($this)),$entitySegments);
-            $this->crudObjectName = $entitySegments[1];
-        }
+    public function setEntity(){
+        $this->crudObjectName = str_replace($this->getClassType(),"",$this->baseClass);
     }
 
+    public function explodeClass(){
+        if(empty($this->baseClass))
+            $this->baseClass=class_basename(get_class($this));
+
+        if(empty($this->classType)){
+            foreach (["Controller","Request"] as $classType) 
+                if($this->testClassType($classType))
+                    $this->classType = $classType;
+            if(empty($this->classType))
+                $this->classType = "Model";
+        }
+
+        if(empty($this->crudObjectName))
+            $this->crudObjectName = str_replace($this->classType,"",$this->baseClass);
+    }
+
+    public function getClassType(){
+        if(empty($this->classType))
+            $this->explodeClass();
+        return $this->classType;
+    }
+
+    public function getBaseClass(){
+        if(empty($this->baseClass))
+            $this->explodeClass();
+        return $this->baseClass;
+    }
+
+    public function getCrudObjectName(){
+        if(empty($this->crudObjectName))
+            $this->explodeClass();
+        return $this->crudObjectName;
+    }
+    
     public function mainArgumentName(){
         if(empty($this->crudObjectName))
-            $this->setEntityName();
-        if(!empty($this->rowName))
-            return $this->rowName;
-
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $this->crudObjectName));
+            $this->explodeClass();
+        if(empty($this->rowName))
+            $this->rowName = camel_case($this->crudObjectName);
+        return $this->rowName;
     }
 
     public function autoSetPropertys(...$propertyRewriter){
@@ -56,8 +75,8 @@ trait CrudTrait {
             null;
     }
 
-    public function getClassType(){
-        return strstr(get_class($this),"Controller")?"Controller":"Request";
+    public function testClassType($tryClassType){
+        return strstr($this->baseClass,$tryClassType)===$tryClassType;
     }
 
     public function loadFields(){

@@ -1,0 +1,11 @@
+<?php namespace Crudvel\Customs\Models;
+/**
+ *
+ *
+ * @author Benomas benomas@gmail.com
+ * @date   2017-05-08
+ * modificable Role
+ */
+use Crudvel\Models\Role AS RoleModel;
+class Role extends RoleModel {
+}

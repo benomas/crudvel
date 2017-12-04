@@ -50,8 +50,21 @@ class ApiController extends CustomController
         $this->orderables          = null;
     }
 
-    public function modelator($action){} //$this->model
-
+    public function resourcesExplode(){
+        if(empty($this->langName))
+            $this->langName = snake_case($this->getCrudObjectName());
+        if(empty($this->rowLabel))
+            $this->rowLabel = trans("crudvel/".$this->langName.".row_label");
+        if(empty($this->rowsLabel))
+            $this->rowsLabel = trans("crudvel/".$this->langName.".rows_label");
+        if(empty($this->singularSlug))
+            $this->singularSlug = str_slug($this->rowLabel);
+        if(empty($this->pluralSlug))
+            $this->pluralSlug = str_slug($this->rowsLabel);
+        if(empty($this->viewFolder))
+            $this->viewFolder = snake_case($this->getCrudObjectName());
+    }
+    
     public function callAction($method,$parameters=[]){
         return empty($this->model)?$this->apiNotFound():parent::callAction($method,$parameters);
     }
@@ -63,7 +76,6 @@ class ApiController extends CustomController
      */
     public function index()
     {
-        $this->modelator(__FUNCTION__);
         return ($paginable = $this->paginable && $this->extractPaginate())?
             $this->paginatedResponse():
             $this->apiSuccessResponse($this->model->get());
@@ -88,7 +100,6 @@ class ApiController extends CustomController
     public function store()
     {
         $this->setStamps();
-        $this->modelator(__FUNCTION__);
         return $this->persist()?$this->apiSuccessResponse():$this->apiFailResponse();
     }
 
@@ -100,7 +111,6 @@ class ApiController extends CustomController
      */
     public function show($id)
     {
-        $this->modelator(__FUNCTION__);
         return !$this->model->count()?
             $this->apiNotFound():
             $this->apiSuccessResponse($this->model->first());
@@ -128,7 +138,6 @@ class ApiController extends CustomController
     {
         $this->fields['id'] = $id;
         $this->setStamps();
-        $this->modelator(__FUNCTION__);
         return $this->persist()?$this->apiSuccessResponse():$this->apiFailResponse();
     }
 
@@ -140,7 +149,6 @@ class ApiController extends CustomController
      */
     public function destroy($id)
     {
-        $this->modelator(__FUNCTION__);
         $this->resetTransaction();
         $this->startTranstaction();
         $this->testTransaction(function(){
@@ -153,7 +161,6 @@ class ApiController extends CustomController
     }
 
     public function select(){
-        $this->modelator(__FUNCTION__);
         return !$this->model->count()?
             $this->apiNotFound():
             $this->apiSuccessResponse(['data'=>$this->model->get()]);
