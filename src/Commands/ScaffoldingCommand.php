@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class ScaffoldingCommand extends Command {
 
     protected $signature   = 
-    'scaffold {modo} {classes} {entity} {gender} {menu} {defaults} {entity_segments} {api_segments} {web_segments}  ';
+    'scaffold {modo} {classes} {entity} {entity_segments} {api_segments} {web_segments}  ';
     protected $name        = "scaffold";
     protected $description = 'Command description.';
     protected $controller_template;
@@ -22,15 +22,10 @@ class ScaffoldingCommand extends Command {
     
     protected $classes=[];
     protected $entity="";
-    protected $singular_snack_entity="";
-    protected $gender="";
-    protected $slug_entity="";
     protected $snack_entity="";
     protected $entity_segments="";
     protected $api_segments="";
     protected $web_segments="";
-    protected $menu="";
-    protected $defaults="";
 
     public function __construct()
     {
@@ -147,10 +142,6 @@ class ScaffoldingCommand extends Command {
         $this->api_controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->api_controller_template);
         $this->api_controller_template = str_replace('$APIENTITYSEGMENTS$', Str::title($this->api_segments), $this->api_controller_template);
         $this->api_controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->api_controller_template);
-        $this->api_controller_template = str_replace('$GENDER$', Str::title($this->gender), $this->api_controller_template);
-        $this->api_controller_template = str_replace('$SLUGENTITY$', $this->slug_entity, $this->api_controller_template);
-        $this->api_controller_template = str_replace('$SNACKENTITY$', $this->snack_entity, $this->api_controller_template);
-        $this->api_controller_template = str_replace('$SINGULARSNACKENTITY$', $this->singular_snack_entity, $this->api_controller_template);
     }
 
     public function makeWebController(){
@@ -158,22 +149,11 @@ class ScaffoldingCommand extends Command {
         $this->web_controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->web_controller_template);
         $this->web_controller_template = str_replace('$WEBENTITYSEGMENTS$', Str::title($this->web_segments), $this->web_controller_template);
         $this->web_controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->web_controller_template);
-        $this->web_controller_template = str_replace('$GENDER$', Str::title($this->gender), $this->web_controller_template);
-        $this->web_controller_template = str_replace('$SLUGENTITY$', $this->slug_entity, $this->web_controller_template);
-        $this->web_controller_template = str_replace('$SNACKENTITY$', $this->snack_entity, $this->web_controller_template);
-        $this->web_controller_template = str_replace('$SINGULARSNACKENTITY$', $this->singular_snack_entity, $this->web_controller_template);
-        $this->web_controller_template = str_replace('$MENU$', $this->menu, $this->web_controller_template);
-        $this->web_controller_template = str_replace('$SUBMENU$', $this->slug_entity, $this->web_controller_template);
-        $this->web_controller_template = str_replace('$DEFAULTS$', $this->defaults, $this->web_controller_template);
     }
 
     public function makeRequest(){
         $this->request_template = str_replace('$ENTITY$', $this->entity, $this->request_template);
         $this->request_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->request_template);
-        $this->request_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->request_template);
-        $this->request_template = str_replace('$SLUGENTITY$', $this->slug_entity, $this->request_template);
-        $this->request_template = str_replace('$SNACKENTITY$', $this->snack_entity, $this->request_template);
-        $this->request_template = str_replace('$SINGULARSNACKENTITY$', $this->singular_snack_entity, $this->request_template);
     }
 
     public function makeModel(){
@@ -194,23 +174,16 @@ class ScaffoldingCommand extends Command {
         $classes                     = $this->argument("classes");
         $this->classes               = explode(",", $classes);
         $this->entity                = $this->argument("entity");
-        $this->gender                = $this->argument("gender");
-        $this->menu                  = $this->argument("menu");
-        $this->defaults              = $this->argument("defaults");
         $this->entity_segments       = $this->argument("entity_segments");
         $this->api_segments          = $this->argument("api_segments");
         $this->web_segments          = $this->argument("web_segments");
-        $this->singular_snack_entity = snake_case($this->entity);
-        $this->snack_entity          = str_plural($this->singular_snack_entity);
-        $this->slug_entity           = str_slug($this->snack_entity);
+        $this->snack_entity          = str_plural(snake_case($this->entity));
         
         /*
         dd([
             "classes"               =>$this->classes,
             "entity"                =>$this->entity,
             "gender"                =>$this->gender,
-            "singular_snack_entity" =>$this->singular_snack_entity,
-            "slug_entity"           =>$this->slug_entity,
             "snack_entity"          =>$this->snack_entity,
             "entity_segments"       =>$this->entity_segments,
             "api_segments"          =>$this->api_segments,
@@ -271,15 +244,6 @@ class ScaffoldingCommand extends Command {
             ],
             [
                 "entity", InputArgument::REQUIRED, "Entidy is required",
-            ],
-            [
-                "gender", InputArgument::REQUIRED, "gender is required (F,M)",
-            ],
-            [
-                "menu", InputArgument::OPTIONAL,
-            ],
-            [
-                "defaults", InputArgument::OPTIONAL,
             ],
             [
                 "entity_segments", InputArgument::OPTIONAL,
