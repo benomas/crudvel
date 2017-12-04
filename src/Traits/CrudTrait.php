@@ -48,7 +48,7 @@ trait CrudTrait {
             $this->explodeClass();
         return $this->crudObjectName;
     }
-    
+
     public function mainArgumentName(){
         if(empty($this->crudObjectName))
             $this->explodeClass();
@@ -56,7 +56,7 @@ trait CrudTrait {
             $this->rowName = camel_case($this->crudObjectName);
         return $this->rowName;
     }
-
+    
     public function autoSetPropertys(...$propertyRewriter){
         if(!empty($propertyRewriter) && is_array($propertyRewriter))
             foreach ($propertyRewriter as $param)

@@ -17,13 +17,13 @@ class ApiController extends CustomController
     //bandera que indica si index se carga desde tabla o desde vista
     protected $hasView;
     //arreglo con columnas que se permiten filtrar en paginado, si se setea con false, no se permitira filtrado, si se setea con null o no se setea, no se pondran restricciones en filtrado
-    protected $filterables;
+    protected $filterables=null;
     //arreglo con columnas que se permiten ordenar en paginado, si se setea con false, no se permitira ordenar, si se setea con null o no se setea, no se pondran restricciones en ordenar
-    protected $orderables;
+    protected $orderables=null;
     //boleado que indica si el controller permite paginacion de forma general
-    protected $paginable;
+    protected $paginable=true;
     //arreglo con columnas que se permiten seleccionar en paginado, si se setea con false, no se permitira seleccionar de forma especifica, si se setea con null o no se setea, no se pondran restricciones en seleccionar de forma especifica
-    protected $selectables;
+    protected $selectables=null;
     //boleado que indica si el ordenamiento sera ascendente o no
     protected $ascending;
     //boleado que indica si se permite filtrado columna por columna
@@ -44,10 +44,6 @@ class ApiController extends CustomController
     //public function __construct($request,$model){
     public function __construct(...$propertyRewriter){
         parent::__construct(...$propertyRewriter);
-        $this->paginable           = true;
-        $this->filterables         = null;
-        $this->selectables         = null;
-        $this->orderables          = null;
     }
 
     public function resourcesExplode(){
@@ -64,7 +60,7 @@ class ApiController extends CustomController
         if(empty($this->viewFolder))
             $this->viewFolder = snake_case($this->getCrudObjectName());
     }
-    
+
     public function callAction($method,$parameters=[]){
         return empty($this->model)?$this->apiNotFound():parent::callAction($method,$parameters);
     }

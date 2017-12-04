@@ -58,7 +58,7 @@ class WebController extends CustomController
         if(empty($this->viewFolder))
             $this->viewFolder = snake_case($this->getCrudObjectName());
         if(empty($this->rowName))
-            $this->rowName = camel_case($this->crudObjectName);
+            $this->rowName = camel_case($this->getCrudObjectName());
     }
 
     public function  callAction($method, $parameters=[]){
