@@ -358,4 +358,12 @@ class CustomController extends BaseController {
         return true;
     }
 
+    public function addActions(...$moreActions){
+        $this->actions=array_merge($this->actions,$moreActions);
+    }
+
+    public function addKeyActions(...$moreActions){
+        $this->keyActions=array_merge($this->keyActions,$moreActions);
+    }
+
 }
