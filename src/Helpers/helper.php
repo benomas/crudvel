@@ -468,6 +468,13 @@ if(!function_exists("instanceTrans")){
 	}
 }
 
+if(!function_exists("shadowInstance")){
+
+	function shadowInstance($instance){
+		return clone $instance; 
+	}
+}
+
 if(!function_exists("resourceAccess")){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
