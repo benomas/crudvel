@@ -280,13 +280,14 @@ class CustomController extends BaseController {
 
     public function export(){
         $data = [];
+        $this->request->langsToImport($this->modelInstanciator(true)->getFillable());
         if(($rows = $this->model->get()))
             foreach($rows as $key=>$row)
-                foreach ($this->request->exportImportPropertys as $label=>$field)
+                foreach ($this->request->exportImportProperties as $label=>$field)
                     $data[$key][] = $this->request->exportPropertyFixer($field,$row);
 
-        array_unshift($data, array_keys($this->request->exportImportPropertys));
-        Excel::create(str_slug(str_plural($this->crudObjectName))."_".intval(microtime(true)), function ($excel) use ($data) {
+        array_unshift($data, array_keys($this->request->exportImportProperties));
+        Excel::create(trans("crudvel/".$this->langName.".rows_label")." ".intval(microtime(true)), function ($excel) use ($data) {
             $excel->sheet('Hoja1', function ($sheet) use ($data) {
                 $sheet->fromArray($data, "", "A1", true, false);
             });
@@ -306,14 +307,14 @@ class CustomController extends BaseController {
 
             $this->request->file('importation_file')->move(public_path() . "/upload/importing/", $filename);
             $reader = Excel::load($path)->get();
-            $this->request->inicializeImporter();
+            $this->request->inicializeImporter($this->modelInstanciator(true)->getFillable());
             $reader->each(function ($row){
                 $this->resetTransaction();
                 $this->startTranstaction();
                 $this->testTransaction(function() use($row){
                     $this->request->firstImporterCall($row);
                     $this->request->fields = [];
-                    foreach ($this->request->exportImportPropertys as $label=>$field)
+                    foreach ($this->request->exportImportProperties as $label=>$field)
                         if(($dataFiled = $this->request->importPropertyFixer($label,$row))!==null)
                             $this->request->fields[$field] = $dataFiled;
 
@@ -322,6 +323,7 @@ class CustomController extends BaseController {
                         return false;
                     }
 
+                    $this->request->changeImporter();
                     if(($model = (  $this->request->currentAction==="store"?
                                         $this->modelInstanciator(true):
                                         $this->modelInstanciator()->id($row->{$this->request->slugedImporterRowIdentifier()})->first()
