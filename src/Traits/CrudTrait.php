@@ -52,7 +52,7 @@ trait CrudTrait {
         if(empty($this->crudObjectName))
             $this->explodeClass();
         if(empty($this->rowName))
-            $this->rowName = camel_case($this->crudObjectName);
+            $this->rowName = snake_case($this->crudObjectName);
         return $this->rowName;
     }
     
