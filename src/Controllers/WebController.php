@@ -46,7 +46,7 @@ class WebController extends CustomController
 
     public function resourcesExplode(){
         if(empty($this->langName))
-            $this->langName = snake_case($this->getCrudObjectName());
+            $this->langName = snake_case(str_plural($this->getCrudObjectName()));
         if(empty($this->rowLabel))
             $this->rowLabel = trans("crudvel/".$this->langName.".row_label");
         if(empty($this->rowsLabel))
@@ -56,9 +56,9 @@ class WebController extends CustomController
         if(empty($this->pluralSlug))
             $this->pluralSlug = str_slug($this->rowsLabel);
         if(empty($this->viewFolder))
-            $this->viewFolder = snake_case($this->getCrudObjectName());
+            $this->viewFolder = kebab_case(str_plural($this->getCrudObjectName()));
         if(empty($this->rowName))
-            $this->rowName = camel_case($this->getCrudObjectName());
+            $this->rowName = snake_case($this->getCrudObjectName());
     }
 
     public function  callAction($method, $parameters=[]){
