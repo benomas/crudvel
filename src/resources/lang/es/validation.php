@@ -85,6 +85,7 @@ return [
 	"at_least_x_semaphores_of_kind"     => "Debe tener almenos un",
 	"no_more_than_x_semaphores_of_kind" => "Debe haber uno o mas",
 	"color"                             => "Color invalido",
+	"key_exist"                         => "El valor no corresponde con el catalogo",
 
 
 	/*

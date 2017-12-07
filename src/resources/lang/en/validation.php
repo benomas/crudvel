@@ -76,6 +76,11 @@ return [
 	"url"                        => "The :attribute format is invalid.",
 	"timezone"                   => "The :attribute must be a valid zone.",
 	"user_name"                  => "El campo :attribute solo acepta \"letras\", \"numeros\", y los siguientes caracteres: . - _ @ ",
+	"user_name"                         => "El campo :attribute solo acepta \"letras\", \"numeros\", y los siguientes caracteres: . - _ @ ",
+	"at_least_x_semaphores_of_kind"     => "Debe tener almenos un",
+	"no_more_than_x_semaphores_of_kind" => "Debe haber uno o mas",
+	"color"                             => "Color invalido",
+	"key_exist"                         => "El valor no corresponde con el catalogo",
 
 	/*
 	|--------------------------------------------------------------------------

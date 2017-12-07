@@ -25,13 +25,12 @@ class CrudRequest extends FormRequest
     protected $rowName;
 
     //import/export
-    public $exportImportPropertys = [];
+    public $exportImportProperties = [];
     public $importerRowIdentifier = "Identificador";
-    public $importerKey           = "";
     public $currentValidator;
 
     //imports/export
-    public $importerResults       = [];
+    public $importResults       = [];
     public $importerCursor        = 1;
     use CrudTrait;
 
@@ -146,7 +145,12 @@ class CrudRequest extends FormRequest
             if(method_exists($this,"postStore"))
                 $this->postStore();
         }
-        $this->currentValidator= \Illuminate\Support\Facades\Validator::make($this->fields,$this->rules);
+        $this->currentValidator= \Illuminate\Support\Facades\Validator::make(
+            $this->fields,
+            $this->rules,
+            [],
+            $this->attributes()
+        );
         return !$this->currentValidator->fails();
     }
 
@@ -159,7 +163,8 @@ class CrudRequest extends FormRequest
         return (!empty($row->{$fixedLabel}))?$row->{$fixedLabel}:null;
     }
 
-    public function inicializeImporter(){
+    public function inicializeImporter($properties){
+        $this->langsToImport($properties);
         $this->importerCursor=1;
         $this->importResults=[];
     }
@@ -167,7 +172,6 @@ class CrudRequest extends FormRequest
     public function firstImporterCall($row){
         $this->importerCursor++;
         $this->changeImporter();
-        $this->importResults[$this->importerCursor][$this->importerKey] = $row->{$this->importerLabelKey};
     }
 
     public function changeImporter($status="success",$errors=null){
@@ -188,5 +192,14 @@ class CrudRequest extends FormRequest
 
     public function slugedImporterRowIdentifier(){
         return str_slug($this->importerRowIdentifier,"_");
+    }
+
+    public function langsToImport($properties){
+        $key = trans("crudvel/".$this->langName.".fields.id");
+        $this->exportImportProperties[$key] = "id";
+        foreach ($properties as $property) {
+            $key = trans("crudvel/".$this->langName.".fields.".$property);
+            $this->exportImportProperties[$key] = $property;
+        }
     }
 }
