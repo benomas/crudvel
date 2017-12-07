@@ -492,7 +492,7 @@ if(!function_exists("resourceAccess")){
 		if($user->isRoot())
 		    return true;
 
-		if(!\Crudvel\Models\Permission::actionResource($resourceAction)->count())
+		if(!\App\Models\Permission::actionResource($resourceAction)->count())
 		    return true;
 		$newUserInstace->resourceActionPermission($resourceAction)->count();
 
