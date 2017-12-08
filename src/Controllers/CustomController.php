@@ -4,6 +4,8 @@ namespace Crudvel\Controllers;
 use DB;
 use Crudvel\Traits\CrudTrait;
 use Illuminate\Routing\Controller as BaseController;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
 /*
     This is a customization of the controller, some controllers needs to save multiple data on different tables in one step, doing that without transaction is a bad idea.
     so the options is to doing it manually, but it is a lot of code, and it is always the same, to i get that code and put it togheter as methods, so now with the support of
@@ -274,6 +276,94 @@ class CustomController extends BaseController {
         },null,false);
         $this->transactionComplete();
         return $this->isTransactionCompleted();
+    }
+
+    public function export(){
+        $data = [];
+        $this->request->langsToImport($this->modelInstanciator(true)->getFillable());
+        if(($rows = $this->model->get()))
+            foreach($rows as $key=>$row)
+                foreach ($this->request->exportImportProperties as $label=>$field)
+                    $data[$key][] = $this->request->exportPropertyFixer($field,$row);
+
+        array_unshift($data, array_keys($this->request->exportImportProperties));
+        Excel::create(trans("crudvel/".$this->langName.".rows_label")." ".intval(microtime(true)), function ($excel) use ($data) {
+            $excel->sheet('Hoja1', function ($sheet) use ($data) {
+                $sheet->fromArray($data, "", "A1", true, false);
+            });
+        })->export('xlsx');
+    }
+
+    public function importing(){
+        $fail=true;
+        ini_set('max_execution_time',300);
+
+        if ($this->request->hasFile('importation_file')) {
+            $fail=false;
+            $extension = $this->request->file('importation_file')->getClientOriginalExtension();
+            $name      = uniqid();
+            $filename  = $name . "." . $extension;
+            $path      = public_path() . "/upload/importing/" . $filename;
+
+            $this->request->file('importation_file')->move(public_path() . "/upload/importing/", $filename);
+            $reader = Excel::load($path)->get();
+            $this->request->inicializeImporter($this->modelInstanciator(true)->getFillable());
+            $reader->each(function ($row){
+                $this->resetTransaction();
+                $this->startTranstaction();
+                $this->testTransaction(function() use($row){
+                    $this->request->firstImporterCall($row);
+                    $this->request->fields = [];
+                    foreach ($this->request->exportImportProperties as $label=>$field)
+                        if(($dataFiled = $this->request->importPropertyFixer($label,$row))!==null)
+                            $this->request->fields[$field] = $dataFiled;
+
+                    if(!$this->request->validateImportingRow($row)){
+                        $this->request->changeImporter("validationErrors",$this->request->currentValidator->errors());
+                        return false;
+                    }
+
+                    $this->request->changeImporter();
+                    if(($model = (  $this->request->currentAction==="store"?
+                                        $this->modelInstanciator(true):
+                                        $this->modelInstanciator()->id($row->{$this->request->slugedImporterRowIdentifier()})->first()
+                                )
+                        )
+                    ){
+                        $model->fill($this->request->fields);
+                        if(!$model->isDirty()){
+                            $this->request->changeTransactionType("Sin cambios");
+                            return $this->importCallBack();
+                        }
+                        if($model->save())
+                            return $this->importCallBack();
+                        
+                        $this->request->changeImporter("validationErrors",'Error de transacción');
+                    }
+                    return false;
+                },null,false);
+                $this->transactionComplete();
+            });
+            @unlink($path);
+        }
+
+        if($this->request->wantsJson())
+            return $fail?$this->apiFailResponse():$this->apiSuccessResponse(["data"=>$this->request->importResults,"status"=>trans("crudvel.api.success")]);
+
+        Session::flash('importResults', $this->request->importResults);
+        return $fail?$this->webFailResponse():$this->webSuccessResponse();
+    }
+
+    public function importCallBack(){
+        return true;
+    }
+
+    public function addActions(...$moreActions){
+        $this->actions=array_merge($this->actions,$moreActions);
+    }
+
+    public function addKeyActions(...$moreActions){
+        $this->keyActions=array_merge($this->keyActions,$moreActions);
     }
 
 }

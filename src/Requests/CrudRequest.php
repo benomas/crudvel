@@ -23,6 +23,15 @@ class CrudRequest extends FormRequest
     protected $customBaseName;
     protected $langName;
     protected $rowName;
+
+    //import/export
+    public $exportImportProperties = [];
+    public $importerRowIdentifier = "Identificador";
+    public $currentValidator;
+
+    //imports/export
+    public $importResults       = [];
+    public $importerCursor        = 1;
     use CrudTrait;
 
     public function resourcesExplode(){
@@ -121,4 +130,76 @@ class CrudRequest extends FormRequest
         return !empty($fields = Lang::get("crudvel/".$this->langName.".fields"))?$fields:[];
     }
 
+    //Todo
+    public function validateImportingRow($row){
+        $this->defaultRules();
+        $identifier = $this->slugedImporterRowIdentifier();
+        $this->currentAction = "store";
+        if($row->{$identifier}){
+            $this->currentAction   = "update";
+            $this->currentActionId = $row->{$identifier};
+            if(method_exists($this,"putUpdate"))
+                $this->putUpdate();
+        }
+        else{
+            if(method_exists($this,"postStore"))
+                $this->postStore();
+        }
+        $this->currentValidator= \Illuminate\Support\Facades\Validator::make(
+            $this->fields,
+            $this->rules,
+            [],
+            $this->attributes()
+        );
+        return !$this->currentValidator->fails();
+    }
+
+    public function exportPropertyFixer($property,$row){
+        return !empty($row->{$property})?$row->{$property}:null;
+    }
+
+    public function importPropertyFixer($label,$row){
+        $fixedLabel = str_slug($label,"_");
+        return (!empty($row->{$fixedLabel}))?$row->{$fixedLabel}:null;
+    }
+
+    public function inicializeImporter($properties){
+        $this->langsToImport($properties);
+        $this->importerCursor=1;
+        $this->importResults=[];
+    }
+
+    public function firstImporterCall($row){
+        $this->importerCursor++;
+        $this->changeImporter();
+    }
+
+    public function changeImporter($status="success",$errors=null){
+        if(empty($this->importResults[$this->importerCursor]))
+            $this->importResults[$this->importerCursor]=[];
+        $this->importResults[$this->importerCursor]["status"]          = $status;
+        $this->importResults[$this->importerCursor]["errors"]          = $errors;
+        $this->importResults[$this->importerCursor]["transactionType"] = trans("crudvel.actions.".$this->currentAction.".call_message");
+    }
+
+    public function changeTransactionType($transactionType){
+        $this->importResults[$this->importerCursor]["transactionType"] = $transactionType;
+    }
+
+    public function changeErrors($errors){
+        $this->importResults[$this->importerCursor]["errors"] = $errors;
+    }
+
+    public function slugedImporterRowIdentifier(){
+        return str_slug($this->importerRowIdentifier,"_");
+    }
+
+    public function langsToImport($properties){
+        $key = trans("crudvel/".$this->langName.".fields.id");
+        $this->exportImportProperties[$key] = "id";
+        foreach ($properties as $property) {
+            $key = trans("crudvel/".$this->langName.".fields.".$property);
+            $this->exportImportProperties[$key] = $property;
+        }
+    }
 }
