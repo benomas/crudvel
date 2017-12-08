@@ -468,35 +468,39 @@ if(!function_exists("instanceTrans")){
 	}
 }
 
+if(!function_exists("shadowInstance")){
+
+	function shadowInstance($instance){
+		return clone $instance; 
+	}
+}
+
 if(!function_exists("resourceAccess")){
 	/**
-	 * Cuenta los valores true al evaluar un array de expresiones
+	 * check user permission
 	 *
-	 * @param string   expresions  array con expresiones logicas
+	 * @param user model instance   userInstance
+	 * @param string 	resourceAction
 	 *
 	 * @author Benomas benomas@gmail.com
 	 * @date   2017-05-08
 	 * @return array
 	 */
 
-	function resourceAccess($userInstace,$resourceAction){
+	function resourceAccess($userInstace,$actionResource){
 		if(empty($userInstace))
             return false;
 
-		$newUserInstace = new \Illuminate\Database\Eloquent\Builder(clone $userInstace->getQuery());
-		$newUserInstace->setModel($userInstace->getModel());
-
-		if(!($user = $newUserInstace->first()))
+		if(!($user = $userInstace->first()))
 		    return false;
 
 		if($user->isRoot())
 		    return true;
 
-		if(!\Crudvel\Models\Permission::actionResource($resourceAction)->count())
+		if(!\App\Models\Permission::actionResource($actionResource)->count())
 		    return true;
-		$newUserInstace->resourceActionPermission($resourceAction)->count();
 
-		return $newUserInstace->resourceActionPermission($resourceAction)->count();
+		return shadowInstance($userInstace)->resourceActionPermission($actionResource)->count();
 	}
 }
 

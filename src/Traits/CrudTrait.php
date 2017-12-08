@@ -8,7 +8,6 @@ namespace Crudvel\Traits;
 */
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
-use Crudvel\Models\User;
 trait CrudTrait {
 
     public function setEntity(){
@@ -53,7 +52,7 @@ trait CrudTrait {
         if(empty($this->crudObjectName))
             $this->explodeClass();
         if(empty($this->rowName))
-            $this->rowName = camel_case($this->crudObjectName);
+            $this->rowName = snake_case($this->crudObjectName);
         return $this->rowName;
     }
     

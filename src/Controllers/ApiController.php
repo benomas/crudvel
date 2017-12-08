@@ -48,7 +48,7 @@ class ApiController extends CustomController
 
     public function resourcesExplode(){
         if(empty($this->langName))
-            $this->langName = snake_case($this->getCrudObjectName());
+            $this->langName = snake_case(str_plural($this->getCrudObjectName()));
         if(empty($this->rowLabel))
             $this->rowLabel = trans("crudvel/".$this->langName.".row_label");
         if(empty($this->rowsLabel))
@@ -57,8 +57,8 @@ class ApiController extends CustomController
             $this->singularSlug = str_slug($this->rowLabel);
         if(empty($this->pluralSlug))
             $this->pluralSlug = str_slug($this->rowsLabel);
-        if(empty($this->viewFolder))
-            $this->viewFolder = snake_case($this->getCrudObjectName());
+        if(empty($this->rowName))
+            $this->rowName = snake_case($this->getCrudObjectName());
     }
 
     public function callAction($method,$parameters=[]){
