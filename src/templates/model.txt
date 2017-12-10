@@ -3,7 +3,6 @@
 use Crudvel\Customs\Models\BaseModel;
 
 class $ENTITY$ extends BaseModel {
-    $TRAITS$;
 
     protected $fillable = [
     ];

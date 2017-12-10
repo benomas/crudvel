@@ -64,7 +64,7 @@ class WebController extends CustomController
     public function  callAction($method, $parameters=[]){
 
         $next = empty($this->model)?$this->redirectBackWithInput():parent::callAction($method,$parameters);
-        if(!empty($this->currentUser))
+        if(!empty($this->userModelInstance))
             $this->viewSharedPropertys[]="currentUser";
         if(empty($this->resource)){
             if(!empty($this->request->baseName))

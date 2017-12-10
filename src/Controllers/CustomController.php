@@ -31,6 +31,7 @@ class CustomController extends BaseController {
     //modelo cargado en memoria
     protected $model;
     protected $modelInstance;
+    protected $userModelInstance;
     //validador autorizador anonimo
     protected $request;
     protected $currentAction;
@@ -117,7 +118,7 @@ class CustomController extends BaseController {
             return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
 
         $this->setCurrentUser();
-        if(!resourceAccess($this->currentUser,"inactives"))
+        if(!resourceAccess($this->userModelInstance,"inactives"))
             $this->model->actives();
         if(in_array($this->request->method(),["POST","PUT"]))
             $this->loadFields();
@@ -365,5 +366,4 @@ class CustomController extends BaseController {
     public function addKeyActions(...$moreActions){
         $this->keyActions=array_merge($this->keyActions,$moreActions);
     }
-
 }
