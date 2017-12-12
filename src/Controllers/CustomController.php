@@ -366,4 +366,8 @@ class CustomController extends BaseController {
     public function addKeyActions(...$moreActions){
         $this->keyActions=array_merge($this->keyActions,$moreActions);
     }
+
+    public function addViewActions(...$moreActions){
+        $this->viewActions=array_merge($this->viewActions,$moreActions);
+    }
 }
