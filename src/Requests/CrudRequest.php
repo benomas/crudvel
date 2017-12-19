@@ -117,8 +117,13 @@ class CrudRequest extends FormRequest
      */
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
-        if(!$this->wantsJson())
+        if(!$this->wantsJson()){
+            $this->merge([
+                "lastAction"   =>$this->currentAction,
+                "lastActionId" =>$this->currentActionId,
+            ]);
             Session::flash("error", trans("crudvel.web.validation_errors"));
+        }
 
         throw new HttpResponseException($this->response(
             $this->formatErrors($validator)
