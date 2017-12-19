@@ -153,14 +153,22 @@ trait CrudTrait {
             $respProp["statusMessage"]?$respProp["statusMessage"]:"Correcto"
         );
         Session::flash("statusMessage",$respProp["statusMessage"]?$respProp["statusMessage"]:"Correcto");
+        if(!empty($respProp["inputs"]))
+            $allInputs = empty($respProp["inputs"])?$this->fields:$respProp["inputs"];
+        
+        $allInputs["lastAction"]   = $this->currentAction;
+        $allInputs["lastActionId"] = $this->currentActionId;
+
         if(isset($respProp["withInput"])){
             $redirector=($respProp["redirector"]?$respProp["redirector"]:Redirect::back());
             if($respProp["withInput"])
-                $redirector->withInput(!empty($respProp["inputs"])?$respProp["inputs"]:$this->fields);
+                $redirector->withInput($allInputs);
         }
         else
             $redirector=$respProp["redirector"]?$respProp["redirector"]:Redirect::back();
-            $redirector->withInput(!empty($respProp["inputs"])?$respProp["inputs"]:$this->fields);
+        
+        $redirector->withInput($allInputs);
+        
         if(!empty($respProp["errors"]))
             Session::flash($errors, $respProp["errors"]);
 
