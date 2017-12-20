@@ -157,6 +157,12 @@ class ApiController extends CustomController
     }
 
     public function select(){
+        if(!empty($this->filterables))
+            foreach ($this->filterables as $filterable) {
+                if(!empty($this->fields[$filterable]))
+                    $this->model->where($filterable,$this->fields[$filterable]);
+            }
+
         return !$this->model->count()?
             $this->apiNotFound():
             $this->apiSuccessResponse(['data'=>$this->model->get()]);
