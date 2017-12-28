@@ -69,14 +69,14 @@ trait CrudTrait {
             $this->user():
             $this->request->user();
         $userModelSource = config("auth.providers.users.model","Crudvel\Models\User");
-        $this->userModelInstance=$user?
+        $this->userModel=$user?
             $userModelSource::id($user->id):
             null;
-        $this->currentUser = $this->userModelInstance?$this->userModelInstance->first():null;
+        $this->currentUser = $this->userModel?$this->userModel->first():null;
     }
 
     public function userInstance(){
-        return $this->userModelInstance->first();
+        return $this->userModel->first();
     }
 
     public function testClassType($tryClassType){
