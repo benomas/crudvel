@@ -290,17 +290,42 @@ class CustomValidator extends Validator {
     	if(!isset($parameters[1]))
     		$parameters[1]='id';
 
+        $hasExceptions = 0;
+        $exceptions    = [];
     	try{
     		$test = DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],'=',$value);
     		foreach ($parameters as $key => $property) {
     			if($key<2)
     				continue;
+                
+                if($hasExceptions){
+                    if($key===$hasExceptions+1)
+                        $exceptionTable = $property;
+                    if($key===$hasExceptions+2)
+                        $exceptionTableColumn= $property;
+                    if($key===$hasExceptions+3)
+                        $exceptionTableValue= $property;
+                }
+                else{
+                    if($property==="exception"){
+                        $hasExceptions = $key;
+                        continue;
+                    }
 
-    			if($key%2===0)
-    				$temp = $property;
-    			else
-    				$test->where($parameters[0].'.'.$temp,'=',$property);
+                    if($key%2===0)
+                        $temp = $property;
+                    else
+                        $test->where($parameters[0].'.'.$temp,'=',$property);
+                }
     		}
+
+            if($hasExceptions && DB::table($exceptionTable)->
+                where($exceptionTable.".".$attribute,$value)->
+                where($exceptionTable.".".$exceptionTableColumn,$exceptionTableValue)->
+                count()
+            )
+                return true;
+
     		return $test->count()>0;
     	}
         catch(\Exception $e){
@@ -334,4 +359,19 @@ class CustomValidator extends Validator {
     	return preg_match('/^\w{3,4}\d{6,6}\w{2,3}$/',$value);
 
     }
+
+    /**
+     * Validate that de value of the attribute correspond to with some of the items in the atributes list
+     *
+     * @author  Beni (beni@intagono.com) 2017-12-27
+     *
+     * @return  boolean
+     */
+    function validateInList($attribute, $value, $parameters)
+    {
+        if(empty($parameters))
+            return true;
+        return in_array($value,$parameters);
+    }
+
 }
