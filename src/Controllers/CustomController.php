@@ -31,7 +31,7 @@ class CustomController extends BaseController {
     //modelo cargado en memoria
     protected $model;
     protected $modelInstance;
-    protected $userModelInstance;
+    protected $userModel;
     //validador autorizador anonimo
     protected $request;
     protected $currentAction;
@@ -118,7 +118,7 @@ class CustomController extends BaseController {
             return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
 
         $this->setCurrentUser();
-        if(!resourceAccess($this->userModelInstance,"inactives"))
+        if(!resourceAccess($this->userModel,"inactives"))
             $this->model->actives();
         $this->loadFields();
         $preactionResponse = $this->preAction($method,$parameters);

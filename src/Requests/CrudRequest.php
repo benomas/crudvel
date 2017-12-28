@@ -50,7 +50,7 @@ class CrudRequest extends FormRequest
     {
         if(!$this->currentAction)
             return true;
-        return resourceAccess($this->userModelInstance,$this->baseName."_".$this->currentAction);
+        return resourceAccess($this->userModel,$this->baseName."_".$this->currentAction);
     }
 
     /**
