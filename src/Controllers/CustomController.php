@@ -346,7 +346,7 @@ class CustomController extends BaseController {
             });
             @unlink($path);
         }
-
+        
         if($this->request->wantsJson())
             return $fail?$this->apiFailResponse():$this->apiSuccessResponse(["data"=>$this->request->importResults,"status"=>trans("crudvel.api.success")]);
 
