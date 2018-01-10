@@ -163,9 +163,7 @@ class ApiController extends CustomController
                     $this->model->where($filterable,$this->fields[$filterable]);
             }
 
-        return !$this->model->count()?
-            $this->apiNotFound():
-            $this->apiSuccessResponse(['data'=>$this->model->get()]);
+        return $this->apiSuccessResponse(['data'=>$this->model->get()]);
     }
 
     protected function setStamps(){
