@@ -580,6 +580,56 @@ if(!function_exists("resourceByForeingKey")){
 }
 
 
+if(!function_exists("pdd")){
+	function pdd(...$doDebugg)
+	{
+		$backtrace = debug_backtrace();
+		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']." with message: ".$params);
+		array_unshift(
+			$doDebugg,
+			"from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']);
+		dd($doDebugg);
+	}
+}
+
+if(!function_exists("jdd")){
+	function jdd(...$doDebugg)
+	{
+		$backtrace = debug_backtrace();
+		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']." with message: ".$params);
+		array_unshift(
+			$doDebugg,
+			"from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']);
+		echo json_encode($doDebugg);
+		die();
+	}
+}
+
+if(!function_exists("propertyByPosition")){
+	function propertyByPosition($object,$position)
+	{
+		$cellCount=1;
+		$currentProperty=null;
+		if(!empty($object))
+			foreach($object as $cellIndex=>$cell){
+				$currentProperty=$cellIndex;
+				if($position<=$cellCount)
+					break;
+				$cellCount++;
+			}
+		return $cellCount===$position?$currentProperty:null;
+	}
+}
+
+if(!function_exists("customLog")){
+	function customLog(...$params){
+		$params = json_encode($params);
+		$backtrace = debug_backtrace();
+		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']." with message: ".$params);
+	}
+}
+
+
 
 
 
