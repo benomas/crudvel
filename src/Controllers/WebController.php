@@ -76,6 +76,9 @@ class WebController extends CustomController
         if(in_array($method,$this->viewActions))
             $this->globalViewShare();
 
+        if(in_array($method,$this->keyActions))
+            View::share("row", $this->modelInstance);
+
         return $next;
     }
 
