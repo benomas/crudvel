@@ -584,7 +584,6 @@ if(!function_exists("pdd")){
 	function pdd(...$doDebugg)
 	{
 		$backtrace = debug_backtrace();
-		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']." with message: ".$params);
 		array_unshift(
 			$doDebugg,
 			"from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']);
