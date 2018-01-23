@@ -5,7 +5,7 @@ use Crudvel\Models\BaseModel;
 class Permission extends BaseModel{
 
     protected $fillable = [
-        'slug', 'name', 'active','created_at','updated_at'
+        "slug", "name", "description", "active","created_at","updated_at"
     ];
 
     public function __construct($attributes = array())  {
@@ -22,15 +22,15 @@ class Permission extends BaseModel{
 // Scopes
 
     public function scopeActionResource($query,$actionResource){
-        $query->where($this->getTable().'.slug',$actionResource);
+        $query->where($this->getTable().".slug",$actionResource);
     }
 
     public function scopeInPermissions($query,$permissions){
-        $query->whereIn($this->getTable().'.id',$permissions);
+        $query->whereIn($this->getTable().".id",$permissions);
     }
 
     public function scopeInNamePermissions($query,$namePermissions){
-        $query->whereIn($this->getTable().'.name',$namePermissions);
+        $query->whereIn($this->getTable().".name",$namePermissions);
     }
 
 

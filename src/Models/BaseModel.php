@@ -18,69 +18,69 @@ class BaseModel extends Model {
 
     public function scopeInStatus($query, $status){
         if(is_array($status))
-            $query->whereIn($this->getTable().'.status',$status);
+            $query->whereIn($this->getTable().".status",$status);
         else
-            $query->whereIn($this->getTable().'.status',[$status]);
+            $query->whereIn($this->getTable().".status",[$status]);
     }
 
     public function scopeNotInStatus($query, $status){
         if(is_array($status))
-            $query->whereNotIn($this->getTable().'.status',$status);
+            $query->whereNotIn($this->getTable().".status",$status);
         else
-            $query->whereNotIn($this->getTable().'.status',[$status]);
+            $query->whereNotIn($this->getTable().".status",[$status]);
     }
 
     public function scopeStatus($query, $status){
-        $query->where($this->getTable().'.status',$status);
+        $query->where($this->getTable().".status",$status);
     }
 
     public function scopeActives($query){
         if($query->getModel()->hasPropertyActive)
-            $query->where($this->getTable().'.active',1);
+            $query->where($this->getTable().".active",1);
     }
 
     public function scopeNoFilters($query){
-        $query->whereNotNull($this->getTable().'.id');
+        $query->whereNotNull($this->getTable().".id");
     }
 
     public function scopeNullFilter($query){
-        $query->whereNull($this->getTable().'.id');
+        $query->whereNull($this->getTable().".id");
     }
 
     public function scopeId($query,$id){
-        $query->where($this->getTable().'.id',$id);
+        $query->where($this->getTable().".id",$id);
     }
 
     public function scopeIds($query,$ids){
-        $query->whereIn($this->getTable().'.id',$ids);
+        $query->whereIn($this->getTable().".id",$ids);
     }
 
     public function scopeNoIds($query,$ids){
-        $query->whereNotIn($this->getTable().'.id',$ids);
+        $query->whereNotIn($this->getTable().".id",$ids);
     }
 
     public function scopeUnActives($query){
-        $query->where($this->getTable().'.status',0);
+        $query->where($this->getTable().".status",0);
     }
 
     public function scopeName($query,$name){
-        $query->where($this->getTable().'.name', $name);
+        $query->where($this->getTable().".name", $name);
     }
 
     public function scopeSlug($query,$name){
-        $query->where($this->getTable().'.slug', $name);
+        $query->where($this->getTable().".slug", $name);
     }
 
     public function scopeOfLevel($query,$level_id){
-        $query->where($this->getTable().'.level_id', $level_id);
+        $query->where($this->getTable().".level_id", $level_id);
     }
 
     public function scopeOfParent($query,$parent_id){
-        $query->where($this->getTable().'.parent_id', $parent_id);
+        $query->where($this->getTable().".parent_id", $parent_id);
     }
 
     public function scopeOfSublevel($query,$sublevel_id){
-        $query->where($this->getTable().'.sublevel_id', $sublevel_id);
+        $query->where($this->getTable().".sublevel_id", $sublevel_id);
     }
 
 // End Scopes

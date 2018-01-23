@@ -1,0 +1,16 @@
+<?php 
+namespace App\Models;
+
+use Crudvel\Customs\Models\Permission AS PermissionBaseModel;
+class Permission extends PermissionBaseModel{
+
+//Relationships
+
+
+//End Relationships
+
+// Scopes
+
+
+// End Scopes
+}

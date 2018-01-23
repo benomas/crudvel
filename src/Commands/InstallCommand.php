@@ -26,14 +26,25 @@ class InstallCommand extends Command {
             if(!file_exists($this->migrationsPath))
                 mkdir($this->migrationsPath);
             $migrations =[];
-            if(!Schema::hasTable("roles"))
+            
+            $migrations[]= "alter_users_table";
+            
+            $this->cloneFileData("User.php",base_path("vendor/benomas/crudvel/src/templates/user.txt"),base_path("app/Models"));
+            
+            if(!Schema::hasTable("roles")){
                 $migrations[]= "create_roles_table";
-            if(!Schema::hasTable("role_users"))
-                $migrations[]= "create_role_users_table";
-            if(!Schema::hasTable("permissions"))
+                $this->cloneFileData("Role.php",base_path("vendor/benomas/crudvel/src/templates/role.txt"),base_path("app/Models"));
+            }
+            if(!Schema::hasTable("role_user")){
+                $migrations[]= "create_role_user_table";
+            }
+            if(!Schema::hasTable("permissions")){
                 $migrations[]= "create_permissions_table";
-            if(!Schema::hasTable("permission_role"))
+                $this->cloneFileData("Permission.php",base_path("vendor/benomas/crudvel/src/templates/permission.txt"),base_path("app/Models"));
+            }
+            if(!Schema::hasTable("permission_role")){
                 $migrations[]= "create_permission_role_table";
+            }
             foreach ($migrations  as $baseName) 
                 $this->publishMigration($baseName);
         }
@@ -85,5 +96,17 @@ class InstallCommand extends Command {
         if(!file_exists(($fileName=$this->migrationsPath."/".($leftNow)."_".$baseName."_".$rightNow.".php")))
             file_put_contents($fileName, $migration);
         shell_exec('composer dump-autoload');
+    }
+
+    function cloneFileData($file,$source,$targetFolder){
+
+        if(!file_exists($source))
+            return false;
+
+        if(!file_exists($targetFolder))
+            mkdir($targetFolder);
+
+        if(!file_exists($targetFolder."/".$file))
+            file_put_contents($targetFolder."/".$file, file_get_contents($source));
     }
 }
