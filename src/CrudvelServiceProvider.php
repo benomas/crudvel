@@ -5,6 +5,7 @@ namespace Benomas\Crudvel;
 use Illuminate\Support\ServiceProvider;
 use Benomas\Crudvel\Commands\InstallCommand;
 use Benomas\Crudvel\Commands\ScaffoldingCommand;
+use Benomas\Crudvel\Commands\MakeRootUser;
 
 class CrudvelServiceProvider extends ServiceProvider
 {
@@ -44,5 +45,10 @@ class CrudvelServiceProvider extends ServiceProvider
             return new ScaffoldingCommand();
         });
         $this->commands('make.scaffold');
+        
+        $this->app->singleton('make:root-user', function () {
+            return new MakeRootUser();
+        });
+        $this->commands('make:root-user');
     }
 }

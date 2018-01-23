@@ -5,7 +5,7 @@ use Crudvel\Models\BaseModel;
 class Role extends BaseModel{
 
     protected $fillable = [
-        "slug", "name", "description","active"
+        "slug", "name", "description","active","created_at","updated_at"
     ];
 
     public function __construct($attributes = array())  {
@@ -15,7 +15,7 @@ class Role extends BaseModel{
 //Relationships
 
     public function users(){
-        return $this->belongsToMany("Crudvel\Models\User", "role_users");
+        return $this->belongsToMany("Crudvel\Models\User", "role_user");
     }
 
     public function permissions(){
@@ -26,7 +26,7 @@ class Role extends BaseModel{
 
 // Scopes
     public function scopeInRoles($query,$rolesSlug){
-        $query->whereIn($this->getTable().'.slug',$rolesSlug);
+        $query->whereIn($this->getTable().".slug",$rolesSlug);
     }
 
     public function scopeWithRole($query,$roleSlug){
@@ -34,23 +34,23 @@ class Role extends BaseModel{
     }
 
     public function scopeWithRoot($query){
-        $this->scopeWithRole($query,'root');
+        $this->scopeWithRole($query,"root");
     }
 
     public function scopeWithAdmin($query){
-        $this->scopeWithRole($query,'administrador');
+        $this->scopeWithRole($query,"administrador");
     }
 
     public function scopeWithManager($query){
-        $this->scopeWithRole($query,'gerente');
+        $this->scopeWithRole($query,"gerente");
     }
 
     public function scopeWithDistribuitor($query){
-        $this->scopeWithRole($query,'distribuidor');
+        $this->scopeWithRole($query,"distribuidor");
     }
 
     public function scopeHidden($query){
-        $query->where($this->getTable().'.slug',"<>","root");
+        $query->where($this->getTable().".slug","<>","root");
     }
 
 // End Scopes

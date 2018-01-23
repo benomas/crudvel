@@ -3,29 +3,26 @@
 namespace Crudvel\Models;
 
 use Carbon\Carbon;
-use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
-use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
-use Cartalyst\Sentinel\Laravel\Facades\Activation;
-use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Crudvel\Models\BaseModel;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Str;
-use HTML2PDF;
 
 class User extends BaseModel{
 
     protected $fillable = [
-        'username','first_name', 'last_name', 'email', 'password'
+         "active",
+         "created_at",
+         "email",
+         "first_name",
+         "last_login",
+         "last_name",
+         "password",
+         "updated_at",
+         "username",
     ]; 
 
     protected $dates = [
-        'created_at',
-        'updated_at',
-        'last_login'
+        "created_at",
+        "updated_at",
+        "last_login"
     ];
 
     public function __construct($attributes = array())  {
@@ -34,7 +31,7 @@ class User extends BaseModel{
 //Relationships
 
     public function roles(){
-        return $this->belongsToMany("Crudvel\Models\Role", "role_users");
+        return $this->belongsToMany("Crudvel\Models\Role", "role_user");
     }
 //End Relationships
 
@@ -49,10 +46,10 @@ class User extends BaseModel{
 // Scopes
 
     public function scopeHidden($query){
-        $query->whereHas('roles',function($query){
+        $query->whereHas("roles",function($query){
             $query->whereNotIn("roles.slug",["root"]);
         })->orWhere(function($query){
-            $query->doesntHave('roles');
+            $query->doesntHave("roles");
         });
     }
 
@@ -80,6 +77,14 @@ class User extends BaseModel{
         $query->whereHas("roles",function($query) use($roles){
             $query->whereIn("roles.id",$roles);
         });
+    }
+
+    public function scopeWithUserName($query,$username){
+        $query->where($this->getTable().".username",$username);
+    }
+
+    public function scopeWithEmail($query,$email){
+        $query->where($this->getTable().".email",$email);
     }
 
 // End Scopes
@@ -123,7 +128,7 @@ class User extends BaseModel{
             $roleToFind =  implode("_",$checkForRole);
             return $this->inRoles($roleToFind);
         }
-        return is_callable(['parent', '__call']) ? parent::__call($method, $parameters) : null;
+        return is_callable(["parent", "__call"]) ? parent::__call($method, $parameters) : null;
     }
 // End others
 }

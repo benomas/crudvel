@@ -12,7 +12,11 @@ class CreateRolesTablerightdatetag extends BaseMigration
                 $table->increments('id');
                 $table->string('slug');
                 $table->string('name');
+                $table->string('description');
+                $table->boolean('active')->default(true);
                 $table->timestamps();
+                $table->integer('created_by')->nullable();
+                $table->integer('updated_by')->nullable();
                 $table->engine = 'InnoDB';
                 $table->unique('slug');
             });
