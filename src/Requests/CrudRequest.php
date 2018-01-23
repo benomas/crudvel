@@ -36,7 +36,7 @@ class CrudRequest extends FormRequest
 
     public function resourcesExplode(){
         if(empty($this->langName))
-            $this->langName = snake_case($this->getCrudObjectName());
+            $this->langName = snake_case(str_plural($this->getCrudObjectName()));
         if(empty($this->rowName))
             $this->rowName = camel_case($this->getCrudObjectName());
     }
@@ -132,7 +132,7 @@ class CrudRequest extends FormRequest
 
     public function attributes()
     {
-        return !empty($fields = Lang::get("crudvel/".$this->langName.".fields"))?$fields:[];
+        return !empty($fields = __("crudvel/".$this->langName.".fields"))?$fields:[];
     }
 
     //Todo
@@ -150,6 +150,7 @@ class CrudRequest extends FormRequest
             if(method_exists($this,"postStore"))
                 $this->postStore();
         }
+
         $this->currentValidator= \Illuminate\Support\Facades\Validator::make(
             $this->fields,
             $this->rules,

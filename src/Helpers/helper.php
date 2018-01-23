@@ -572,6 +572,54 @@ if(!function_exists("crudvelResources")){
 	}
 }
 
+
+if(!function_exists("apiCrudvelResource")){
+	function apiCrudvelResource($resource,$controller=null,$conditionals=[]){
+		if(empty($resource))
+			return false;
+		$urlSegments = explode("/",$resource);
+		$rowName = str_slug(str_singular(end($urlSegments)),"_");
+		
+		if(!$controller)
+			$controller="Api\\".studly_case($rowName)."Controller";
+        if(!count($conditionals)){
+	        Route::get($resource."/import", $controller."@import");
+	        Route::get($resource."/export", $controller."@export");
+	        Route::post($resource."/import", $controller."@importing");
+	        Route::post($resource."/export", $controller."@exporting");
+	        Route::get($resource."/{".$rowName."}/active", $controller."@active");
+	        Route::get($resource."/{".$rowName."}/deactive", $controller."@deactive");
+	        Route::resource($resource, $controller);
+        }
+        else{
+			$only     = empty($conditionals["only"])?[]:$conditionals["only"];
+			$excludes = empty($conditionals["excludes"])?[]:$conditionals["excludes"];
+	        if(validateGetActionResource("active",$only,$excludes)) Route::get($resource."/{".$rowName."}/active", $controller."@active");
+	        if(validateGetActionResource("create",$only,$excludes)) Route::get($resource."/create", $controller."@create");
+	        if(validateGetActionResource("deactive",$only,$excludes)) Route::get($resource."/{".$rowName."}/deactive", $controller."@deactive");
+	        if(validateGetActionResource("edit",$only,$excludes)) Route::get($resource."/{".$rowName."}/edit", $controller."@edit");
+	        if(validateGetActionResource("export",$only,$excludes)) Route::get($resource."/export", $controller."@export");
+	        if(validateGetActionResource("import",$only,$excludes)) Route::get($resource."/import", $controller."@import");
+	        if(validateGetActionResource("index",$only,$excludes)) Route::get($resource, $controller."@index");
+	        if(validateGetActionResource("show",$only,$excludes)) Route::get($resource."/{".$rowName."}/show", $controller."@show");
+
+	        if(validatePostActionResource("destroy",$only,$excludes)) Route::delete($resource."/{".$rowName."}", $controller."@destroy");
+	        if(validatePostActionResource("exporting",$only,$excludes)) Route::post($resource."/export", $controller."@exporting");
+	        if(validatePostActionResource("importing",$only,$excludes)) Route::post($resource."/import", $controller."@importing");
+	        if(validatePostActionResource("store",$only,$excludes)) Route::post($resource, $controller."@store");
+	        if(validatePostActionResource("update",$only,$excludes)) Route::put($resource."/{".$rowName."}", $controller."@update");
+        }
+	}
+}
+
+if(!function_exists("apiCrudvelResources")){
+	function apiCrudvelResources($resources){
+		foreach ($resources as $resource) {
+			apiCrudvelResource(...$resource);
+		}
+	}
+}
+
 if(!function_exists("resourceByForeingKey")){
 	function resourceByForeingKey($foreingKey){
 		$foreingKey = str_replace("_id","",$foreingKey);
@@ -595,7 +643,7 @@ if(!function_exists("jdd")){
 	function jdd(...$doDebugg)
 	{
 		$backtrace = debug_backtrace();
-		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']." with message: ".$params);
+		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']);
 		array_unshift(
 			$doDebugg,
 			"from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']);
