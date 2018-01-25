@@ -270,19 +270,26 @@ if(!function_exists("arrayIntersect")){
 	 * @date   2017-05-08
 	 * @return array or null
 	 */
-	function arrayIntersect($array1=null,$array2=null){
+	function arrayIntersect($array1=null,$array2=null,$isAsociative=false){
 		//si el primer parametro no es un customNonEmptyArray
 		if(!customNonEmptyArray($array2))
 			return customNonEmptyArray($array1)? $array1:null;
+
 		//si el segundo parametro no es un customNonEmptyArray
 		if(!customNonEmptyArray($array1))
 			return null;
 
 		//si ambos parametros son customNonEmptyArrays
 		$result = [];
-		foreach ($array1 as $key=>$value) {
-			if(isset($array2[$key]))
-				$result[$key]=$value;
+		if($isAsociative){
+			foreach ($array1 as $key=>$value)
+				if(in_array($key,$array2))
+					$result[$key]=$value;
+		}
+		else{
+			foreach ($array2 as $value)
+				if(in_array($value,$array1))
+					$result[]=$value;
 		}
 		return $result;
 	}

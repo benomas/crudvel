@@ -31,6 +31,8 @@ class ApiController extends CustomController
     //arreglo de columnas a filtrar, cuando byColumn es verdadero, se debera agregar un valor de busqueda por cada columna
     protected $filterQuery;
     //texto que se busca de forma general, cuando byColumn es false
+    protected $superFilterQuery;
+    //texto que se busca de forma general, cuando byColumn es false
     protected $generalSearch;
     //entero con limite de valores a regresar por paginado
     protected $limit;
@@ -40,6 +42,14 @@ class ApiController extends CustomController
     protected $page;
     //arreglo de columnas a seleccionar
     protected $selectQuery;
+    //array de comparaciones validas
+    protected $comparators=["=","<",">","<>","<=",">=","like"];
+    //array de comparaciones validas
+    protected $logicConnectors=["and","or"];
+    //array de comparaciones validas
+    protected $operatorTypes=["con","com"];
+    // current comparator;
+    protected $comparator="like";
 
     //public function __construct($request,$model){
     public function __construct(...$propertyRewriter){
@@ -257,12 +267,11 @@ class ApiController extends CustomController
             if (!$query)
                 continue;
 
-            if (is_string($query))
-                $this->model->where($mainTableName.$field,'LIKE',"%{$query}%");
-            else{
-                $start = Carbon::createFromFormat('Y-m-d',$query['start'])->startOfDay();
-                $end   = Carbon::createFromFormat('Y-m-d',$query['end'])->endOfDay();
-                $this->model->whereBetween($mainTableName.$field,[$start, $end]);
+            if (is_string($query)){
+                if($this->comparator==="like")
+                    $this->model->where($mainTableName.$field,$this->comparator,"%{$query}%");
+                else
+                    $this->model->where($mainTableName.$field,$this->comparator,"{$query}");
             }
         }
     }
@@ -278,7 +287,10 @@ class ApiController extends CustomController
 
         foreach ($this->filterQuery as $field=>$query){
             $method=!isset($method)?"where":"orWhere";
-            $this->model->{$method}($mainTableName.$field,'LIKE',"%{$this->generalSearch}%");
+            if($this->comparator==="like")
+                $this->modelInstance->{$method}($mainTableName.$field,$this->comparator,"%{$this->generalSearch}%");
+            else
+                $this->modelInstance->{$method}($mainTableName.$field,$this->comparator,"{$this->generalSearch}");
         }
     }
 
@@ -326,8 +338,14 @@ class ApiController extends CustomController
             //definimos las columnas que podran ser filtradas mediante fluent eloquent
             $this->filterQuery = arrayIntersect(
                 isset($paginate['filterQuery'])?$paginate['filterQuery']:null,
-                isset($this->filterables)?$this->filterables:null
+                isset($this->filterables)?$this->filterables:null,true
             );
+
+            if(empty($this->filterQuery))
+                $this->superFilterQuery = isset($paginate['sQ'])?$paginate['sQ']:null;
+            
+            if(!empty($paginate['comparator']) && in_array($paginate['comparator'],$this->comparators))
+                $this->comparator = $paginate['comparator'];
         }
 
         //si orderables esta definida en false, no se aceptara ordenado por ninguna columna
@@ -368,5 +386,126 @@ class ApiController extends CustomController
             $this->generalSearch=$paginate['generalSearch'];
 
         return true;
+    }
+
+    public function superQueryFilterProcesor($mainTableName){
+        if(empty($this->superFilterQuery) || empty($this->superFilterQuery[0]["sQ"]))
+            return false;
+        $this->processSubSuperQuery($mainTableName,$this->superFilterQuery);
+    }
+
+    public function processSubSuperQuery($mainTableName,$subSuperQuery,$currentConnector=null,$currentComparator=null,$subQuery=null){
+        if(empty($subQuery))
+            $subQuery=$this->modelInstance;
+        if(isAssoc($subSuperQuery)){
+            if(empty($subSuperQuery["sQ"])){
+                if(
+                    $currentConnector &&
+                    $currentComparator &&
+                    $this->vLogicarOperator($currentConnector) && 
+                    $this->vComparator($currentComparator) 
+                ){
+                    $keys = array_keys($subSuperQuery);
+                    if(!empty($keys) && $this->vFilterable($keys[0])){
+                        $queryMatch = $subSuperQuery[$keys[0]];
+                        if($currentConnector==="and" ){
+                            customLog("where ".$mainTableName.$keys[0].$currentComparator."%{$queryMatch}%");
+                            if($currentComparator==="like")
+                                $subQuery->where($mainTableName.$keys[0],$currentComparator,"%{$queryMatch}%");
+                            else
+                                $subQuery->where($mainTableName.$keys[0],$currentComparator,"{$queryMatch}");
+                        }
+                        if($currentConnector==="or"){
+                            customLog("orWhere ".$mainTableName.$keys[0].$currentComparator."%{$queryMatch}%");
+                            if($currentComparator==="like")
+                                $subQuery->orWhere($mainTableName.$keys[0],$currentComparator,"%{$queryMatch}%");
+                            else
+                                $subQuery->orWhere($mainTableName.$keys[0],$currentComparator,"{$queryMatch}");
+                        }
+                    }
+                }
+            }
+            else{
+                if(isAssoc($subSuperQuery["sQ"])){
+                    if(
+                        $currentConnector &&
+                        $this->vLogicarOperator($currentConnector) && 
+                        $this->vOperatorType($subSuperQuery,"com") && 
+                        $this->vComparator($subSuperQuery)
+                    )
+                        $this->processSubSuperQuery($mainTableName,$subSuperQuery["sQ"],$currentConnector,$subSuperQuery["op"],$subQuery);
+                }
+                else{
+                    if( 
+                        $this->vOperatorType($subSuperQuery,"con") && 
+                        $this->vLogicarOperator($subSuperQuery)
+                    ){
+                        if($currentConnector && $this->vLogicarOperator($currentConnector)){
+                            if($currentConnector==="and"){
+                                $subQuery->where(function($query) use($mainTableName,$subSuperQuery){
+                                    $this->processSubSuperQuery($mainTableName,$subSuperQuery["sQ"],$subSuperQuery["op"],null,$query);
+                                });
+                            }
+                            if($currentConnector==="or"){
+                                $subQuery->orWhere(function($query) use($mainTableName,$subSuperQuery){
+                                    $this->processSubSuperQuery($mainTableName,$subSuperQuery["sQ"],$subSuperQuery["op"],null,$query);
+                                });
+                            }
+                        }
+                        else
+                            $this->processSubSuperQuery($mainTableName,$subSuperQuery["sQ"],$subSuperQuery["op"],null,$subQuery);
+                    }
+                }
+            }
+        }
+        else{
+            foreach ($subSuperQuery as $element) {
+                if( !empty($element["sQ"])){
+                    if($this->vOperatorType($element,"com") && $this->vComparator($element))
+                        $this->processSubSuperQuery($mainTableName,$element["sQ"],$currentConnector,$element["op"],$subQuery);
+                    else
+                        $this->processSubSuperQuery($mainTableName,$element,$currentConnector,null,$subQuery);
+                }
+            }
+        }
+    }
+
+    public function vOperatorType($container,$equalTo=null){
+        $needle = !empty($container["opT"])?$container["opT"]:$container;
+        if(empty($needle))
+            return false;
+        if(!in_array($needle,$this->operatorTypes))
+            return false;
+        if($equalTo && $needle!==$equalTo)
+            return false;
+        return true;
+    }
+
+    public function vLogicarOperator($container){
+        $needle = !empty($container["op"])?$container["op"]:$container;
+        if(empty($needle))
+            return false;
+        if(!in_array($needle,$this->logicConnectors))
+            return false;
+        return true;
+    }
+
+    public function vComparator($container){
+        $needle = !empty($container["op"])?$container["op"]:$container;
+        if(empty($needle))
+            return false;
+        if(!in_array($needle,$this->comparators))
+            return false;
+        return true;
+    }
+
+    public function vFilterable($property){
+        if(empty($this->filterables))
+            return true;
+        if(!$this->filterables)
+            return false;
+        if(is_array($this->filterables) && in_array($property,$this->filterables))
+            return true;
+        return false;
     }
 }
