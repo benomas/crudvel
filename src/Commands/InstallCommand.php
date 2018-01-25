@@ -49,6 +49,9 @@ class InstallCommand extends Command {
             $saveFile=true;
         }
 
+        if(empty($myFile->autoload->files))
+            $myFile->autoload->files=[];
+
         if(!in_array('vendor/benomas/crudvel/src/Helpers/helper.php',$myFile->autoload->files)){
             $myFile->autoload->files[] = 'vendor/benomas/crudvel/src/Helpers/helper.php';
             $saveFile=true;
