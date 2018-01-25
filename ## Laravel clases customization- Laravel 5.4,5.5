@@ -17,3 +17,16 @@ Add dependency on our composer.json at the root of laravel.
 ```bash
     composer update
 ```
+
+## Scaddfolding
+for automatic create vinculated laravel clases, use a command like in the the example
+```bash
+	php artisan scaffold create api_controller,request,model,migration Car "" "Api" ""
+	php artisan scaffold delete api_controller,request,model,migration Car "" "Api" ""
+
+	php artisan scaffold create api_controller,request,model,migration User "" "Api" ""
+	php artisan scaffold delete api_controller,request,model,migration User "" "Api" ""
+
+	php artisan scaffold create api_controller,request,model,migration CarType "" "Api" ""
+	php artisan scaffold delete api_controller,request,model,migration CarType "" "Api" ""
+```
