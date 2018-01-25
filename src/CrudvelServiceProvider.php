@@ -36,15 +36,15 @@ class CrudvelServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('install.crudvel', function () {
+        $this->app->singleton('install:crudvel', function () {
             return new InstallCommand();
         });
-        $this->commands('install.crudvel');
+        $this->commands('install:crudvel');
         
-        $this->app->singleton('make.scaffold', function () {
+        $this->app->singleton('make:scaffold', function () {
             return new ScaffoldingCommand();
         });
-        $this->commands('make.scaffold');
+        $this->commands('make:scaffold');
         
         $this->app->singleton('make:root-user', function () {
             return new MakeRootUser();
