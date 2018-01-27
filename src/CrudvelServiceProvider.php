@@ -26,7 +26,9 @@ class CrudvelServiceProvider extends ServiceProvider
             __DIR__.'/customs/Models/Role.txt' => base_path('crudvel/customs/Models/Role.php'),
             __DIR__.'/customs/Models/User.txt' => base_path('crudvel/customs/Models/User.php'),
             __DIR__.'/customs/Requests/CrudRequest.txt' => base_path('crudvel/customs/Requests/CrudRequest.php'),
-            __DIR__.'/customs/Validations/CustomValidator.txt' => base_path('crudvel/customs/Validations/CustomValidator.php')
+            __DIR__.'/customs/Validations/CustomValidator.txt' => base_path('crudvel/customs/Validations/CustomValidator.php'),
+
+            __DIR__.'/config' => base_path('config/packages/benomas/crudvel'),
         ]);
     }
     /**

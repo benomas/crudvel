@@ -40,15 +40,13 @@ class MakeRootUser extends Command {
                     }
                 }
                 if(!($user = \App\Models\User::withUserName("root")->first())){
-                    if(
-                        !($user = new \App\Models\User())->fill([
-                            "username"   =>"root",
-                            "first_name" =>"root",
-                            "last_name"  =>"root",
-                            "email"      =>"root@root.com",
-                            "password"   =>bcrypt("root@root.com"),
-                        ])->save()
-                    )
+                    $defaultUser = config("packages.benomas.crudvel.crudvel.default_user");
+                    if(!$defaultUser){
+                        echo "Exception, the proccess fail.";
+                        return false;
+                    }
+                    $defaultUser["password"]=bcrypt($defaultUser["password"]);
+                    if(!($user = new \App\Models\User())->fill($defaultUser)->save())
                     {
                         echo "Exception, the proccess fail.";
                         return false;
