@@ -26,8 +26,15 @@ class InstallCommand extends Command {
             if(!file_exists($this->migrationsPath))
                 mkdir($this->migrationsPath);
             $migrations =[];
-            
-            $migrations[]= "alter_users_table";
+            $alter_users=true;
+
+            foreach (glob(database_path()."/migrations/*alter_users_table*.php") as $filename) { 
+                $alter_users = false;
+                break;
+            }
+
+            if($alter_users)
+                $migrations[]= "alter_users_table";
             
             $this->cloneFileData("User.php",base_path("vendor/benomas/crudvel/src/templates/user.txt"),base_path("app/Models"));
             

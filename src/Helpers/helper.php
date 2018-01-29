@@ -475,9 +475,9 @@ if(!function_exists("instanceTrans")){
 	}
 }
 
-if(!function_exists("shadowInstance")){
+if(!function_exists("kageBunshinNoJutsu")){
 
-	function shadowInstance($instance){
+	function kageBunshinNoJutsu($instance){
 		return clone $instance; 
 	}
 }
@@ -507,7 +507,7 @@ if(!function_exists("resourceAccess")){
 		if(!\App\Models\Permission::actionResource($actionResource)->count())
 		    return true;
 
-		return shadowInstance($userInstace)->resourceActionPermission($actionResource)->count();
+		return kageBunshinNoJutsu($userInstace)->resourceActionPermission($actionResource)->count();
 	}
 }
 
@@ -683,6 +683,11 @@ if(!function_exists("customLog")){
 	}
 }
 
+if(!function_exists("fixedIsInt")){
+	function fixedIsInt($intTest){
+ 		return isset($intTest) && strval($intTest) === strval(intval($intTest));
+	}
+}
 
 
 

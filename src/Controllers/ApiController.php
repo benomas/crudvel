@@ -81,7 +81,7 @@ class ApiController extends CustomController
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    { 
         return ($paginable = $this->paginable && $this->extractPaginate())?
             $this->paginatedResponse():
             $this->apiSuccessResponse($this->model->get());
@@ -316,7 +316,6 @@ class ApiController extends CustomController
         //si la peticion http solicita paginación de forma incorrecta
         if(!customNonEmptyArray($paginate))
             return false;
-
         //si selectables esta definida en false, no se aceptara seleccion personalizada de columnas
         if(isset($this->selectables) && $this->selectables===false){
             $this->selectQuery=false;
@@ -358,7 +357,6 @@ class ApiController extends CustomController
                 isset($paginate['orderBy'])?[$paginate['orderBy']]:null,
                 isset($this->orderables)?$this->orderables:null
             );
-
             if(customNonEmptyArray($this->orderBy)){
                 $this->orderBy=$this->orderBy[0];
             }
@@ -370,17 +368,17 @@ class ApiController extends CustomController
         }
 
         //se carga el resto de los parametros para paginar
-        if(isset($paginate['limit']))
+        if(fixedIsInt($paginate['limit']))
             $this->limit=$paginate['limit'];
 
-        if(isset($paginate['page']))
+        if(fixedIsInt($paginate['page']))
             $this->page=$paginate['page'];
 
-        if(isset($paginate['ascending']))
-            $this->ascending=$paginate['ascending'];
+        if(isset($paginate['ascending']) && $paginate['ascending'])
+            $this->ascending=1;
 
-        if(isset($paginate['byColumn']))
-            $this->byColumn=$paginate['byColumn'];
+        if(isset($paginate['byColumn']) && $paginate['byColumn'])
+            $this->byColumn=1;
 
         if(isset($paginate['generalSearch']))
             $this->generalSearch=$paginate['generalSearch'];
