@@ -579,7 +579,6 @@ if(!function_exists("crudvelResources")){
 	}
 }
 
-
 if(!function_exists("apiCrudvelResource")){
 	function apiCrudvelResource($resource,$controller=null,$conditionals=[]){
 		if(empty($resource))
