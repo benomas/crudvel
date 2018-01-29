@@ -688,6 +688,15 @@ if(!function_exists("fixedIsInt")){
 	}
 }
 
+if(!function_exists("deletePathContent")){
+	function deletePathContent($path,$subFolder=false) {
+    foreach (($files = array_diff(scandir($path), array('.','..'))) as $file)
+      (is_dir("$path/$file")) ? deletePathContent("$path/$file",true) : unlink("$path/$file");
+    if($subFolder)
+    	return rmdir($path); 
+	}
+}
+
 
 
 
