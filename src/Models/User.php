@@ -9,13 +9,11 @@ class User extends BaseModel{
 
     protected $fillable = [
          "active",
-         "created_at",
          "email",
          "first_name",
          "last_login",
          "last_name",
          "password",
-         "updated_at",
          "username",
     ]; 
 

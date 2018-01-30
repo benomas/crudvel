@@ -5,7 +5,10 @@ use Crudvel\Models\BaseModel;
 class Permission extends BaseModel{
 
     protected $fillable = [
-        "slug", "name", "description", "active","created_at","updated_at"
+        "slug",
+        "name",
+        "description",
+        "active",
     ];
 
     public function __construct($attributes = array())  {
