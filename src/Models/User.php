@@ -11,7 +11,6 @@ class User extends BaseModel{
          "active",
          "email",
          "first_name",
-         "last_login",
          "last_name",
          "password",
          "username",
