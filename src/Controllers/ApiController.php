@@ -235,8 +235,10 @@ class ApiController extends CustomController
         if(isset($this->limit) && $this->limit){
             $this->model->limit($this->limit);
             //si se especifica una pagina a regresar
-            if(isset($this->page) && $this->page)
-                $this->model->skip($this->limit * ($this->page-1));
+            if(isset($this->page) && $this->page){
+                if($count >= $this->limit * ($this->page-1))
+                    $this->model->skip($this->limit * ($this->page-1));
+            }
         }
 
         if (isset($this->orderBy) && $this->orderBy){
@@ -288,9 +290,9 @@ class ApiController extends CustomController
         foreach ($this->filterQuery as $field=>$query){
             $method=!isset($method)?"where":"orWhere";
             if($this->comparator==="like")
-                $this->modelInstance->{$method}($mainTableName.$field,$this->comparator,"%{$this->generalSearch}%");
+                $this->model->{$method}($mainTableName.$field,$this->comparator,"%{$this->generalSearch}%");
             else
-                $this->modelInstance->{$method}($mainTableName.$field,$this->comparator,"{$this->generalSearch}");
+                $this->model->{$method}($mainTableName.$field,$this->comparator,"{$this->generalSearch}");
         }
     }
 
