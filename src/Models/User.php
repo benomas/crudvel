@@ -8,12 +8,12 @@ use Crudvel\Models\BaseModel;
 class User extends BaseModel{
 
     protected $fillable = [
-         "active",
-         "email",
-         "first_name",
-         "last_name",
-         "password",
-         "username",
+        "active",
+        "email",
+        "first_name",
+        "last_name",
+        "password",
+        "username",
     ]; 
 
     protected $dates = [
