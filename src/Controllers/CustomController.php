@@ -49,6 +49,7 @@ class CustomController extends BaseController {
         "store",
         "edit",
         "update",
+        "delete",
         "destroy",
         "active",
         "deactive",
@@ -60,6 +61,7 @@ class CustomController extends BaseController {
     protected $keyActions = [
         "show",
         "edit",
+        "delete",
         "update",
         "destroy",
         "active",
