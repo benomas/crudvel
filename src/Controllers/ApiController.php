@@ -54,6 +54,7 @@ class ApiController extends CustomController
     //public function __construct($request,$model){
     public function __construct(...$propertyRewriter){
         parent::__construct(...$propertyRewriter);
+        $this->addActions("select","permissions");
     }
 
     public function resourcesExplode(){
@@ -106,7 +107,7 @@ class ApiController extends CustomController
     public function store()
     {
         $this->setStamps();
-        return $this->persist()?$this->apiSuccessResponse():$this->apiFailResponse();
+        return $this->persist()?$this->apiSuccessResponse($this->modelInstance):$this->apiFailResponse();
     }
 
     /**
@@ -117,9 +118,9 @@ class ApiController extends CustomController
      */
     public function show($id)
     {
-        return !$this->model->count()?
-            $this->apiNotFound():
-            $this->apiSuccessResponse($this->model->first());
+        return ($paginable = $this->paginable && $this->extractPaginate())?
+            $this->paginatedResponse():
+            $this->apiSuccessResponse($this->modelInstance);
     }
 
     /**
@@ -144,7 +145,7 @@ class ApiController extends CustomController
     {
         $this->fields['id'] = $id;
         $this->setStamps();
-        return $this->persist()?$this->apiSuccessResponse():$this->apiFailResponse();
+        return $this->persist()?$this->apiSuccessResponse($this->modelInstance):$this->apiFailResponse();
     }
 
     /**
@@ -174,6 +175,17 @@ class ApiController extends CustomController
             }
 
         return $this->apiSuccessResponse(['data'=>$this->model->get()]);
+    }
+
+    public function permissions(){
+        $actionPermittions=[];
+        foreach($this->actions AS $action){
+            if(resourceAccess($this->currentUser,str_plural(str_slug($this->mainEntityName))."_".$action))
+                $actionPermittions[$action]=true;
+            else
+                $actionPermittions[$action]=false;
+        }
+        return $this->apiSuccessResponse($actionPermittions);
     }
 
     protected function setStamps(){
@@ -255,6 +267,8 @@ class ApiController extends CustomController
                 $this->model->orderBy($mainTableName.$this->orderBy,$direction);
         }
 
+        if(in_array($this->currentAction,$this->keyActions))
+            return ['data'=>$this->model->first(),'count'=>$count];
         return ['data'=>$this->model->get(),'count'=>$count];
     }
 
