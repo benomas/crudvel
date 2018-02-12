@@ -267,7 +267,7 @@ class ApiController extends CustomController
                 $this->model->orderBy($mainTableName.$this->orderBy,$direction);
         }
 
-        if(in_array($this->currentAction,$this->keyActions))
+        if(in_array($this->currentAction,$this->rowActions))
             return ['data'=>$this->model->first(),'count'=>$count];
         return ['data'=>$this->model->get(),'count'=>$count];
     }

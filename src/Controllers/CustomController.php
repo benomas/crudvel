@@ -58,7 +58,7 @@ class CustomController extends BaseController {
         "export",
         "exporting",
     ];
-    protected $keyActions = [
+    protected $rowActions = [
         "show",
         "edit",
         "delete",
@@ -126,7 +126,7 @@ class CustomController extends BaseController {
         $preactionResponse = $this->preAction($method,$parameters);
         if($preactionResponse)
             return $preactionResponse;
-        if(in_array($method,$this->keyActions)){
+        if(in_array($method,$this->rowActions)){
             if(empty($parameters))
                 return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
             $this->currentActionId=$parameters[$this->mainArgumentName()];
@@ -364,8 +364,8 @@ class CustomController extends BaseController {
         $this->actions=array_merge($this->actions,$moreActions);
     }
 
-    public function addKeyActions(...$moreActions){
-        $this->keyActions=array_merge($this->keyActions,$moreActions);
+    public function addRowActions(...$moreActions){
+        $this->rowActions=array_merge($this->rowActions,$moreActions);
     }
 
     public function addViewActions(...$moreActions){
