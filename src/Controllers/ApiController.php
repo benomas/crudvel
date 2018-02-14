@@ -167,6 +167,17 @@ class ApiController extends CustomController
                 $this->apiFailResponse();
     }
 
+
+    public function activate($id){
+        $this->fields["status"]=1;
+        return $this->update($id);
+    }
+
+    public function deactivate($id){
+        $this->fields["status"]=0;
+        return $this->update($id);
+    }
+
     public function select(){
         if(!empty($this->filterables))
             foreach ($this->filterables as $filterable) {

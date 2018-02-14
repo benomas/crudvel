@@ -51,8 +51,8 @@ class CustomController extends BaseController {
         "update",
         "delete",
         "destroy",
-        "active",
-        "deactive",
+        "activate",
+        "deactivate",
         "import",
         "importing",
         "export",
@@ -64,8 +64,8 @@ class CustomController extends BaseController {
         "delete",
         "update",
         "destroy",
-        "active",
-        "deactive"
+        "activate",
+        "deactivate"
     ];
     protected $viewActions = [
         "index",
@@ -127,6 +127,7 @@ class CustomController extends BaseController {
         if($preactionResponse)
             return $preactionResponse;
         if(in_array($method,$this->rowActions)){
+
             if(empty($parameters))
                 return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
             $this->currentActionId=$parameters[$this->mainArgumentName()];
@@ -278,6 +279,16 @@ class CustomController extends BaseController {
         });
         $this->transactionComplete();
         return $this->isTransactionCompleted();
+    }
+
+    public function activate($id){
+        $this->fields["status"]=1;
+        return $this->update($id);
+    }
+
+    public function deactivate($id){
+        $this->fields["status"]=0;
+        return $this->update($id);
     }
 
     public function export(){

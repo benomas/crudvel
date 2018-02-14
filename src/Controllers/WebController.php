@@ -158,16 +158,6 @@ class WebController extends CustomController
         return $this->model->delete()?$this->webSuccessResponse():$this->webFailResponse();
     }
 
-    public function active($id){
-        $this->fields["status"]=1;
-        return $this->update($id);
-    }
-
-    public function deactive($id){
-        $this->fields["status"]=0;
-        return $this->update($id);
-    }
-
     public function import(){
         View::share("page_title", 
             trans("crudvel.actions.".$this->currentAction.".called_message").

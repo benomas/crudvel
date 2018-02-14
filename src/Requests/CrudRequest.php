@@ -208,4 +208,12 @@ class CrudRequest extends FormRequest
             $this->exportImportProperties[$key] = $property;
         }
     }
+
+    public function putActivate(){
+        $this->rules=[];
+    }
+
+    public function putDeactivate(){
+        $this->rules=[];
+    }
 }

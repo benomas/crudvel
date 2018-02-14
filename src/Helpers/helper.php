@@ -546,16 +546,16 @@ if(!function_exists("crudvelResource")){
 	        Route::get($resource."/export", $controller."@export");
 	        Route::post($resource."/import", $controller."@importing");
 	        Route::post($resource."/export", $controller."@exporting");
-	        Route::get($resource."/{".$rowName."}/active", $controller."@active");
-	        Route::get($resource."/{".$rowName."}/deactive", $controller."@deactive");
+	        Route::put($resource."/{".$rowName."}/activate", $controller."@activate");
+	        Route::put($resource."/{".$rowName."}/deactivate", $controller."@deactivate");
 	        Route::resource($resource, $controller);
         }
         else{
 			$only     = empty($conditionals["only"])?[]:$conditionals["only"];
 			$excludes = empty($conditionals["excludes"])?[]:$conditionals["excludes"];
-	        if(validateGetActionResource("active",$only,$excludes)) Route::get($resource."/{".$rowName."}/active", $controller."@active");
+	        if(validateGetActionResource("activate",$only,$excludes)) Route::get($resource."/{".$rowName."}/activate", $controller."@activate");
 	        if(validateGetActionResource("create",$only,$excludes)) Route::get($resource."/create", $controller."@create");
-	        if(validateGetActionResource("deactive",$only,$excludes)) Route::get($resource."/{".$rowName."}/deactive", $controller."@deactive");
+	        if(validateGetActionResource("deactivate",$only,$excludes)) Route::get($resource."/{".$rowName."}/deactivate", $controller."@deactivate");
 	        if(validateGetActionResource("edit",$only,$excludes)) Route::get($resource."/{".$rowName."}/edit", $controller."@edit");
 	        if(validateGetActionResource("export",$only,$excludes)) Route::get($resource."/export", $controller."@export");
 	        if(validateGetActionResource("import",$only,$excludes)) Route::get($resource."/import", $controller."@import");
@@ -593,16 +593,16 @@ if(!function_exists("apiCrudvelResource")){
 	        Route::get($resource."/export", $controller."@export");
 	        Route::post($resource."/import", $controller."@importing");
 	        Route::post($resource."/export", $controller."@exporting");
-	        Route::get($resource."/{".$rowName."}/active", $controller."@active");
-	        Route::get($resource."/{".$rowName."}/deactive", $controller."@deactive");
+	        Route::put($resource."/{".$rowName."}/activate", $controller."@activate");
+	        Route::put($resource."/{".$rowName."}/deactivate", $controller."@deactivate");
 	        Route::resource($resource, $controller);
         }
         else{
 			$only     = empty($conditionals["only"])?[]:$conditionals["only"];
 			$excludes = empty($conditionals["excludes"])?[]:$conditionals["excludes"];
-	        if(validateGetActionResource("active",$only,$excludes)) Route::get($resource."/{".$rowName."}/active", $controller."@active");
+	        if(validateGetActionResource("activate",$only,$excludes)) Route::get($resource."/{".$rowName."}/activate", $controller."@activate");
 	        if(validateGetActionResource("create",$only,$excludes)) Route::get($resource."/create", $controller."@create");
-	        if(validateGetActionResource("deactive",$only,$excludes)) Route::get($resource."/{".$rowName."}/deactive", $controller."@deactive");
+	        if(validateGetActionResource("deactivate",$only,$excludes)) Route::get($resource."/{".$rowName."}/deactivate", $controller."@deactivate");
 	        if(validateGetActionResource("edit",$only,$excludes)) Route::get($resource."/{".$rowName."}/edit", $controller."@edit");
 	        if(validateGetActionResource("export",$only,$excludes)) Route::get($resource."/export", $controller."@export");
 	        if(validateGetActionResource("import",$only,$excludes)) Route::get($resource."/import", $controller."@import");
