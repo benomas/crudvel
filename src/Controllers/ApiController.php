@@ -395,10 +395,10 @@ class ApiController extends CustomController
         }
 
         //se carga el resto de los parametros para paginar
-        if(fixedIsInt($paginate['limit']))
+        if(isset($paginate['limit']) && fixedIsInt($paginate['limit']))
             $this->limit=$paginate['limit'];
 
-        if(fixedIsInt($paginate['page']))
+        if(isset($paginate['page']) && fixedIsInt($paginate['page']))
             $this->page=$paginate['page'];
 
         if(isset($paginate['ascending']) && $paginate['ascending'])

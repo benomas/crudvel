@@ -127,7 +127,6 @@ class CustomController extends BaseController {
         if($preactionResponse)
             return $preactionResponse;
         if(in_array($method,$this->rowActions)){
-
             if(empty($parameters))
                 return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
             $this->currentActionId=$parameters[$this->mainArgumentName()];
@@ -269,6 +268,7 @@ class CustomController extends BaseController {
         $this->resetTransaction();
         $this->startTranstaction();
         $this->testTransaction(function() use($callBack){
+            $this->modelInstance = $this->modelInstance ?? $this->modelInstanciator(true);
             $this->modelInstance->fill($this->fields);
             $this->dirtyPropertys = $this->modelInstance->getDirty();
             if(!$this->modelInstance->save())
@@ -276,7 +276,7 @@ class CustomController extends BaseController {
             if($callBack && is_callable($callBack))
                 return $callBack();
             return true;
-        });
+        },null,false);
         $this->transactionComplete();
         return $this->isTransactionCompleted();
     }
