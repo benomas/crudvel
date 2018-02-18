@@ -53,7 +53,7 @@ trait CrudTrait {
             $this->explodeClass();
         if(empty($this->rowName))
             $this->rowName = snake_case($this->crudObjectName);
-        return $this->rowName;
+        return snake_case($this->rowName);
     }
     
     public function autoSetPropertys(...$propertyRewriter){
