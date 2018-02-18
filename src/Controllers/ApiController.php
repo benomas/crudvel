@@ -120,7 +120,7 @@ class ApiController extends CustomController
     {
         return ($paginable = $this->paginable && $this->extractPaginate())?
             $this->paginatedResponse():
-            $this->apiSuccessResponse($this->modelInstance);
+            $this->apiSuccessResponse(count($this->selectables)?$this->model->select($this->selectables)->first():$this->modelInstance);
     }
 
     /**
