@@ -8,6 +8,8 @@ use Crudvel\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
 use Lang;
 
 class CrudRequest extends FormRequest
@@ -115,7 +117,7 @@ class CrudRequest extends FormRequest
      * @param  \Illuminate\Validation\Validator  $validator
      * @return mixed
      */
-    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    protected function failedValidation(Validator $validator)
     {
         if(!$this->wantsJson()){
             $this->merge([
@@ -125,9 +127,15 @@ class CrudRequest extends FormRequest
             Session::flash("error", trans("crudvel.web.validation_errors"));
         }
 
-        throw new HttpResponseException($this->response(
-            $this->formatErrors($validator)
-        ));
+        if(property_exists($this,"formatErrors")){
+            throw new HttpResponseException($this->response(
+                $this->formatErrors($validator)
+            ));
+        }else{
+            throw (new ValidationException($validator))
+                ->errorBag($this->errorBag)
+                ->redirectTo($this->getRedirectUrl());
+        }
     }
 
     public function attributes()

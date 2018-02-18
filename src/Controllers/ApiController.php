@@ -54,7 +54,7 @@ class ApiController extends CustomController
     //public function __construct($request,$model){
     public function __construct(...$propertyRewriter){
         parent::__construct(...$propertyRewriter);
-        $this->addActions("select","permissions");
+        $this->addActions("select","resourcePermissions");
     }
 
     public function resourcesExplode(){
