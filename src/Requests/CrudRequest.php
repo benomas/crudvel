@@ -38,7 +38,7 @@ class CrudRequest extends FormRequest
 
     public function resourcesExplode(){
         if(empty($this->langName))
-            $this->langName = snake_case(str_plural($this->getCrudObjectName()));
+            $this->langName = str_slug(snake_case(str_plural($this->getCrudObjectName())));
         if(empty($this->rowName))
             $this->rowName = camel_case($this->getCrudObjectName());
     }
@@ -68,7 +68,7 @@ class CrudRequest extends FormRequest
             $this->customBaseName:
             basename($this->path());
         if(empty($this->langName))
-            $this->langName=str_slug($this->baseName,"_");
+            $this->langName=str_slug($this->baseName);
 
         $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
         $this->currentActionId = $this->route($this->mainArgumentName());

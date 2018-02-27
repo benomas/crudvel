@@ -107,7 +107,11 @@ class ApiController extends CustomController
     public function store()
     {
         $this->setStamps();
-        return $this->persist()?$this->apiSuccessResponse($this->modelInstance):$this->apiFailResponse();
+        if($this->persist())
+            return ($paginable = $this->paginable && $this->extractPaginate())?
+                $this->paginatedResponse():
+                $this->apiSuccessResponse(count($this->selectables)?$this->modelInstance->select($this->selectables)->first():$this->modelInstance);
+        return $this->apiFailResponse();
     }
 
     /**
@@ -145,7 +149,11 @@ class ApiController extends CustomController
     {
         $this->fields['id'] = $id;
         $this->setStamps();
-        return $this->persist()?$this->apiSuccessResponse($this->modelInstance):$this->apiFailResponse();
+        if($this->persist())
+            return ($paginable = $this->paginable && $this->extractPaginate())?
+                $this->paginatedResponse():
+                $this->apiSuccessResponse(count($this->selectables)?$this->model->select($this->selectables)->first():$this->modelInstance);
+        return $this->apiFailResponse();
     }
 
     /**
