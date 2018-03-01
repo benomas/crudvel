@@ -249,6 +249,8 @@ class CustomValidator extends Validator {
      */
     function validateListExist($attribute, $value, $parameters)
     {
+        if(empty($value))
+            return true;
     	if(!isset($parameters[0]) || !is_array($value) || count($value)===0)
     		return false;
 
