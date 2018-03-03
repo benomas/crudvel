@@ -583,18 +583,31 @@ if(!function_exists("apiCrudvelResource")){
 	function apiCrudvelResource($resource,$controller=null,$conditionals=[]){
 		if(empty($resource))
 			return false;
-		$urlSegments = explode("/",$resource);
-		$rowName = str_slug(str_singular(end($urlSegments)),"_");
+		$urlSegments = explode(".",$resource);
+		$baseSegmentResource = end($urlSegments);
+		$rowName = str_slug(str_singular($baseSegmentResource),"_");
 		
 		if(!$controller)
 			$controller="Api\\".studly_case($rowName)."Controller";
         if(!count($conditionals)){
-	        Route::get($resource."/import", $controller."@import");
-	        Route::get($resource."/export", $controller."@export");
-	        Route::post($resource."/import", $controller."@importing");
-	        Route::post($resource."/export", $controller."@exporting");
-	        Route::put($resource."/{".$rowName."}/activate", $controller."@activate");
-	        Route::put($resource."/{".$rowName."}/deactivate", $controller."@deactivate");
+        	if(count($urlSegments)>1){
+	        	foreach ($urlSegments as $segment){
+	        		$i=empty($i)?1:$i+1;
+	        		$prefixRoute = (empty($prefixRoute)?"":$prefixRoute."/").$segment.($i<count($urlSegments)?"/{".str_singular($segment)."}":"");
+	        	}
+        	}
+        	else{
+        		$prefixRoute = $resource;
+        	}
+
+	        Route::get($prefixRoute."/import", $controller."@import")->name($resource.".import");
+	        Route::get($prefixRoute."/export", $controller."@export")->name($resource.".export");
+	        Route::post($prefixRoute."/import", $controller."@importing")->name($resource.".importing");
+	        Route::post($prefixRoute."/export", $controller."@exporting")->name($resource.".exporting");
+	        Route::post($prefixRoute."/resource-permissions", $controller."@resourcePermissions")->name($resource.".resource-permissions");
+	        Route::post($prefixRoute."/select", $controller."@select")->name($resource.".select");
+	        Route::put($prefixRoute."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
+	        Route::put($prefixRoute."/{".$rowName."}/deactivate", $controller."@deactivate")->name($resource.".deactivate");
 	        Route::resource($resource, $controller);
         }
         else{
