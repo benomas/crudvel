@@ -43,7 +43,7 @@ class BaseMigration extends Migration
         */
     }
 
-    public function userStamps(){   
+    public function userStamps($table){   
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $table->bigInteger('created_by')->unsigned();
         $table->bigInteger('updated_by')->unsigned();
@@ -68,7 +68,7 @@ class BaseMigration extends Migration
                 $table->text('description');
                 $table->boolean('active')->default(true);
                 $table->timestamps();
-                $this->userStamps();
+                $this->userStamps($table);
             });
         }
     }
