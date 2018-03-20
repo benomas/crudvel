@@ -21,7 +21,7 @@ class CrudvelServiceProvider extends ServiceProvider
             __DIR__.'/resources/lang/en' => base_path('resources/lang/en'),
             __DIR__.'/customs/Controllers/ApiController.txt' => base_path('crudvel/customs/Controllers/ApiController.php'),
             __DIR__.'/customs/Controllers/WebController.txt' => base_path('crudvel/customs/Controllers/WebController.php'),
-            __DIR__.'/customs/database/BaseMigration.txt' => base_path('crudvel/customs/DataBase/Migrations/BaseMigration.php'),
+            __DIR__.'/customs/DataBase/BaseMigration.txt' => base_path('crudvel/customs/DataBase/Migrations/BaseMigration.php'),
             __DIR__.'/customs/Models/BaseModel.txt' => base_path('crudvel/customs/Models/BaseModel.php'),
             __DIR__.'/customs/Models/Permission.txt' => base_path('crudvel/customs/Models/Permission.php'),
             __DIR__.'/customs/Models/Role.txt' => base_path('crudvel/customs/Models/Role.php'),
