@@ -1,4 +1,4 @@
-<?php namespace Crudvel\Customs\DataBase\Migrations;
+<?php namespace Crudvel\Customs\Database\Migrations;
 /**
  *
  *
