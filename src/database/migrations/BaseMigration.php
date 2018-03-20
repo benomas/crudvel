@@ -34,4 +34,21 @@ class BaseMigration extends Migration
         $table->string('list_hover_style')->nullable()->default("");
         */
     }
+
+    public function userStamps(){   
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $table->bigInteger('created_by')->unsigned();
+        $table->bigInteger('updated_by')->unsigned();
+        $table->foreign('created_by')
+            ->references('id')
+            ->on('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+        $table->foreign('updated_by')
+            ->references('id')
+            ->on('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    }
 }
