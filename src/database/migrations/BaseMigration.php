@@ -14,7 +14,15 @@ class BaseMigration extends Migration
         $this->mainTable = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $matches[1]));
     }
 
-    public function up(){}
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $this->defaultCatalog();
+    }
 
     public function down()
     {
