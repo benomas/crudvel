@@ -51,4 +51,17 @@ class BaseMigration extends Migration
             ->onDelete('cascade');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
+
+    public function defaultCatalog(){
+        if (!Schema::hasTable($this->mainTable)) {
+            Schema::create($this->mainTable, function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name');
+                $table->text('description');
+                $table->boolean('active')->default(true);
+                $table->timestamps();
+                $this->userStamps();
+            });
+        }
+    }
 }
