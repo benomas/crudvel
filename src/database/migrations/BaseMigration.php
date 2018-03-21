@@ -48,20 +48,10 @@ class BaseMigration extends Migration
     }
 
     public function userStamps($table){   
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $table->bigInteger('created_by')->unsigned();
         $table->bigInteger('updated_by')->unsigned();
-        $table->foreign('created_by')
-            ->references('id')
-            ->on('users')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
-        $table->foreign('updated_by')
-            ->references('id')
-            ->on('users')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $table->index("created_by");
+        $table->index("updated_by");
     }
 
     public function defaultCatalog($table){
