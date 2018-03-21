@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Crudvel\Database\Migrations\BaseMigration;
+use Crudvel\Customs\Database\Migrations\BaseMigration;
 
 class CreatePermissionRoleTable extends BaseMigration
 {
@@ -10,6 +10,8 @@ class CreatePermissionRoleTable extends BaseMigration
     {
         if(!Schema::hasTable($this->mainTable) && Schema::hasTable("roles") && Schema::hasTable("permissions")){
             Schema::create($this->mainTable, function (Blueprint $table) {
+                $table->engine = 'InnoDB';
+                
                 $table->increments('id');
                 $table->integer('permission_id')->unsigned();
                 $table->integer('role_id')->unsigned();
@@ -24,7 +26,6 @@ class CreatePermissionRoleTable extends BaseMigration
                     ->on('roles')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-                $table->engine = 'InnoDB';
             });
         }
     }

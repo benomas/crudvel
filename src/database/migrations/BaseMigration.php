@@ -21,7 +21,11 @@ class BaseMigration extends Migration
      */
     public function up()
     {
-        $this->defaultCatalog();
+        if (!Schema::hasTable($this->mainTable)) {
+            Schema::create($this->mainTable, function (Blueprint $table) {
+                $this->defaultCatalog($table);
+            });
+        }
     }
 
     public function down()
@@ -60,16 +64,15 @@ class BaseMigration extends Migration
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
-    public function defaultCatalog(){
-        if (!Schema::hasTable($this->mainTable)) {
-            Schema::create($this->mainTable, function (Blueprint $table) {
-                $table->increments('id');
-                $table->string('name');
-                $table->text('description');
-                $table->boolean('active')->default(true);
-                $table->timestamps();
-                $this->userStamps($table);
-            });
-        }
+    public function defaultCatalog($table){
+        $table->engine = 'InnoDB';
+        $table->increments('id');
+        $table->string('name');
+        $table->text('description');
+        $table->boolean('active')->default(true);
+        $table->timestamps();
+        $this->userStamps($table);
+        $table->index("name");
+        $table->index("active");
     }
 }
