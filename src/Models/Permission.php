@@ -28,8 +28,61 @@ class Permission extends BaseModel{
 
 // Scopes
 
-    public function scopeActionResource($query,$actionResource){
-        $query->where($this->getTable().".slug",$actionResource);
+    //general
+    public function scopePermissionsOfType($query,$type){
+        $query->whereHas('catPermissionType',function($query) use($type){
+            $query->name($type);
+        });
+    }
+
+    //specific
+    public function scopeSecctionPermissions($query){
+        $query->permissionsOfType("Sección");
+    }
+
+    //specific
+    public function scopeResourcePermissions($query){
+        $query->permissionsOfType("Recurso");
+    }
+
+    //specific
+    public function scopeActionPermissions($query){
+        $query->permissionsOfType("Acción");
+    }
+
+    //specific
+    public function scopeFieldPermissions($query){
+        $query->permissionsOfType("Campo");
+    }
+
+    //specific
+    public function scopeSpecialPermissions($query){
+        $query->permissionsOfType("Especial");
+    }
+
+    //specific
+    public function scopeSection($query,$section){
+        $query->slug($section)->secctionPermissions();
+    }
+
+    //specific
+    public function scopeResource($query,$resource){
+        $query->slug($resource)->resourcePermissions();
+    }
+
+    //specific
+    public function scopeAction($query,$action){
+        $query->slug($action)->actionPermissions();
+    }
+
+    //specific
+    public function scopeField($query,$field){
+        $query->slug($field)->fieldPermissions();
+    }
+
+    //specific
+    public function scopeSpecial($query,$special){
+        $query->slug($special)->fieldPermissions();
     }
 
     public function scopeInPermissions($query,$permissions){
@@ -39,6 +92,7 @@ class Permission extends BaseModel{
     public function scopeInNamePermissions($query,$namePermissions){
         $query->whereIn($this->getTable().".name",$namePermissions);
     }
+
 
 
 // End Scopes

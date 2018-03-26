@@ -35,6 +35,30 @@ class Role extends BaseModel{
 
 //End Relationships
 
+//Non standar Relationships
+
+    public function sectionPermissions(){
+        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role")->secctionPermissions();
+    }
+
+    public function resourcePermissions(){
+        return $this->belsongsToMany("Crudvel\Models\Permission", "permission_role")->resourcePermissions();
+    }
+
+    public function actionePermissions(){
+        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role")->actionPermissions();
+    }
+
+    public function fieldPermissions(){
+        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role")->fieldPermissions();
+    }
+
+    public function specialPermissions(){
+        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role")->specialPermissions();
+    }
+
+//End Non standar Relationships
+
 // Scopes
     public function scopeInRoles($query,$rolesSlug){
         $query->whereIn($this->getTable().".slug",$rolesSlug);

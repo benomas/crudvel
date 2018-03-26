@@ -504,10 +504,10 @@ if(!function_exists("resourceAccess")){
 		if($user->isRoot())
 		    return true;
 
-		if(!\App\Models\Permission::actionResource($actionResource)->count())
+		if(!\App\Models\Permission::action($actionResource)->count())
 		    return true;
 
-		return kageBunshinNoJutsu($userInstace)->resourceActionPermission($actionResource)->count();
+		return kageBunshinNoJutsu($userInstace)->action($actionResource)->count();
 	}
 }
 

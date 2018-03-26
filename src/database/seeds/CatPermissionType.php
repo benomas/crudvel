@@ -34,7 +34,12 @@ class CatPermissionTypeTableSeeder extends Seeder
 				],
 				[
 					"name"        =>"Campo",
-					"description" =>"Permiso a nivel Campo",
+					"description" =>"Permiso a nivel campo",
+					"active"      =>1,
+				],
+				[
+					"name"        =>"Especial",
+					"description" =>"Permiso especial",
 					"active"      =>1,
 				],
 			];

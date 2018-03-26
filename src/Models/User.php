@@ -39,6 +39,31 @@ class User extends BaseModel{
         return $this->manyToManyToMany("roles","permissions","Crudvel\Models\Permission");
     }
 
+    public function sectionPermissions()
+    {
+        return $this->rolesPermissions()->secctionPermissions();
+    }
+
+    public function resourcePermissions()
+    {
+        return $this->rolesPermissions()->resourcePermissions();
+    }
+
+    public function actionePermissions()
+    {
+        return $this->rolesPermissions()->actionePermissions();
+    }
+
+    public function fieldPermissions()
+    {
+        return $this->rolesPermissions()->fieldPermissions();
+    }
+
+    public function specialPermissions()
+    {
+        return $this->rolesPermissions()->specialPermissions();
+    }
+
 //End Non standar Relationships
 // Scopes
 
@@ -50,10 +75,42 @@ class User extends BaseModel{
         });
     }
 
-    public function scopeResourceActionPermission($query,$permission){
-        $query->whereHas("roles",function($query) use($permission){
-            $query->whereHas("permissions",function($query) use($permission){
-                $query->where("permissions.slug",$permission);
+    public function scopeSectionPermission($query,$action){
+        $query->whereHas("roles",function($query) use($action){
+            $query->whereHas("permissions",function($query) use($action){
+                $query->section($action);
+            });
+        });
+    }
+
+    public function scopeResourcePermission($query,$action){
+        $query->whereHas("roles",function($query) use($action){
+            $query->whereHas("permissions",function($query) use($action){
+                $query->resource($action);
+            });
+        });
+    }
+
+    public function scopeActionPermission($query,$action){
+        $query->whereHas("roles",function($query) use($action){
+            $query->whereHas("permissions",function($query) use($action){
+                $query->action($action);
+            });
+        });
+    }
+
+    public function scopeFieldPermission($query,$field){
+        $query->whereHas("roles",function($query) use($field){
+            $query->whereHas("permissions",function($query) use($field){
+                $query->field($field);
+            });
+        });
+    }
+
+    public function scopeSpecialPermission($query,$special){
+        $query->whereHas("roles",function($query) use($special){
+            $query->whereHas("permissions",function($query) use($special){
+                $query->special($special);
             });
         });
     }
