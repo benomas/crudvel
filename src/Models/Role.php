@@ -25,6 +25,14 @@ class Role extends BaseModel{
         return $this->belongsToMany("Crudvel\Models\Permission", "permission_role");
     }
 
+    public function dominedBy(){
+        return $this->belongsToMany("Crudvel\Models\Role", 'role_role', 'id', 'domineering_role_id');
+    }
+
+    public function dominetTo(){
+        return $this->belongsToMany("Crudvel\Models\Role", 'role_role', 'id', 'domined_role_id');
+    }
+
 //End Relationships
 
 // Scopes

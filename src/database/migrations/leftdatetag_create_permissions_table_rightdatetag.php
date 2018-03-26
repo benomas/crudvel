@@ -8,16 +8,23 @@ class CreatePermissionsTablerightdatetag extends BaseMigration
     {
         if(!Schema::hasTable($this->mainTable)){
             Schema::create($this->mainTable, function (Blueprint $table) {
+                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
                 $table->increments('id');
+                $table->integer('cat_permission_type_id')->unsigned();
                 $table->string('slug');
                 $table->string('name');
                 $table->string('description');
                 $table->boolean('active')->default(true);
                 $table->timestamps();
-                $table->integer('created_by')->nullable();
-                $table->integer('updated_by')->nullable();
+                $this->userStamps($table);
                 $table->engine = 'InnoDB';
-                $table->unique('slug');
+                $table->unique('slug'); 
+                $table->foreign('cat_permission_type_id')
+                    ->references('id')
+                    ->on('cat_permission_types')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
             });
         }
     }

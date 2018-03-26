@@ -48,10 +48,17 @@ class BaseMigration extends Migration
     }
 
     public function userStamps($table){   
-        $table->bigInteger('created_by')->unsigned();
-        $table->bigInteger('updated_by')->unsigned();
+        $table->bigInteger('created_by')->unsigned()->nullable();
+        $table->bigInteger('updated_by')->unsigned()->nullable();
         $table->index("created_by");
         $table->index("updated_by");
+    }
+
+    public function userStampsDown($table){
+        $table->dropIndex('created_by');
+        $table->dropIndex('updated_by');
+        $table->dropColumn('created_by');
+        $table->dropColumn('updated_by');
     }
 
     public function defaultCatalog($table){

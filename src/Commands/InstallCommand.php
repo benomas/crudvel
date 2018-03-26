@@ -42,8 +42,15 @@ class InstallCommand extends Command {
                 $migrations[]= "create_roles_table";
                 $this->cloneFileData("Role.php",base_path("vendor/benomas/crudvel/src/templates/role.txt"),base_path("app/Models"));
             }
+            if(!Schema::hasTable("role_role")){
+                $migrations[]= "create_role_role_table";
+            }
             if(!Schema::hasTable("role_user")){
                 $migrations[]= "create_role_user_table";
+            }
+            if(!Schema::hasTable("cat_permission_types")){
+                $migrations[]= "create_cat_permission_types_table";
+                $this->cloneFileData("CatPermissionType.php",base_path("vendor/benomas/crudvel/src/templates/cat_permission_type.txt"),base_path("app/Models"));
             }
             if(!Schema::hasTable("permissions")){
                 $migrations[]= "create_permissions_table";

@@ -9,16 +9,17 @@ class CreateRolesTablerightdatetag extends BaseMigration
         if(!Schema::hasTable($this->mainTable))
         {
             Schema::create('roles', function (Blueprint $table) {
+                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
                 $table->increments('id');
                 $table->string('slug');
                 $table->string('name');
                 $table->string('description');
                 $table->boolean('active')->default(true);
                 $table->timestamps();
-                $table->integer('created_by')->nullable();
-                $table->integer('updated_by')->nullable();
+                $this->userStamps($table);
                 $table->engine = 'InnoDB';
                 $table->unique('slug');
+                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
             });
         }
     }

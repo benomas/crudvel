@@ -20,6 +20,10 @@ class Permission extends BaseModel{
         return $this->belongsToMany("Crudvel\Models\Role", "permission_role");
     }
 
+    public function catPermissionType(){
+        return $this->belongsTo("Crudvel\Models\CatPermissionType");
+    }
+
 //End Relationships
 
 // Scopes
