@@ -83,6 +83,16 @@ class BaseModel extends Model {
         $query->where($this->getTable().'.sublevel_id', $sublevel_id);
     }
 
+    public function scopeDinamicSelect($query,$fields,$joinFields){
+        $fixedSelectors = [];
+        foreach ($fields as $key => $value)
+            $fixedSelectors[]=$this->getTable().".".$value." AS ".$value;
+
+        if(!empty($joinFields) && count($joinFields))
+            foreach ($joinFields as $alias => $tableField)
+                $fixedSelectors[]=$tableField." AS ".$alias;
+        $query->select($fixedSelectors);
+    }
 // End Scopes
 
 // Others

@@ -333,10 +333,10 @@ class CustomController extends BaseController {
                         $model->fill($this->request->fields);
                         if(!$model->isDirty()){
                             $this->request->changeTransactionType("Sin cambios");
-                            return $this->importCallBack();
+                            return $this->importCallBack($model,$row);
                         }
                         if($model->save())
-                            return $this->importCallBack();
+                            return $this->importCallBack($model,$row);
                         
                         $this->request->changeImporter("validationErrors",'Error de transacción');
                     }
@@ -354,7 +354,7 @@ class CustomController extends BaseController {
         return $fail?$this->webFailResponse():$this->webSuccessResponse();
     }
 
-    public function importCallBack(){
+    public function importCallBack($model,$row){
         return true;
     }
 
