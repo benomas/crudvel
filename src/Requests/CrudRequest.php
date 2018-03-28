@@ -20,6 +20,7 @@ class CrudRequest extends FormRequest
     public $currentActionId;
     public $currentUser;
     public $baseName;
+    public $mainTable;
     public $fields;
     protected $unauthorizedException;
     protected $customBaseName;
@@ -37,10 +38,14 @@ class CrudRequest extends FormRequest
     use CrudTrait;
 
     public function resourcesExplode(){
+        if(empty($this->mainTable))
+            $this->mainTable = str_slug(snake_case(str_plural($this->getCrudObjectName())),"_");
         if(empty($this->langName))
             $this->langName = str_slug(snake_case(str_plural($this->getCrudObjectName())));
         if(empty($this->rowName))
             $this->rowName = camel_case($this->getCrudObjectName());
+        if(empty($this->baseName))
+            $this->baseName = $this->langName;
     }
 
     /**
@@ -64,11 +69,6 @@ class CrudRequest extends FormRequest
     {
         $this->resourcesExplode();
         $this->setCurrentUser();
-        $this->baseName = $this->customBaseName?
-            $this->customBaseName:
-            basename($this->path());
-        if(empty($this->langName))
-            $this->langName=str_slug($this->baseName);
 
         $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
         $this->currentActionId = $this->route($this->mainArgumentName());

@@ -503,7 +503,6 @@ if(!function_exists("resourceAccess")){
 
 		if($user->isRoot())
 		    return true;
-
 		if(!\App\Models\Permission::action($actionResource)->count())
 		    return true;
 
