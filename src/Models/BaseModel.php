@@ -112,9 +112,10 @@ class BaseModel extends Model {
     }
 
     public function shadow(){
-        $clonedInstace = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
+        $clonedInstacse = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
         $clonedInstace->setModel($this->getModel());
         return $clonedInstace;
     }
+
 // Others
 }

@@ -23,7 +23,7 @@ class BaseMigration extends Migration
     {
         if (!Schema::hasTable($this->mainTable)) {
             Schema::create($this->mainTable, function (Blueprint $table) {
-                $this->defaultCatalog($table);
+                $this->catalog1($table);
             });
         }
     }
@@ -61,15 +61,19 @@ class BaseMigration extends Migration
         $table->dropColumn('updated_by');
     }
 
-    public function defaultCatalog($table){
+    public function catalog1($table){
         $table->engine = 'InnoDB';
         $table->increments('id');
         $table->string('name');
         $table->text('description');
+        $this->defaultColumns($table);
+        $table->index("name");
+    }
+
+    public function defaultColumns($table){
         $table->boolean('active')->default(true);
         $table->timestamps();
         $this->userStamps($table);
-        $table->index("name");
         $table->index("active");
     }
 }
