@@ -75,6 +75,19 @@ trait CrudTrait {
         $this->currentUser = $this->userModel?$this->userModel->first():null;
     }
 
+    public function modelInstanciator($new=false){
+        $model = $this->modelSource = $this->modelSource?
+            $this->modelSource:
+            "App\Models\\".$this->getCrudObjectName();
+        if($new)
+            return new $model();
+        return $model::noFilters();
+    }
+
+    public function setModelInstance(){
+        $this->model = $this->modelInstanciator();
+    }
+
     public function userInstance(){
         return $this->userModel->first();
     }

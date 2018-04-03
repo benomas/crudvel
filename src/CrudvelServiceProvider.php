@@ -27,6 +27,8 @@ class CrudvelServiceProvider extends ServiceProvider
                 base_path('crudvel/customs/Controllers/WebController.php'),
             __DIR__.'/customs/Database/Migrations/BaseMigration.txt' => 
                 base_path('crudvel/customs/Database/Migrations/BaseMigration.php'),
+            __DIR__.'/customs/Database/Seeds/BaseSeeder.txt' => 
+                base_path('crudvel/customs/Database/Seeds/BaseSeeder.php'),
             __DIR__.'/customs/Database/Seeds/CatPermissionTypeTableSeeder.txt' => 
                 base_path('crudvel/customs/Database/Seeds/CatPermissionTypeTableSeeder.php'),
             __DIR__.'/customs/Models/BaseModel.txt' => 
