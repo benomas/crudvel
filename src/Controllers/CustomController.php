@@ -29,6 +29,7 @@ class CustomController extends BaseController {
     public $rowName;
     public $rowsName;
     //modelo cargado en memoria
+    protected $mainTableName;
     protected $model;
     protected $modelInstance;
     protected $userModel;

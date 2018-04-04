@@ -24,6 +24,8 @@ class ApiController extends CustomController
     protected $paginable=true;
     //arreglo con columnas que se permiten seleccionar en paginado, si se setea con false, no se permitira seleccionar de forma especifica, si se setea con null o no se setea, no se pondran restricciones en seleccionar de forma especifica
     protected $selectables=null;
+    //mapa de columnas join, 
+    protected $joinables=null;
     //boleado que indica si el ordenamiento sera ascendente o no
     protected $ascending;
     //boleado que indica si se permite filtrado columna por columna
@@ -241,7 +243,7 @@ class ApiController extends CustomController
             return ['data'=>[],'count'=>0];
 
         //se define tabla principal de la consulta, necesario para cuando la consulta incluye joins
-        $mainTableName = $this->model->getModel()->getTable().'.';
+        $this->mainTableName = $mainTableName = $this->model->getModel()->getTable().'.';
 
         //si existe un array de columnas a seleccionar
         if(customNonEmptyArray($this->selectQuery)){
@@ -251,6 +253,8 @@ class ApiController extends CustomController
                 is_callable($callBacks['selectQuery'])
             )
                 $callBacks['selectQuery']();
+            $this->selectQuery=$this->groupingColumns($this->selectQuery);
+            jdd($this->selectQuery);
             $this->model->select($this->selectQuery);
         }
 
@@ -541,4 +545,18 @@ class ApiController extends CustomController
             return true;
         return false;
     }
+
+    public function groupingColumns($simpleColumns){
+        if(!empty($this->joinables) && count($this->joinables)){
+            foreach ($this->joinables as $joinableKey => $joinableValue)
+                foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue) {
+                    if($simpleColumnValue===$joinableKey)
+                        $simpleColumns[$simpleColumnKey]= $joinableValue." AS ".$joinableKey;
+                    else
+                        $simpleColumns[$simpleColumnKey]=$this->mainTableName.$simpleColumnValue;
+                }
+        }
+        return $simpleColumns;
+    }
+
 }

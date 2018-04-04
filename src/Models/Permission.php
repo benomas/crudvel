@@ -8,6 +8,7 @@ class Permission extends BaseModel{
         "slug",
         "name",
         "description",
+        "cat_permission_type_id",
         "active",
     ];
 
