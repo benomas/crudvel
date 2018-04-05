@@ -65,7 +65,7 @@ class BaseMigration extends Migration
         $table->engine = 'InnoDB';
         $table->increments('id');
         $table->string('name');
-        $table->text('description');
+        $table->text('description')->nullable();
         $this->defaultColumns($table);
         $table->index("name");
     }

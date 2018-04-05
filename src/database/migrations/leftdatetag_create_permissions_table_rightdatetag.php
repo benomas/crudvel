@@ -13,7 +13,7 @@ class CreatePermissionsTablerightdatetag extends BaseMigration
                 $table->integer('cat_permission_type_id')->unsigned();
                 $table->string('slug');
                 $table->string('name');
-                $table->string('description');
+                $table->string('description')->nullable();
                 $table->boolean('active')->default(true);
                 $table->timestamps();
                 $this->userStamps($table);

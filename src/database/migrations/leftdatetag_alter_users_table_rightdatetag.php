@@ -17,7 +17,7 @@ class AlterUsersTablerightdatetag extends BaseMigration
                 $table->dropColumn('name');
                 $table->string('username')->after("id");
                 $table->string('first_name')->after("username");
-                $table->string('last_name')->after("first_name");
+                $table->string('last_name')->nullable()->after("first_name");
                 $table->dateTime('last_login')->nullable()->after("email");
                 $this->userStamps($table);
                 $table->boolean('active')->default(true)->after("created_by");
