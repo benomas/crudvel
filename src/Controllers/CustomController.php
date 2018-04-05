@@ -100,7 +100,8 @@ class CustomController extends BaseController {
     }
 
     public function setModelInstance(){
-        $this->model = $this->modelInstanciator();
+        if(($this->model = $this->modelInstanciator()))
+            $this->mainTableName = $this->model->getModel()->getTable().'.';
     }
 
     public function setRequestInstance(){
@@ -383,4 +384,6 @@ class CustomController extends BaseController {
     public function addViewActions(...$moreActions){
         $this->viewActions=array_merge($this->viewActions,$moreActions);
     }
+
+    public function joins(){}
 }

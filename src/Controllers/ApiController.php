@@ -85,7 +85,7 @@ class ApiController extends CustomController
      */
     public function index()
     { 
-        return ($paginable = $this->paginable && $this->extractPaginate())?
+        return ($this->paginable && $this->extractPaginate())?
             $this->paginatedResponse():
             $this->apiSuccessResponse($this->model->get());
     }
@@ -110,9 +110,9 @@ class ApiController extends CustomController
     {
         $this->setStamps();
         if($this->persist())
-            return ($paginable = $this->paginable && $this->extractPaginate())?
+            return ($this->paginable && $this->extractPaginate())?
                 $this->paginatedResponse():
-                $this->apiSuccessResponse(count($this->selectables)?$this->modelInstance->select($this->selectables)->first():$this->modelInstance);
+                $this->noPaginatedResponse();
         return $this->apiFailResponse();
     }
 
@@ -124,9 +124,9 @@ class ApiController extends CustomController
      */
     public function show($id)
     {
-        return ($paginable = $this->paginable && $this->extractPaginate())?
+        return ($this->paginable && $this->extractPaginate())?
             $this->paginatedResponse():
-            $this->apiSuccessResponse(count($this->selectables)?$this->model->select($this->selectables)->first():$this->modelInstance);
+            $this->noPaginatedResponse();
     }
 
     /**
@@ -154,7 +154,7 @@ class ApiController extends CustomController
         if($this->persist())
             return ($paginable = $this->paginable && $this->extractPaginate())?
                 $this->paginatedResponse():
-                $this->apiSuccessResponse(count($this->selectables)?$this->model->select($this->selectables)->first():$this->modelInstance);
+                $this->noPaginatedResponse();
         return $this->apiFailResponse();
     }
 
@@ -188,6 +188,7 @@ class ApiController extends CustomController
         return $this->update($id);
     }
 
+    //todo, fix for joins
     public function select(){
         if(!empty($this->filterables))
             foreach ($this->filterables as $filterable) {
@@ -242,8 +243,8 @@ class ApiController extends CustomController
         if(!isset($this->model) || $this->model===null)
             return ['data'=>[],'count'=>0];
 
-        //se define tabla principal de la consulta, necesario para cuando la consulta incluye joins
-        $this->mainTableName = $mainTableName = $this->model->getModel()->getTable().'.';
+        //add joins
+        $this->joins();
 
         //si existe un array de columnas a seleccionar
         if(customNonEmptyArray($this->selectQuery)){
@@ -253,16 +254,17 @@ class ApiController extends CustomController
                 is_callable($callBacks['selectQuery'])
             )
                 $callBacks['selectQuery']();
-            $this->selectQuery=$this->groupingColumns($this->selectQuery);
-            jdd($this->selectQuery);
+            $this->fixSelectables();
             $this->model->select($this->selectQuery);
         }
 
         //si existe un array de columnas a filtrar
-        if(customNonEmptyArray($this->filterQuery))
+        if(customNonEmptyArray($this->filterQuery)){
+            $this->fixFilterables();
             isset($this->byColumn) && $this->byColumn==1?
-                $this->filterByColumn($mainTableName,$callBacks):
-                $this->filter($mainTableName,$callBacks);
+                $this->filterByColumn($callBacks):
+                $this->filter($callBacks);
+        }
 
         $count = $this->model->count();
 
@@ -277,6 +279,7 @@ class ApiController extends CustomController
         }
 
         if (isset($this->orderBy) && $this->orderBy){
+            $this->fixOrderBy();
             $direction = isset($this->ascending) && $this->ascending==1?"ASC":"DESC";
             if(
                 isset($callBacks) &&
@@ -287,7 +290,7 @@ class ApiController extends CustomController
                 $callBacks['orderBy'][$this->orderBy]($direction);
             }
             else
-                $this->model->orderBy($mainTableName.$this->orderBy,$direction);
+                $this->model->orderBy($this->orderBy,$direction);
         }
 
         if(in_array($this->currentAction,$this->rowActions))
@@ -295,7 +298,20 @@ class ApiController extends CustomController
         return ['data'=>$this->model->get(),'count'=>$count];
     }
 
-    protected function filterByColumn($mainTableName,$callBacks) {
+    public function noPaginatedResponse(){
+        //add joins
+        $this->joins();
+        
+        $response = $this->modelInstance;
+        if(count($this->selectables)){
+            $this->selectQuery = $this->selectables;
+            $this->fixSelectables();
+            $response = $this->model->select($this->selectQuery)->first();
+        }
+        return $this->apiSuccessResponse($response);
+    }
+
+    protected function filterByColumn($callBacks) {
 
         if(isset($callBacks) && isset($callBacks['filters']) && is_callable($callBacks['filters']) ){
             $callBacks['filters']();
@@ -308,14 +324,14 @@ class ApiController extends CustomController
 
             if (is_string($query)){
                 if($this->comparator==="like")
-                    $this->model->where($mainTableName.$field,$this->comparator,"%{$query}%");
+                    $this->model->where($field,$this->comparator,"%{$query}%");
                 else
-                    $this->model->where($mainTableName.$field,$this->comparator,"{$query}");
+                    $this->model->where($field,$this->comparator,"{$query}");
             }
         }
     }
 
-    protected function filter($mainTableName,$callBacks) {
+    protected function filter($callBacks) {
         if(!isset($this->generalSearch) || !$this->generalSearch)
             return $this->model;
 
@@ -327,9 +343,9 @@ class ApiController extends CustomController
         foreach ($this->filterQuery as $field=>$query){
             $method=!isset($method)?"where":"orWhere";
             if($this->comparator==="like")
-                $this->model->{$method}($mainTableName.$field,$this->comparator,"%{$this->generalSearch}%");
+                $this->model->{$method}($field,$this->comparator,"%{$this->generalSearch}%");
             else
-                $this->model->{$method}($mainTableName.$field,$this->comparator,"{$this->generalSearch}");
+                $this->model->{$method}($field,$this->comparator,"{$this->generalSearch}");
         }
     }
 
@@ -546,17 +562,78 @@ class ApiController extends CustomController
         return false;
     }
 
-    public function groupingColumns($simpleColumns){
+    public function tableFixer($simpleColumns,$mode=1,$joinableKey=null,$joinableValue=null){
+        $fixedColumns =[];
+        foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue) {
+            if($mode===1){
+                if(!empty($joinableValue) && $simpleColumnValue===$joinableKey)
+                    $fixedColumns[$simpleColumnKey] = $joinableValue." AS ".$joinableKey;
+                else
+                    $fixedColumns[$simpleColumnKey] = $this->mainTableName.$simpleColumnValue;
+            }
+            if($mode===2){
+                if(!empty($joinableValue) && $simpleColumnKey===$joinableKey)
+                    $fixedColumns[$joinableValue] = $simpleColumnValue;
+                else
+                    $fixedColumns[$this->mainTableName.$simpleColumnKey] = $simpleColumnValue;
+            }
+        }
+
+        return $fixedColumns;
+    }
+    /**
+     * This function allow to transform simple selectable column to a table.column field, in this way
+     * is posible to direct use joinable columns, the model needs to declare de join tables too, maybe * rewriting call_action function for global resource join, or by action for specific join
+     *
+     * @param simpleColumns   Array of selectable columns
+     * 
+     * @author Benomas benomas@gmail.com
+     * @date   2018-04-04
+     * @return array with fixed seletable columns
+     */ 
+
+    public function fixSelectables(){
         if(!empty($this->joinables) && count($this->joinables)){
             foreach ($this->joinables as $joinableKey => $joinableValue)
-                foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue) {
-                    if($simpleColumnValue===$joinableKey)
-                        $simpleColumns[$simpleColumnKey]= $joinableValue." AS ".$joinableKey;
-                    else
-                        $simpleColumns[$simpleColumnKey]=$this->mainTableName.$simpleColumnValue;
-                }
+                $this->selectQuery = $this->tableFixer($this->selectQuery,1,$joinableKey,$joinableValue);
         }
-        return $simpleColumns;
+        else
+            $this->selectQuery = $this->tableFixer($this->selectQuery);    }
+
+    /**
+     * This function allow to transform simple filterable column to a table.column field, in this way
+     * is posible to direct use joinable columns, the model needs to declare de join tables too, maybe * rewriting call_action function for global resource join, or by action for specific join
+     *
+     * @param simpleColumns   Array of filterable columns
+     * 
+     * @author Benomas benomas@gmail.com
+     * @date   2018-04-04
+     * @return array with fixed seletable columns
+     */ 
+
+    public function fixFilterables(){
+        if(!empty($this->joinables) && count($this->joinables)){
+            foreach ($this->joinables as $joinableKey => $joinableValue)
+                $this->filterQuery = $this->tableFixer($this->filterQuery,2,$joinableKey,$joinableValue);
+        }
+        else
+            $this->filterQuery = $this->tableFixer($this->filterQuery,2);
     }
 
+    /**
+     * This function allow to transform simple orderBy column to a table.column field, in this way
+     * is posible to direct use joinable columns, the model needs to declare de join tables too, maybe * rewriting call_action function for global resource join, or by action for specific join
+     *
+     * @param simpleColumns   string of orderBy 
+     * 
+     * @author Benomas benomas@gmail.com
+     * @date   2018-04-04
+     * @return string with fixed orderBy column
+     */ 
+    public function fixOrderBy(){
+        if(!empty($this->joinables[$this->orderBy]))
+            $this->orderBy = $this->joinables[$this->orderBy];
+        else
+            $this->orderBy = $this->mainTableName.$this->orderBy;
+    }
 }
