@@ -29,12 +29,12 @@ class CrudRequest extends FormRequest
 
     //import/export
     public $exportImportProperties = [];
-    public $importerRowIdentifier = "Identificador";
+    public $importerRowIdentifier  = "Identificador";
     public $currentValidator;
-
+    
     //imports/export
-    public $importResults       = [];
-    public $importerCursor        = 1;
+    public $importResults          = [];
+    public $importerCursor         = 1;
     use CrudTrait;
 
     public function resourcesExplode(){
@@ -57,7 +57,8 @@ class CrudRequest extends FormRequest
     {
         if(!$this->currentAction)
             return true;
-        return resourceAccess($this->userModel,$this->baseName."_".$this->currentAction);
+        return resourceAccess($this->userModel,$this->baseName."_".$this->currentAction) && 
+            $this->owner();
     }
 
     /**
@@ -223,5 +224,9 @@ class CrudRequest extends FormRequest
 
     public function putDeactivate(){
         $this->rules=[];
+    }
+
+    public function owner(){
+        return true;
     }
 }

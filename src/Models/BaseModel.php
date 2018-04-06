@@ -99,7 +99,6 @@ class BaseModel extends Model {
             return null;
 
         $firstLevelRelationInstace = $this->{$firstLevelRelation};
-
         if(!$firstLevelRelationInstace)
             return $secondLevelModel::nullFilter();
 
