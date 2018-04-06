@@ -106,26 +106,26 @@ class WebController extends CustomController
     }
 
     public function createEditAction($action){
-        View::share("page_title", trans("crudvel.actions.".$action.".called_message")." ".$this->rowLabel);
+        View::share("page_title", trans("crudvel.actions.".snake_case($action).".called_message")." ".$this->rowLabel);
         View::share("row",$this->model->first());
         return view("backend.layout.partials.actions.create-edit");
     }
 
     public function singleRowViewAction($action){
-        View::share("page_title", trans("crudvel.actions.".$action.".called_message")." ".$this->rowLabel);
+        View::share("page_title", trans("crudvel.actions.".snake_case($action).".called_message")." ".$this->rowLabel);
         View::share("row",$this->model->first());
-        return view("backend.".$this->viewFolder.".".$action);
+        return view("backend.".$this->viewFolder.".".str_slug($action));
     }
 
     public function index(){
         View::share("page_title", 
-            trans("crudvel.actions.".$this->currentAction.".called_message").
+            trans("crudvel.actions.".snake_case($this->currentAction).".called_message").
             " ".
-            trans("crudvel.actions.common.of").
+            trans("crudvel.actions_extra.common.of").
             " ".
             $this->rowsLabel);
 		View::share("rows", $this->model->get());
-        return view("backend.".$this->viewFolder.".".$this->currentAction);
+        return view("backend.".$this->viewFolder.".".str_slug($this->currentAction));
     }
 
     public function show($id){
@@ -160,11 +160,11 @@ class WebController extends CustomController
 
     public function import(){
         View::share("page_title", 
-            trans("crudvel.actions.".$this->currentAction.".called_message").
+            trans("crudvel.actions.".snake_case($this->currentAction).".called_message").
             " ".
             $this->rowsLabel);
         View::share("method","post");
-        return view("backend.layout.partials.actions.".$this->currentAction);
+        return view("backend.layout.partials.actions.".str_slug($this->currentAction));
     }
 
     //to depreciate

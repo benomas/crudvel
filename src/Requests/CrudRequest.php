@@ -193,7 +193,7 @@ class CrudRequest extends FormRequest
             $this->importResults[$this->importerCursor]=[];
         $this->importResults[$this->importerCursor]["status"]          = $status;
         $this->importResults[$this->importerCursor]["errors"]          = $errors;
-        $this->importResults[$this->importerCursor]["transactionType"] = trans("crudvel.actions.".$this->currentAction.".call_message");
+        $this->importResults[$this->importerCursor]["transactionType"] = trans("crudvel.actions.".snake_case($this->currentAction).".call_message");
     }
 
     public function changeTransactionType($transactionType){

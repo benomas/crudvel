@@ -202,7 +202,7 @@ class ApiController extends CustomController
     public function permissions(){
         $actionPermittions=[];
         foreach($this->actions AS $action){
-            if(resourceAccess($this->currentUser,str_plural(str_slug($this->mainEntityName))."_".$action))
+            if(resourceAccess($this->currentUser,str_plural(str_slug($this->crudObjectName)).".".str_slug($action)))
                 $actionPermittions[$action]=true;
             else
                 $actionPermittions[$action]=false;

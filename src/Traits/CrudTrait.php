@@ -278,7 +278,7 @@ trait CrudTrait {
             $label = in_array($this->currentAction,$this->rowsActions)?
                 $this->rowsLabelTrans():
                 $this->rowLabelTrans();
-            return trans("crudvel.actions.".$this->currentAction.".success")." ".$label." ".trans("crudvel.actions.common.correctly");
+            return trans("crudvel.actions.".snake_case($this->currentAction).".success")." ".$label." ".trans("crudvel.actions_extra.common.correctly");
         }
         return trans("crudvel.web.not_found");
     }
