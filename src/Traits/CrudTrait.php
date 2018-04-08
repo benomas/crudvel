@@ -123,6 +123,14 @@ trait CrudTrait {
         );
     }
 
+    public function apiLoggetOut($data=null){
+        return response()->json($data?
+            $data:
+            ["status"=>trans("crudvel.api.logget_out")]
+            ,204
+        );
+    }
+
     public function apiUnautorized($data=null){
         return response()->json($data?
             $data:
