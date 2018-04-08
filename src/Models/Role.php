@@ -73,15 +73,15 @@ class Role extends BaseModel{
     }
 
     public function scopeWithAdmin($query){
-        $this->scopeWithRole($query,"administrador");
+        $this->scopeWithRole($query,"adminsitrator");
     }
 
     public function scopeWithManager($query){
-        $this->scopeWithRole($query,"gerente");
+        $this->scopeWithRole($query,"manager");
     }
 
     public function scopeWithDistribuitor($query){
-        $this->scopeWithRole($query,"distribuidor");
+        $this->scopeWithRole($query,"distributor");
     }
 
     public function scopeHidden($query){

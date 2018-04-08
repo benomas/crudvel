@@ -238,7 +238,7 @@ class ApiController extends CustomController
      * @return respuesta http paginada
      */
     protected function paginatedResponse($callBacks=null) {
-
+        //jdd($this->model->get());
         //si el modelo no esta definido o es nulo
         if(!isset($this->model) || $this->model===null)
             return ['data'=>[],'count'=>0];

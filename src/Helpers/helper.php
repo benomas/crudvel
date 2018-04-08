@@ -482,7 +482,7 @@ if(!function_exists("kageBunshinNoJutsu")){
 	}
 }
 
-if(!function_exists("resourceAccess")){
+if(!function_exists("actionAccess")){
 	/**
 	 * check user permission
 	 *
@@ -494,7 +494,7 @@ if(!function_exists("resourceAccess")){
 	 * @return array
 	 */
 
-	function resourceAccess($userInstace,$actionResource){
+	function actionAccess($userInstace,$resourceAction){
 		if(empty($userInstace))
             return false;
 
@@ -503,10 +503,39 @@ if(!function_exists("resourceAccess")){
 
 		if($user->isRoot())
 		    return true;
-		if(!\App\Models\Permission::action($actionResource)->count())
+		if(!\App\Models\Permission::action($resourceAction)->count())
 		    return true;
 
-		return kageBunshinNoJutsu($userInstace)->action($actionResource)->count();
+		return kageBunshinNoJutsu($userInstace)->actionPermission($resourceAction)->count();
+	}
+}
+
+if(!function_exists("specialAccess")){
+	/**
+	 * check user permission
+	 *
+	 * @param user model instance   userInstance
+	 * @param string 	resourceAction
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array
+	 */
+
+	function specialAccess($userInstace,$special){
+		if(empty($userInstace))
+            return false;
+
+		if(!($user = $userInstace->first()))
+		    return false;
+
+		if($user->isRoot())
+		    return true;
+
+		if(!\App\Models\Permission::special($special)->count())
+		    return true;
+
+		return kageBunshinNoJutsu($userInstace)->specialPermission($special)->count();
 	}
 }
 

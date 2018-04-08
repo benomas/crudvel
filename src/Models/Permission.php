@@ -62,28 +62,28 @@ class Permission extends BaseModel{
     }
 
     //specific
-    public function scopeSection($query,$section){
-        $query->slug($section)->secctionPermissions();
+    public function scopeSection($query,$slug){
+        $query->slug($slug)->secctionPermissions();
     }
 
     //specific
-    public function scopeResource($query,$resource){
-        $query->slug($resource)->resourcePermissions();
+    public function scopeResource($query,$slug){
+        $query->slug($slug)->resourcePermissions();
     }
 
     //specific
-    public function scopeAction($query,$action){
-        $query->slug($action)->actionPermissions();
+    public function scopeAction($query,$slug){
+        $query->slug($slug)->actionPermissions();
     }
 
     //specific
-    public function scopeField($query,$field){
-        $query->slug($field)->fieldPermissions();
+    public function scopeField($query,$slug){
+        $query->slug($slug)->fieldPermissions();
     }
 
     //specific
-    public function scopeSpecial($query,$special){
-        $query->slug($special)->fieldPermissions();
+    public function scopeSpecial($query,$slug){
+        $query->slug($slug)->fieldPermissions();
     }
 
     public function scopeInPermissions($query,$permissions){

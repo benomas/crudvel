@@ -75,18 +75,18 @@ class User extends BaseModel{
         });
     }
 
-    public function scopeSectionPermission($query,$action){
-        $query->whereHas("roles",function($query) use($action){
-            $query->whereHas("permissions",function($query) use($action){
-                $query->section($action);
+    public function scopeSectionPermission($query,$section){
+        $query->whereHas("roles",function($query) use($section){
+            $query->whereHas("permissions",function($query) use($section){
+                $query->section($section);
             });
         });
     }
 
-    public function scopeResourcePermission($query,$action){
-        $query->whereHas("roles",function($query) use($action){
-            $query->whereHas("permissions",function($query) use($action){
-                $query->resource($action);
+    public function scopeResourcePermission($query,$resource){
+        $query->whereHas("roles",function($query) use($resource){
+            $query->whereHas("permissions",function($query) use($resource){
+                $query->resource($resource);
             });
         });
     }

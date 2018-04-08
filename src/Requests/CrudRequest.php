@@ -57,8 +57,7 @@ class CrudRequest extends FormRequest
     {
         if(!$this->currentAction)
             return true;
-        return resourceAccess($this->userModel,$this->baseName."_".$this->currentAction) && 
-            $this->owner();
+        return actionAccess($this->userModel,$this->baseName.".".str_slug(snake_case($this->currentAction))) && $this->owner();
     }
 
     /**

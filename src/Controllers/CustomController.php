@@ -122,7 +122,7 @@ class CustomController extends BaseController {
             return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
 
         $this->setCurrentUser();
-        if(!resourceAccess($this->userModel,"inactives"))
+        if(!specialAccess($this->userModel,"inactives"))
             $this->model->actives();
         $this->loadFields();
         $preactionResponse = $this->preAction($method,$parameters);
