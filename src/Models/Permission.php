@@ -83,7 +83,7 @@ class Permission extends BaseModel{
 
     //specific
     public function scopeSpecial($query,$slug){
-        $query->slug($slug)->fieldPermissions();
+        $query->slug($slug)->specialPermissions();
     }
 
     public function scopeInPermissions($query,$permissions){

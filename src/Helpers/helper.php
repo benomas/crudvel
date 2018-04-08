@@ -531,7 +531,7 @@ if(!function_exists("specialAccess")){
 
 		if($user->isRoot())
 		    return true;
-
+		    
 		if(!\App\Models\Permission::special($special)->count())
 		    return true;
 
