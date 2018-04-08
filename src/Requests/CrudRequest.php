@@ -101,7 +101,7 @@ class CrudRequest extends FormRequest
     }
 
     public function unautorizedRedirect(){
-        return $this->wantsJson()?$this->apiUnautorized():$this->webUnauthorized();
+        return $this->wantsJson()?($this->currentUser->active?$this->apiUnautorized():$this->apiUnautenticated()):$this->webUnauthorized();
     }
 
     public function failedAuthorization(){

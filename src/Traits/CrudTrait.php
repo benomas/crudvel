@@ -115,6 +115,14 @@ trait CrudTrait {
         );
     }
 
+    public function apiUnautenticated($data=null){
+        return response()->json($data?
+            $data:
+            ["status"=>trans("crudvel.api.unautorized")]
+            ,401
+        );
+    }
+
     public function apiUnautorized($data=null){
         return response()->json($data?
             $data:

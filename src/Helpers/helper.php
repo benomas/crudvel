@@ -500,9 +500,13 @@ if(!function_exists("actionAccess")){
 
 		if(!($user = $userInstace->first()))
 		    return false;
+		
+		if(!$user->active)
+			return false;
 
 		if($user->isRoot())
 		    return true;
+		
 		if(!\App\Models\Permission::action($resourceAction)->count())
 		    return true;
 
@@ -531,7 +535,7 @@ if(!function_exists("specialAccess")){
 
 		if($user->isRoot())
 		    return true;
-		    
+
 		if(!\App\Models\Permission::special($special)->count())
 		    return true;
 
