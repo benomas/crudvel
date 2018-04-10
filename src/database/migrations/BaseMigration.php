@@ -23,7 +23,7 @@ class BaseMigration extends Migration
     {
         if (!Schema::hasTable($this->mainTable)) {
             Schema::create($this->mainTable, function (Blueprint $table) {
-                $this->catalog1($table);
+                $this->catalog($table);
             });
         }
     }
@@ -61,7 +61,7 @@ class BaseMigration extends Migration
         $table->dropColumn('updated_by');
     }
 
-    public function catalog1($table){
+    public function catalog($table){
         $table->engine = 'InnoDB';
         $table->increments('id');
         $table->string('name');
@@ -75,5 +75,15 @@ class BaseMigration extends Migration
         $table->timestamps();
         $this->userStamps($table);
         $table->index("active");
+    }
+
+    public function change($callBack){
+        if(!is_callable($callBack))
+            return false;
+        Schema::table($this->mainTable, function($table) use($callBack){
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            $callBack($table);
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        });
     }
 }

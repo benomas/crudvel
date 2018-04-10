@@ -26,39 +26,36 @@ class InstallCommand extends Command {
             if(!file_exists($this->migrationsPath))
                 mkdir($this->migrationsPath);
             $migrations =[];
-            $alter_users=true;
-
-            foreach (glob(database_path()."/migrations/*alter_users_table*.php") as $filename) { 
-                $alter_users = false;
-                break;
-            }
-
-            if($alter_users)
-                $migrations[]= "alter_users_table";
             
             $this->cloneFileData("User.php",base_path("vendor/benomas/crudvel/src/templates/user.txt"),base_path("app/Models"));
             
-            if(!Schema::hasTable("roles")){
+            if(!count(glob(database_path()."/migrations/*alter_users_table*.php")))
+                $migrations[]= "alter_users_table";
+
+            if(!count(glob(database_path()."/migrations/*create_roles_table*.php"))){
                 $migrations[]= "create_roles_table";
                 $this->cloneFileData("Role.php",base_path("vendor/benomas/crudvel/src/templates/role.txt"),base_path("app/Models"));
             }
-            if(!Schema::hasTable("role_role")){
+
+            if(!count(glob(database_path()."/migrations/*create_role_role_table*.php")))
                 $migrations[]= "create_role_role_table";
-            }
-            if(!Schema::hasTable("role_user")){
+
+            if(!count(glob(database_path()."/migrations/*create_role_user_table*.php")))
                 $migrations[]= "create_role_user_table";
-            }
-            if(!Schema::hasTable("cat_permission_types")){
+
+            if(!count(glob(database_path()."/migrations/*create_cat_permission_types_table*.php"))){
                 $migrations[]= "create_cat_permission_types_table";
                 $this->cloneFileData("CatPermissionType.php",base_path("vendor/benomas/crudvel/src/templates/cat_permission_type.txt"),base_path("app/Models"));
             }
-            if(!Schema::hasTable("permissions")){
+
+            if(!count(glob(database_path()."/migrations/*create_permissions_table*.php"))){
                 $migrations[]= "create_permissions_table";
                 $this->cloneFileData("Permission.php",base_path("vendor/benomas/crudvel/src/templates/permission.txt"),base_path("app/Models"));
             }
-            if(!Schema::hasTable("permission_role")){
+
+            if(!count(glob(database_path()."/migrations/*create_permission_role_table*.php")))
                 $migrations[]= "create_permission_role_table";
-            }
+
             foreach ($migrations  as $baseName) 
                 $this->publishMigration($baseName);
         }

@@ -412,6 +412,7 @@ class ApiController extends CustomController
                 isset($paginate['orderBy'])?[$paginate['orderBy']]:null,
                 isset($this->orderables)?$this->orderables:null
             );
+            
             if(customNonEmptyArray($this->orderBy)){
                 $this->orderBy=$this->orderBy[0];
             }
@@ -568,8 +569,10 @@ class ApiController extends CustomController
             if($mode===1){
                 if(!empty($joinableValue) && $simpleColumnValue===$joinableKey)
                     $fixedColumns[$simpleColumnKey] = $joinableValue." AS ".$joinableKey;
-                else
+                else{
+                    $simpleColumnValue!==
                     $fixedColumns[$simpleColumnKey] = $this->mainTableName.$simpleColumnValue;
+                }
             }
             if($mode===2){
                 if(!empty($joinableValue) && $simpleColumnKey===$joinableKey)
@@ -593,12 +596,19 @@ class ApiController extends CustomController
      */ 
 
     public function fixSelectables(){
-        if(!empty($this->joinables) && count($this->joinables)){
+        $simpleColumns=$this->selectQuery;
+        if(!empty($this->joinables) && count($this->joinables))
             foreach ($this->joinables as $joinableKey => $joinableValue)
-                $this->selectQuery = $this->tableFixer($this->selectQuery,1,$joinableKey,$joinableValue);
-        }
-        else
-            $this->selectQuery = $this->tableFixer($this->selectQuery);    }
+                foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
+                    if(!empty($joinableValue) && $simpleColumnValue===$joinableKey){
+                        $this->selectQuery[$simpleColumnKey] = $joinableValue." AS ".$joinableKey;
+                        unset($simpleColumns[$simpleColumnKey]);
+                    }
+
+        if($simpleColumns && count($simpleColumns))
+            foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
+                $this->selectQuery[$simpleColumnKey] = $this->mainTableName.$simpleColumnValue;
+    }
 
     /**
      * This function allow to transform simple filterable column to a table.column field, in this way
@@ -612,12 +622,18 @@ class ApiController extends CustomController
      */ 
 
     public function fixFilterables(){
-        if(!empty($this->joinables) && count($this->joinables)){
+        $simpleColumns=$this->filterQuery;
+        if(!empty($this->joinables) && count($this->joinables))
             foreach ($this->joinables as $joinableKey => $joinableValue)
-                $this->filterQuery = $this->tableFixer($this->filterQuery,2,$joinableKey,$joinableValue);
-        }
-        else
-            $this->filterQuery = $this->tableFixer($this->filterQuery,2);
+                foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
+                    if(!empty($joinableValue) && $simpleColumnValue===$joinableKey){
+                        $this->filterQuery[$joinableValue] = $simpleColumnValue;
+                        unset($simpleColumns[$simpleColumnKey]);
+                    }
+
+        if($simpleColumns && count($simpleColumns))
+            foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
+                $this->filterQuery[$this->mainTableName.$simpleColumnKey] = $simpleColumnValue;
     }
 
     /**
