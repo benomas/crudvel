@@ -1,8 +1,7 @@
-<?php
-
-namespace App\Http\Requests$ENTITYSEGMENTS$;
+<?php namespace App\Http\Requests$ENTITYSEGMENTS$;
 
 use Crudvel\Customs\Requests\CrudRequest;
+
 class $ENTITY$Request extends CrudRequest
 {
     /**

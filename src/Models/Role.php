@@ -1,5 +1,5 @@
-<?php 
-namespace Crudvel\Models;
+<?php namespace Crudvel\Models;
+
 use Crudvel\Models\BaseModel;
 
 class Role extends BaseModel{

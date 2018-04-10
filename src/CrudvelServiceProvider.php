@@ -1,6 +1,4 @@
-<?php
-
-namespace Benomas\Crudvel;
+<?php namespace Benomas\Crudvel;
 
 use Illuminate\Support\ServiceProvider;
 use Benomas\Crudvel\Commands\InstallCommand;

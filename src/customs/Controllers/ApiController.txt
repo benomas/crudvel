@@ -7,6 +7,7 @@
  * modificable ApiController
  */
 use Crudvel\Controllers\ApiController AS defaultApiController;
+
 class ApiController extends defaultApiController
 {
     

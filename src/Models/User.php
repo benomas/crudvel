@@ -1,6 +1,4 @@
-<?php
-
-namespace Crudvel\Models;
+<?php namespace Crudvel\Models;
 
 use Carbon\Carbon;
 use Crudvel\Models\BaseModel;

@@ -1,5 +1,4 @@
-<?php 
-namespace Crudvel\Traits;
+<?php namespace Crudvel\Traits;
 
 /*
     This is a customization of the controller, some controllers needs to save multiple data on different tables in one step, doing that without transaction is a bad idea.
@@ -8,6 +7,7 @@ namespace Crudvel\Traits;
 */
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+
 trait CrudTrait {
 
     public function setEntity(){

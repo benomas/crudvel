@@ -1,5 +1,4 @@
-<?php
-namespace Crudvel\Database\Migrations;
+<?php namespace Crudvel\Database\Migrations;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;

@@ -1,6 +1,7 @@
 <?php namespace Crudvel\Customs\Models;
 
 use Crudvel\Models\CatPermissionType AS CatPermissionTypeBaseModel;
+
 class CatPermissionType extends CatPermissionTypeBaseModel{
 
 //Relationships

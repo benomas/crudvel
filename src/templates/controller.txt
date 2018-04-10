@@ -1,5 +1,4 @@
-<?php 
-namespace App\Http\Controllers$ENTITYSEGMENTS$;
+<?php namespace App\Http\Controllers$ENTITYSEGMENTS$;
 
 use App\Http\Controllers\BaseController;
 use App\Persistence\Repository$ENTITYSEGMENTS$\$ENTITY$Repository;

@@ -7,5 +7,6 @@
  * modificable Role
  */
 use Crudvel\Models\Role AS RoleModel;
+
 class Role extends RoleModel {
 }

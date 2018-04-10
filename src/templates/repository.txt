@@ -1,6 +1,5 @@
-<?php
+<?php namespace App\Persistence\Repository\$ENTITYSEGMENTS$;
 
-namespace App\Persistence\Repository\$ENTITYSEGMENTS$;
 use App\Persistence\Models\$ENTITYSEGMENTS$\$ENTITY$;
 use App\Persistence\Repository\BaseRepository;
 

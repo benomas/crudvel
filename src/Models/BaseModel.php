@@ -1,5 +1,4 @@
-<?php 
-namespace Crudvel\Models;
+<?php namespace Crudvel\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Crudvel\Traits\CrudTrait;
@@ -65,6 +64,10 @@ class BaseModel extends Model {
 
     public function scopeName($query,$name){
         $query->where($this->getTable().".name", $name);
+    }
+
+    public function scopeValue($query,$value){
+        $query->where($this->getTable().".value", $value);
     }
 
     public function scopeSlug($query,$name){

@@ -1,6 +1,4 @@
-<?php
-
-namespace Crudvel\Controllers;
+<?php namespace Crudvel\Controllers;
 
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;

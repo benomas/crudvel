@@ -1,5 +1,4 @@
-<?php 
-namespace Crudvel\Controllers;
+<?php namespace Crudvel\Controllers;
 
 use DB;
 use Crudvel\Traits\CrudTrait;

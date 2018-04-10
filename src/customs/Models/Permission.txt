@@ -7,5 +7,6 @@
  * modificable Permission
  */
 use Crudvel\Models\Permission AS PermissionModel;
+
 class Permission extends PermissionModel {
 }

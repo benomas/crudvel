@@ -7,6 +7,7 @@
  * modificable BaseMigration
  */
 use Crudvel\Database\Seeds\BaseSeeder AS defaultSeeder;
+
 class BaseSeeder extends defaultSeeder
 {
     

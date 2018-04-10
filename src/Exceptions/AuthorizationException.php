@@ -1,6 +1,7 @@
-<?php
-namespace Crudvel\Exceptions;
+<?php namespace Crudvel\Exceptions;
+
 use Exception;
+
 class AuthorizationException extends Exception
 {
 

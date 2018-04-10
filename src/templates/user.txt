@@ -1,7 +1,7 @@
-<?php 
-namespace App\Models;
+<?php namespace App\Models;
 
 use Crudvel\Customs\Models\User AS UserBaseModel;
+
 class User extends UserBaseModel{
 
 //Relationships

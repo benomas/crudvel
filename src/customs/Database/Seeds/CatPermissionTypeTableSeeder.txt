@@ -7,6 +7,7 @@
  * modificable BaseMigration
  */
 use Crudvel\Database\Seeds\CatPermissionTypeTableSeeder AS DefaultCatPermissionTypeTableSeeder;
+
 class CatPermissionTypeTableSeeder extends DefaultCatPermissionTypeTableSeeder
 {
     

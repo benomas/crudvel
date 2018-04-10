@@ -7,5 +7,6 @@
  * modificable BaseModel
  */
 use Crudvel\Models\BaseModel AS defaultModel;
+
 class BaseModel extends defaultModel {
 }

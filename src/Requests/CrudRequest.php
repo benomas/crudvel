@@ -1,5 +1,4 @@
-<?php
-namespace Crudvel\Requests;
+<?php namespace Crudvel\Requests;
 
 use Crudvel\Traits\CrudTrait;
 use Crudvel\Exceptions\AuthorizationException;
