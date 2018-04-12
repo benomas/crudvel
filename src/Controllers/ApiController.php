@@ -305,8 +305,11 @@ class ApiController extends CustomController
         if(count($this->selectables)){
             $this->selectQuery = $this->selectables;
             $this->fixSelectables();
+            if($this->modelInstance && $this->modelInstance->id)
+                $this->model->id($this->modelInstance->id);
             $response = $this->model->select($this->selectQuery)->first();
         }
+
         return $this->apiSuccessResponse($response);
     }
 
@@ -562,27 +565,6 @@ class ApiController extends CustomController
         return false;
     }
 
-    public function tableFixer($simpleColumns,$mode=1,$joinableKey=null,$joinableValue=null){
-        $fixedColumns =[];
-        foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue) {
-            if($mode===1){
-                if(!empty($joinableValue) && $simpleColumnValue===$joinableKey)
-                    $fixedColumns[$simpleColumnKey] = $joinableValue." AS ".$joinableKey;
-                else{
-                    $simpleColumnValue!==
-                    $fixedColumns[$simpleColumnKey] = $this->mainTableName.$simpleColumnValue;
-                }
-            }
-            if($mode===2){
-                if(!empty($joinableValue) && $simpleColumnKey===$joinableKey)
-                    $fixedColumns[$joinableValue] = $simpleColumnValue;
-                else
-                    $fixedColumns[$this->mainTableName.$simpleColumnKey] = $simpleColumnValue;
-            }
-        }
-
-        return $fixedColumns;
-    }
     /**
      * This function allow to transform simple selectable column to a table.column field, in this way
      * is posible to direct use joinable columns, the model needs to declare de join tables too, maybe * rewriting call_action function for global resource join, or by action for specific join
@@ -625,14 +607,17 @@ class ApiController extends CustomController
         if(!empty($this->joinables) && count($this->joinables))
             foreach ($this->joinables as $joinableKey => $joinableValue)
                 foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
-                    if(!empty($joinableValue) && $simpleColumnValue===$joinableKey){
+                    if(!empty($joinableValue) && $simpleColumnKey===$joinableKey){
                         $this->filterQuery[$joinableValue] = $simpleColumnValue;
                         unset($simpleColumns[$simpleColumnKey]);
+                        unset($this->filterQuery[$simpleColumnKey]);
                     }
 
         if($simpleColumns && count($simpleColumns))
-            foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
+            foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue){
+                unset($this->filterQuery[$simpleColumnKey]);
                 $this->filterQuery[$this->mainTableName.$simpleColumnKey] = $simpleColumnValue;
+            }
     }
 
     /**
