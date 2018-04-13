@@ -6,11 +6,10 @@ use Crudvel\Traits\CrudTrait;
 class BaseModel extends Model {
     use CrudTrait;
     protected $schema;
-    protected $hasPropertyActive;
+    protected $hasPropertyActive=true;
     
     public function __construct($attributes = array())  {
         parent::__construct($attributes);
-        $this->hasPropertyActive=true;
     }
 
 // Scopes
