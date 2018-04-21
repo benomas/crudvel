@@ -54,8 +54,7 @@ class ScaffoldingCommand extends Command {
             $ApiControllerPath = app_path()."/Http/Controllers/".$apiSegment.$fixedEntitySegments;
             if(!file_exists($ApiControllerPath))
                 mkdir($ApiControllerPath);
-            if(!file_exists(($fileName=$ApiControllerPath."/".($this->entity)."Controller.php")))
-                file_put_contents($fileName, $this->api_controller_template);
+            if(!file_exists(($fileName=$ApiControllerPath."/".($this->entity)."Controller.php"))) file_put_contents($fileName, $this->api_controller_template);
         }
         if(in_array("web_controller",$this->classes)){
             $WebControllerPath = app_path()."/Http/Controllers/".$webSegment.$fixedEntitySegments;
@@ -133,38 +132,38 @@ class ScaffoldingCommand extends Command {
 
     public function makeController(){
         $this->controller_template = str_replace('$ENTITY$', $this->entity, $this->controller_template);
-        $this->controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->controller_template);
+        $this->controller_template = str_replace('$ENTITYSEGMENTS$', ucwords($this->entity_segments), $this->controller_template);
         $this->controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->controller_template);
     }
 
     public function makeApiController(){
         $this->api_controller_template = str_replace('$ENTITY$', $this->entity, $this->api_controller_template);
-        $this->api_controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->api_controller_template);
-        $this->api_controller_template = str_replace('$APIENTITYSEGMENTS$', Str::title($this->api_segments), $this->api_controller_template);
+        $this->api_controller_template = str_replace('$ENTITYSEGMENTS$', ucwords($this->entity_segments), $this->api_controller_template);
+        $this->api_controller_template = str_replace('$APIENTITYSEGMENTS$', ucwords($this->api_segments), $this->api_controller_template);
         $this->api_controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->api_controller_template);
     }
 
     public function makeWebController(){
         $this->web_controller_template = str_replace('$ENTITY$', $this->entity, $this->web_controller_template);
-        $this->web_controller_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->web_controller_template);
-        $this->web_controller_template = str_replace('$WEBENTITYSEGMENTS$', Str::title($this->web_segments), $this->web_controller_template);
+        $this->web_controller_template = str_replace('$ENTITYSEGMENTS$', ucwords($this->entity_segments), $this->web_controller_template);
+        $this->web_controller_template = str_replace('$WEBENTITYSEGMENTS$', ucwords($this->web_segments), $this->web_controller_template);
         $this->web_controller_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->web_controller_template);
     }
 
     public function makeRequest(){
         $this->request_template = str_replace('$ENTITY$', $this->entity, $this->request_template);
-        $this->request_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->request_template);
+        $this->request_template = str_replace('$ENTITYSEGMENTS$', ucwords($this->entity_segments), $this->request_template);
     }
 
     public function makeModel(){
         $this->model_template = str_replace('$ENTITY$', $this->entity, $this->model_template);
-        $this->model_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->model_template);
+        $this->model_template = str_replace('$ENTITYSEGMENTS$', ucwords($this->entity_segments), $this->model_template);
         $this->model_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->model_template);
     }
 
     public function makeRepository(){
         $this->repository_template = str_replace('$ENTITY$', $this->entity, $this->repository_template);
-        $this->repository_template = str_replace('$ENTITYSEGMENTS$', Str::title($this->entity_segments), $this->repository_template);
+        $this->repository_template = str_replace('$ENTITYSEGMENTS$', ucwords($this->entity_segments), $this->repository_template);
         $this->repository_template = str_replace('$MAINTABLE$', $this->snack_entity, $this->repository_template);
     }
 
@@ -241,8 +240,7 @@ class ScaffoldingCommand extends Command {
             ],
             [
                 "classes", InputArgument::REQUIRED, "classes are required (controller, api_controller, web_controller,request,repository,model,migration)",
-            ],
-            [
+            ], [
                 "entity", InputArgument::REQUIRED, "Entidy is required",
             ],
             [
