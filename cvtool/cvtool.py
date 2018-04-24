@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 #This script to opens crudvel resource files in editor saving time open one by one
+# To install and run this script in GNU/Linux for example, you need to copy this file to some dir inside in your main env variable path.
+# To install runt he following command 'cp cvtool.py /usr/bin/cvtool'
 import argparse
 from subprocess import call
 import string
