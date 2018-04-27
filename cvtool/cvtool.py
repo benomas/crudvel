@@ -43,8 +43,8 @@ parser.add_argument('--action',help='Action to run, default is \'openfiles\'')
 args = parser.parse_args()
 
 if args.editor == None:
-    # Default editor 'vim'
-    args.editor = 'vim'
+    # Default editor 'sublime_text' you can use your favorite editor like 'vim', just set te following var or use --editor argument
+    args.editor = 'sublime_text'
 
 if args.action== None:
     # Default action 'openfiles'
