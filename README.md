@@ -1,7 +1,7 @@
 # crudvel
 Laravel clases customization
 
-This package helps you to make and resfull api, implementing all the default laravel api endpoinds plus some aditionals.
+This package helps you to make and restfull api, implementing all the default laravel api endpoinds plus some aditionals.
 The main concept of this package is a resource.
 ## A resource require:
 
@@ -70,3 +70,4 @@ After you create a resource with crudvel scaffolding, you require to complete th
 ```
 
 ## Current working branch is 4code-crudvel
+  https://github.com/benomas/crudvel/tree/4code-crudvel
