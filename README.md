@@ -68,3 +68,5 @@ After you create a resource with crudvel scaffolding, you require to complete th
   -Edit       		  routes/api *Add in the apiCrudvelResources call (plural,slug)
 
 ```
+
+## Current working branch is 4code-crudvel
