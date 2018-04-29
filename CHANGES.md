@@ -42,7 +42,7 @@
     For example if we want that a user with role 'role0' can update a role 'role1', but cant update a role 'role2'.
     We define that role0 has domain over role1, that means that role0 don have domain over any other role different that 'role1'
 
-  ## owner permission
+  ## Owner permission
     We have already some code for manage owner permissions. but it is no generic, every resource need his own definition for detect how,
     and when a user can be owner of some data, for now the package includes a empty methods owner, this method required to be re-declared in
     the resource implementation, for add the specific login.
@@ -77,4 +77,8 @@
         -lang, 
         -resource definition
         -resource views
+  ## Add support to future laravel versions .
+    Right now the pachage is compatible with
+    laravel 5.0, master branch
+    laravel 5.4, 5.5 4code-crudvel branch
   
