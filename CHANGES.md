@@ -1,17 +1,17 @@
 ## Changes for the current proyects iteration
 
   ## Expert and combinatory pagination
-  the package currently support basic and advanced pagination, but some current proyects require to include more sofisticate ways to search and paginate the data. 
+  the package currently support basic and advanced pagination, but some current proyects require to include more sophisticated ways to search and paginate the data. 
 
     ##Expert pagination: 
     ```
-    This kind of pagination was already includen in the package, but after some recent refactoring it is posible broken, so require to test and fix
+    This kind of pagination was already includen in the package, but after some recent refactoring it is possible broken, so require to test again and fix
     What this mode of pagination do is to permit and infinity filters with combinations of or/and logical operator and "=","<",">","<>","<=",">=","like" comparators operators
      ```
     #combinatory paginations
     ```
     This kind of pagination is no develop at all in this package, but we have some successful implementation in another proyect.
-    What suppose to do is, get a string as serch, split it in words, and find all the combinations of those words in the filterable columns.
+    What suppose to do is. Get a string as search, split it in words, and find all the combinations of those words in the filterable columns.
     an example in a search like 'big red car'. the combinatory paginations will try with:
     ```
 
