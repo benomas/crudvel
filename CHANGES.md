@@ -62,7 +62,7 @@
     and include a way to enable or disable this feature
 ## Changes for the future proyects iteration
   ## Form scaffolding .
-    One of the most Interesting features that we are sploring, is to change the way that scaffolding work, we want te posibolity to include a
+    One of the most interesting features that we are exploring, is to change the way that scaffolding work, we want the possibility to include a
     json file base for process the scaffolding. in our imagination that json will be fillet with data from a form, but this form needs to remember
     the current state of the scaffolding, and share data from the different parts of a resource, including the front data.
     For instance when we define a list of fields, that means that those fields will be reused for define:
