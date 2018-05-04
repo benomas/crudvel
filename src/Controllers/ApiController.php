@@ -150,6 +150,7 @@ class ApiController extends CustomController
     {
         $this->fields['id'] = $id;
         $this->setStamps();
+        unset($this->fields["created_by"]);
         if($this->persist())
             return ($paginable = $this->paginable && $this->extractPaginate())?
                 $this->paginatedResponse():
@@ -211,10 +212,10 @@ class ApiController extends CustomController
 
     protected function setStamps(){
         $rightNow = Carbon::now()->toDateTimeString();
-        $this->fields['actualizado_usuarios_id'] = $this->request->user()->id;
-        $this->fields['creado_usuarios_id']      = $this->request->user()->id;
-        $this->fields['fecha_creacion']          = $rightNow;
-        $this->fields['fecha_actualizacion']     = $rightNow;
+        $this->fields['created_by'] = $this->request->user()->id;
+        $this->fields['updated_by'] = $this->request->user()->id;
+        $this->fields['created_at'] = $rightNow;
+        $this->fields['updated_at'] = $rightNow;
     }
 
     protected function getRequest(){
