@@ -8,6 +8,7 @@
     What this mode of pagination do is to permit and infinity filters with combinations of or/and logical operator and "=","<",">","<>","<=",">=","like" comparators operators
     #combinatory paginations
     
+  ## Combinatory pagination: 
     This kind of pagination is no develop at all in this package, but we have some successful implementation in another proyect.
     What suppose to do is. Get a string as search, split it in words, and find all the combinations of those words in the filterable columns.
     an example in a search like 'big red car'. the combinatory paginations will try with:
