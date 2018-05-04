@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 """
 CVtool
 Copyright (C) 2018 - Energy1011[at]gmail(dot)com
@@ -24,17 +24,36 @@ import argparse
 from subprocess import call
 import string
 import os.path
+import re
 
-print("Welcome to crudvel tool")
+print("Welcome to crudvel/crudvuel python-script-tool")
 # Path list to open in backend crudvel project
-paths = [ 'resources/lang/es/crudvel/<r_plural_lower_c>.php' ,
-          'app/Models/<r_singular_studly_c>.php',
-          'app/Http/Requests/<r_singular_studly_c>Request.php',
-          'app/Http/Controllers/Api/<r_singular_studly_c>Controller.php',
-          'database/seeds/<r_singular_studly>TableSeeder.php',
-          'routes/api.php']
+paths = [ 
+    [
+# [0] = back
+      'resources/lang/es/crudvel/<r_plural_lower_c>.php' ,
+      'app/Models/<r_singular_studly_c>.php',
+      'app/Http/Requests/<r_singular_studly_c>Request.php',
+      'app/Http/Controllers/Api/<r_singular_studly_c>Controller.php',
+      'database/seeds/<r_singular_studly_c>TableSeeder.php',
+      'routes/api.php'
+      ],
+    [
+# [1] = front 
+      'src/i18n/es/crudvuel/<r_plural_slug_c)>.js',
+      'src/i18n/es/crudvuel.js',
+      'src/components/resources/<r_plural_slug_c>/CvCreate.vue',
+      'src/components/resources/<r_plural_slug_c>/CvEdit.vue',
+      'src/components/resources/<r_plural_slug_c>/CvIndex.vue',
+      'src/components/resources/<r_plural_slug_c>/CvShow.vue',
+      'src/services/<r_singular_studly_c>.js',
+      'src/resource-definitions/<r_plural_camel_c)>.js',
+      'src/plugins/boot.js',
+      'src/router/Router.js',
+      'src/layout/dashboard.js'
+      ]
+    ]
 
-#paths = ['app/Models/<r_singular_studly_c>.php']
 parser = argparse.ArgumentParser()
 parser.add_argument('r_singular',help='Resource name in singular')
 parser.add_argument('r_plural',help='Resource name in plural')
@@ -43,29 +62,52 @@ parser.add_argument('--action',help='Action to run, default is \'openfiles\'')
 args = parser.parse_args()
 
 if args.editor == None:
-    # Default editor 'sublime_text' you can use your favorite editor like 'vim', just set te following var or use --editor argument
-    args.editor = 'sublime_text'
+  # Default editor 'sublime_text' you can use your favorite editor like 'vim', just set te following var or use --editor argument
+    args.editor = 'vim'
 
 if args.action== None:
-    # Default action 'openfiles'
+  # Default action 'openfiles'
     args.action = 'openfiles'
+
+# Current dir has artisan ? is it a backend ?
+if os.path.isfile('artisan'): 
+  layer=0 
+else: 
+  layer=1
+
+def launch_editor():
+  # Wait for a keypress to continue
+  try:
+    input("Press enter to continue")
+  except SyntaxError:
+    pass
+  call(paths[layer])
+
 def open_resource_files():
-    # Insert resource in paths
-    for index, path in enumerate(paths):
-      paths[index] = string.replace(paths[index], '<r_singular_studly_c>', args.r_singular.title())
-      paths[index] = string.replace(paths[index], '<r_plural_lower_c>', args.r_plural.lower())
+  pathsToOpen = []
+  # Insert resource in paths
+  for index, path in enumerate(paths[layer]):
+    paths[layer][index] = paths[layer][index].replace("<r_singular_studly_c>", args.r_singular.title())
+    paths[layer][index] = paths[layer][index].replace("<r_plural_slug_c>", re.sub('\W+', '-', args.r_plural.lower()))
+    paths[layer][index] = paths[layer][index].replace("<r_plural_camel_c>",''.join(x for x in args.r_plural.title() if not x.isspace()))
+    paths[layer][index] = paths[layer][index].replace("<r_plural_lower_c>", args.r_plural.lower())
+    print("esto hay")
+    print(paths[layer][index])
 
-      # remove path from list if it does not exist
-      if not os.path.isfile(paths[index]):
-        print("[i] File: "+paths[index]+" doesn't exist")
-        paths.pop(index)
+    # remove path from list if it does not exist
+    if not os.path.isfile(paths[layer][index]):
+      print("[i] File: "+paths[layer][index]+" doesn't exist")
+      #paths[layer].pop(index)
+    else:
+      pathsToOpen.append(paths[layer][index])
 
-    paths.insert(0,args.editor)
-    try:
-        input("Press enter to continue")
-    except SyntaxError:
-        pass
+  paths[layer] = pathsToOpen
+
+  if len(paths[layer]) > 0:
+    paths[layer].insert(0,args.editor)
+    launch_editor()
+  else:
+    print("Nothing to open, maybe wrong pwd (current working directory)")
 
 if args.action == 'openfiles':
-    open_resource_files()
-    call(paths)
+  open_resource_files()
