@@ -150,7 +150,7 @@ class ApiController extends CustomController
     {
         $this->fields['id'] = $id;
         $this->setStamps();
-        unset($this->fields["created_by"])
+        unset($this->fields["created_by"]);
         if($this->persist())
             return ($paginable = $this->paginable && $this->extractPaginate())?
                 $this->paginatedResponse():
