@@ -58,7 +58,6 @@ class ApiController extends CustomController
     // current comparator;
     protected $comparator="like";
 
-    //public function __construct($request,$model){
     public function __construct(...$propertyRewriter){
         parent::__construct(...$propertyRewriter);
         $this->addActions("select","resourcePermissions");
