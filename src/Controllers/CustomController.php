@@ -140,7 +140,7 @@ class CustomController extends BaseController {
     }
 
     public function preAction($method,$parameters){} //customize actions before normal ejecution
-    
+
     public function postAction($next){ //customize actions after normal ejecution
         return $next;
     }
@@ -386,5 +386,6 @@ class CustomController extends BaseController {
         $this->viewActions=array_merge($this->viewActions,$moreActions);
     }
 
+    //rewrite this method
     public function joins(){}
 }
