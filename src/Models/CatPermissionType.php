@@ -6,6 +6,7 @@ class CatPermissionType extends BaseModel{
 
     protected $fillable = [
         "name",
+        "slug",
         "description",
         "active"
     ];

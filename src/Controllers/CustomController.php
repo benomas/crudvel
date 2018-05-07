@@ -81,6 +81,7 @@ class CustomController extends BaseController {
         "export",
         "exporting",
     ];
+    
     use CrudTrait;
 
     public function __construct(...$propertyRewriter){

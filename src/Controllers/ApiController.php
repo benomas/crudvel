@@ -12,6 +12,8 @@ use Carbon\Carbon;
 class ApiController extends CustomController
 {
     //arreglo de columnas que deben exisistir almenos como null, se requiere para procedimientos
+    protected $forceSingleItemPagination=false;
+    //arreglo de columnas que deben exisistir almenos como null, se requiere para procedimientos
     protected $forceNulls;
     //bandera que indica si index se carga desde tabla o desde vista
     protected $hasView;
@@ -21,6 +23,10 @@ class ApiController extends CustomController
     protected $orderables=null;
     //boleado que indica si el controller permite paginacion de forma general
     protected $paginable=true;
+    //boleado que indica si el controller permite paginacion de forma general
+    protected $flexPaginable=true;
+    //boleado que indica si el controller permite paginacion de forma general
+    protected $badPaginablePetition=false;
     //arreglo con columnas que se permiten seleccionar en paginado, si se setea con false, no se permitira seleccionar de forma especifica, si se setea con null o no se setea, no se pondran restricciones en seleccionar de forma especifica
     protected $selectables=null;
     //mapa de columnas join, 
@@ -83,7 +89,7 @@ class ApiController extends CustomController
      * @return \Illuminate\Http\Response
      */
     public function index()
-    { 
+    {
         return ($this->paginable && $this->extractPaginate())?
             $this->paginatedResponse():
             $this->apiSuccessResponse($this->model->get());
@@ -242,7 +248,6 @@ class ApiController extends CustomController
         //si el modelo no esta definido o es nulo
         if(!isset($this->model) || $this->model===null)
             return ['data'=>[],'count'=>0];
-
         //add joins
         $this->joins();
 
@@ -293,8 +298,14 @@ class ApiController extends CustomController
                 $this->model->orderBy($this->orderBy,$direction);
         }
 
-        if(in_array($this->currentAction,$this->rowActions))
+        if($this->modelInstance && !empty($this->modelInstance->id)){
+            $this->model->id($this->modelInstance->id);
             return ['data'=>$this->model->first(),'count'=>$count];
+        }
+
+        if($this->forceSingleItemPagination)
+            return ['data'=>$this->model->first(),'count'=>$count];
+        
         return ['data'=>$this->model->get(),'count'=>$count];
     }
 
@@ -363,17 +374,22 @@ class ApiController extends CustomController
 
         //si el controller no soporta paginado o si la peticion http no solicita paginación
         if( !isset($this->paginable)    ||
-            !$this->paginable           ||
-            !$this->request->has('paginate')
+            !$this->paginable
         )
             return false;
 
+        //!$this->request->has('paginate')
         //si la peticion http si solicita paginación
         $paginate = $this->request->get('paginate');
 
         //si la peticion http solicita paginación de forma incorrecta
-        if(!customNonEmptyArray($paginate))
-            return false;
+        if(!customNonEmptyArray($paginate)){
+            if(!$this->flexPaginable)
+                return false;
+            $paginate['selectQuery'] = $this->selectables;
+            $paginate['filterQuery'] = $this->filterables;
+            $this->badPaginablePetition=true;
+        }
         //si selectables esta definida en false, no se aceptara seleccion personalizada de columnas
         if(isset($this->selectables) && $this->selectables===false){
             $this->selectQuery=false;
