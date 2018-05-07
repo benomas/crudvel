@@ -140,6 +140,7 @@ class CustomController extends BaseController {
     }
 
     public function preAction($method,$parameters){} //customize actions before normal ejecution
+    
     public function postAction($next){ //customize actions after normal ejecution
         return $next;
     }
