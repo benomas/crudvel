@@ -90,20 +90,6 @@ class CustomController extends BaseController {
         $this->setModelInstance();
     }
 
-    public function modelInstanciator($new=false){
-        $model = $this->modelSource = $this->modelSource?
-            $this->modelSource:
-            "App\Models\\".$this->getCrudObjectName();
-        if($new)
-            return new $model();
-        return $model::noFilters();
-    }
-
-    public function setModelInstance(){
-        if(($this->model = $this->modelInstanciator()))
-            $this->mainTableName = $this->model->getModel()->getTable().'.';
-    }
-
     public function setRequestInstance(){
         $request = $this->requestSource?
             $this->requestSource:

@@ -69,8 +69,12 @@ class BaseModel extends Model {
         $query->where($this->getTable().".value", $value);
     }
 
-    public function scopeSlug($query,$name){
-        $query->where($this->getTable().".slug", $name);
+    public function scopeSlugs($query,$slug){
+        $query->whereIn($this->getTable().".slug", $slug);
+    }
+
+    public function scopeSlug($query,$slug){
+        $query->where($this->getTable().".slug", $slug);
     }
 
     public function scopeOfLevel($query,$level_id){
