@@ -216,11 +216,11 @@ class ApiController extends CustomController
     }
 
     protected function setStamps(){
-        $rightNow = Carbon::now()->toDateTimeString();
-        $this->fields['created_by'] = $this->request->user()->id;
-        $this->fields['updated_by'] = $this->request->user()->id;
-        $this->fields['created_at'] = $rightNow;
-        $this->fields['updated_at'] = $rightNow;
+        //$rightNow = Carbon::now()->toDateTimeString();
+        $this->fields['created_by'] = $this->request->user()->id??null;
+        $this->fields['updated_by'] = $this->request->user()->id??null;
+        //$this->fields['created_at'] = $rightNow??null;
+        //$this->fields['updated_at'] = $rightNow??null;
     }
 
     protected function getRequest(){
