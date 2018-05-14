@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Session;
 */
 class CustomController extends BaseController {
 
-    protected $crudvel       = true;
-    protected $prefix        = "";
-    protected $classType     = "Controller";
-    protected $baseClass     = "";
+    protected $crudvel         = true;
+    protected $prefix          = "";
+    protected $classType       = "Controller";
+    protected $baseClass       = "";
     public $resource;
     //public $baseResourceUrl;
     protected $transStatus;
@@ -35,14 +35,15 @@ class CustomController extends BaseController {
     //validador autorizador anonimo
     protected $request;
     protected $currentAction;
-    protected $currentActionId=null;
+    protected $currentActionId =null;
     protected $fields;
     protected $defaultFields;
     //Acciones que se basan en un solo elemento
     protected $currentUser;
     protected $dirtyPropertys;
     protected $langName;
-    protected $actions = [
+    protected $debugg          = false;
+    protected $actions         = [
         "index",
         "show",
         "create",
@@ -225,7 +226,7 @@ class CustomController extends BaseController {
     protected function testTransaction($callback,$errorCallBack=null,$tryCatch=true){
         $errorException=null;
         if($this->transStatus === 'transaction-in-progress' && is_callable($callback)){
-            if($tryCatch){
+            if($tryCatch && !$this->debugg){
                 try{
                     if(!$callback())
                         $this->transactionFail();
@@ -239,7 +240,7 @@ class CustomController extends BaseController {
                 if(!$callback())
                     $this->transactionFail();
             }
-            if($this->transStatus==='transaction-fail' && is_callable($errorCallBack))
+             if($this->transStatus==='transaction-fail' && is_callable($errorCallBack) && !$this->debugg)
                 $errorCallBack($errorException);
         }
     }
@@ -253,6 +254,17 @@ class CustomController extends BaseController {
      */
     protected function isTransactionCompleted(){
         return $this->transStatus==='transaction-completed';
+    }
+
+    /**
+     * Check if the curret set of transactions has fail status
+     *
+     * @author    Beni (benomas@gmail.com) 2016-12-20
+     *
+     * @return  boolean
+     */
+    protected function isFailedTransaction(){
+        return $this->transStatus==='transaction-fail';
     }
 
     protected function isThisCommitter($committer=null){
