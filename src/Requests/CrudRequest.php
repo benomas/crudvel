@@ -25,7 +25,10 @@ class CrudRequest extends FormRequest
     protected $customBaseName;
     protected $langName;
     protected $rowName;
-
+    protected $model;
+    protected $modelInstance;
+    protected $fixedAttributes = null;
+    
     //import/export
     public $exportImportProperties = [];
     public $importerRowIdentifier  = "Identificador";
@@ -144,7 +147,9 @@ class CrudRequest extends FormRequest
 
     public function attributes()
     {
-        return !empty($fields = __("crudvel/".$this->langName.".fields"))?$fields:[];
+        return array_merge(
+            __("crudvel/".$this->langName.".fields")??[],
+            $this->fixedAttributes??[]);
     }
 
     //Todo

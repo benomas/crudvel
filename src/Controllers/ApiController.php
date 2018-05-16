@@ -171,13 +171,7 @@ class ApiController extends CustomController
      */
     public function destroy($id)
     {
-        $this->resetTransaction();
-        $this->startTranstaction();
-        $this->testTransaction(function(){
-            return $this->model->first()->delete();
-        });
-        $this->transactionComplete();
-        return $this->isTransactionCompleted()?
+        return $this->model->first()->delete()?
                 $this->apiSuccessResponse():
                 $this->apiFailResponse();
     }
