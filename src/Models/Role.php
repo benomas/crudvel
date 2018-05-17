@@ -64,8 +64,16 @@ class Role extends BaseModel{
         $query->whereIn($this->getTable().".slug",$rolesSlug);
     }
 
+    public function scopeNotInRoles($query,$rolesSlug){
+        $query->whereNotIn($this->getTable().".slug",$rolesSlug);
+    }
+
     public function scopeWithRole($query,$roleSlug){
         $this->scopeInRoles($query,[$roleSlug]);
+    }
+
+    public function scopeWithoutRole($query,$roleSlug){
+        $this->scopeNotInRoles($query,[$roleSlug]);
     }
 
     public function scopeWithRoot($query){
@@ -76,6 +84,15 @@ class Role extends BaseModel{
         $this->scopeWithRole($query,"adminsitrator");
     }
 
+    public function scopeWithoutRoot($query){
+        $this->scopeWithoutRole($query,"root");
+    }
+
+    public function scopeWithoutAdmin($query){
+        $this->scopeWithoutRole($query,"adminsitrator");
+    }
+
+    //others
     public function scopeWithManager($query){
         $this->scopeWithRole($query,"manager");
     }
