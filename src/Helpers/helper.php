@@ -632,6 +632,7 @@ if(!function_exists("apiCrudvelResource")){
         		$prefixRoute = $resource;
         	}
 
+	        Route::get($prefixRoute."/sluged", $controller."@sluged")->name($resource.".sluged");
 	        Route::get($prefixRoute."/import", $controller."@import")->name($resource.".import");
 	        Route::get($prefixRoute."/export", $controller."@export")->name($resource.".export");
 	        Route::post($prefixRoute."/import", $controller."@importing")->name($resource.".importing");
@@ -643,6 +644,8 @@ if(!function_exists("apiCrudvelResource")){
 	        Route::resource($resource, $controller);
         }
         else{
+        	if(in_array("sluged",$conditionals))
+	        	Route::get($resource."/sluged", $controller."@sluged")->name($resource.".sluged");
         	if(in_array("import",$conditionals))
 	        	Route::get($resource."/import", $controller."@import")->name($resource.".import");
         	if(in_array("export",$conditionals))

@@ -299,4 +299,9 @@ trait CrudTrait {
         }
         return trans("crudvel.web.not_found");
     }
+
+    public function setLangName(){
+        if(empty($this->langName))
+            $this->langName = str_slug(snake_case(str_plural($this->getCrudObjectName())));
+    }
 }

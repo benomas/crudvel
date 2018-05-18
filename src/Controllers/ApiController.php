@@ -94,6 +94,19 @@ class ApiController extends CustomController
             $this->apiSuccessResponse($this->model->get());
     }
 
+    //web routes
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sluged()
+    {
+        if($this->setSlugField())
+            $this->slugedResponse=true;
+        return $this->index();
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -298,8 +311,14 @@ class ApiController extends CustomController
 
         if($this->forceSingleItemPagination)
             return ['data'=>$this->model->first(),'count'=>$count];
-        
-        return ['data'=>$this->model->get(),'count'=>$count];
+
+        if(!$this->slugedResponse)
+            return ['data'=>$this->model->get(),'count'=>$count];
+
+        $keyed = $this->model->get()->keyBy(function ($item) {
+            return str_slug($item[$this->slugField]);
+        });
+        return ['data'=>$keyed->all(),'count'=>$count];
     }
 
     public function noPaginatedResponse(){

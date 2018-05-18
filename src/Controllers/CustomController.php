@@ -37,6 +37,8 @@ class CustomController extends BaseController {
     protected $currentAction;
     protected $currentActionId = null;
     protected $fields;
+    protected $slugField       = null;
+    protected $slugedResponse  = false;
     protected $defaultFields;
     //Acciones que se basan en un solo elemento
     protected $currentUser;
@@ -45,6 +47,7 @@ class CustomController extends BaseController {
     protected $debugg          = false;
     protected $actions         = [
         "index",
+        "sluged",
         "show",
         "create",
         "store",
@@ -77,6 +80,7 @@ class CustomController extends BaseController {
     ];
     protected $rowsActions = [
         "index",
+        "sluged",
         "import",
         "importing",
         "export",
@@ -123,6 +127,7 @@ class CustomController extends BaseController {
                 return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
             $this->modelInstance =  $this->model->first();
         }
+        $this->setLangName();
         return parent::callAction($method,$parameters);
     }
 
@@ -375,4 +380,16 @@ class CustomController extends BaseController {
 
     //rewrite this method
     public function joins(){}
+
+    public function setSlugField(){
+        if($this->slugField)
+            return true;
+        if(in_array("slug",$this->selectables))
+            return $this->slugField = "slug";
+        if(in_array("name",$this->selectables))
+            return $this->slugField = "name";
+        if(in_array("title",$this->selectables))
+            return $this->slugField = "title";
+        return false;
+    }
 }

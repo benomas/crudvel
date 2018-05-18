@@ -42,8 +42,11 @@ class CrudRequest extends FormRequest
     public function resourcesExplode(){
         if(empty($this->mainTable))
             $this->mainTable = str_slug(snake_case(str_plural($this->getCrudObjectName())),"_");
+        $this->setLangName();
+        /*
         if(empty($this->langName))
             $this->langName = str_slug(snake_case(str_plural($this->getCrudObjectName())));
+        */
         if(empty($this->rowName))
             $this->rowName = camel_case($this->getCrudObjectName());
         if(empty($this->baseName))
