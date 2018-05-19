@@ -12,25 +12,25 @@ use Carbon\Carbon;
 class ApiController extends CustomController
 {
     //arreglo de columnas que deben exisistir almenos como null, se requiere para procedimientos
-    protected $forceSingleItemPagination=false;
+    protected $forceSingleItemPagination =false;
     //arreglo de columnas que deben exisistir almenos como null, se requiere para procedimientos
     protected $forceNulls;
     //bandera que indica si index se carga desde tabla o desde vista
     protected $hasView;
     //arreglo con columnas que se permiten filtrar en paginado, si se setea con false, no se permitira filtrado, si se setea con null o no se setea, no se pondran restricciones en filtrado
-    protected $filterables=null;
+    protected $filterables               =null;
     //arreglo con columnas que se permiten ordenar en paginado, si se setea con false, no se permitira ordenar, si se setea con null o no se setea, no se pondran restricciones en ordenar
-    protected $orderables=null;
+    protected $orderables                =null;
     //boleado que indica si el controller permite paginacion de forma general
-    protected $paginable=true;
+    protected $paginable                 =true;
     //boleado que indica si el controller permite paginacion de forma general
-    protected $flexPaginable=true;
+    protected $flexPaginable             =true;
     //boleado que indica si el controller permite paginacion de forma general
-    protected $badPaginablePetition=false;
+    protected $badPaginablePetition      =false;
     //arreglo con columnas que se permiten seleccionar en paginado, si se setea con false, no se permitira seleccionar de forma especifica, si se setea con null o no se setea, no se pondran restricciones en seleccionar de forma especifica
-    protected $selectables=null;
+    protected $selectables               =null;
     //mapa de columnas join, 
-    protected $joinables=null;
+    protected $joinables                 =null;
     //boleado que indica si el ordenamiento sera ascendente o no
     protected $ascending;
     //boleado que indica si se permite filtrado columna por columna
@@ -50,13 +50,15 @@ class ApiController extends CustomController
     //arreglo de columnas a seleccionar
     protected $selectQuery;
     //array de comparaciones validas
-    protected $comparators=["=","<",">","<>","<=",">=","like"];
+    protected $comparators               =["=","<",">","<>","<=",">=","like"];
     //array de comparaciones validas
-    protected $logicConnectors=["and","or"];
+    protected $logicConnectors           =["and","or"];
     //array de comparaciones validas
-    protected $operatorTypes=["con","com"];
+    protected $operatorTypes             =["con","com"];
     // current comparator;
-    protected $comparator="like";
+    protected $comparator                ="like";
+    protected $paginateCount             =0;
+    protected $paginateData              =null;
 
     public function __construct(...$propertyRewriter){
         parent::__construct(...$propertyRewriter);
@@ -249,8 +251,7 @@ class ApiController extends CustomController
      * @date   2017-05-08
      * @return respuesta http paginada
      */
-    protected function paginatedResponse($callBacks=null) {
-        //jdd($this->model->get());
+    protected function processPaginatedResponse($callBacks=null) {
         //si el modelo no esta definido o es nulo
         if(!isset($this->model) || $this->model===null)
             return ['data'=>[],'count'=>0];
@@ -277,14 +278,14 @@ class ApiController extends CustomController
                 $this->filter($callBacks);
         }
 
-        $count = $this->model->count();
+        $this->paginateCount = $this->model->count();
 
         //si se solicita limitar el numero de resultados
         if(isset($this->limit) && $this->limit){
             $this->model->limit($this->limit);
             //si se especifica una pagina a regresar
             if(isset($this->page) && $this->page){
-                if($count >= $this->limit * ($this->page-1))
+                if($this->paginateCount >= $this->limit * ($this->page-1))
                     $this->model->skip($this->limit * ($this->page-1));
             }
         }
@@ -304,21 +305,44 @@ class ApiController extends CustomController
                 $this->model->orderBy($this->orderBy,$direction);
         }
 
-        if($this->modelInstance && !empty($this->modelInstance->id)){
+        if($this->modelInstance && !empty($this->modelInstance->id))
             $this->model->id($this->modelInstance->id);
-            return ['data'=>$this->model->first(),'count'=>$count];
+    }
+
+    protected function paginateResponder(){
+        
+        if(!empty($this->modelInstance->id)|| $this->forceSingleItemPagination)
+            $this->paginateData=$this->model->first();
+
+        if(!$this->paginateData && !$this->slugedResponse)
+            $this->paginateData = $this->model->get();
+
+        if(!$this->paginateData){
+            $keyed = $this->model->get()->keyBy(function ($item) {
+                return str_slug($item[$this->slugField]);
+            });
+            $this->paginateData = $keyed->all();
         }
+        
+        return $this->apiSuccessResponse([
+            'data'=>$this->paginateData,
+            'count'=>$this->paginateCount,
+            "status"=>trans("crudvel.api.success")
+        ]);
+    }
 
-        if($this->forceSingleItemPagination)
-            return ['data'=>$this->model->first(),'count'=>$count];
-
-        if(!$this->slugedResponse)
-            return ['data'=>$this->model->get(),'count'=>$count];
-
-        $keyed = $this->model->get()->keyBy(function ($item) {
-            return str_slug($item[$this->slugField]);
-        });
-        return ['data'=>$keyed->all(),'count'=>$count];
+    /**
+     * Responde una peticion http de forma paginada de acuerdo a la combinacion de parametros mandados
+     *
+     * @param model   prefilteredModel  Modelo con filtros default para el servicio a paginar
+     *
+     * @author Benomas benomas@gmail.com
+     * @date   2017-05-08
+     * @return respuesta http paginada
+     */
+    protected function paginatedResponse($callBacks=null) {
+        $this->processPaginatedResponse($callBacks);
+        return $this->paginateResponder();
     }
 
     public function noPaginatedResponse(){
