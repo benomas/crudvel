@@ -168,7 +168,7 @@ class ApiController extends CustomController
      */
     public function update($id)
     {
-        $this->fields['id'] = $id;
+        $this->fields["id"] = $id;
         $this->setStamps();
         unset($this->fields["created_by"]);
         if($this->persist())
@@ -210,7 +210,7 @@ class ApiController extends CustomController
                     $this->model->where($filterable,$this->fields[$filterable]);
             }
 
-        return $this->apiSuccessResponse(['data'=>$this->model->get()]);
+        return $this->apiSuccessResponse(["data"=>$this->model->get()]);
     }
 
     public function permissions(){
@@ -226,10 +226,10 @@ class ApiController extends CustomController
 
     protected function setStamps(){
         //$rightNow = Carbon::now()->toDateTimeString();
-        $this->fields['created_by'] = $this->request->user()->id??null;
-        $this->fields['updated_by'] = $this->request->user()->id??null;
-        //$this->fields['created_at'] = $rightNow??null;
-        //$this->fields['updated_at'] = $rightNow??null;
+        $this->fields["created_by"] = $this->request->user()->id??null;
+        $this->fields["updated_by"] = $this->request->user()->id??null;
+        //$this->fields["created_at"] = $rightNow??null;
+        //$this->fields["updated_at"] = $rightNow??null;
     }
 
     protected function getRequest(){
@@ -254,7 +254,7 @@ class ApiController extends CustomController
     protected function processPaginatedResponse($callBacks=null) {
         //si el modelo no esta definido o es nulo
         if(!isset($this->model) || $this->model===null)
-            return ['data'=>[],'count'=>0];
+            return ["data"=>[],"count"=>0];
         //add joins
         $this->joins();
 
@@ -262,10 +262,10 @@ class ApiController extends CustomController
         if(customNonEmptyArray($this->selectQuery)){
             if(
                 isset($callBacks) &&
-                isset($callBacks['selectQuery']) &&
-                is_callable($callBacks['selectQuery'])
+                isset($callBacks["selectQuery"]) &&
+                is_callable($callBacks["selectQuery"])
             )
-                $callBacks['selectQuery']();
+                $callBacks["selectQuery"]();
             $this->fixSelectables();
             $this->model->select($this->selectQuery);
         }
@@ -295,11 +295,11 @@ class ApiController extends CustomController
             $direction = isset($this->ascending) && $this->ascending==1?"ASC":"DESC";
             if(
                 isset($callBacks) &&
-                isset($callBacks['orderBy']) &&
-                isset($callBacks['orderBy'][$this->orderBy]) &&
-                is_callable($callBacks['orderBy'][$this->orderBy])
+                isset($callBacks["orderBy"]) &&
+                isset($callBacks["orderBy"][$this->orderBy]) &&
+                is_callable($callBacks["orderBy"][$this->orderBy])
             ){
-                $callBacks['orderBy'][$this->orderBy]($direction);
+                $callBacks["orderBy"][$this->orderBy]($direction);
             }
             else
                 $this->model->orderBy($this->orderBy,$direction);
@@ -325,9 +325,9 @@ class ApiController extends CustomController
         }
         
         return $this->apiSuccessResponse([
-            'data'=>$this->paginateData,
-            'count'=>$this->paginateCount,
-            "status"=>trans("crudvel.api.success")
+            "data"   =>$this->paginateData,
+            "count"  =>$this->paginateCount,
+            "status" =>trans("crudvel.api.success")
         ]);
     }
 
@@ -363,8 +363,8 @@ class ApiController extends CustomController
 
     protected function filterByColumn($callBacks) {
 
-        if(isset($callBacks) && isset($callBacks['filters']) && is_callable($callBacks['filters']) ){
-            $callBacks['filters']();
+        if(isset($callBacks) && isset($callBacks["filters"]) && is_callable($callBacks["filters"]) ){
+            $callBacks["filters"]();
             return $this->model;
         }
 
@@ -385,8 +385,8 @@ class ApiController extends CustomController
         if(!isset($this->generalSearch) || !$this->generalSearch)
             return $this->model;
 
-        if(isset($callBacks) && isset($callBacks['generalFilter']) && is_callable($callBacks['generalFilter']) ){
-            $callBacks['generalFilter']();
+        if(isset($callBacks) && isset($callBacks["generalFilter"]) && is_callable($callBacks["generalFilter"]) ){
+            $callBacks["generalFilter"]();
             return $this->model;
         }
 
@@ -414,16 +414,16 @@ class ApiController extends CustomController
         )
             return false;
 
-        //!$this->request->has('paginate')
+        //!$this->request->has("paginate")
         //si la peticion http si solicita paginación
-        $paginate = $this->request->get('paginate');
+        $paginate = $this->request->get("paginate");
 
         //si la peticion http solicita paginación de forma incorrecta
         if(!customNonEmptyArray($paginate)){
             if(!$this->flexPaginable)
                 return false;
-            $paginate['selectQuery'] = $this->selectables;
-            $paginate['filterQuery'] = $this->filterables;
+            $paginate["selectQuery"] = $this->selectables;
+            $paginate["filterQuery"] = $this->filterables;
             $this->badPaginablePetition=true;
         }
         //si selectables esta definida en false, no se aceptara seleccion personalizada de columnas
@@ -433,10 +433,10 @@ class ApiController extends CustomController
         else{
             //definimos las columnas que deberan mandarse como respuesta a la petición
             $this->selectQuery = arrayIntersect(
-                isset($paginate['selectQuery'])?$paginate['selectQuery']:null,
+                isset($paginate["selectQuery"])?$paginate["selectQuery"]:null,
                 isset($this->selectables)?$this->selectables:null
             );
-            $this->generalSearch=isset($paginate['generalSearch'])?$paginate['generalSearch']:null;
+            $this->generalSearch=isset($paginate["generalSearch"])?$paginate["generalSearch"]:null;
         }
 
         //si filterables esta definida en false, no se aceptara filtrado por ninguna columna
@@ -446,15 +446,15 @@ class ApiController extends CustomController
         else{
             //definimos las columnas que podran ser filtradas mediante fluent eloquent
             $this->filterQuery = arrayIntersect(
-                isset($paginate['filterQuery'])?$paginate['filterQuery']:null,
+                isset($paginate["filterQuery"])?$paginate["filterQuery"]:null,
                 isset($this->filterables)?$this->filterables:null,true
             );
 
             if(empty($this->filterQuery))
-                $this->superFilterQuery = isset($paginate['sQ'])?$paginate['sQ']:null;
+                $this->superFilterQuery = isset($paginate["sQ"])?$paginate["sQ"]:null;
             
-            if(!empty($paginate['comparator']) && in_array($paginate['comparator'],$this->comparators))
-                $this->comparator = $paginate['comparator'];
+            if(!empty($paginate["comparator"]) && in_array($paginate["comparator"],$this->comparators))
+                $this->comparator = $paginate["comparator"];
         }
 
         //si orderables esta definida en false, no se aceptara ordenado por ninguna columna
@@ -464,7 +464,7 @@ class ApiController extends CustomController
         else{
             //definimos la columna de ordenamiento
             $this->orderBy = arrayIntersect(
-                isset($paginate['orderBy'])?[$paginate['orderBy']]:null,
+                isset($paginate["orderBy"])?[$paginate["orderBy"]]:null,
                 isset($this->orderables)?$this->orderables:null
             );
             
@@ -479,20 +479,20 @@ class ApiController extends CustomController
         }
 
         //se carga el resto de los parametros para paginar
-        if(isset($paginate['limit']) && fixedIsInt($paginate['limit']))
-            $this->limit=$paginate['limit'];
+        if(isset($paginate["limit"]) && fixedIsInt($paginate["limit"]))
+            $this->limit=$paginate["limit"];
 
-        if(isset($paginate['page']) && fixedIsInt($paginate['page']))
-            $this->page=$paginate['page'];
+        if(isset($paginate["page"]) && fixedIsInt($paginate["page"]))
+            $this->page=$paginate["page"];
 
-        if(isset($paginate['ascending']) && $paginate['ascending'])
+        if(isset($paginate["ascending"]) && $paginate["ascending"])
             $this->ascending=1;
 
-        if(isset($paginate['byColumn']) && $paginate['byColumn'])
+        if(isset($paginate["byColumn"]) && $paginate["byColumn"])
             $this->byColumn=1;
 
-        if(isset($paginate['generalSearch']))
-            $this->generalSearch=$paginate['generalSearch'];
+        if(isset($paginate["generalSearch"]))
+            $this->generalSearch=$paginate["generalSearch"];
 
         return true;
     }
