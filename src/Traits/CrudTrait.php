@@ -111,7 +111,7 @@ trait CrudTrait {
         return response()->json(
             $data?
                 $data:
-                ["status"=>trans("crudvel.api.already_exist")],
+                ["message"=>trans("crudvel.api.already_exist")],
             409
         );
     }
@@ -119,7 +119,7 @@ trait CrudTrait {
     public function apiUnautenticated($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans("crudvel.api.unautorized")]
+            ["message"=>trans("crudvel.api.unautorized")]
             ,401
         );
     }
@@ -127,7 +127,7 @@ trait CrudTrait {
     public function apiLoggetOut($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans("crudvel.api.logget_out")]
+            ["message"=>trans("crudvel.api.logget_out")]
             ,204
         );
     }
@@ -135,7 +135,7 @@ trait CrudTrait {
     public function apiUnautorized($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans("crudvel.api.unautorized")]
+            ["message"=>trans("crudvel.api.unautorized")]
             ,403
         );
     }
@@ -143,7 +143,7 @@ trait CrudTrait {
     public function apiNotFound($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans("crudvel.api.not_found")]
+            ["message"=>trans("crudvel.api.not_found")]
             ,404
         );
     }
@@ -151,15 +151,23 @@ trait CrudTrait {
     public function apiSuccessResponse($data=null){
         return response()->json($data?
             $data:
-            ["status"=>trans("crudvel.api.success")]
+            ["message"=>trans("crudvel.api.success")]
             ,200
+        );
+    }
+
+    public function apiIncompleteResponse($data=null){
+        return response()->json($data?
+            $data:
+            ["message"=>trans("crudvel.api.incomplete")]
+            ,202
         );
     }
 
     public function apiFailResponse($data=null){
         return  response()->json($data?
             $data:
-            ["status"=>trans("crudvel.api.transaction-error"),"error-message"=>trans("crudvel.api.operation_error")]
+            ["message"=>trans("crudvel.api.transaction-error"),"error-message"=>trans("crudvel.api.operation_error")]
             ,400
         );
     }
@@ -179,7 +187,7 @@ trait CrudTrait {
         if(empty($respProp))
             return Redirect::back()->withInput($this->fields);
         Session::flash(
-            $respProp["status"]?$respProp["status"]:"success",
+            $respProp["message"]?$respProp["status"]:"success",
             $respProp["statusMessage"]?$respProp["statusMessage"]:"Correcto"
         );
         Session::flash("statusMessage",$respProp["statusMessage"]?$respProp["statusMessage"]:"Correcto");

@@ -327,7 +327,7 @@ class ApiController extends CustomController
         return $this->apiSuccessResponse([
             "data"   =>$this->paginateData,
             "count"  =>$this->paginateCount,
-            "status" =>trans("crudvel.api.success")
+            "message" =>trans("crudvel.api.success")
         ]);
     }
 
