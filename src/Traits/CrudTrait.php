@@ -321,9 +321,9 @@ trait CrudTrait {
 
         if($this->currentUser->resourcePermissions()->slug($this->langName.".general-owner")->count())
             $this->model->generalOwner($this->currentUser->id);
-
-        if($this->currentUser->resourcePermissions()->slug($this->langName.".particular-owner")->count())
-            $this->model->particularOwner($this->currentUser->id);
+        else
+            if($this->currentUser->resourcePermissions()->slug($this->langName.".particular-owner")->count())
+                $this->model->particularOwner($this->currentUser->id);
 
         if(!$this->currentActionId)
             return true;
