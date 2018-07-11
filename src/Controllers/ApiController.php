@@ -81,7 +81,7 @@ class ApiController extends CustomController
     }
 
     public function callAction($method,$parameters=[]){
-        return empty($this->model)?$this->apiNotFound():parent::callAction($method,$parameters);
+        return parent::callAction($method,$parameters);
     }
     //web routes
     /**

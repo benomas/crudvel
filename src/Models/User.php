@@ -139,6 +139,13 @@ class User extends BaseModel{
         $query->where($this->getTable().".email",$email);
     }
 
+    public function scopeGeneralOwner($query,$userId){
+        $this->scopeHidden($query);
+    }
+
+    public function scopeParticularOwner($query,$userId){
+        $query->where($this->getTable().".id", $userId);
+    }
 // End Scopes
 
     public static function getLogginPropertys(){

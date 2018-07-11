@@ -13,10 +13,11 @@ use Lang;
 
 class CrudRequest extends FormRequest
 {
-    protected $crudObjectName;
+    public $crudObjectName;
     protected $rules;
     public $currentAction;
     public $currentActionId;
+    public $userModel;
     public $currentUser;
     public $baseName;
     public $mainTable;
@@ -25,8 +26,8 @@ class CrudRequest extends FormRequest
     protected $customBaseName;
     protected $langName;
     protected $rowName;
-    protected $model;
-    protected $modelInstance;
+    public $model;
+    public $modelInstance;
     protected $fixedAttributes = null;
     
     //import/export
@@ -43,10 +44,6 @@ class CrudRequest extends FormRequest
         if(empty($this->mainTable))
             $this->mainTable = str_slug(snake_case(str_plural($this->getCrudObjectName())),"_");
         $this->setLangName();
-        /*
-        if(empty($this->langName))
-            $this->langName = str_slug(snake_case(str_plural($this->getCrudObjectName())));
-        */
         if(empty($this->rowName))
             $this->rowName = camel_case($this->getCrudObjectName());
         if(empty($this->baseName))
@@ -60,9 +57,20 @@ class CrudRequest extends FormRequest
      */
     public function authorize()
     {
+        return !$this->currentAction || 
+        (
+            actionAccess($this->userModel,$this->baseName.".".str_slug(snake_case($this->currentAction))) &&
+            $this->owner()
+        );
+        
         if(!$this->currentAction)
             return true;
-        return actionAccess($this->userModel,$this->baseName.".".str_slug(snake_case($this->currentAction))) && $this->owner();
+        if(actionAccess($this->userModel,$this->baseName.".".str_slug(snake_case($this->currentAction)))){
+            if($this->validateOwner() && !$this->owner())
+                return false;
+            return true;
+        }
+        return  false;
     }
 
     /**
@@ -84,6 +92,8 @@ class CrudRequest extends FormRequest
             $this->loadFields();
             $this->defaultRules();
         }
+
+        $this->setModelInstance();
         $rulesGenerator = strtolower($this->method()).(ucfirst($this->currentAction));
         if(method_exists($this,$rulesGenerator))
             $this->{$rulesGenerator}();
@@ -235,9 +245,5 @@ class CrudRequest extends FormRequest
 
     public function putDeactivate(){
         $this->rules=[];
-    }
-
-    public function owner(){
-        return true;
     }
 }

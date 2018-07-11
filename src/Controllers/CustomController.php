@@ -92,7 +92,6 @@ class CustomController extends BaseController {
     public function __construct(...$propertyRewriter){
         $this->autoSetPropertys(...$propertyRewriter);
         $this->explodeClass();
-        $this->setModelInstance();
     }
 
     public function setRequestInstance(){
@@ -108,11 +107,17 @@ class CustomController extends BaseController {
     public function callAction($method,$parameters=[]){
         $this->currentAction  = $method;
         $this->setRequestInstance();
+        $this->model         = $this->request->model;
+        if(empty($this->model))
+            return $this->apiNotFound();
+
+        $this->mainTableName = $this->request->mainTableName;
 
         if(!in_array($this->currentAction,$this->actions))
             return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
 
         $this->setCurrentUser();
+        $this->setLangName();
         if(!specialAccess($this->userModel,"inactives"))
             $this->model->actives();
         $this->loadFields();
@@ -127,7 +132,6 @@ class CustomController extends BaseController {
                 return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
             $this->modelInstance =  $this->model->first();
         }
-        $this->setLangName();
         return parent::callAction($method,$parameters);
     }
 

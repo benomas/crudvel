@@ -95,6 +95,18 @@ class Permission extends BaseModel{
     }
 
 
+    public function scopeGeneralOwner($query,$userId){
+        $this->scopeParticularOwner($query,$userId);
+    }
+
+    public function scopeParticularOwner($query,$userId){
+        $query->whereHas('roles',function($query) use($userId) {
+            $query->whereHas('users',function($query) use($userId) {
+                $query->particularOwner($userId);
+            });
+        });
+    }
+
 
 // End Scopes
 }

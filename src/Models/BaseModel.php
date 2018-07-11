@@ -89,6 +89,13 @@ class BaseModel extends Model {
         $query->where($this->getTable().".sublevel_id", $sublevel_id);
     }
 
+    public function scopeGeneralOwner($query,$userId){
+    }
+
+    public function scopeParticularOwner($query,$userId){
+        $query->where($this->getTable().".user_id", $userId);
+    }
+
 // End Scopes
 
 // Others

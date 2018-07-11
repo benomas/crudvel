@@ -30,7 +30,7 @@ class Role extends BaseModel{
     }
 
     public function dominetTo(){
-        return $this->belongsToMany("Crudvel\Models\Role", 'role_role', 'id', 'domined_role_id');
+        return $this->belongsToMany("Crudvel\Models\Role", 'role_role', 'domineering_role_id', 'domined_role_id');
     }
 
 //End Relationships
@@ -103,6 +103,16 @@ class Role extends BaseModel{
 
     public function scopeHidden($query){
         $query->where($this->getTable().".slug","<>","root");
+    }
+
+    public function scopeGeneralOwner($query,$userId){
+        $this->scopeHidden($query);
+    }
+
+    public function scopeParticularOwner($query,$userId){
+        $query->whereHas('users',function($query) use($userId) {
+            $query->particularOwner($userId);
+        });
     }
 
 // End Scopes

@@ -312,4 +312,24 @@ trait CrudTrait {
         if(empty($this->langName))
             $this->langName = str_slug(snake_case(str_plural($this->getCrudObjectName())));
     }
+
+    public function owner(){
+        if( !$this->currentUser || 
+            $this->currentUser->isRoot()
+        )
+            return true;
+
+        if($this->currentUser->resourcePermissions()->slug($this->langName.".general-owner")->count())
+            $this->model->generalOwner($this->currentUser->id);
+
+        if($this->currentUser->resourcePermissions()->slug($this->langName.".particular-owner")->count())
+            $this->model->particularOwner($this->currentUser->id);
+
+        if(!$this->currentActionId)
+            return true;
+
+        $this->model->id($this->currentActionId);
+
+        return $this->model->count();
+    }
 }
