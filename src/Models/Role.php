@@ -18,19 +18,19 @@ class Role extends BaseModel{
 //Relationships
 
     public function users(){
-        return $this->belongsToMany("Crudvel\Models\User", "role_user");
+        return $this->belongsToMany("App\Models\User", "role_user");
     }
 
     public function permissions(){
-        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role");
+        return $this->belongsToMany("App\Models\Permission", "permission_role");
     }
 
     public function dominedBy(){
-        return $this->belongsToMany("Crudvel\Models\Role", 'role_role', 'id', 'domineering_role_id');
+        return $this->belongsToMany("App\Models\Role", 'role_role', 'id', 'domineering_role_id');
     }
 
     public function dominetTo(){
-        return $this->belongsToMany("Crudvel\Models\Role", 'role_role', 'domineering_role_id', 'domined_role_id');
+        return $this->belongsToMany("App\Models\Role", 'role_role', 'domineering_role_id', 'domined_role_id');
     }
 
 //End Relationships
@@ -38,23 +38,23 @@ class Role extends BaseModel{
 //Non standar Relationships
 
     public function sectionPermissions(){
-        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role")->secctionPermissions();
+        return $this->belongsToMany("App\Models\Permission", "permission_role")->secctionPermissions();
     }
 
     public function resourcePermissions(){
-        return $this->belsongsToMany("Crudvel\Models\Permission", "permission_role")->resourcePermissions();
+        return $this->belsongsToMany("App\Models\Permission", "permission_role")->resourcePermissions();
     }
 
     public function actionePermissions(){
-        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role")->actionPermissions();
+        return $this->belongsToMany("App\Models\Permission", "permission_role")->actionPermissions();
     }
 
     public function fieldPermissions(){
-        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role")->fieldPermissions();
+        return $this->belongsToMany("App\Models\Permission", "permission_role")->fieldPermissions();
     }
 
     public function specialPermissions(){
-        return $this->belongsToMany("Crudvel\Models\Permission", "permission_role")->specialPermissions();
+        return $this->belongsToMany("App\Models\Permission", "permission_role")->specialPermissions();
     }
 
 //End Non standar Relationships
@@ -110,10 +110,11 @@ class Role extends BaseModel{
     }
 
     public function scopeParticularOwner($query,$userId){
-        $query->whereHas('users',function($query) use($userId) {
-            $query->particularOwner($userId);
-        });
+        $user = \App\Models\User::id($userId)->first();
+        if(!$user)
+            $query->nullFilter();
+        else
+            $query->ids($user->rolesroles()->get()->pluck("id")->toArray());
     }
-
 // End Scopes
 }

@@ -26,7 +26,7 @@ class User extends BaseModel{
 //Relationships
 
     public function roles(){
-        return $this->belongsToMany("Crudvel\Models\Role", "role_user");
+        return $this->belongsToMany("App\Models\Role", "role_user");
     }
 //End Relationships
 
@@ -34,7 +34,12 @@ class User extends BaseModel{
 
     public function rolesPermissions()
     {
-        return $this->manyToManyToMany("roles","permissions","Crudvel\Models\Permission");
+        return $this->manyToManyToMany("roles","permissions","App\Models\Permission");
+    }
+
+    public function rolesroles()
+    {
+        return $this->manyToManyToMany("roles","dominetTo","App\Models\Role");
     }
 
     public function sectionPermissions()
