@@ -488,19 +488,25 @@ if(!function_exists("resourceAccess")){
 	 */
 
 	function resourceAccess($userInstace,$actionResource){
+		if(!empty($GLOBALS[$actionResource]))
+			return $GLOBALS[$actionResource];
+
 		if(empty($userInstace))
-            return false;
+            return ($GLOBALS[$actionResource]=false);
 
 		if(!($user = $userInstace->first()))
-		    return false;
+            return ($GLOBALS[$actionResource]=false);
 
 		if($user->isRoot())
-		    return true;
+            return ($GLOBALS[$actionResource]=true);
 
 		if(!\App\Models\Permission::actionResource($actionResource)->count())
-		    return true;
+            return ($GLOBALS[$actionResource]=true);
 
-		return shadowInstance($userInstace)->resourceActionPermission($actionResource)->count();
+        if(shadowInstance($userInstace)->resourceActionPermission($actionResource)->count())
+            return ($GLOBALS[$actionResource]=true);
+            	
+		return false;
 	}
 }
 
