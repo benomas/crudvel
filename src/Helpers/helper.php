@@ -487,9 +487,12 @@ if(!function_exists("resourceAccess")){
 	 * @return array
 	 */
 
-	function resourceAccess($userInstace,$actionResource){
-		if(!empty($GLOBALS[$actionResource]))
-			return $GLOBALS[$actionResource];
+	function resourceAccess($userInstace,$actionResource,$reset=false){
+		if(!empty($GLOBALS[$actionResource])){
+			if(!$reset)
+				return $GLOBALS[$actionResource];
+			unset($GLOBALS[$actionResource]);
+		}
 
 		if(empty($userInstace))
             return ($GLOBALS[$actionResource]=false);
