@@ -65,14 +65,23 @@ trait CrudTrait {
     }
 
     public function setCurrentUser(){
-        $user = $this->getClassType()==="Request"?
+        $classType = $this->getClassType();
+        $user = $classType ==="Request"?
             $this->user():
             $this->request->user();
         $userModelSource = config("auth.providers.users.model","Crudvel\Models\User");
         $this->userModel=$user?
             $userModelSource::id($user->id):
             null;
-        $this->currentUser = $this->userModel?$this->userModel->first():null;
+        if($classType ==="Request")
+            $this->currentUser = $this->userModel?$this->userModel->first():null;
+        else{
+            $this->currentUser = ($this->request->currentUser)?
+                $this->request->currentUser:
+                    $this->userModel?
+                        $this->userModel->first():
+                        null;
+        }
     }
 
     public function userInstance(){

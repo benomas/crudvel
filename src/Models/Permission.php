@@ -3,6 +3,8 @@ namespace Crudvel\Models;
 
 use Crudvel\Models\BaseModel;
 class Permission extends BaseModel{
+    
+    public static $enablePermissionCheck = true;
 
     protected $fillable = [
         'slug', 'name', 'active','created_at','updated_at'
