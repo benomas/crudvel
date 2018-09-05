@@ -57,20 +57,10 @@ class CrudRequest extends FormRequest
      */
     public function authorize()
     {
-        return !$this->currentAction || 
-        (
-            actionAccess($this->userModel,$this->baseName.".".str_slug(snake_case($this->currentAction))) &&
-            $this->owner()
-        );
-        
-        if(!$this->currentAction)
-            return true;
-        if(actionAccess($this->userModel,$this->baseName.".".str_slug(snake_case($this->currentAction)))){
-            if($this->validateOwner() && !$this->owner())
-                return false;
-            return true;
-        }
-        return  false;
+        return 
+            !$this->currentAction || 
+            $this->owner() || 
+            actionAccess($this->userModel,$this->baseName.".".str_slug(snake_case($this->currentAction)));
     }
 
     /**
