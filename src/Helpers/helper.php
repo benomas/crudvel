@@ -494,23 +494,46 @@ if(!function_exists("actionAccess")){
 	 * @return array
 	 */
 
-	function actionAccess($userInstace,$resourceAction){
-		if(empty($userInstace))
-            return false;
+	function actionAccess($userModel,$actionResource,$reset=false){
+		if($reset){
+			unset($GLOBALS[$actionResource]);
+			unset($GLOBALS["userInstance"]);
+			unset($GLOBALS["isRoot"]);
+		}
 
-		if(!($user = $userInstace->first()))
-		    return false;
-		
-		if(!$user->active)
-			return false;
+		if(!empty($GLOBALS[$actionResource]))
+			return $GLOBALS[$actionResource];
 
-		if($user->isRoot())
-		    return true;
-		
-		if(!\App\Models\Permission::action($resourceAction)->count())
-		    return true;
+		if(empty($userModel))
+            return ($GLOBALS[$actionResource]=false);
 
-		return kageBunshinNoJutsu($userInstace)->actionPermission($resourceAction)->count();
+        if(!empty($GLOBALS["userInstance"]) && $GLOBALS["userInstance"])
+        	$user = $GLOBALS["userInstance"];
+        else
+        	$user = $GLOBALS["userInstance"] = $userModel->first();
+
+		if(!$user || !$user->active)
+            return ($GLOBALS[$actionResource]=false);
+
+        //if permission revision is disabled through the model
+		if(!\App\Models\Permission::$enablePermissionCheck)
+            return ($GLOBALS[$actionResource]=true);
+
+		if(!empty($GLOBALS["isRoot"]) && $GLOBALS["isRoot"])
+            return ($GLOBALS[$actionResource]=true);
+			
+		if($user->isRoot()){
+			$GLOBALS["isRoot"] = true;
+			customLog($GLOBALS["isRoot"]);
+            return ($GLOBALS[$actionResource]=true);
+		}
+
+		if(!\App\Models\Permission::action($actionResource)->count())
+            return ($GLOBALS[$actionResource]=true);
+
+        if(shadowInstance($userModel)->actionPermission($actionResource)->count())
+            return ($GLOBALS[$actionResource]=true);
+		return false;
 	}
 }
 
