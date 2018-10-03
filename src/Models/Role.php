@@ -29,7 +29,7 @@ class Role extends BaseModel{
         return $this->belongsToMany("App\Models\Role", 'role_role', 'id', 'domineering_role_id');
     }
 
-    public function dominetTo(){
+    public function roles(){
         return $this->belongsToMany("App\Models\Role", 'role_role', 'domineering_role_id', 'domined_role_id');
     }
 

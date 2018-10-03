@@ -39,7 +39,7 @@ class User extends BaseModel{
 
     public function rolesroles()
     {
-        return $this->manyToManyToMany("roles","dominetTo","App\Models\Role");
+        return $this->manyToManyToMany("roles","roles","App\Models\Role");
     }
 
     public function sectionPermissions()

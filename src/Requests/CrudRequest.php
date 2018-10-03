@@ -57,6 +57,11 @@ class CrudRequest extends FormRequest
      */
     public function authorize()
     {
+        $this->resourcesExplode();
+        $this->setCurrentUser();
+        $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
+        $this->currentActionId = $this->route($this->mainArgumentName());
+        $this->setModelInstance();
         return 
             !$this->currentAction || 
             $this->owner() || 
@@ -70,11 +75,6 @@ class CrudRequest extends FormRequest
      */
     public function rules()
     {
-        $this->resourcesExplode();
-        $this->setCurrentUser();
-
-        $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
-        $this->currentActionId = $this->route($this->mainArgumentName());
         $this->rules           = [];
         if(!$this->currentAction)
             return $this->rules;
@@ -83,7 +83,6 @@ class CrudRequest extends FormRequest
             $this->defaultRules();
         }
 
-        $this->setModelInstance();
         $rulesGenerator = strtolower($this->method()).(ucfirst($this->currentAction));
         if(method_exists($this,$rulesGenerator))
             $this->{$rulesGenerator}();

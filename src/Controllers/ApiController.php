@@ -277,7 +277,6 @@ class ApiController extends CustomController
                 $this->filterByColumn($callBacks):
                 $this->filter($callBacks);
         }
-
         $this->paginateCount = $this->model->count();
 
         //si se solicita limitar el numero de resultados
@@ -310,7 +309,6 @@ class ApiController extends CustomController
     }
 
     protected function paginateResponder(){
-        
         if(!empty($this->modelInstance->id)|| $this->forceSingleItemPagination)
             $this->paginateData=$this->model->first();
 
@@ -323,7 +321,6 @@ class ApiController extends CustomController
             });
             $this->paginateData = $keyed->all();
         }
-        
         return $this->apiSuccessResponse([
             "data"   =>$this->paginateData,
             "count"  =>$this->paginateCount,
@@ -368,17 +365,19 @@ class ApiController extends CustomController
             return $this->model;
         }
 
-        foreach ($this->filterQuery as $field=>$query){
-            if (!$query)
-                continue;
+        $this->model->where(function($query){
+            foreach ($this->filterQuery as $field=>$filter){
+                if (!$filter)
+                    continue;
 
-            if (is_string($query)){
-                if($this->comparator==="like")
-                    $this->model->where($field,$this->comparator,"%{$query}%");
-                else
-                    $this->model->where($field,$this->comparator,"{$query}");
+                if (is_string($filter)){
+                    if($this->comparator==="like")
+                        $query->where($field,$this->comparator,"%{$filter}%");
+                    else
+                        $query->where($field,$this->comparator,"{$filter}");
+                }
             }
-        }
+        });
     }
 
     protected function filter($callBacks) {
@@ -389,14 +388,15 @@ class ApiController extends CustomController
             $callBacks["generalFilter"]();
             return $this->model;
         }
-
-        foreach ($this->filterQuery as $field=>$query){
-            $method=!isset($method)?"where":"orWhere";
-            if($this->comparator==="like")
-                $this->model->{$method}($field,$this->comparator,"%{$this->generalSearch}%");
-            else
-                $this->model->{$method}($field,$this->comparator,"{$this->generalSearch}");
-        }
+        $this->model->where(function($query){
+            foreach ($this->filterQuery as $field=>$filter){
+                $method=!isset($method)?"where":"orWhere";
+                if($this->comparator==="like")
+                    $query->{$method}($field,$this->comparator,"%{$this->generalSearch}%");
+                else
+                    $query->{$method}($field,$this->comparator,"{$this->generalSearch}");
+            }
+        });
     }
 
     /**
