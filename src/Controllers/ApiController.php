@@ -368,17 +368,19 @@ class ApiController extends CustomController
             return $this->model;
         }
 
-        foreach ($this->filterQuery as $field=>$query){
-            if (!$query)
-                continue;
+        $this->model->where(function($query){
+            foreach ($this->filterQuery as $field=>$filter){
+                if (!$filter)
+                    continue;
 
-            if (is_string($query)){
-                if($this->comparator==="like")
-                    $this->model->where($field,$this->comparator,"%{$query}%");
-                else
-                    $this->model->where($field,$this->comparator,"{$query}");
+                if (is_string($filter)){
+                    if($this->comparator==="like")
+                        $query->where($field,$this->comparator,"%{$filter}%");
+                    else
+                        $query->where($field,$this->comparator,"{$filter}");
+                }
             }
-        }
+        });
     }
 
     protected function filter($callBacks) {
@@ -389,14 +391,15 @@ class ApiController extends CustomController
             $callBacks["generalFilter"]();
             return $this->model;
         }
-
-        foreach ($this->filterQuery as $field=>$query){
-            $method=!isset($method)?"where":"orWhere";
-            if($this->comparator==="like")
-                $this->model->{$method}($field,$this->comparator,"%{$this->generalSearch}%");
-            else
-                $this->model->{$method}($field,$this->comparator,"{$this->generalSearch}");
-        }
+        $this->model->where(function($query){
+            foreach ($this->filterQuery as $field=>$filter){
+                $method=!isset($method)?"where":"orWhere";
+                if($this->comparator==="like")
+                    $query->{$method}($field,$this->comparator,"%{$this->generalSearch}%");
+                else
+                    $query->{$method}($field,$this->comparator,"{$this->generalSearch}");
+            }
+        });
     }
 
     /**
