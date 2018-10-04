@@ -6,7 +6,8 @@ use Crudvel\Traits\CrudTrait;
 class BaseModel extends Model {
     use CrudTrait;
     protected $schema;
-    protected $hasPropertyActive=true;
+    protected $hasPropertyActive = true;
+    protected $hidden            = ['pivot'];
     
     public function __construct($attributes = array())  {
         parent::__construct($attributes);
@@ -116,9 +117,10 @@ class BaseModel extends Model {
             return $secondLevelModel::nullFilter();
 
         $secondLevelRelationArray=[];
-        foreach ($firstLevelRelationInstace as $firstLevelRelationItem)
+        foreach ($firstLevelRelationInstace as $firstLevelRelationItem){
             if(method_exists($firstLevelRelationItem,$secondLevelRelation) && $firstLevelRelationItem->{$secondLevelRelation}()->count())
-                $secondLevelRelationArray += $firstLevelRelationItem->{$secondLevelRelation}()->get()->pluck("id")->toArray();
+                $secondLevelRelationArray = array_unique(array_merge($secondLevelRelationArray,$firstLevelRelationItem->{$secondLevelRelation}()->get()->pluck("id")->toArray()));
+        }
 
         return $secondLevelModel::ids($secondLevelRelationArray);
     }
