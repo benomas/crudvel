@@ -320,12 +320,16 @@ class CustomValidator extends Validator {
                 }
     		}
 
-            if($hasExceptions && DB::table($exceptionTable)->
-                where($exceptionTable.".".$attribute,$value)->
-                where($exceptionTable.".".$exceptionTableColumn,$exceptionTableValue)->
-                count()
-            )
+            if($hasExceptions && DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],'=',$value)->count()){
+                $exceptionQuery = DB::table($exceptionTable)->where($exceptionTable.".".$attribute,$value);
+                if(!$exceptionQuery->count())
+                    return false;
+                if(!empty($exceptionTableColumn) && !empty($exceptionTableValue))
+                    return $exceptionQuery->
+                        where($exceptionTable.".".$exceptionTableColumn,$exceptionTableValue)->
+                        count();
                 return true;
+            }
 
     		return $test->count()>0;
     	}
