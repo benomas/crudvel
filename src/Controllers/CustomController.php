@@ -120,7 +120,7 @@ class CustomController extends BaseController {
         $this->setLangName();
         if(
           !specialAccess($this->userModel,"inactives") &&
-          !actionAccess($this->userModel,$this->request->baseName.'.inactives')
+          !specialAccess($this->userModel,$this->request->baseName.'.inactives')
         )
           $this->model->actives();
         $this->loadFields();
