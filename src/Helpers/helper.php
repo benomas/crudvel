@@ -478,7 +478,7 @@ if(!function_exists("instanceTrans")){
 if(!function_exists("kageBunshinNoJutsu")){
 
 	function kageBunshinNoJutsu($instance){
-		return clone $instance; 
+		return clone $instance;
 	}
 }
 
@@ -515,13 +515,13 @@ if(!function_exists("actionAccess")){
 		if(!$user || !$user->active)
             return ($GLOBALS[$actionResource]=false);
 
-        //if permission revision is disabled through the model
+    //if permission revision is disabled through the model
 		if(!\App\Models\Permission::$enablePermissionCheck)
             return ($GLOBALS[$actionResource]=true);
 
 		if(!empty($GLOBALS["isRoot"]) && $GLOBALS["isRoot"])
             return ($GLOBALS[$actionResource]=true);
-			
+
 		if($user->isRoot()){
 			$GLOBALS["isRoot"] = true;
 			customLog($GLOBALS["isRoot"]);
@@ -575,14 +575,14 @@ if(!function_exists("errorClass")){
 
 if(!function_exists("validateGetActionResource")){
 	function validateGetActionResource($action,$only=[],$excludes=[]){
-		return ( empty($only["get"]) || !count($only["get"]) ||  in_array($action,$only["get"])) && 
+		return ( empty($only["get"]) || !count($only["get"]) ||  in_array($action,$only["get"])) &&
 			(empty($excludes["get"]) || !in_array($action,$excludes["get"]));
 	}
 }
 
 if(!function_exists("validatePostActionResource")){
 	function validatePostActionResource($action,$only=[],$excludes=[]){
-		return ( empty($only["post"]) || !count($only["post"]) ||  in_array($action,$only["post"])) && 
+		return ( empty($only["post"]) || !count($only["post"]) ||  in_array($action,$only["post"])) &&
 			(empty($excludes["post"]) || !in_array($action,$excludes["post"]));
 	}
 }
@@ -593,7 +593,7 @@ if(!function_exists("crudvelResource")){
 			return false;
 		$urlSegments = explode("/",$resource);
 		$rowName = str_slug(str_singular(end($urlSegments)),"_");
-		
+
 		if(!$controller)
 			$controller=studly_case($rowName)."Controller";
         if(!count($conditionals)){
@@ -641,7 +641,7 @@ if(!function_exists("apiCrudvelResource")){
 		$urlSegments = explode(".",$resource);
 		$baseSegmentResource = end($urlSegments);
 		$rowName = str_slug(str_singular($baseSegmentResource),"_");
-		
+
 		if(!$controller)
 			$controller="Api\\".studly_case($rowName)."Controller";
         if(!count($conditionals)){
@@ -770,10 +770,29 @@ if(!function_exists("deletePathContent")){
     foreach (($files = array_diff(scandir($path), array('.','..'))) as $file)
       (is_dir("$path/$file")) ? deletePathContent("$path/$file",true) : unlink("$path/$file");
     if($subFolder)
-    	return rmdir($path); 
+    	return rmdir($path);
 	}
 }
 
+if(!function_exists("pushCrudvuelActions")){
+  function pushCrudvuelActions($resource=null,&$targetArray,$actions=null,$excludes=[]) {
+    if(!$resource)
+      return;
+
+    if(!$actions){
+      if(!in_array($resource,$excludes))
+        $targetArray[] = $resource;
+      $labelActions = trans("crudvel.actions");
+      foreach ($labelActions as $labelActionKey => $labelActionValue)
+        $actions[]=$labelActionKey;
+    }
+
+
+    foreach ($actions as $action)
+      if(!in_array($action,$excludes))
+        $targetArray[] = "$resource.$action";
+  }
+}
 
 
 

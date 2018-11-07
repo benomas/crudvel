@@ -118,8 +118,11 @@ class CustomController extends BaseController {
 
         $this->setCurrentUser();
         $this->setLangName();
-        if(!specialAccess($this->userModel,"inactives"))
-            $this->model->actives();
+        if(
+          !specialAccess($this->userModel,"inactives") &&
+          !actionAccess($this->userModel,$this->request->baseName.'.inactives')
+        )
+          $this->model->actives();
         $this->loadFields();
         $preactionResponse = $this->preAction($method,$parameters);
         if($preactionResponse)
