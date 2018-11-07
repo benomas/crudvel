@@ -531,7 +531,7 @@ if(!function_exists("actionAccess")){
 		if(!\App\Models\Permission::action($actionResource)->count())
             return ($GLOBALS[$actionResource]=true);
 
-        if(shadowInstance($userModel)->actionPermission($actionResource)->count())
+        if(kageBunshinNoJutsu($userModel)->actionPermission($actionResource)->count())
             return ($GLOBALS[$actionResource]=true);
 		return false;
 	}

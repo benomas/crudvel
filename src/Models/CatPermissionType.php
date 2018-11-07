@@ -4,21 +4,21 @@ use Crudvel\Models\BaseModel;
 
 class CatPermissionType extends BaseModel{
 
-    protected $fillable = [
-        "name",
-        "slug",
-        "description",
-        "active"
-    ];
+  protected $fillable = [
+    "name",
+    "slug",
+    "description",
+    "active"
+  ];
 
-    public function __construct($attributes = array())  {
-        parent::__construct($attributes);
-    }
+  public function __construct($attributes = array())  {
+    parent::__construct($attributes);
+  }
 //Relationships
 
-    public function permissions(){
-        return $this->hasMany("Crudvel\Models\Permission");
-    }
+  public function permissions(){
+    return $this->hasMany("Crudvel\Models\Permission");
+  }
 
 //End Relationships
 
