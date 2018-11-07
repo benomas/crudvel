@@ -29,7 +29,7 @@ class ApiController extends CustomController
     protected $badPaginablePetition      =false;
     //arreglo con columnas que se permiten seleccionar en paginado, si se setea con false, no se permitira seleccionar de forma especifica, si se setea con null o no se setea, no se pondran restricciones en seleccionar de forma especifica
     protected $selectables               =null;
-    //mapa de columnas join, 
+    //mapa de columnas join,
     protected $joinables                 =null;
     //boleado que indica si el ordenamiento sera ascendente o no
     protected $ascending;
@@ -345,7 +345,7 @@ class ApiController extends CustomController
     public function noPaginatedResponse(){
         //add joins
         $this->joins();
-        
+
         $response = $this->modelInstance;
         if(count($this->selectables)){
             $this->selectQuery = $this->selectables;
@@ -452,7 +452,7 @@ class ApiController extends CustomController
 
             if(empty($this->filterQuery))
                 $this->superFilterQuery = isset($paginate["sQ"])?$paginate["sQ"]:null;
-            
+
             if(!empty($paginate["comparator"]) && in_array($paginate["comparator"],$this->comparators))
                 $this->comparator = $paginate["comparator"];
         }
@@ -467,7 +467,7 @@ class ApiController extends CustomController
                 isset($paginate["orderBy"])?[$paginate["orderBy"]]:null,
                 isset($this->orderables)?$this->orderables:null
             );
-            
+
             if(customNonEmptyArray($this->orderBy)){
                 $this->orderBy=$this->orderBy[0];
             }
@@ -511,8 +511,8 @@ class ApiController extends CustomController
                 if(
                     $currentConnector &&
                     $currentComparator &&
-                    $this->vLogicarOperator($currentConnector) && 
-                    $this->vComparator($currentComparator) 
+                    $this->vLogicarOperator($currentConnector) &&
+                    $this->vComparator($currentComparator)
                 ){
                     $keys = array_keys($subSuperQuery);
                     if(!empty($keys) && $this->vFilterable($keys[0])){
@@ -538,15 +538,15 @@ class ApiController extends CustomController
                 if(isAssoc($subSuperQuery["sQ"])){
                     if(
                         $currentConnector &&
-                        $this->vLogicarOperator($currentConnector) && 
-                        $this->vOperatorType($subSuperQuery,"com") && 
+                        $this->vLogicarOperator($currentConnector) &&
+                        $this->vOperatorType($subSuperQuery,"com") &&
                         $this->vComparator($subSuperQuery)
                     )
                         $this->processSubSuperQuery($mainTableName,$subSuperQuery["sQ"],$currentConnector,$subSuperQuery["op"],$subQuery);
                 }
                 else{
-                    if( 
-                        $this->vOperatorType($subSuperQuery,"con") && 
+                    if(
+                        $this->vOperatorType($subSuperQuery,"con") &&
                         $this->vLogicarOperator($subSuperQuery)
                     ){
                         if($currentConnector && $this->vLogicarOperator($currentConnector)){
@@ -623,11 +623,11 @@ class ApiController extends CustomController
      * is posible to direct use joinable columns, the model needs to declare de join tables too, maybe * rewriting call_action function for global resource join, or by action for specific join
      *
      * @param simpleColumns   Array of selectable columns
-     * 
+     *
      * @author Benomas benomas@gmail.com
      * @date   2018-04-04
      * @return array with fixed seletable columns
-     */ 
+     */
 
     public function fixSelectables(){
         $simpleColumns=$this->selectQuery;
@@ -649,11 +649,11 @@ class ApiController extends CustomController
      * is posible to direct use joinable columns, the model needs to declare de join tables too, maybe * rewriting call_action function for global resource join, or by action for specific join
      *
      * @param simpleColumns   Array of filterable columns
-     * 
+     *
      * @author Benomas benomas@gmail.com
      * @date   2018-04-04
      * @return array with fixed seletable columns
-     */ 
+     */
 
     public function fixFilterables(){
         $simpleColumns=$this->filterQuery;
@@ -677,12 +677,12 @@ class ApiController extends CustomController
      * This function allow to transform simple orderBy column to a table.column field, in this way
      * is posible to direct use joinable columns, the model needs to declare de join tables too, maybe * rewriting call_action function for global resource join, or by action for specific join
      *
-     * @param simpleColumns   string of orderBy 
-     * 
+     * @param simpleColumns   string of orderBy
+     *
      * @author Benomas benomas@gmail.com
      * @date   2018-04-04
      * @return string with fixed orderBy column
-     */ 
+     */
     public function fixOrderBy(){
         if(!empty($this->joinables[$this->orderBy]))
             $this->orderBy = $this->joinables[$this->orderBy];

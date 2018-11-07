@@ -86,7 +86,7 @@ class CustomController extends BaseController {
         "export",
         "exporting",
     ];
-    
+
     use CrudTrait;
 
     public function __construct(...$propertyRewriter){
@@ -98,7 +98,7 @@ class CustomController extends BaseController {
         $request = $this->requestSource?
             $this->requestSource:
             "App\Http\Requests\\".$this->getCrudObjectName()."Request";
-        
+
         if(is_callable([$request,"capture"])){
             $this->request = app($request);
         }
@@ -269,6 +269,10 @@ class CustomController extends BaseController {
         $this->testTransaction(function() use($callBack){
             $this->modelInstance = $this->modelInstance ?? $this->modelInstanciator(true);
             $this->modelInstance->fill($this->fields);
+            if(!empty($this->fields['created_by']))
+              $this->modelInstance->created_by=$this->fields['created_by'];
+            if(!empty($this->fields['updated_by']))
+              $this->modelInstance->updated_by=$this->fields['updated_by'];
             $this->dirtyPropertys = $this->modelInstance->getDirty();
             if(!$this->modelInstance->save())
                 return false;
@@ -349,7 +353,7 @@ class CustomController extends BaseController {
                         }
                         if($model->save())
                             return $this->importCallBack();
-                        
+
                         $this->request->changeImporter("validationErrors",'Error de transacción');
                     }
                     return false;
@@ -358,7 +362,7 @@ class CustomController extends BaseController {
             });
             @unlink($path);
         }
-        
+
         if($this->request->wantsJson())
             return $fail?$this->apiFailResponse():$this->apiSuccessResponse(["data"=>$this->request->importResults,"status"=>trans("crudvel.api.success")]);
 
