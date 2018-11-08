@@ -98,9 +98,12 @@ trait CrudTrait {
   }
 
   public function loadFields(){
-    $this->fields = $this->getClassType()==="Request"?
-      $this->all():
-      $this->request->all();
+    if($this->getClassType()==="Request")
+      $this->fields = $this->all();
+    else{
+      $this->fields = empty($this->request->fields)?
+        $this->request->all():$this->request->fields;
+    }
     if(!empty($this->defaultFields))
       foreach ($this->defaultFields as $field => $value)
         if(empty($this->fields[$field]))
@@ -112,7 +115,7 @@ trait CrudTrait {
       $data?
         $data:
         ["message"=>trans("crudvel.api.already_exist")],
-      409
+        409
     );
   }
 
