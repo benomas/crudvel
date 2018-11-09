@@ -97,6 +97,18 @@ class BaseModel extends Model {
     $query->where($this->getTable().".user_id", $userId);
   }
 
+  public function scopeUpdatedBefore($query,$date){
+    $query->where($this->getTable().".updated_at",'>',$date);
+  }
+
+  public function scopeUpdatedAfter($query,$date){
+    $query->where($this->getTable().".updated_at",'<',$date);
+  }
+
+  public function scopeUpdatedBetween($query,$date){
+    $query->updatedBefore($date)->updatedAfter($date);
+  }
+
 // End Scopes
 
 // Others
