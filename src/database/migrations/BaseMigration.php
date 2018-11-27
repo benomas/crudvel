@@ -27,15 +27,6 @@ class BaseMigration extends Migration
     }
   }
 
-  public function down()
-  {
-    if(Schema::hasTable($this->mainTable)){
-      DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-      Schema::drop($this->mainTable);
-      DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    }
-  }
-
   public function makeStylesColumns($table){
     $table->string('icon')->nullable()->default("");
     /*
@@ -67,6 +58,13 @@ class BaseMigration extends Migration
     $table->text('description')->nullable();
     $this->defaultColumns($table);
     $table->index("name");
+  }
+  
+  public function defaultColumns($table){
+    $table->boolean('active')->default(true);
+    $table->timestamps();
+    $this->userStamps($table);
+    $table->index("active");
   }
 
   public function down()
