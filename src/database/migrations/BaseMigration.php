@@ -69,20 +69,22 @@ class BaseMigration extends Migration
     $table->index("name");
   }
 
-  public function defaultColumns($table){
-    $table->boolean('active')->default(true);
-    $table->timestamps();
-    $this->userStamps($table);
-    $table->index("active");
+  public function down()
+  {
+    if(Schema::hasTable($this->mainTable)){
+      Schema::disableForeignKeyConstraints();
+      Schema::drop($this->mainTable);
+      Schema::enableForeignKeyConstraints();
+    }
   }
 
   public function change($callBack){
     if(!is_callable($callBack))
         return false;
     Schema::table($this->mainTable, function($table) use($callBack){
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::disableForeignKeyConstraints();
         $callBack($table);
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::enableForeignKeyConstraints();
     });
   }
 }

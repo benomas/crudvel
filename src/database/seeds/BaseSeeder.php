@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use DB;
 use Crudvel\Traits\CrudTrait;
+use Illuminate\Support\Facades\Schema;
 
 class BaseSeeder extends Seeder
 {
@@ -21,12 +22,12 @@ class BaseSeeder extends Seeder
   {
   	if(empty($this->data))
   		return false;
-      $this->explodeClass();
-  	DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+    $this->explodeClass();
+		Schema::disableForeignKeyConstraints();
   	DB::transaction(function() {
 		foreach ($this->data as $key => $value)
   			$this->modelInstanciator(true)->fill($value)->save();
   	});
-  	DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+		Schema::enableForeignKeyConstraints();
   }
 }
