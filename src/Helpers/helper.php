@@ -793,26 +793,6 @@ if(!function_exists("pushCrudvuelActions")){
   }
 }
 
-if(!function_exists("recursiveSqlSrvDisableForeing")){
-	function recursiveSqlSrvDisableForeing() {
-  	if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
-  		foreach ($tables AS $table){
-        $currentTable = \DB::table($table)->get();
-        DB::STATEMENT(" ALTER TABLE ".$table." NOCHECK CONSTRAINT fk_name");
-      }
-  }
-}
-
-if(!function_exists("recursiveSqlSrvEnableForeing")){
-	function recursiveSqlSrvEnableForeing() {
-  	if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
-  		foreach ($tables AS $table){
-        DB::STATEMENT(" ALTER TABLE ".$table." NOCHECK CONSTRAINT fk_name");
-      }
-  }
-}
-
-
 if(!function_exists("disableForeignKeyConstraints")){
 	function disableForeignKeyConstraints($connection=null) {
     $connection = $connection ?? config('database.default');
