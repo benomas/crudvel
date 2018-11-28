@@ -787,37 +787,88 @@ if(!function_exists("pushCrudvuelActions")){
         $actions[]=$labelActionKey;
     }
 
-
     foreach ($actions as $action)
       if(!in_array($action,$excludes))
         $targetArray[] = "$resource.$action";
   }
 }
 
+if(!function_exists("recursiveSqlSrvDisableForeing")){
+	function recursiveSqlSrvDisableForeing() {
+  	if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
+  		foreach ($tables AS $table){
+        $currentTable = \DB::table($table)->get();
+        DB::STATEMENT(" ALTER TABLE ".$table." NOCHECK CONSTRAINT fk_name");
+      }
+  }
+}
+
+if(!function_exists("recursiveSqlSrvEnableForeing")){
+	function recursiveSqlSrvEnableForeing() {
+  	if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
+  		foreach ($tables AS $table){
+        DB::STATEMENT(" ALTER TABLE ".$table." NOCHECK CONSTRAINT fk_name");
+      }
+  }
+}
 
 
+if(!function_exists("disableForeignKeyConstraints")){
+	function disableForeignKeyConstraints($connection=null) {
+    $connection = $connection ?? config('database.default');
+    switch ($connection) {
+      case 'mysql':
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        break;
+      case 'sqlite':
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        break;
 
+      case 'pgsql':
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        break;
 
+      case 'mssql':
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        break;
 
+      case 'sqlsrv':
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        break;
 
+      default:
+        // code...
+        break;
+    }
+	}
+}
 
+if(!function_exists("enableForeignKeyConstraints")){
+	function enableForeignKeyConstraints($connection=null) {
+    $connection = $connection ?? config('database.default');
+    switch ($connection) {
+      case 'mysql':
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        break;
+      case 'sqlite':
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        break;
 
+      case 'pgsql':
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        break;
 
+      case 'mssql':
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        break;
 
+      case 'sqlsrv':
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        break;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      default:
+        //code
+        break;
+    }
+	}
+}

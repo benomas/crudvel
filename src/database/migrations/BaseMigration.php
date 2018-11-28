@@ -59,7 +59,7 @@ class BaseMigration extends Migration
     $this->defaultColumns($table);
     $table->index("name");
   }
-  
+
   public function defaultColumns($table){
     $table->boolean('active')->default(true);
     $table->timestamps();
@@ -70,9 +70,9 @@ class BaseMigration extends Migration
   public function down()
   {
     if(Schema::hasTable($this->mainTable)){
-      Schema::disableForeignKeyConstraints();
+      disableForeignKeyConstraints();
       Schema::drop($this->mainTable);
-      Schema::enableForeignKeyConstraints();
+      enableForeignKeyConstraints();
     }
   }
 
@@ -80,9 +80,9 @@ class BaseMigration extends Migration
     if(!is_callable($callBack))
         return false;
     Schema::table($this->mainTable, function($table) use($callBack){
-        Schema::disableForeignKeyConstraints();
+        disableForeignKeyConstraints();
         $callBack($table);
-        Schema::enableForeignKeyConstraints();
+        enableForeignKeyConstraints();
     });
   }
 }

@@ -23,11 +23,11 @@ class BaseSeeder extends Seeder
   	if(empty($this->data))
   		return false;
     $this->explodeClass();
-		Schema::disableForeignKeyConstraints();
+		disableForeignKeyConstraints();
   	DB::transaction(function() {
 		foreach ($this->data as $key => $value)
   			$this->modelInstanciator(true)->fill($value)->save();
   	});
-		Schema::enableForeignKeyConstraints();
+		enableForeignKeyConstraints();
   }
 }
