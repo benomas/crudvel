@@ -812,7 +812,6 @@ if(!function_exists("recursiveSqlSrvEnableForeing")){
   }
 }
 
-
 if(!function_exists("disableForeignKeyConstraints")){
 	function disableForeignKeyConstraints($connection=null) {
     $connection = $connection ?? config('database.default');
