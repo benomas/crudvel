@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class BaseMigration extends Migration
 {
+  protected $schema;
   protected $mainTable;
   public function __construct(){
     if(empty($this->mainTable)){
@@ -22,8 +23,8 @@ class BaseMigration extends Migration
    */
   public function up()
   {
-    if (!Schema::hasTable($this->mainTable)) {
-      Schema::create($this->mainTable, function (Blueprint $table) {
+    if (!Schema::hasTable($this->getTable())) {
+      Schema::create($this->getSchemaTable(), function (Blueprint $table) {
         $this->catalog($table);
       });
     }
@@ -71,9 +72,9 @@ class BaseMigration extends Migration
 
   public function down()
   {
-    if(Schema::hasTable($this->mainTable)){
+    if(Schema::hasTable($this->getTable())){
       disableForeignKeyConstraints();
-      Schema::drop($this->mainTable);
+      Schema::drop($this->getSchemaTable());
       enableForeignKeyConstraints();
     }
   }
@@ -81,10 +82,20 @@ class BaseMigration extends Migration
   public function change($callBack){
     if(!is_callable($callBack))
       return false;
-    Schema::table($this->mainTable, function($table) use($callBack){
+    Schema::table($this->getSchemaTable(), function($table) use($callBack){
       disableForeignKeyConstraints();
       $callBack($table);
       enableForeignKeyConstraints();
     });
+  }
+
+  public function getTable(){
+    return $this->mainTable;
+  }
+
+  public function getSchemaTable(){
+    if(empty($this->schema))
+      return $this->mainTable;
+    return $this->schema.'.'.$this->mainTable;
   }
 }
