@@ -9,8 +9,10 @@ class BaseMigration extends Migration
 {
   protected $mainTable;
   public function __construct(){
+    if(empty($this->mainTable)){
       preg_match('/(?:reate|lter)(.+?)Table/',get_class($this),$matches);
       $this->mainTable = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $matches[1]));
+    }
   }
 
   /**
@@ -22,7 +24,7 @@ class BaseMigration extends Migration
   {
     if (!Schema::hasTable($this->mainTable)) {
       Schema::create($this->mainTable, function (Blueprint $table) {
-          $this->catalog($table);
+        $this->catalog($table);
       });
     }
   }
@@ -78,11 +80,11 @@ class BaseMigration extends Migration
 
   public function change($callBack){
     if(!is_callable($callBack))
-        return false;
+      return false;
     Schema::table($this->mainTable, function($table) use($callBack){
-        disableForeignKeyConstraints();
-        $callBack($table);
-        enableForeignKeyConstraints();
+      disableForeignKeyConstraints();
+      $callBack($table);
+      enableForeignKeyConstraints();
     });
   }
 }
