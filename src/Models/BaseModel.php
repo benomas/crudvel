@@ -39,7 +39,7 @@ class BaseModel extends Model {
   }
 
   public function scopeNoFilters($query){
-    $query->whereNotNull($this->getTable().".id");
+    $query->whereRaw("1 = 1");
   }
 
   public function scopeNullFilter($query){

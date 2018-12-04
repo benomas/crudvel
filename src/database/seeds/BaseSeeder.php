@@ -26,7 +26,7 @@ class BaseSeeder extends Seeder
 		disableForeignKeyConstraints();
   	DB::transaction(function() {
 		foreach ($this->data as $key => $value)
-  			$this->modelInstanciator(true)->fill($value)->save();
+  		$this->modelInstanciator(true)->fill($value)->save();
   	});
 		enableForeignKeyConstraints();
   }
