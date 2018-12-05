@@ -114,7 +114,7 @@ class BaseModel extends Model {
 // Others
 
   public function getTable(){
-    return ($this->schema?$this->schema:"").parent::getTable();
+    return ($this->schema?$this->schema.'.':'').parent::getTable();
   }
 
   public function manyToManyToMany($firstLevelRelation,$secondLevelRelation,$secondLevelModel){
