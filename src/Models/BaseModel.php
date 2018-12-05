@@ -114,7 +114,8 @@ class BaseModel extends Model {
 // Others
 
   public function getTable(){
-    return ($this->schema?$this->schema.'.':'').parent::getTable();
+    //TODO, fix schema inclusion
+    return parent::getTable();
   }
 
   public function manyToManyToMany($firstLevelRelation,$secondLevelRelation,$secondLevelModel){
@@ -143,5 +144,12 @@ class BaseModel extends Model {
     return $clonedInstace;
   }
 
+  public function getConnectionName(){
+    return $this->connection;
+  }
+
+  public static function accesor(){
+    return self::first();
+  }
 // Others
 }
