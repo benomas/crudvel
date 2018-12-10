@@ -872,3 +872,141 @@ if(!function_exists("enableForeignKeyConstraints")){
     }
 	}
 }
+
+if(!function_exists("columnList")){
+	function columnList($connectionName='sqlsrv',$table) {
+    //return 'database.connections.sqlsrv.driver';
+    if(!$connection = config('database.connections.'.$connectionName))
+      return null;
+    switch($connection['driver']){
+      case 'sqlite':
+        return sqliteColumnList($connectionName,$table);
+        break;
+      case 'mysql':
+        return mysqlColumnList($connectionName,$table);
+        break;
+      case 'pgsql':
+        return pgsqlColumnList($connectionName,$table);
+        break;
+      case 'sqlsrv':
+        return sqlsrvColumnList($connectionName,$table);
+        break;
+      default:
+        return null;
+    }
+    return null;
+	}
+}
+
+if(!function_exists("sqliteColumnList")){
+	function sqliteColumnList($connectionName=null,$table=null) {
+    if(!$connectionName || !$table)
+      return null;
+    $columns = \DB::connection($connectionName)->getSchemaBuilder()->getColumnListing($table);
+    $response =[];
+    foreach ($columns as $column) {
+      $response[]=[
+        'name'     =>$column,
+        'default'  =>'no-default-value',
+        'nullable' =>'true',
+        'type'     =>sqliteDataTypeTraductor(\DB::connection($connectionName)->getSchemaBuilder()->getColumnType($table,$column)),
+        'length'   =>'10',
+      ];
+    };
+    return $response;
+	}
+}
+
+if(!function_exists("mysqlColumnList")){
+	function mysqlColumnList($connectionName=null,$table=null) {
+    if(!$connectionName || !$table)
+      return null;
+    return null;
+	}
+}
+
+if(!function_exists("pgsqlColumnList")){
+	function pgsqlColumnList($connectionName=null,$table=null) {
+    if(!$connectionName || !$table)
+      return null;
+    return null;
+	}
+}
+
+if(!function_exists("sqlsrvColumnList")){
+	function sqlsrvColumnList($connectionName=null,$table=null) {
+    if(!$connectionName || !$table)
+      return null;
+    $columnsDefinitions = \DB::connection($connectionName)->
+      SELECT("
+        SELECT
+          COLUMN_NAME AS [name],
+          COLUMN_DEFAULT AS [default],
+          IS_NULLABLE AS [nullable],
+          DATA_TYPE AS [type],
+          CHARACTER_MAXIMUM_LENGTH AS [length]
+        FROM
+          INFORMATION_SCHEMA.COLUMNS
+        WHERE
+          CONCAT(TABLE_SCHEMA,'.',TABLE_NAME)= '".$table."'
+      ");
+    $response=[];
+    foreach ($columnsDefinitions as $key => $columnDefinition){
+      $default = $columnDefinition->default;
+      if($columnDefinition->default ===null){
+        $columnDefinition->default = 'null';
+        $default = 'null';
+      }
+      if($columnDefinition->nullable === 'YES'){
+        $nullable = 'true';
+      }else{
+        $nullable = 'false';
+        if($columnDefinition->default ==='null')
+          $default = 'no-default-value';
+      }
+      $response[]=[
+        'name'     =>$columnDefinition->name,
+        'default'  =>$default,
+        'nullable' =>$nullable,
+        'type'     =>sqlsrvDataTypeTraductor($columnDefinition->type),
+        'length'   =>$columnDefinition->length,
+      ];
+    }
+
+    return $response;
+	}
+}
+
+if(!function_exists("sqlsrvDataTypeTraductor")){
+	function sqlsrvDataTypeTraductor($dataType) {
+    switch($dataType){
+      case 'tinyint':
+        return 'tinyInteger';
+      case 'smallint':
+        return 'smallInteger';
+      case 'int':
+        return 'integer';
+      case 'nvarchar':
+        return 'string';
+      default:
+        return $dataType.' este tipo de dato necesita reevaluarse';
+    }
+    return '';
+  }
+}
+
+if(!function_exists("sqliteDataTypeTraductor")){
+	function sqliteDataTypeTraductor($dataType) {
+    switch($dataType){
+      case 'integer':
+        return 'integer';
+      case 'smallint':
+        return 'smallInteger';
+      case 'string':
+        return 'string';
+      default:
+        return $dataType.' este tipo de dato necesita reevaluarse';
+    }
+    return '';
+  }
+}
