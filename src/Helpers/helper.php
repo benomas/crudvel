@@ -1010,3 +1010,9 @@ if(!function_exists("sqliteDataTypeTraductor")){
     return '';
   }
 }
+
+if(!function_exists("arrayTranspose")){
+	function arrayTranspose($sourceArray) {
+    return array_map(null, ...$sourceArray);
+  }
+}
