@@ -908,9 +908,9 @@ if(!function_exists("sqliteColumnList")){
       $response[]=[
         'name'     =>$column,
         'default'  =>'no-default-value',
-        'nullable' =>'true',
+        'nullable' => 1,
         'type'     =>sqliteDataTypeTraductor(\DB::connection($connectionName)->getSchemaBuilder()->getColumnType($table,$column)),
-        'length'   =>'10',
+        'length'   => 10,
       ];
     };
     return $response;
@@ -958,9 +958,9 @@ if(!function_exists("sqlsrvColumnList")){
         $default = 'null';
       }
       if($columnDefinition->nullable === 'YES'){
-        $nullable = 'true';
+        $nullable = 1;
       }else{
-        $nullable = 'false';
+        $nullable = 0;
         if($columnDefinition->default ==='null')
           $default = 'no-default-value';
       }
