@@ -904,15 +904,44 @@ if(!function_exists("sqliteColumnList")){
       return null;
     $columns = \DB::connection($connectionName)->getSchemaBuilder()->getColumnListing($table);
     $response =[];
+    //Obtenenemos definicion de tabla
+    $creationQuery = \DB::connection($connectionName)->
+      select("select sql from sqlite_master where sql like 'CREATE TABLE $table(%'");
+    //templazamos caracteres invisibles
+    $replacer = preg_replace('/\n/', '', $creationQuery[0]->sql);
+    $replacer = preg_replace('/\t/', '', $replacer);
+    //Limitamos texto sql de definicion de columnas
+    $replacer = preg_replace('/CREATE TABLE '.$table.'\((.*)?\)/', '$1', $replacer);
+    $replacer = 'RegionID INT PRIMARY KEY NOT NULL,Descripcion VARCHAR(100) NULL,Anio VARCHAR(50) NULL';
     foreach ($columns as $column) {
+      //Seleccionar definición de columna actual
+      $currentCol = preg_replace('/(.*)?('.$column.'\s)(.+?)(,|$)/', '$3', $replacer);
+      //Seleccionar tipo de dato de columna actual
+      $datatype   = preg_replace('/^(\w+)?(.*)/', '$1', $currentCol);
+      //Seleccionar tamaño de dato de columna actual
+      $length     = preg_replace('/^'.$datatype.'\s{0,1}\((\d+)?\)(.*)/', '$1', $currentCol);
+      if(!preg_match('/^\d+$/', $length, $matches, PREG_OFFSET_CAPTURE)){
+        $currentCol = preg_replace('/^'.$datatype.'\s(.*)/', '$1', $currentCol);
+        $length = null;
+      }
+      else
+        $currentCol = preg_replace('/^'.$datatype.'\s\('.$length.'\)\s(.*)/', '$1', $currentCol);
+      $search     = preg_match('/NOT NULL/', $currentCol, $matches, PREG_OFFSET_CAPTURE);
+      //Seleccionar si la columna actual es nulable
+      $nullable   = $search?'false':'true';
+      $currentCol = preg_replace('/(.*?)NOT NULL(.*?)/', '$1$3', $currentCol);
+      //Seleccionar valor default de columna actual
+      $default    = preg_replace('/(.*)(DEFAULT)\s(\d+)(.*)/', '$3', $currentCol);
+      if($default === $currentCol)
+        $default = 'no-default-value';
       $response[]=[
         'name'     =>$column,
-        'default'  =>'no-default-value',
-        'nullable' => 1,
-        'type'     =>sqliteDataTypeTraductor(\DB::connection($connectionName)->getSchemaBuilder()->getColumnType($table,$column)),
-        'length'   => 10,
+        'default'  =>$default,
+        'nullable' =>$nullable,
+        'type'     =>sqliteDataTypeTraductor($datatype),
+        'length'   =>$length,
       ];
-    };
+    }
     return $response;
 	}
 }
@@ -1000,13 +1029,23 @@ if(!function_exists("sqliteDataTypeTraductor")){
     switch($dataType){
       case 'integer':
         return 'integer';
+      case 'INT':
+        return 'integer';
       case 'smallint':
         return 'smallInteger';
+      case 'VARCHAR':
+        return 'string';
       case 'string':
         return 'string';
       default:
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
     return '';
+  }
+}
+
+if(!function_exists("arrayTranspose")){
+	function arrayTranspose($sourceArray) {
+    return array_map(null, ...$sourceArray);
   }
 }
