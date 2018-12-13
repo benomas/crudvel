@@ -928,7 +928,7 @@ if(!function_exists("sqliteColumnList")){
         $currentCol = preg_replace('/^'.$datatype.'\s\('.$length.'\)\s(.*)/', '$1', $currentCol);
       $search     = preg_match('/NOT NULL/', $currentCol, $matches, PREG_OFFSET_CAPTURE);
       //Seleccionar si la columna actual es nulable
-      $nullable   = $search?'false':'true';
+      $nullable   = $search?0:1;
       $currentCol = preg_replace('/(.*?)NOT NULL(.*?)/', '$1$3', $currentCol);
       //Seleccionar valor default de columna actual
       $default    = preg_replace('/(.*)(DEFAULT)\s(\d+)(.*)/', '$3', $currentCol);
