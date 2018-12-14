@@ -793,6 +793,7 @@ if(!function_exists("pushCrudvuelActions")){
   }
 }
 
+/*
 if(!function_exists("recursiveSqlSrvDisableForeing")){
 	function recursiveSqlSrvDisableForeing() {
   	if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
@@ -811,7 +812,7 @@ if(!function_exists("recursiveSqlSrvEnableForeing")){
       }
   }
 }
-
+*/
 
 if(!function_exists("disableForeignKeyConstraints")){
 	function disableForeignKeyConstraints($connection=null) {
@@ -829,11 +830,11 @@ if(!function_exists("disableForeignKeyConstraints")){
         break;
 
       case 'mssql':
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        \DB::statement('EXEC sp_msforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all"');
         break;
 
       case 'sqlsrv':
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        \DB::statement('EXEC sp_msforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all"');
         break;
 
       default:
@@ -859,11 +860,11 @@ if(!function_exists("enableForeignKeyConstraints")){
         break;
 
       case 'mssql':
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        \DB::statement('EXEC sp_msforeachtable @command1="print \'?\'", @command2="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all"');
         break;
 
       case 'sqlsrv':
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        \DB::statement('EXEC sp_msforeachtable @command1="print \'?\'", @command2="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all"');
         break;
 
       default:
@@ -928,7 +929,7 @@ if(!function_exists("sqliteColumnList")){
         $currentCol = preg_replace('/^'.$datatype.'\s\('.$length.'\)\s(.*)/', '$1', $currentCol);
       $search     = preg_match('/NOT NULL/', $currentCol, $matches, PREG_OFFSET_CAPTURE);
       //Seleccionar si la columna actual es nulable
-      $nullable   = $search?'false':'true';
+      $nullable   = $search?0:1;
       $currentCol = preg_replace('/(.*?)NOT NULL(.*?)/', '$1$3', $currentCol);
       //Seleccionar valor default de columna actual
       $default    = preg_replace('/(.*)(DEFAULT)\s(\d+)(.*)/', '$3', $currentCol);
@@ -987,9 +988,9 @@ if(!function_exists("sqlsrvColumnList")){
         $default = 'null';
       }
       if($columnDefinition->nullable === 'YES'){
-        $nullable = 'true';
+        $nullable = 1;
       }else{
-        $nullable = 'false';
+        $nullable = 0;
         if($columnDefinition->default ==='null')
           $default = 'no-default-value';
       }

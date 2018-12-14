@@ -24,9 +24,11 @@ class BaseMigration extends Migration
   public function up()
   {
     if (!Schema::hasTable($this->getTable())) {
+      disableForeignKeyConstraints();
       Schema::create($this->getSchemaTable(), function (Blueprint $table) {
         $this->catalog($table);
       });
+      enableForeignKeyConstraints();
     }
   }
 
@@ -97,5 +99,39 @@ class BaseMigration extends Migration
     if(empty($this->schema))
       return $this->mainTable;
     return $this->schema.'.'.$this->mainTable;
+  }
+
+  public function sqlViewUp($driver=null){
+    if(!$driver){
+      $default = config('database.default');
+      $driver  = config("database.connections.$default.driver");
+    }
+
+    if(!$driver)
+      return customLog('driver connection undefined');
+
+    try{
+      $this->{$driver.'ViewUp'}();
+    }
+    catch(\Exception $e){
+      customLog("error when try to create ".$this->mainTable." view");
+    }
+  }
+
+  public function sqlViewDown($driver=null){
+    if(!$driver){
+      $default = config('database.default');
+      $driver  = config("database.connections.$default.driver");
+    }
+
+    if(!$driver)
+      return customLog('driver connection undefined');
+
+    try{
+      $this->{$driver.'ViewDown'}();
+    }
+    catch(\Exception $e){
+      customLog("error when try to drop ".$this->mainTable." view");
+    }
   }
 }
