@@ -1,7 +1,4 @@
 <?php
-
-
-
 if ( ! function_exists('array_fetch'))
 {
     /**
@@ -28,11 +25,9 @@ if ( ! function_exists('array_fetch'))
         return collect(array_values($results));
     }
 }
-
 /*
 *custom helper, made by Beni at 2016-11-22, the principal porpouse is to bind DFP html from array.
 */
-
 if(!function_exists("requestToModel")){
 	/**
 	 * load data only if exist, this function is necesary, because when request->field recibe an empty
@@ -60,11 +55,9 @@ if(!function_exists("requestToModel")){
 				}
 			}
 		}
-
 		return $data;
 	}
 }
-
 if(!function_exists("toModelWithRequest")){
 	/**
 	 * load data only if exist, this function is necesary, because when request->field recive an empty
@@ -92,13 +85,10 @@ if(!function_exists("toModelWithRequest")){
 				}
 			}
 		}
-
 		return $data;
 	}
 }
-
 if(!function_exists("factorial")){
-
 	/**
 	 * calculate factorial of n
 	 *
@@ -115,10 +105,7 @@ if(!function_exists("factorial")){
 		return $n * factorial($n-1);
 	}
 }
-
-
 if(!function_exists("dateFormatSwitch")){
-
 	/**
 	 * switch between date format
 	 *
@@ -136,7 +123,6 @@ if(!function_exists("dateFormatSwitch")){
 		return \Carbon\Carbon::createFromFormat($originFormant,$date)->format($destineFormat);
 	}
 }
-
 /**
  * check current role
  *
@@ -148,7 +134,6 @@ if(!function_exists("dateFormatSwitch")){
  */
 /*
 if(!function_exists("inRoles")){
-
 	function inRoles(...$roles){
 		return !($user = \Cartalyst\Sentinel\Laravel\Facades\Sentinel::getUser())?
 			0:
@@ -156,7 +141,6 @@ if(!function_exists("inRoles")){
 	}
 }
 */
-
 if(!function_exists("customLog")){
 	function customLog(...$params){
 		$params = json_encode($params);
@@ -164,27 +148,22 @@ if(!function_exists("customLog")){
 		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]["file"]." - ".$backtrace[1]["function"]." in the line: ".$backtrace[0]["line"]." with message: ".$params);
 	}
 }
-
 if(!function_exists("ffDebugg")){
 	function ffDebugg(...$params){
 		dd($params);
 	}
 }
-
 //alias of ffDebugg for fast call
 if(!function_exists("audit")){
 	function audit(...$params){
 		dd($params);
 	}
 }
-
 //alias of ffDebugg for fast call
 if(!function_exists("capitalizeWithAccents")){
 	function capitalizeWithAccents($originalString){
-
 		if(!$originalString)
 			return null;
-
 		return str_replace(
 			"á","Á",
 			str_replace(
@@ -204,41 +183,31 @@ if(!function_exists("capitalizeWithAccents")){
 				)
 			)
 		);
-
 	}
 }
-
 if(!function_exists("renameValidationKey")){
 	function renameValidationKey(&$rules, $oldKey,$newKey){
-
 		if(is_array($rules) && isset($rules[$oldKey]) && !isset($rules[$newKey])){
 			$rules[$newKey] =  $rules[$oldKey];
 			unset($rules[$oldKey]);
 		}
 	}
 }
-
 if(!function_exists("reloadFormValue")){
 	function reloadFormValue($inputName,$model=null,$columnName=null,$otherValue=null){
-
 		if($otherValue)
 			return $otherValue;
-
 		if(\Input::old($inputName)!==null)
 			return \Input::old($inputName);
-
 		if($model){
 			if($columnName && isset($model->$columnName))
 				return $model->$columnName;
-
 			if($inputName && isset($model->$inputName))
 				return $model->$inputName;
 		}
-
 		return "";
 	}
 }
-
 if(!function_exists("customNonEmptyArray")){
 	/**
 	 * Verifica si el parametro mandado es diferente de null, es un array, y tiene almenos un elemento
@@ -253,7 +222,6 @@ if(!function_exists("customNonEmptyArray")){
 		return $testArray && is_array($testArray) && count($testArray);
 	}
 }
-
 if(!function_exists("arrayIntersect")){
 	/**
 	 * Si los dos parametros pasados son customNonEmptyArrays, entonces
@@ -274,11 +242,9 @@ if(!function_exists("arrayIntersect")){
 		//si el primer parametro no es un customNonEmptyArray
 		if(!customNonEmptyArray($array2))
 			return customNonEmptyArray($array1)? $array1:null;
-
 		//si el segundo parametro no es un customNonEmptyArray
 		if(!customNonEmptyArray($array1))
 			return null;
-
 		//si ambos parametros son customNonEmptyArrays
 		$result = [];
 		if($isAsociative){
@@ -294,7 +260,6 @@ if(!function_exists("arrayIntersect")){
 		return $result;
 	}
 }
-
 if(!function_exists("optionalColumn")){
 	function optionalColumn($context,$column){
 		return !($colConfiguration = config("project.optional_columns"))
@@ -303,7 +268,6 @@ if(!function_exists("optionalColumn")){
 		|| $colConfiguration[$context][$column];
 	}
 }
-
 if(!function_exists("countOptionalColumns")){
 	function countOptionalColumns($context,...$columns){
 		$total = 0;
@@ -314,7 +278,6 @@ if(!function_exists("countOptionalColumns")){
 		return $total;
 	}
 }
-
 if(!function_exists("concatToArray")){
 	/**
 	 * Concatena un prefijo a cada elemento del array
@@ -326,16 +289,12 @@ if(!function_exists("concatToArray")){
 	 * @return array
 	 */
 	function concatToArray($prefix=null,$baseArray=null){
-
 		if(!customNonEmptyArray($baseArray))
 			return $baseArray;
-
 		foreach ($baseArray as $key=>$column) {
-
 		}
 	}
 }
-
 if(!function_exists("versionedAsset")){
 	/**
 	 * Genera la ruta para un asset, agregando su fecha de creacion, lo que permite controlar la forma como el navegador maneja el cache
@@ -346,12 +305,10 @@ if(!function_exists("versionedAsset")){
 	 * @date   2017-05-08
 	 * @return array
 	 */
-
 	function versionedAsset($file){
 		return asset($file)."?creation=".filemtime("../public/".$file);
 	}
 }
-
 if(!function_exists("trueCount")){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
@@ -362,7 +319,6 @@ if(!function_exists("trueCount")){
 	 * @date   2017-05-08
 	 * @return array
 	 */
-
 	function trueCount(...$expresions){
 		$trues=0;
 		foreach ($expresions as $expresion) {
@@ -372,7 +328,6 @@ if(!function_exists("trueCount")){
 		return $trues;
 	}
 }
-
 if(!function_exists("classTrans")){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
@@ -383,7 +338,6 @@ if(!function_exists("classTrans")){
 	 * @date   2017-05-08
 	 * @return array
 	 */
-
 	function classTrans($person,$gender,$quantity,$lenguage="es"){
 		switch($lenguage){
 			case "es":
@@ -427,7 +381,6 @@ if(!function_exists("classTrans")){
 		return "";
 	}
 }
-
 if(!function_exists("instanceTrans")){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
@@ -438,7 +391,6 @@ if(!function_exists("instanceTrans")){
 	 * @date   2017-05-08
 	 * @return array
 	 */
-
 	function instanceTrans($instance,$gender,$quantity,$lenguage="es"){
 		switch($lenguage){
 			case "es":
@@ -474,14 +426,11 @@ if(!function_exists("instanceTrans")){
 		return $instance;
 	}
 }
-
 if(!function_exists("kageBunshinNoJutsu")){
-
 	function kageBunshinNoJutsu($instance){
 		return clone $instance;
 	}
 }
-
 if(!function_exists("actionAccess")){
 	/**
 	 * check user permission
@@ -493,50 +442,39 @@ if(!function_exists("actionAccess")){
 	 * @date   2017-05-08
 	 * @return array
 	 */
-
 	function actionAccess($userModel,$actionResource,$reset=false){
 		if($reset){
 			unset($GLOBALS[$actionResource]);
 			unset($GLOBALS["userInstance"]);
 			unset($GLOBALS["isRoot"]);
 		}
-
 		if(!empty($GLOBALS[$actionResource]))
 			return $GLOBALS[$actionResource];
-
 		if(empty($userModel))
       return ($GLOBALS[$actionResource]=false);
-
       if(!empty($GLOBALS["userInstance"]) && $GLOBALS["userInstance"])
       	$user = $GLOBALS["userInstance"];
       else
       	$user = $GLOBALS["userInstance"] = $userModel->first();
-
 		if(!$user || !$user->active)
       return ($GLOBALS[$actionResource]=false);
-
     //if permission revision is disabled through the model
 		if(!\App\Models\Permission::$enablePermissionCheck)
       return ($GLOBALS[$actionResource]=true);
-
 		if(!empty($GLOBALS["isRoot"]) && $GLOBALS["isRoot"])
       return ($GLOBALS[$actionResource]=true);
-
 		if($user->isRoot()){
 			$GLOBALS["isRoot"] = true;
 			customLog($GLOBALS["isRoot"]);
       return ($GLOBALS[$actionResource]=true);
 		}
-
 		if(!\App\Models\Permission::action($actionResource)->count())
       return ($GLOBALS[$actionResource]=true);
-
       if(kageBunshinNoJutsu($userModel)->actionPermission($actionResource)->count())
         return ($GLOBALS[$actionResource]=true);
 		return false;
 	}
 }
-
 if(!function_exists("specialAccess")){
 	/**
 	 * check user permission
@@ -548,52 +486,41 @@ if(!function_exists("specialAccess")){
 	 * @date   2017-05-08
 	 * @return array
 	 */
-
 	function specialAccess($userInstace,$special){
 		if(empty($userInstace))
             return false;
-
 		if(!($user = $userInstace->first()))
 		    return false;
-
 		if($user->isRoot())
 		    return true;
-
 		if(!\App\Models\Permission::special($special)->count())
 		    return true;
-
 		return kageBunshinNoJutsu($userInstace)->specialPermission($special)->count();
 	}
 }
-
 if(!function_exists("errorClass")){
 	function errorClass($errors,$cField){
 		return $errors->first($cField)?'has-error':'';
 	}
 }
-
-
 if(!function_exists("validateGetActionResource")){
 	function validateGetActionResource($action,$only=[],$excludes=[]){
 		return ( empty($only["get"]) || !count($only["get"]) ||  in_array($action,$only["get"])) &&
 			(empty($excludes["get"]) || !in_array($action,$excludes["get"]));
 	}
 }
-
 if(!function_exists("validatePostActionResource")){
 	function validatePostActionResource($action,$only=[],$excludes=[]){
 		return ( empty($only["post"]) || !count($only["post"]) ||  in_array($action,$only["post"])) &&
 			(empty($excludes["post"]) || !in_array($action,$excludes["post"]));
 	}
 }
-
 if(!function_exists("crudvelResource")){
 	function crudvelResource($resource,$controller=null,$conditionals=[]){
 		if(empty($resource))
 			return false;
 		$urlSegments = explode("/",$resource);
 		$rowName = str_slug(str_singular(end($urlSegments)),"_");
-
 		if(!$controller)
 			$controller=studly_case($rowName)."Controller";
         if(!count($conditionals)){
@@ -616,7 +543,6 @@ if(!function_exists("crudvelResource")){
 	        if(validateGetActionResource("import",$only,$excludes)) Route::get($resource."/import", $controller."@import");
 	        if(validateGetActionResource("index",$only,$excludes)) Route::get($resource, $controller."@index");
 	        if(validateGetActionResource("show",$only,$excludes)) Route::get($resource."/{".$rowName."}/show", $controller."@show");
-
 	        if(validatePostActionResource("destroy",$only,$excludes)) Route::delete($resource."/{".$rowName."}", $controller."@destroy");
 	        if(validatePostActionResource("exporting",$only,$excludes)) Route::post($resource."/export", $controller."@exporting");
 	        if(validatePostActionResource("importing",$only,$excludes)) Route::post($resource."/import", $controller."@importing");
@@ -625,7 +551,6 @@ if(!function_exists("crudvelResource")){
         }
 	}
 }
-
 if(!function_exists("crudvelResources")){
 	function crudvelResources($resources){
 		foreach ($resources as $resource) {
@@ -633,7 +558,6 @@ if(!function_exists("crudvelResources")){
 		}
 	}
 }
-
 if(!function_exists("apiCrudvelResource")){
 	function apiCrudvelResource($resource,$controller=null,$conditionals=[]){
 		if(empty($resource))
@@ -641,7 +565,6 @@ if(!function_exists("apiCrudvelResource")){
 		$urlSegments = explode(".",$resource);
 		$baseSegmentResource = end($urlSegments);
 		$rowName = str_slug(str_singular($baseSegmentResource),"_");
-
 		if(!$controller)
 			$controller="Api\\".studly_case($rowName)."Controller";
         if(!count($conditionals)){
@@ -654,7 +577,6 @@ if(!function_exists("apiCrudvelResource")){
         	else{
         		$prefixRoute = $resource;
         	}
-
 	        Route::get($prefixRoute."/sluged", $controller."@sluged")->name($resource.".sluged");
 	        Route::get($prefixRoute."/import", $controller."@import")->name($resource.".import");
 	        Route::get($prefixRoute."/export", $controller."@export")->name($resource.".export");
@@ -694,7 +616,6 @@ if(!function_exists("apiCrudvelResource")){
         }
 	}
 }
-
 if(!function_exists("apiCrudvelResources")){
 	function apiCrudvelResources($resources){
 		foreach ($resources as $resource) {
@@ -702,15 +623,12 @@ if(!function_exists("apiCrudvelResources")){
 		}
 	}
 }
-
 if(!function_exists("resourceByForeingKey")){
 	function resourceByForeingKey($foreingKey){
 		$foreingKey = str_replace("_id","",$foreingKey);
 		return str_slug(str_plural($foreingKey));
 	}
 }
-
-
 if(!function_exists("pdd")){
 	function pdd(...$doDebugg)
 	{
@@ -721,7 +639,6 @@ if(!function_exists("pdd")){
 		dd($doDebugg);
 	}
 }
-
 if(!function_exists("jdd")){
 	function jdd(...$doDebugg)
 	{
@@ -734,7 +651,6 @@ if(!function_exists("jdd")){
 		die();
 	}
 }
-
 if(!function_exists("propertyByPosition")){
 	function propertyByPosition($object,$position)
 	{
@@ -750,7 +666,6 @@ if(!function_exists("propertyByPosition")){
 		return $cellCount===$position?$currentProperty:null;
 	}
 }
-
 if(!function_exists("customLog")){
 	function customLog(...$params){
 		$params = json_encode($params);
@@ -758,13 +673,11 @@ if(!function_exists("customLog")){
 		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']." with message: ".$params);
 	}
 }
-
 if(!function_exists("fixedIsInt")){
 	function fixedIsInt($intTest){
  		return isset($intTest) && strval($intTest) === strval(intval($intTest));
 	}
 }
-
 if(!function_exists("deletePathContent")){
 	function deletePathContent($path,$subFolder=false) {
     foreach (($files = array_diff(scandir($path), array('.','..'))) as $file)
@@ -773,12 +686,10 @@ if(!function_exists("deletePathContent")){
     	return rmdir($path);
 	}
 }
-
 if(!function_exists("pushCrudvuelActions")){
   function pushCrudvuelActions($resource=null,&$targetArray,$actions=null,$excludes=[]) {
     if(!$resource)
       return;
-
     if(!$actions){
       if(!in_array($resource,$excludes))
         $targetArray[] = $resource;
@@ -786,13 +697,11 @@ if(!function_exists("pushCrudvuelActions")){
       foreach ($labelActions as $labelActionKey => $labelActionValue)
         $actions[]=$labelActionKey;
     }
-
     foreach ($actions as $action)
       if(!in_array($action,$excludes))
         $targetArray[] = "$resource.$action";
   }
 }
-
 if(!function_exists("recursiveSqlSrvDisableForeing")){
 	function recursiveSqlSrvDisableForeing() {
   	if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
@@ -802,7 +711,6 @@ if(!function_exists("recursiveSqlSrvDisableForeing")){
       }
   }
 }
-
 if(!function_exists("recursiveSqlSrvEnableForeing")){
 	function recursiveSqlSrvEnableForeing() {
   	if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
@@ -811,8 +719,6 @@ if(!function_exists("recursiveSqlSrvEnableForeing")){
       }
   }
 }
-
-
 if(!function_exists("disableForeignKeyConstraints")){
 	function disableForeignKeyConstraints($connection=null) {
     $connection = $connection ?? config('database.default');
@@ -823,26 +729,21 @@ if(!function_exists("disableForeignKeyConstraints")){
       case 'sqlite':
         \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         break;
-
       case 'pgsql':
         \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         break;
-
       case 'mssql':
         \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         break;
-
       case 'sqlsrv':
         \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         break;
-
       default:
         // code...
         break;
     }
 	}
 }
-
 if(!function_exists("enableForeignKeyConstraints")){
 	function enableForeignKeyConstraints($connection=null) {
     $connection = $connection ?? config('database.default');
@@ -853,26 +754,21 @@ if(!function_exists("enableForeignKeyConstraints")){
       case 'sqlite':
         \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
         break;
-
       case 'pgsql':
         \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
         break;
-
       case 'mssql':
         \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
         break;
-
       case 'sqlsrv':
         \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
         break;
-
       default:
         //code
         break;
     }
 	}
 }
-
 if(!function_exists("columnList")){
 	function columnList($connectionName='sqlsrv',$table) {
     //return 'database.connections.sqlsrv.driver';
@@ -897,7 +793,6 @@ if(!function_exists("columnList")){
     return null;
 	}
 }
-
 if(!function_exists("sqliteColumnList")){
 	function sqliteColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
@@ -945,7 +840,6 @@ if(!function_exists("sqliteColumnList")){
     return $response;
 	}
 }
-
 if(!function_exists("mysqlColumnList")){
 	function mysqlColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
@@ -953,7 +847,6 @@ if(!function_exists("mysqlColumnList")){
     return null;
 	}
 }
-
 if(!function_exists("pgsqlColumnList")){
 	function pgsqlColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
@@ -961,7 +854,6 @@ if(!function_exists("pgsqlColumnList")){
     return null;
 	}
 }
-
 if(!function_exists("sqlsrvColumnList")){
 	function sqlsrvColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
@@ -1001,11 +893,9 @@ if(!function_exists("sqlsrvColumnList")){
         'length'   =>$columnDefinition->length,
       ];
     }
-
     return $response;
 	}
 }
-
 if(!function_exists("sqlsrvDataTypeTraductor")){
 	function sqlsrvDataTypeTraductor($dataType) {
     switch($dataType){
@@ -1023,7 +913,6 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
     return '';
   }
 }
-
 if(!function_exists("sqliteDataTypeTraductor")){
 	function sqliteDataTypeTraductor($dataType) {
     switch($dataType){
@@ -1043,7 +932,6 @@ if(!function_exists("sqliteDataTypeTraductor")){
     return '';
   }
 }
-
 if(!function_exists("arrayTranspose")){
 	function arrayTranspose($sourceArray) {
     return array_map(null, ...$sourceArray);
