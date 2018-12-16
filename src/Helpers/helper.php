@@ -559,61 +559,68 @@ if(!function_exists("crudvelResources")){
 	}
 }
 if(!function_exists("apiCrudvelResource")){
-	function apiCrudvelResource($resource,$controller=null,$conditionals=[]){
+	function apiCrudvelResource($resource,$controller=null,$conditionals=[],$translator=[]){
 		if(empty($resource))
 			return false;
 		$urlSegments = explode(".",$resource);
 		$baseSegmentResource = end($urlSegments);
-		$rowName = str_slug(str_singular($baseSegmentResource),"_");
+	  $rowName = !empty($translator[$baseSegmentResource])?
+      $translator[$baseSegmentResource]:str_slug(str_singular($baseSegmentResource),"_");
 		if(!$controller)
-			$controller="Api\\".studly_case($rowName)."Controller";
-        if(!count($conditionals)){
-        	if(count($urlSegments)>1){
-	        	foreach ($urlSegments as $segment){
-	        		$i=empty($i)?1:$i+1;
-	        		$prefixRoute = (empty($prefixRoute)?"":$prefixRoute."/").$segment.($i<count($urlSegments)?"/{".str_singular($segment)."}":"");
-	        	}
-        	}
-        	else{
-        		$prefixRoute = $resource;
-        	}
-	        Route::get($prefixRoute."/sluged", $controller."@sluged")->name($resource.".sluged");
-	        Route::get($prefixRoute."/import", $controller."@import")->name($resource.".import");
-	        Route::get($prefixRoute."/export", $controller."@export")->name($resource.".export");
-	        Route::post($prefixRoute."/import", $controller."@importing")->name($resource.".importing");
-	        Route::post($prefixRoute."/export", $controller."@exporting")->name($resource.".exporting");
-	        Route::post($prefixRoute."/resource-permissions", $controller."@resourcePermissions")->name($resource.".resource-permissions");
-	        Route::post($prefixRoute."/select", $controller."@select")->name($resource.".select");
-	        Route::put($prefixRoute."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
-	        Route::put($prefixRoute."/{".$rowName."}/deactivate", $controller."@deactivate")->name($resource.".deactivate");
-	        Route::resource($resource, $controller);
-        }
-        else{
-        	if(in_array("sluged",$conditionals))
-	        	Route::get($resource."/sluged", $controller."@sluged")->name($resource.".sluged");
-        	if(in_array("import",$conditionals))
-	        	Route::get($resource."/import", $controller."@import")->name($resource.".import");
-        	if(in_array("export",$conditionals))
-	        	Route::get($resource."/export", $controller."@export")->name($resource.".export");
-        	if(in_array("importing",$conditionals))
-	        	Route::post($resource."/import", $controller."@importing")->name($resource.".importing");
-        	if(in_array("exporting",$conditionals))
-	        	Route::post($resource."/export", $controller."@exporting")->name($resource.".exporting");
-        	if(in_array("activate",$conditionals))
-	        	Route::put($resource."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
-        	if(in_array("deactivate",$conditionals))
-	        	Route::put($resource."/{".$rowName."}/deactivate", $controller."@deactivate")->name($resource.".deactivate");
-        	if(in_array("index",$conditionals))
-	        	Route::get($resource, $controller."@index")->name($resource.".index");
-        	if(in_array("show",$conditionals))
-	        	Route::get($resource."/{".$rowName."}", $controller."@show")->name($resource.".show");
-        	if(in_array("store",$conditionals))
-	        	Route::post($resource."/{".$rowName."}", $controller."@store")->name($resource.".store");
-        	if(in_array("update",$conditionals))
-	        	Route::put($resource."/{".$rowName."}", $controller."@update")->name($resource.".update");
-        	if(in_array("destroy",$conditionals))
-	        	Route::delete($resource."/{".$rowName."}", $controller."@destroy")->name($resource.".destroy");
-        }
+    	$controller="Api\\".studly_case($rowName)."Controller";
+    if(!count($conditionals)){
+    	if(count($urlSegments)>1){
+      	foreach ($urlSegments as $segment){
+      		$i=empty($i)?1:$i+1;
+          $currentSegment=!empty($translator[$segment])?$segment:str_singular($segment);
+      		$prefixRoute = (empty($prefixRoute)?"":$prefixRoute."/").$segment.($i<count($urlSegments)?"/{".$currentSegment."}":"");
+      	}
+    	}
+    	else{
+    		$prefixRoute = $resource;
+    	}
+      Route::get($prefixRoute."/sluged", $controller."@sluged")->name($resource.".sluged");
+      Route::get($prefixRoute."/import", $controller."@import")->name($resource.".import");
+      Route::get($prefixRoute."/export", $controller."@export")->name($resource.".export");
+      Route::post($prefixRoute."/import", $controller."@importing")->name($resource.".importing");
+      Route::post($prefixRoute."/export", $controller."@exporting")->name($resource.".exporting");
+      Route::post($prefixRoute."/resource-permissions", $controller."@resourcePermissions")->name($resource.".resource-permissions");
+      Route::post($prefixRoute."/select", $controller."@select")->name($resource.".select");
+      Route::put($prefixRoute."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
+      Route::put($prefixRoute."/{".$rowName."}/deactivate", $controller."@deactivate")->name($resource.".deactivate");
+      //Route::resource($resource, $controller);
+      Route::get($prefixRoute, $controller."@index")->name($resource.".index");
+      Route::get($prefixRoute."/{".$rowName."}", $controller."@show")->name($resource.".show");
+      Route::post($prefixRoute."/{".$rowName."}", $controller."@store")->name($resource.".store");
+      Route::put($prefixRoute."/{".$rowName."}", $controller."@update")->name($resource.".update");
+      Route::delete($prefixRoute."/{".$rowName."}", $controller."@destroy")->name($resource.".destroy");
+    }
+    else{
+    	if(in_array("sluged",$conditionals))
+      	Route::get($resource."/sluged", $controller."@sluged")->name($resource.".sluged");
+    	if(in_array("import",$conditionals))
+      	Route::get($resource."/import", $controller."@import")->name($resource.".import");
+    	if(in_array("export",$conditionals))
+      	Route::get($resource."/export", $controller."@export")->name($resource.".export");
+    	if(in_array("importing",$conditionals))
+      	Route::post($resource."/import", $controller."@importing")->name($resource.".importing");
+    	if(in_array("exporting",$conditionals))
+      	Route::post($resource."/export", $controller."@exporting")->name($resource.".exporting");
+    	if(in_array("activate",$conditionals))
+      	Route::put($resource."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
+    	if(in_array("deactivate",$conditionals))
+      	Route::put($resource."/{".$rowName."}/deactivate", $controller."@deactivate")->name($resource.".deactivate");
+    	if(in_array("index",$conditionals))
+      	Route::get($resource, $controller."@index")->name($resource.".index");
+    	if(in_array("show",$conditionals))
+      	Route::get($resource."/{".$rowName."}", $controller."@show")->name($resource.".show");
+    	if(in_array("store",$conditionals))
+      	Route::post($resource."/{".$rowName."}", $controller."@store")->name($resource.".store");
+    	if(in_array("update",$conditionals))
+      	Route::put($resource."/{".$rowName."}", $controller."@update")->name($resource.".update");
+    	if(in_array("destroy",$conditionals))
+      	Route::delete($resource."/{".$rowName."}", $controller."@destroy")->name($resource.".destroy");
+    }
 	}
 }
 if(!function_exists("apiCrudvelResources")){
