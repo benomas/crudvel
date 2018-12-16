@@ -591,7 +591,7 @@ if(!function_exists("apiCrudvelResource")){
       //Route::resource($resource, $controller);
       Route::get($prefixRoute, $controller."@index")->name($resource.".index");
       Route::get($prefixRoute."/{".$rowName."}", $controller."@show")->name($resource.".show");
-      Route::post($prefixRoute."/{".$rowName."}", $controller."@store")->name($resource.".store");
+      Route::post($prefixRoute, $controller."@store")->name($resource.".store");
       Route::put($prefixRoute."/{".$rowName."}", $controller."@update")->name($resource.".update");
       Route::delete($prefixRoute."/{".$rowName."}", $controller."@destroy")->name($resource.".destroy");
     }
@@ -615,7 +615,7 @@ if(!function_exists("apiCrudvelResource")){
     	if(in_array("show",$conditionals))
       	Route::get($resource."/{".$rowName."}", $controller."@show")->name($resource.".show");
     	if(in_array("store",$conditionals))
-      	Route::post($resource."/{".$rowName."}", $controller."@store")->name($resource.".store");
+      	Route::post($resource, $controller."@store")->name($resource.".store");
     	if(in_array("update",$conditionals))
       	Route::put($resource."/{".$rowName."}", $controller."@update")->name($resource.".update");
     	if(in_array("destroy",$conditionals))
