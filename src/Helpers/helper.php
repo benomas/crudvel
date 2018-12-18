@@ -808,8 +808,18 @@ if(!function_exists("sqliteColumnList")){
     $response =[];
     //Obtenenemos definicion de tabla
     $creationQuery = \DB::connection($connectionName)->
-      select("select sql from sqlite_master where sql like 'CREATE TABLE $table(%'");
+      select("
+        SELECT
+          sql
+        FROM
+          sqlite_master
+        WHERE
+          sql like 'CREATE TABLE $table (%' OR
+          sql like 'CREATE TABLE $table(%'
+      ");
     //templazamos caracteres invisibles
+    if(empty($creationQuery[0]))
+      pdd('fail to obtain sqlite create statment log');
     $replacer = preg_replace('/\n/', '', $creationQuery[0]->sql);
     $replacer = preg_replace('/\t/', '', $replacer);
     //Limitamos texto sql de definicion de columnas
