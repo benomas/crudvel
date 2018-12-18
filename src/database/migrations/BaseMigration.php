@@ -101,7 +101,7 @@ class BaseMigration extends Migration
     return $this->schema.'.'.$this->mainTable;
   }
 
-  public function sqlViewUp($driver=null){
+  public function sqlStatementUp($driver=null){
     if(!$driver){
       $default = config('database.default');
       $driver  = config("database.connections.$default.driver");
@@ -111,14 +111,14 @@ class BaseMigration extends Migration
       return customLog('driver connection undefined');
 
     try{
-      $this->{$driver.'ViewUp'}();
+      $this->{$driver.'StatementUp'}();
     }
     catch(\Exception $e){
       customLog("error when try to create ".$this->mainTable." view");
     }
   }
 
-  public function sqlViewDown($driver=null){
+  public function sqlStatementDown($driver=null){
     if(!$driver){
       $default = config('database.default');
       $driver  = config("database.connections.$default.driver");
@@ -128,7 +128,7 @@ class BaseMigration extends Migration
       return customLog('driver connection undefined');
 
     try{
-      $this->{$driver.'ViewDown'}();
+      $this->{$driver.'StatementDown'}();
     }
     catch(\Exception $e){
       customLog("error when try to drop ".$this->mainTable." view");

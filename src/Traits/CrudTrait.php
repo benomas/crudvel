@@ -79,6 +79,8 @@ trait CrudTrait {
     $model = $this->modelSource = $this->modelSource?
       $this->modelSource:
       "App\Models\\".$this->getCrudObjectName();
+    if(!class_exists($model))
+      return null;
     if($new)
       return new $model();
     return $model::noFilters();
