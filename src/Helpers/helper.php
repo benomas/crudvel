@@ -815,11 +815,13 @@ if(!function_exists("sqliteColumnList")){
           sqlite_master
         WHERE
           sql like 'CREATE TABLE $table (%' OR
-          sql like 'CREATE TABLE $table(%'
+          sql like 'CREATE TABLE $table(%' OR
+          sql like 'CREATE TABLE \"$table\" (%' OR
+          sql like 'CREATE TABLE\"$table\"(%'
       ");
     //templazamos caracteres invisibles
     if(empty($creationQuery[0]))
-      pdd('fail to obtain sqlite create statment log');
+      pdd('fail to obtain sqlite create statment log',$table);
     $replacer = preg_replace('/\n/', '', $creationQuery[0]->sql);
     $replacer = preg_replace('/\t/', '', $replacer);
     //Limitamos texto sql de definicion de columnas
