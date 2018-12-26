@@ -283,7 +283,7 @@ private function getIgnore(&$parameters)
 
   }
 
-  function validateKeyExist($attribute, $value, $parameters){
+ function validateKeyExist($attribute, $value, $parameters){
 
   	if(!isset($parameters[0]))
   		return false;
@@ -294,33 +294,32 @@ private function getIgnore(&$parameters)
       $hasExceptions = 0;
       $exceptions    = [];
   	try{
-  		$test = DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],'=',$value);
+  		$test = DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],$value);
   		foreach ($parameters as $key => $property) {
   			if($key<2)
   				continue;
 
-            if($hasExceptions){
-              if($key===$hasExceptions+1)
-                  $exceptionTable = $property;
-              if($key===$hasExceptions+2)
-                  $exceptionTableColumn= $property;
-              if($key===$hasExceptions+3)
-                  $exceptionTableValue= $property;
-            }
-            else{
-              if($property==="exception"){
-                $hasExceptions = $key;
-                continue;
-              }
+        if($hasExceptions){
+          if($key===$hasExceptions+1)
+            $exceptionTable = $property;
+          if($key===$hasExceptions+2)
+            $exceptionTableColumn= $property;
+          if($key===$hasExceptions+3)
+            $exceptionTableValue= $property;
+        }
+        else{
+          if($property==="exception"){
+            $hasExceptions = $key;
+            continue;
+          }
 
-              if($key%2===0)
-                $temp = $property;
-              else
-                $test->where($parameters[0].'.'.$temp,'=',$property);
-            }
-  		}
-
-      if($test->count())
+          if($key%2===0)
+            $temp = $property;
+          else
+            $test->where($parameters[0].'.'.$temp,$property);
+    		}
+      }
+      if($test->count()>0)
         return true;
       if($hasExceptions && DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],'=',$value)->count()){
         $exceptionQuery = DB::table($exceptionTable)->where($exceptionTable.".".$attribute,$value);
@@ -333,7 +332,7 @@ private function getIgnore(&$parameters)
         return true;
       }
 
-  		return $test->count()>0;
+    		return false;
   	}
     catch(\Exception $e){
       customLog($e);
