@@ -12,7 +12,7 @@ class MakeRootUser extends Command {
     protected $description = 'Instala paquete';
     protected $name        = "make:root-user";
     protected $migrationPath;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -21,13 +21,13 @@ class MakeRootUser extends Command {
     public function handle()
     {
         echo "Creating root user";
-        
+        \Schema::disableForeignKeyConstraints();
         try{
             if(file_exists("app/Models/Role.php") && file_exists("app/Models/User.php") ){
 
                 if(!($role = \App\Models\Role::withRoot()->first())){
                     if(
-                        !($role = new \App\Models\Role())->fill([   
+                        !($role = new \App\Models\Role())->fill([
                             "slug"        =>"root",
                             "name"        =>"Root",
                             "description" =>"Usuario con super privilegios",
@@ -55,12 +55,14 @@ class MakeRootUser extends Command {
                 }
                 $user->roles()->sync([$role->id]);
             }
+
         }
         catch(\Exception $e){
             echo "Exception, the proccess fail.";
             return false;
         }
 
+        \Schema::enableForeignKeyConstraints();
         echo "Root user created";
     }
 
