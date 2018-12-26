@@ -62,6 +62,7 @@ class CustomController extends BaseController {
     "importing",
     "export",
     "exporting",
+    "exportings",
   ];
   protected $rowActions = [
     "show",
@@ -70,7 +71,8 @@ class CustomController extends BaseController {
     "update",
     "destroy",
     "activate",
-    "deactivate"
+    "deactivate",
+    "exporting",
   ];
   protected $viewActions = [
     "index",
@@ -85,7 +87,7 @@ class CustomController extends BaseController {
     "import",
     "importing",
     "export",
-    "exporting",
+    "exportings",
   ];
 
   use CrudTrait;
@@ -314,6 +316,15 @@ class CustomController extends BaseController {
     })->export('xlsx');
   }
 
+
+  public function exportings(){
+    //Todo, implement a general logic for these methods
+    return false;
+  }
+  public function exporting($id){
+    //Todo, implement a general logic for these methods
+    return false;
+  }
   public function importing(){
     $fail=true;
     ini_set('max_execution_time',300);

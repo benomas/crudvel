@@ -581,9 +581,11 @@ if(!function_exists("apiCrudvelResource")){
     	}
       Route::get($prefixRoute."/sluged", $controller."@sluged")->name($resource.".sluged");
       Route::get($prefixRoute."/import", $controller."@import")->name($resource.".import");
-      Route::get($prefixRoute."/export", $controller."@export")->name($resource.".export");
+      Route::get($prefixRoute."/exports", $controller."@exports")->name($resource.".exports");
+      Route::get($prefixRoute."/{".$rowName."}/export", $controller."@export")->name($resource.".export");
       Route::post($prefixRoute."/import", $controller."@importing")->name($resource.".importing");
-      Route::post($prefixRoute."/export", $controller."@exporting")->name($resource.".exporting");
+      Route::get($prefixRoute."/exporting", $controller."@exportings")->name($resource.".exportings");
+      Route::get($prefixRoute."/{".$rowName."}/exporting", $controller."@exporting")->name($resource.".exporting");
       Route::post($prefixRoute."/resource-permissions", $controller."@resourcePermissions")->name($resource.".resource-permissions");
       Route::post($prefixRoute."/select", $controller."@select")->name($resource.".select");
       Route::put($prefixRoute."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
@@ -600,12 +602,16 @@ if(!function_exists("apiCrudvelResource")){
       	Route::get($resource."/sluged", $controller."@sluged")->name($resource.".sluged");
     	if(in_array("import",$conditionals))
       	Route::get($resource."/import", $controller."@import")->name($resource.".import");
+    	if(in_array("exports",$conditionals))
+      	Route::get($resource."/exports", $controller."@exports")->name($resource.".exports");
     	if(in_array("export",$conditionals))
-      	Route::get($resource."/export", $controller."@export")->name($resource.".export");
+      	Route::get($resource."/{".$rowName."}/export", $controller."@export")->name($resource.".export");
     	if(in_array("importing",$conditionals))
       	Route::post($resource."/import", $controller."@importing")->name($resource.".importing");
+    	if(in_array("exportings",$conditionals))
+      	Route::post($resource."/exporting", $controller."@exportings")->name($resource.".exportings");
     	if(in_array("exporting",$conditionals))
-      	Route::post($resource."/export", $controller."@exporting")->name($resource.".exporting");
+      	Route::post($resource."/{".$rowName."}/exporting", $controller."@exporting")->name($resource.".exporting");
     	if(in_array("activate",$conditionals))
       	Route::put($resource."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
     	if(in_array("deactivate",$conditionals))
