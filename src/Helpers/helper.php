@@ -806,6 +806,7 @@ if(!function_exists("columnList")){
     return null;
 	}
 }
+
 if(!function_exists("sqliteColumnList")){
 	function sqliteColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
@@ -825,17 +826,20 @@ if(!function_exists("sqliteColumnList")){
           sql like 'CREATE TABLE \"$table\" (%' OR
           sql like 'CREATE TABLE\"$table\"(%'
       ");
+
     //templazamos caracteres invisibles
     if(empty($creationQuery[0]))
       pdd('fail to obtain sqlite create statment log',$table);
     $replacer = preg_replace('/\n/', '', $creationQuery[0]->sql);
     $replacer = preg_replace('/\t/', '', $replacer);
+    $replacer = preg_replace('/\r/', '', $replacer);
     //Limitamos texto sql de definicion de columnas
-    $replacer = preg_replace('/CREATE TABLE '.$table.'\((.*)?\)/', '$1', $replacer);
-    $replacer = 'RegionID INT PRIMARY KEY NOT NULL,Descripcion VARCHAR(100) NULL,Anio VARCHAR(50) NULL';
+    $replacer = preg_replace('/(CREATE TABLE ["]{0,1}'.$table.'["]{0,1})(.*)/', '$2', $replacer);
     foreach ($columns as $column) {
       //Seleccionar definición de columna actual
-      $currentCol = preg_replace('/(.*)?('.$column.'\s)(.+?)(,|$)/', '$3', $replacer);
+
+      //$currentCol = preg_replace('/(.*)?('.$column.'.*?)(.+?)(,|$)/', '$3', $replacer);
+      $currentCol = preg_replace('/(.*)?('.$column.'.*?\s+)(\w+.*?)(,|\))(.*)/', '$3', $replacer);
       //Seleccionar tipo de dato de columna actual
       $datatype   = preg_replace('/^(\w+)?(.*)/', '$1', $currentCol);
       //Seleccionar tamaño de dato de columna actual
@@ -912,7 +916,7 @@ if(!function_exists("sqlsrvColumnList")){
       }
       $response[]=[
         'name'     =>$columnDefinition->name,
-        'default'  =>$default,
+        'default'  =>preg_replace('/([\(]{0,1})(.+?)([\)]{0,1})/', '$2', $default),
         'nullable' =>$nullable,
         'type'     =>sqlsrvDataTypeTraductor($columnDefinition->type),
         'length'   =>$columnDefinition->length,
@@ -923,7 +927,7 @@ if(!function_exists("sqlsrvColumnList")){
 }
 if(!function_exists("sqlsrvDataTypeTraductor")){
 	function sqlsrvDataTypeTraductor($dataType) {
-    switch($dataType){
+    switch(strtolower($dataType)){
       case 'tinyint':
         return 'tinyInteger';
       case 'smallint':
@@ -940,14 +944,18 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
 }
 if(!function_exists("sqliteDataTypeTraductor")){
 	function sqliteDataTypeTraductor($dataType) {
-    switch($dataType){
+    switch(strtolower($dataType)){
+      case 'bit':
+        return 'boolean';
       case 'integer':
         return 'integer';
-      case 'INT':
+      case 'int':
         return 'integer';
       case 'smallint':
         return 'smallInteger';
-      case 'VARCHAR':
+      case 'varchar':
+        return 'string';
+      case 'nvarchar':
         return 'string';
       case 'string':
         return 'string';
