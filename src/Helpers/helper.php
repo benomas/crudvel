@@ -827,9 +827,11 @@ if(!function_exists("sqliteColumnList")){
           sql like 'CREATE TABLE\"$table\"(%'
       ");
 
-    //templazamos caracteres invisibles
-    if(empty($creationQuery[0]))
-      pdd('fail to obtain sqlite create statment log',$table);
+    //Remplazamos caracteres invisibles
+    if(empty($creationQuery[0])){
+      customLog('fail to obtain sqlite create statment log',$table);
+      return $response;
+    }
     $replacer = preg_replace('/\n/', '', $creationQuery[0]->sql);
     $replacer = preg_replace('/\t/', '', $replacer);
     $replacer = preg_replace('/\r/', '', $replacer);
