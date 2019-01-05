@@ -940,6 +940,8 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
         return 'string';
       case 'char':
         return 'char';
+      case 'bool':
+        return 'boolean';
       default:
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
@@ -965,6 +967,8 @@ if(!function_exists("sqliteDataTypeTraductor")){
         return 'string';
       case 'char':
         return 'char';
+      case 'bool':
+        return 'boolean';
       default:
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
