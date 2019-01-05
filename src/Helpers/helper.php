@@ -938,6 +938,8 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
         return 'integer';
       case 'nvarchar':
         return 'string';
+      case 'char':
+        return 'char';
       default:
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
@@ -961,6 +963,8 @@ if(!function_exists("sqliteDataTypeTraductor")){
         return 'string';
       case 'string':
         return 'string';
+      case 'char':
+        return 'char';
       default:
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
