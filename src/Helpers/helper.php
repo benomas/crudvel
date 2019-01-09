@@ -930,6 +930,12 @@ if(!function_exists("sqlsrvColumnList")){
 if(!function_exists("sqlsrvDataTypeTraductor")){
 	function sqlsrvDataTypeTraductor($dataType) {
     switch(strtolower($dataType)){
+      case 'bit':
+        return 'boolean';
+      case 'date':
+        return 'date';
+      case 'datetime':
+        return 'dateTime';
       case 'tinyint':
         return 'tinyInteger';
       case 'smallint':
@@ -937,6 +943,8 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
       case 'int':
         return 'integer';
       case 'nvarchar':
+        return 'string';
+      case 'varchar':
         return 'string';
       case 'char':
         return 'char';
@@ -953,6 +961,10 @@ if(!function_exists("sqliteDataTypeTraductor")){
     switch(strtolower($dataType)){
       case 'bit':
         return 'boolean';
+      case 'date':
+        return 'date';
+      case 'datetime':
+        return 'dateTime';
       case 'integer':
         return 'integer';
       case 'int':
