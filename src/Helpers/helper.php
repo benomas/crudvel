@@ -932,9 +932,13 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
     switch(strtolower($dataType)){
       case 'bit':
         return 'boolean';
+      case 'bool':
+        return 'boolean';
       case 'date':
         return 'date';
       case 'datetime':
+        return 'dateTime';
+      case 'smalldatetime':
         return 'dateTime';
       case 'tinyint':
         return 'tinyInteger';
@@ -948,8 +952,6 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
         return 'string';
       case 'char':
         return 'char';
-      case 'bool':
-        return 'boolean';
       default:
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
@@ -961,9 +963,13 @@ if(!function_exists("sqliteDataTypeTraductor")){
     switch(strtolower($dataType)){
       case 'bit':
         return 'boolean';
+      case 'bool':
+        return 'boolean';
       case 'date':
         return 'date';
       case 'datetime':
+        return 'dateTime';
+      case 'smalldatetime':
         return 'dateTime';
       case 'integer':
         return 'integer';
@@ -979,8 +985,6 @@ if(!function_exists("sqliteDataTypeTraductor")){
         return 'string';
       case 'char':
         return 'char';
-      case 'bool':
-        return 'boolean';
       default:
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
