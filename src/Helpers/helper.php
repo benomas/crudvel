@@ -934,6 +934,8 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
         return 'boolean';
       case 'bool':
         return 'boolean';
+      case 'boolean':
+        return 'boolean';
       case 'date':
         return 'date';
       case 'datetime':
@@ -956,7 +958,14 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
         return 'text';
       case 'ntext':
         return 'text';
+      case 'float':
+        return 'float';
+      case 'real':
+        return 'float';
       default:
+        //Hack para identificar tipos de dato no resueltos
+        if(!in_array(strtolower($dataType),['asc','references']))
+          $GLOBALS['Reevaluar']=true;
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
     return '';
@@ -968,6 +977,8 @@ if(!function_exists("sqliteDataTypeTraductor")){
       case 'bit':
         return 'boolean';
       case 'bool':
+        return 'boolean';
+      case 'boolean':
         return 'boolean';
       case 'date':
         return 'date';
@@ -993,7 +1004,15 @@ if(!function_exists("sqliteDataTypeTraductor")){
         return 'text';
       case 'ntext':
         return 'text';
+      case 'float':
+        return 'float';
+      case 'real':
+        return 'float';
+
       default:
+        //Hack para identificar tipos de dato no resueltos
+        if(!in_array(strtolower($dataType),['asc','references']))
+          $GLOBALS['Reevaluar']=true;
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
     return '';
