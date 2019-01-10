@@ -952,6 +952,10 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
         return 'string';
       case 'char':
         return 'char';
+      case 'text':
+        return 'text';
+      case 'ntext':
+        return 'text';
       default:
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
@@ -985,6 +989,10 @@ if(!function_exists("sqliteDataTypeTraductor")){
         return 'string';
       case 'char':
         return 'char';
+      case 'text':
+        return 'text';
+      case 'ntext':
+        return 'text';
       default:
         return $dataType.' este tipo de dato necesita reevaluarse';
     }
