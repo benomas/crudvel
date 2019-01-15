@@ -1052,3 +1052,10 @@ if(!function_exists("assetsMap")){
     return FALSE;
   }
 }
+
+if(!function_exists("customExec")){
+  function customExec($command)
+  {
+    return exec('cd '.base_path().' && '.$command);
+  }
+}
