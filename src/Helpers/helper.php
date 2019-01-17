@@ -860,11 +860,22 @@ if(!function_exists("sqliteColumnList")){
       $default    = preg_replace('/(.*)(DEFAULT)\s(\d+)(.*)/', '$3', $currentCol);
       if($default === $currentCol)
         $default = 'no-default-value';
+      $type = sqliteDataTypeTraductor($datatype);
+      if(in_array($type,['string','char'])){
+        $maxLength = \DB::connection($connectionName)->select("SELECT MAX(length($column)) FROM $table");
+        if($maxLength>255){
+          $length=null;
+          $type='text';
+        }else {
+          if($maxLength>$length)
+            $length = $maxLength;
+        }
+      }
       $response[]=[
         'name'     =>$column,
         'default'  =>$default,
         'nullable' =>$nullable,
-        'type'     =>sqliteDataTypeTraductor($datatype),
+        'type'     =>$type,
         'length'   =>$length,
       ];
     }
