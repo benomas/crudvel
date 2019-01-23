@@ -1,5 +1,35 @@
 <?php
 
+
+
+if ( ! function_exists('consoleDropTables'))
+{
+  function consoleDropTables()
+  {
+    Artisan::command('drop:tables', function () {
+    	if(config('app.production.env')==='production'){
+    		$this->info('Este comando no puede ser ejecutado en ambiente productivo');
+    		return false;
+    	}
+
+      DB::statement('DROP DATABASE fake_database');
+      DB::statement('CREATE DATABASE fake_database');
+      $defaultConnectionName         = config('database.default');
+      $defaultConnection             = config('database.connections.'.$defaultConnectionName);
+      $originalDatabase              = $defaultConnection['database'];
+      $defaultConnection['database'] ='fake_database';
+      config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
+      DB::purge();
+      DB::statement('DROP DATABASE '.$originalDatabase);
+      DB::statement('CREATE DATABASE '.$originalDatabase);
+      $defaultConnection['database'] =$originalDatabase;
+      config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
+    	$this->info('tablas eliminadas');
+
+    })->describe('Elimina todas las tablas');
+  }
+}
+
 if ( ! function_exists('consoleProyectUp'))
 {
   function consoleProyectUp($worksPace)
@@ -359,13 +389,19 @@ if ( ! function_exists('consolePscaff'))
   }
 }
 
-if ( ! function_exists('consoleMigrateCrudvel'))
+if ( ! function_exists('consoleMigrateGroup'))
 {
-  function consoleMigrateCrudvel()
+  function consoleMigrateGroup()
   {
-
-    Artisan::command("migrate-crudvel", function (){
-    })->describe('run specific migrations for crudvel');
-
+    Artisan::command("migrate-group {lastSegment?}", function ($lastSegment='') {
+      $paths = assetsMap(database_path("migrations/$lastSegment"),1);
+      sort($paths);
+      foreach ($paths as $key=>$path)
+        if(!is_dir(database_path("migrations/$lastSegment/$path"))){
+          $shellEcho = customExec($command="php artisan migrate --path=/database/migrations/$lastSegment/$path");
+          $this->info("$shellEcho\n");
+          $this->info($command.' procesado ');
+        }
+    })->describe('run migration group');
   }
 }

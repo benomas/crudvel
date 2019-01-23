@@ -9,7 +9,7 @@ class CreateRoleUserTablerightdatetag extends BaseMigration
     {
         if(!Schema::hasTable($this->mainTable) && Schema::hasTable("roles") && Schema::hasTable("users")){
             Schema::create($this->mainTable, function (Blueprint $table) {
-                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+              disableForeignKeyConstraints();
                 $table->increments('id');
                 $table->integer('role_id')->unsigned();
                 $table->integer('user_id')->unsigned();
@@ -24,7 +24,7 @@ class CreateRoleUserTablerightdatetag extends BaseMigration
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
                 $table->engine = 'InnoDB';
-                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                enableForeignKeyConstraints();
             });
         }
     }

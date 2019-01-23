@@ -9,7 +9,7 @@ class CreatePermissionsTablerightdatetag extends BaseMigration
     {
         if(!Schema::hasTable($this->mainTable)){
             Schema::create($this->mainTable, function (Blueprint $table) {
-                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+              disableForeignKeyConstraints();
                 $table->increments('id');
                 $table->integer('cat_permission_type_id')->unsigned();
                 $table->string('slug');
@@ -19,13 +19,13 @@ class CreatePermissionsTablerightdatetag extends BaseMigration
                 $table->timestamps();
                 $this->userStamps($table);
                 $table->engine = 'InnoDB';
-                $table->unique('slug'); 
+                $table->unique('slug');
                 $table->foreign('cat_permission_type_id')
                     ->references('id')
                     ->on('cat_permission_types')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                enableForeignKeyConstraints();
             });
         }
     }

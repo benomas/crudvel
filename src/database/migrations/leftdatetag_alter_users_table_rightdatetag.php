@@ -14,7 +14,7 @@ class AlterUsersTablerightdatetag extends BaseMigration
     {
       try{
         Schema::table($this->mainTable, function($table){
-          DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+          disableForeignKeyConstraints();
           $table->dropColumn('name');
           $table->string('username')->after("id");
           $table->string('first_name')->after("username");
@@ -22,11 +22,11 @@ class AlterUsersTablerightdatetag extends BaseMigration
           $table->dateTime('last_login')->nullable()->after("email");
           $this->userStamps($table);
           $table->boolean('active')->default(true)->after("created_by");
-          DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+          enableForeignKeyConstraints();
         });
       }
       catch(\Exception $e){
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        enableForeignKeyConstraints();
         customLog("error when try to alter users table");
       }
     }
@@ -40,7 +40,7 @@ class AlterUsersTablerightdatetag extends BaseMigration
     {
       try{
         Schema::table($this->mainTable, function($table){
-          DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+          disableForeignKeyConstraints();
           $table->string('name')->after("id");
           $table->dropColumn('username');
           $table->dropColumn('first_name');
@@ -50,11 +50,11 @@ class AlterUsersTablerightdatetag extends BaseMigration
           $table->dropColumn('updated_by');
           $table->dropColumn('active');
           $this->userStampsDown($table);
-          DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+          enableForeignKeyConstraints();
         });
       }
       catch(\Exception $e){
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        enableForeignKeyConstraints();
         customLog("error when try to alter users table");
       }
     }
