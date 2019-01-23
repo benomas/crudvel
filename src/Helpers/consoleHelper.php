@@ -12,7 +12,12 @@ if ( ! function_exists('consoleDropTables'))
     		return false;
     	}
 
-      DB::statement('DROP DATABASE fake_database');
+      try{
+        DB::statement('DROP DATABASE fake_database');
+      }
+      catch(\Exception $e){
+      }
+
       DB::statement('CREATE DATABASE fake_database');
       $defaultConnectionName         = config('database.default');
       $defaultConnection             = config('database.connections.'.$defaultConnectionName);
@@ -216,10 +221,10 @@ if ( ! function_exists('consoleFixBackup'))
         file_put_contents($fixedBackupFile, $sql);
     		$this->info('Respaldo cargado');
     	}
-        catch(\Exception $e){
-    		$this->info('Error al cargar respaldo');
-    		\Illuminate\Support\Facades\enableForeignKeyConstraints();
-        }
+      catch(\Exception $e){
+  		$this->info('Error al cargar respaldo');
+  		\Illuminate\Support\Facades\enableForeignKeyConstraints();
+      }
 
     })->describe('Respaldo corregido');
   }
