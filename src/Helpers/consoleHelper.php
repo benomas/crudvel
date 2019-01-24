@@ -12,6 +12,7 @@ if ( ! function_exists('consoleDropTables'))
     		return false;
     	}
 
+      DB::purge();
       try{
         DB::statement('DROP DATABASE fake_database');
       }
@@ -29,6 +30,8 @@ if ( ! function_exists('consoleDropTables'))
       DB::statement('CREATE DATABASE '.$originalDatabase);
       $defaultConnection['database'] =$originalDatabase;
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
+      DB::purge();
+      DB::statement('DROP DATABASE fake_database');
     	$this->info('tablas eliminadas');
 
     })->describe('Elimina todas las tablas');
