@@ -10,6 +10,7 @@ class BaseMigration extends Migration
   protected $schema;
   protected $enableForeings=true;
   protected $mainTable;
+  protected $blueprintTable=null;
   public function __construct(){
     if(empty($this->mainTable)){
       preg_match('/(?:reate|lter)(.+?)Table/',get_class($this),$matches);
@@ -33,44 +34,49 @@ class BaseMigration extends Migration
     }
   }
 
-  public function makeStylesColumns($table){
-    $table->string('icon')->nullable()->default("");
+  public function makeStylesColumns($blueprintTable=null){
+    $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
+    $blueprintTable->string('icon')->nullable()->default("");
     /*
-    $table->string('default_style')->nullable()->default("");
-    $table->string('list_default_style')->nullable()->default("");
-    $table->string('list_completed_style')->nullable()->default("");
-    $table->string('list_hover_style')->nullable()->default("");
+    $blueprintTable->string('default_style')->nullable()->default("");
+    $blueprintTable->string('list_default_style')->nullable()->default("");
+    $blueprintTable->string('list_completed_style')->nullable()->default("");
+    $blueprintTable->string('list_hover_style')->nullable()->default("");
     */
   }
 
-  public function userStamps($table){
-    $table->bigInteger('created_by')->unsigned()->nullable();
-    $table->bigInteger('updated_by')->unsigned()->nullable();
-    $table->index("created_by");
-    $table->index("updated_by");
+  public function userStamps($blueprintTable=null){
+    $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
+    $blueprintTable->bigInteger('created_by')->unsigned()->nullable();
+    $blueprintTable->bigInteger('updated_by')->unsigned()->nullable();
+    $blueprintTable->index("created_by");
+    $blueprintTable->index("updated_by");
   }
 
-  public function userStampsDown($table){
-    $table->dropIndex('created_by');
-    $table->dropIndex('updated_by');
-    $table->dropColumn('created_by');
-    $table->dropColumn('updated_by');
+  public function userStampsDown($blueprintTable=null){
+    $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
+    $blueprintTable->dropIndex('created_by');
+    $blueprintTable->dropIndex('updated_by');
+    $blueprintTable->dropColumn('created_by');
+    $blueprintTable->dropColumn('updated_by');
   }
 
-  public function catalog($table){
-    $table->engine = 'InnoDB';
-    $table->increments('id');
-    $table->string('name');
-    $table->text('description')->nullable();
-    $this->defaultColumns($table);
-    $table->index("name");
+  public function catalog($blueprintTable=null){
+    $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
+    $blueprintTable->engine = 'InnoDB';
+    $blueprintTable->increments('id');
+    $blueprintTable->string('name');
+    $blueprintTable->text('description')->nullable();
+    $this->defaultColumns($blueprintTable);
+    $blueprintTable->index("name");
   }
 
-  public function defaultColumns($table){
-    $table->boolean('active')->default(true);
-    $table->timestamps();
-    $this->userStamps($table);
-    $table->index("active");
+  public function defaultColumns($blueprintTable=null){
+    $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
+    $blueprintTable->boolean('active')->default(true);
+    $blueprintTable->timestamps();
+    $this->userStamps($blueprintTable);
+    $blueprintTable->index("active");
   }
 
   public function down()
@@ -85,9 +91,9 @@ class BaseMigration extends Migration
   public function change($callBack){
     if(!is_callable($callBack))
       return false;
-    Schema::table($this->getSchemaTable(), function($table) use($callBack){
+    Schema::table($this->getSchemaTable(), function($blueprintTable) use($callBack){
       disableForeignKeyConstraints();
-      $callBack($table);
+      $callBack($blueprintTable);
       enableForeignKeyConstraints();
     });
   }
@@ -136,10 +142,25 @@ class BaseMigration extends Migration
     }
   }
 
-  public function makeForeing($table,$prefix,$foreingTable,$columnKey='id'){
+  public function makeForeing($prefix,$foreingTable,$columnKey='id',$blueprintTable=null){
+    $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
     if(!$this->enableForeings)
       return ;
-    $table->foreign($prefix.'_'.$columnKey)->references($columnKey)
+    $blueprintTable->foreign($prefix.'_'.$columnKey)->references($columnKey)
     ->on($foreingTable)->onUpdate('cascade')->onDelete('cascade');
+  }
+
+  public function setBlueprintTable($blueprintTable=null){
+    $this->blueprintTable=$blueprintTable;
+  }
+
+  public function getBlueprintTable(){
+    return $this->blueprintTable;
+  }
+
+  public function getSetBlueprintTable($blueprintTable=null){
+    if($blueprintTable)
+      $this->blueprintTable = $blueprintTable;
+    return $this->blueprintTable;
   }
 }
