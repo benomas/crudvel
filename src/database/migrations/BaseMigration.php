@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 class BaseMigration extends Migration
 {
   protected $schema;
+  protected $enableForeings=true;
   protected $mainTable;
   public function __construct(){
     if(empty($this->mainTable)){
@@ -133,5 +134,12 @@ class BaseMigration extends Migration
     catch(\Exception $e){
       customLog("error when try to drop ".$this->mainTable." view");
     }
+  }
+
+  public function makeForeing($table,$prefix,$foreingTable,$columnKey='id'){
+    if(!$this->enableForeings)
+      return ;
+    $table->foreign($prefix.'_'.$columnKey)->references($columnKey)
+    ->on($foreingTable)->onUpdate('cascade')->onDelete('cascade');
   }
 }
