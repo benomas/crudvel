@@ -27,14 +27,15 @@ class BaseMigration extends Migration
   {
     if (!Schema::hasTable($this->getTable())) {
       disableForeignKeyConstraints();
-      Schema::create($this->getSchemaTable(), function (Blueprint $table) {
-        $this->catalog($table);
+      Schema::create($this->getSchemaTable(), function (Blueprint $blueprintTable) {
+        $this->setBlueprintTable($blueprintTable);
+        $this->catalog($blueprintTable);
       });
       enableForeignKeyConstraints();
     }
   }
 
-  public function makeStylesColumns($blueprintTable=null){
+  public function makeStylesColumns($blueprintTable){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
     $blueprintTable->string('icon')->nullable()->default("");
     /*
@@ -45,7 +46,7 @@ class BaseMigration extends Migration
     */
   }
 
-  public function userStamps($blueprintTable=null){
+  public function userStamps($blueprintTable){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
     $blueprintTable->bigInteger('created_by')->unsigned()->nullable();
     $blueprintTable->bigInteger('updated_by')->unsigned()->nullable();
@@ -53,7 +54,7 @@ class BaseMigration extends Migration
     $blueprintTable->index("updated_by");
   }
 
-  public function userStampsDown($blueprintTable=null){
+  public function userStampsDown($blueprintTable){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
     $blueprintTable->dropIndex('created_by');
     $blueprintTable->dropIndex('updated_by');
@@ -61,7 +62,7 @@ class BaseMigration extends Migration
     $blueprintTable->dropColumn('updated_by');
   }
 
-  public function catalog($blueprintTable=null){
+  public function catalog($blueprintTable){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
     $blueprintTable->engine = 'InnoDB';
     $blueprintTable->increments('id');
@@ -71,7 +72,7 @@ class BaseMigration extends Migration
     $blueprintTable->index("name");
   }
 
-  public function defaultColumns($blueprintTable=null){
+  public function defaultColumns($blueprintTable){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
     $blueprintTable->boolean('active')->default(true);
     $blueprintTable->timestamps();
