@@ -118,6 +118,11 @@ class BaseModel extends Model {
     return parent::getTable();
   }
 
+  public function getScheme(){
+    return $this->scheme;
+  }
+
+
   public function manyToManyToMany($firstLevelRelation,$secondLevelRelation,$secondLevelModel){
     if(!is_callable(array($secondLevelModel,"nullFilter")))
       return null;
