@@ -103,6 +103,10 @@ class BaseMigration extends Migration
     return $this->mainTable;
   }
 
+  public function getSchema(){
+    return $this->schema;
+  }
+
   public function getSchemaTable(){
     if(empty($this->schema))
       return $this->mainTable;
