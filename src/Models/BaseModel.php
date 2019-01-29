@@ -118,8 +118,8 @@ class BaseModel extends Model {
     return parent::getTable();
   }
 
-  public function getScheme(){
-    return $this->scheme;
+  public function getSchema(){
+    return $this->schema;
   }
 
 
