@@ -839,7 +839,7 @@ if(!function_exists("sqliteColumnList")){
     $replacer = preg_replace('/(CREATE TABLE ["]{0,1}'.$table.'["]{0,1})(.*)/', '$2', $replacer);
     foreach ($columns as $column) {
       //Seleccionar definición de columna actual
-      $currentCol = preg_replace('/(.*)?('.$column.'\s+)(\w+.*?)(,|\))(.*)/', '$3', $replacer);
+      $currentCol = preg_replace('/(.*)?"{0,1}('.$column.')"{0,1}\s+(\w+.*?)(,|\))(.*)/', '$3', $replacer);
       //Seleccionar tipo de dato de columna actual
       $datatype   = preg_replace('/^(\w+)?(.*)/', '$1', $currentCol);
       //Seleccionar tamaño de dato de columna actual
