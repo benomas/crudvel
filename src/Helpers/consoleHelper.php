@@ -13,21 +13,26 @@ if ( ! function_exists('consoleDropTables'))
     	}
 
       DB::purge();
-      try{
-        DB::statement('DROP DATABASE fake_database');
-      }
-      catch(\Exception $e){
-      }
 
-      DB::statement('CREATE DATABASE fake_database');
+      try{DB::statement('DROP DATABASE fake_database');}
+      catch(\Exception $e){}
+
+      try{DB::statement('CREATE DATABASE fake_database');}
+      catch(\Exception $e){}
+
       $defaultConnectionName         = config('database.default');
       $defaultConnection             = config('database.connections.'.$defaultConnectionName);
       $originalDatabase              = $defaultConnection['database'];
       $defaultConnection['database'] ='fake_database';
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
-      DB::statement('DROP DATABASE '.$originalDatabase);
-      DB::statement('CREATE DATABASE '.$originalDatabase);
+
+      try{DB::statement('DROP DATABASE '.$originalDatabase);}
+      catch(\Exception $e){}
+
+      try{DB::statement('CREATE DATABASE '.$originalDatabase);}
+      catch(\Exception $e){}
+
       $defaultConnection['database'] =$originalDatabase;
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
