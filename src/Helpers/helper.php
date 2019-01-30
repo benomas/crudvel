@@ -969,6 +969,8 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
         return 'text';
       case 'float':
         return 'float';
+      case 'decimal':
+        return 'decimal';
       case 'real':
         return 'float';
       default:
@@ -1015,6 +1017,8 @@ if(!function_exists("sqliteDataTypeTraductor")){
         return 'text';
       case 'float':
         return 'float';
+      case 'decimal':
+        return 'decimal';
       case 'real':
         return 'float';
 
