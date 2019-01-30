@@ -10,7 +10,7 @@ class BaseMigration extends Migration
   protected $schema;
   protected $enableForeings=true;
   protected $mainTable;
-  protected $blueprintTable=null;
+  public $blueprintTable=null;
   public function __construct(){
     if(empty($this->mainTable)){
       preg_match('/(?:reate|lter)(.+?)Table/',get_class($this),$matches);
