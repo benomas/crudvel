@@ -26,17 +26,18 @@ if ( ! function_exists('consoleDropTables'))
       $defaultConnection['database'] ='fake_database';
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
-
+DB::statement('DROP DATABASE '.$originalDatabase);
       try{DB::statement('DROP DATABASE '.$originalDatabase);}
       catch(\Exception $e){}
-
+DB::statement('CREATE DATABASE '.$originalDatabase);
       try{DB::statement('CREATE DATABASE '.$originalDatabase);}
       catch(\Exception $e){}
 
       $defaultConnection['database'] =$originalDatabase;
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
-      DB::statement('DROP DATABASE fake_database');
+      try{DB::statement('DROP DATABASE fake_database');}
+      catch(\Exception $e){}
     	$this->info('tablas eliminadas');
 
     })->describe('Elimina todas las tablas');
