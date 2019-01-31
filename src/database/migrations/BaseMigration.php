@@ -155,6 +155,14 @@ class BaseMigration extends Migration
     ->on($foreingTable)->onUpdate('cascade')->onDelete('cascade');
   }
 
+  public function makeSafeForeing($prefix,$foreingTable,$columnKey='id',$blueprintTable=null){
+    $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
+    if(!$this->enableForeings)
+      return ;
+    $blueprintTable->foreign($prefix.'_'.$columnKey)->references($columnKey)
+    ->on($foreingTable);
+  }
+
   public function setBlueprintTable($blueprintTable=null){
     $this->blueprintTable=$blueprintTable;
   }
