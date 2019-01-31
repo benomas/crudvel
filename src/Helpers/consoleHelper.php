@@ -324,14 +324,14 @@ if ( ! function_exists('consoleRefresh'))
   {
     if(empty($worksPace))
       return customLog('proyectSlug. Is undefined');
-    Artisan::command("$worksPace:refresh", function () use($worksPace){
+    Artisan::command("$worksPace:refresh {skipeDev?}", function ($skipeDev=null) use($worksPace){
 
     	if(config('app.production.env')==='production'){
     		$this->info('Este comando no puede ser ejecutado en ambiente productivo');
     		return false;
     	}
 
-    	$commands = [
+    	$commands = $skipeDev?["php artisan $worksPace:light-refresh"]:[
     		"php artisan $worksPace:down",
     		"php artisan $worksPace:up",
     		"php artisan test:seed",
