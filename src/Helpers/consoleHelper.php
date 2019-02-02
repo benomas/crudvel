@@ -12,6 +12,9 @@ if ( ! function_exists('consoleDropTables'))
     		return false;
     	}
 
+  		$shellEcho  = customExec($command="php artisan logs:clear");
+  		$this->info($shellEcho);
+  		$this->info($command.' procesado ');
       DB::purge();
 
       try{DB::statement('DROP DATABASE fake_database');}
@@ -26,10 +29,10 @@ if ( ! function_exists('consoleDropTables'))
       $defaultConnection['database'] ='fake_database';
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
-DB::statement('DROP DATABASE '.$originalDatabase);
+      DB::statement('DROP DATABASE '.$originalDatabase);
       try{DB::statement('DROP DATABASE '.$originalDatabase);}
       catch(\Exception $e){}
-DB::statement('CREATE DATABASE '.$originalDatabase);
+      DB::statement('CREATE DATABASE '.$originalDatabase);
       try{DB::statement('CREATE DATABASE '.$originalDatabase);}
       catch(\Exception $e){}
 
@@ -419,5 +422,19 @@ if ( ! function_exists('consoleMigrateGroup'))
           $this->info($command.' procesado ');
         }
     })->describe('run migration group');
+  }
+}
+
+if ( ! function_exists('consoleLogsClear'))
+{
+  function consoleLogsClear()
+  {
+    Artisan::command('logs:clear', function() {
+      if(!count(assetsMap(storage_path('logs'))))
+        return ;
+      $shellEcho = customExec($command='rm ' . storage_path('logs/*'));
+      $this->info("$shellEcho\n");
+      $this->info($command.' procesado ');
+    })->describe('Clear log files');
   }
 }
