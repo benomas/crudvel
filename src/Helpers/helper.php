@@ -471,7 +471,7 @@ if(!function_exists("instanceTrans")){
 if(!function_exists("shadowInstance")){
 
 	function shadowInstance($instance){
-		return clone $instance; 
+		return clone $instance;
 	}
 }
 
@@ -514,7 +514,7 @@ if(!function_exists("resourceAccess")){
 
 		if(!empty($GLOBALS["isRoot"]) && $GLOBALS["isRoot"])
             return ($GLOBALS[$actionResource]=true);
-			
+
 		if($user->isRoot()){
 			$GLOBALS["isRoot"] = true;
 			customLog($GLOBALS["isRoot"]);
@@ -539,14 +539,14 @@ if(!function_exists("errorClass")){
 
 if(!function_exists("validateGetActionResource")){
 	function validateGetActionResource($action,$only=[],$excludes=[]){
-		return ( empty($only["get"]) || !count($only["get"]) ||  in_array($action,$only["get"])) && 
+		return ( empty($only["get"]) || !count($only["get"]) ||  in_array($action,$only["get"])) &&
 			(empty($excludes["get"]) || !in_array($action,$excludes["get"]));
 	}
 }
 
 if(!function_exists("validatePostActionResource")){
 	function validatePostActionResource($action,$only=[],$excludes=[]){
-		return ( empty($only["post"]) || !count($only["post"]) ||  in_array($action,$only["post"])) && 
+		return ( empty($only["post"]) || !count($only["post"]) ||  in_array($action,$only["post"])) &&
 			(empty($excludes["post"]) || !in_array($action,$excludes["post"]));
 	}
 }
@@ -557,7 +557,7 @@ if(!function_exists("crudvelResource")){
 			return false;
 		$urlSegments = explode("/",$resource);
 		$rowName = str_slug(str_singular(end($urlSegments)),"_");
-		
+
 		if(!$controller)
 			$controller=studly_case($rowName)."Controller";
         if(!count($conditionals)){
@@ -654,32 +654,9 @@ if(!function_exists("customLog")){
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if(!function_exists("customExec")){
+  function customExec($command)
+  {
+    return exec('cd '.base_path().' && '.$command);
+  }
+}
