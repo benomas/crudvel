@@ -257,11 +257,17 @@ if ( ! function_exists('consoleLoadBackup'))
         if(!file_exists($fixedBackupFile))
     			return $this->info('No existe el respaldo');
     		\Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
-        $currentMax = \DB::select('SELECT @@global.max_allowed_packet AS max_allowed_packet');
-        $currentMax = $currentMax[0]->max_allowed_packet;
-      	\DB::unprepared('SET GLOBAL max_allowed_packet=524288000');
+        try{
+          $currentMax = \DB::select('SELECT @@global.max_allowed_packet AS max_allowed_packet');
+          $currentMax = $currentMax[0]->max_allowed_packet;
+        	\DB::unprepared('SET GLOBAL max_allowed_packet=524288000');
+        }
+        catch(\Exception $e){}
       	\DB::unprepared(file_get_contents($fixedBackupFile));
-      	\DB::unprepared('SET GLOBAL max_allowed_packet='.((int) $currentMax));
+        try{
+      	 \DB::unprepared('SET GLOBAL max_allowed_packet='.((int) $currentMax));
+        }
+        catch(\Exception $e){}
     		\Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
     		$this->info('Respaldo cargado');
 
