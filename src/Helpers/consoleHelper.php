@@ -475,6 +475,8 @@ if ( ! function_exists('consoleSetMySqlMaxes'))
     	\DB::unprepared('SET GLOBAL aria_checkpoint_interval=600');
     	\DB::unprepared('SET GLOBAL innodb_flushing_avg_loops=600');
     	\DB::unprepared('SET GLOBAL innodb_sync_spin_loops=600');
+    	\DB::unprepared('SET GLOBAL table_open_cache = 512');
+    	\DB::unprepared('SET GLOBAL thread_cache_size = 32');
     })->describe('Recalcular ordenes');
   }
 }
