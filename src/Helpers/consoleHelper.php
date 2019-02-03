@@ -464,3 +464,17 @@ if ( ! function_exists('consoleDefPass'))
     })->describe('Usuarios de prueba creados');
   }
 }
+
+if ( ! function_exists('consoleSetMySqlMaxes'))
+{
+  function consoleSetMySqlMaxes()
+  {
+    Artisan::command('set-max', function () {
+    	\DB::unprepared('SET GLOBAL max_allowed_packet=524288000');
+    	\DB::unprepared('SET GLOBAL net_read_timeout=600');
+    	\DB::unprepared('SET GLOBAL aria_checkpoint_interval=600');
+    	\DB::unprepared('SET GLOBAL innodb_flushing_avg_loops=600');
+    	\DB::unprepared('SET GLOBAL innodb_sync_spin_loops=600');
+    })->describe('Recalcular ordenes');
+  }
+}
