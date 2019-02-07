@@ -1072,3 +1072,10 @@ if(!function_exists("customExec")){
     return exec('cd '.base_path().' && '.$command);
   }
 }
+
+if(!function_exists("facader")){
+  function facader($className)
+  {
+    return (new $className);
+  }
+}

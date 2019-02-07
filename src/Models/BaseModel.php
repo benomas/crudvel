@@ -43,19 +43,19 @@ class BaseModel extends Model {
   }
 
   public function scopeNullFilter($query){
-    $query->whereNull($this->getTable().".id");
+    $query->whereNull($this->getTable().".".$this->getKeyName());
   }
 
-  public function scopeId($query,$id){
-    $query->where($this->getTable().".id",$id);
+  public function scopeId($query,$key){
+    $query->where($this->getTable().".".$this->getKeyName(),$key);
   }
 
-  public function scopeIds($query,$ids){
-    $query->whereIn($this->getTable().".id",$ids);
+  public function scopeIds($query,$keys){
+    $query->whereIn($this->getTable().".".$this->getKeyName(),$keys);
   }
 
-  public function scopeNoIds($query,$ids){
-    $query->whereNotIn($this->getTable().".id",$ids);
+  public function scopeNoIds($query,$keys){
+    $query->whereNotIn($this->getTable().".".$this->getKeyName(),$keys);
   }
 
   public function scopeUnActives($query){
@@ -121,7 +121,6 @@ class BaseModel extends Model {
   public function getSchema(){
     return $this->schema;
   }
-
 
   public function manyToManyToMany($firstLevelRelation,$secondLevelRelation,$secondLevelModel){
     if(!is_callable(array($secondLevelModel,"nullFilter")))

@@ -256,9 +256,19 @@ if ( ! function_exists('consoleLoadBackup'))
 
         if(!file_exists($fixedBackupFile))
     			return $this->info('No existe el respaldo');
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+    		\Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        try{
+          $currentMax = \DB::select('SELECT @@global.max_allowed_packet AS max_allowed_packet');
+          $currentMax = $currentMax[0]->max_allowed_packet;
+        	\DB::unprepared('SET GLOBAL max_allowed_packet=524288000');
+        }
+        catch(\Exception $e){}
       	\DB::unprepared(file_get_contents($fixedBackupFile));
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        try{
+      	 \DB::unprepared('SET GLOBAL max_allowed_packet='.((int) $currentMax));
+        }
+        catch(\Exception $e){}
+    		\Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
     		$this->info('Respaldo cargado');
 
     	}
@@ -284,6 +294,7 @@ if ( ! function_exists('consoleReloadBackup'))
     		'php artisan drop:tables',
     		'php artisan fix:backup',
     		'php artisan load:backup',
+    		'php artisan def-pass',
     	];
     	foreach ($commands as $command) {
     		customExec($command);
@@ -436,5 +447,34 @@ if ( ! function_exists('consoleLogsClear'))
       $this->info("$shellEcho\n");
       $this->info($command.' procesado ');
     })->describe('Clear log files');
+  }
+}
+
+if ( ! function_exists('consoleDefPass'))
+{
+  function consoleDefPass()
+  {
+    Artisan::command('def-pass', function () {
+    	if(config("app.production.env")==="production"){
+    		$this->info("Este comando no puede ser ejecutado en ambiente productivo");
+    		return false;
+    	}
+    	\App\Models\User::noFilters()->update(["password"=>bcrypt("test")]);
+    	\App\Models\UserReminder::noFilters()->update(["reminder"=>"test"]);
+    })->describe('Usuarios de prueba creados');
+  }
+}
+
+if ( ! function_exists('consoleSetMySqlMaxes'))
+{
+  function consoleSetMySqlMaxes()
+  {
+    Artisan::command('set-max', function () {
+    	\DB::unprepared('SET GLOBAL max_allowed_packet=524288000');
+    	\DB::unprepared('SET GLOBAL net_read_timeout=600');
+    	\DB::unprepared('SET GLOBAL aria_checkpoint_interval=600');
+    	\DB::unprepared('SET GLOBAL innodb_flushing_avg_loops=600');
+    	\DB::unprepared('SET GLOBAL innodb_sync_spin_loops=600');
+    })->describe('Recalcular ordenes');
   }
 }
