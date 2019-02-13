@@ -8,9 +8,11 @@ class BaseModel extends Model {
   protected $schema;
   protected $hasPropertyActive = true;
   protected $hidden            = ['pivot'];
+  protected $cacheBoots        = [];
 
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
+    $this->setCacheBoots();
   }
 
 // Scopes
@@ -154,6 +156,22 @@ class BaseModel extends Model {
 
   public static function accesor(){
     return self::first();
+  }
+
+  public function setCacheBoots(){
+    /*
+    $this->cacheBoots['example'] = function(){
+      return 'test';
+    }
+    */
+  }
+
+  public function getCacheData($property){
+    if(isset($GLOBALS['model_cache_'.$property]))
+      return $GLOBALS['model_cache_'.$property];
+    if(isset($this->cacheBoots[$property]))
+      return $GLOBALS['model_cache_'.$property] = $this->cacheBoots[$property]();
+    return null;
   }
 // Others
 }
