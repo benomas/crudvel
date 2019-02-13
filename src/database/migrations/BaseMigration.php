@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 class BaseMigration extends Migration
 {
   protected $schema;
-  protected $enableForeings=true;
   protected $mainTable;
   public $blueprintTable=null;
   public function __construct(){
@@ -149,7 +148,7 @@ class BaseMigration extends Migration
 
   public function makeForeing($prefix,$foreingTable,$columnKey='id',$blueprintTable=null){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
-    if(!$this->enableForeings)
+    if(!config('project.enable_foreings'))
       return ;
     $blueprintTable->foreign($prefix.'_'.$columnKey)->references($columnKey)
     ->on($foreingTable)->onUpdate('cascade')->onDelete('cascade');
@@ -157,7 +156,7 @@ class BaseMigration extends Migration
 
   public function makeSafeForeing($prefix,$foreingTable,$columnKey='id',$blueprintTable=null){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
-    if(!$this->enableForeings)
+    if(!config('project.enable_foreings'))
       return ;
     $blueprintTable->foreign($prefix.'_'.$columnKey)->references($columnKey)
     ->on($foreingTable);
