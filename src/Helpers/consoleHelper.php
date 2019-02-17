@@ -21,7 +21,12 @@ if ( ! function_exists('consoleDropTables'))
       catch(\Exception $e){}
 
       try{DB::statement('CREATE DATABASE fake_database');}
-      catch(\Exception $e){}
+      catch(\Exception $e){
+        $shellEcho  = customExec($command="php artisan migrate:reset");
+        $this->info($shellEcho);
+        $this->info($command.' procesado ');
+        return ;
+      }
 
       $defaultConnectionName         = config('database.default');
       $defaultConnection             = config('database.connections.'.$defaultConnectionName);
