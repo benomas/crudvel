@@ -16,10 +16,7 @@ if ( ! function_exists('consoleDropTables'))
       catch(\Exception $e){}
       try{DB::statement('CREATE DATABASE fake_database');}
       catch(\Exception $e){
-        $shellEcho  = customExec($command="php artisan migrate:reset");
-        DB::statement('DROP TABLE migrations');
-        $this->info($shellEcho);
-        $this->info($command.' procesado ');
+        \Illuminate\Support\Facades\Schema::dropAllTables();
         return ;
       }
       $defaultConnectionName         = config('database.default');
