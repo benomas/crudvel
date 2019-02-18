@@ -398,8 +398,8 @@ if ( ! function_exists('consoleDefPass'))
     		$this->info("Este comando no puede ser ejecutado en ambiente productivo");
     		return false;
     	}
-    	\App\Models\User::noFilters()->update(["password"=>bcrypt("test")]);
-    	\App\Models\UserReminder::noFilters()->update(["reminder"=>"test"]);
+      \App\Models\User::noFilters()->update(["password"=>bcrypt("test")]);
+    	//\App\Models\UserReminder::noFilters()->update(["reminder"=>"test"]);
     })->describe('Usuarios de prueba creados');
   }
 }
@@ -416,3 +416,14 @@ if ( ! function_exists('consoleSetMySqlMaxes'))
     })->describe('Recalcular ordenes');
   }
 }
+
+if ( ! function_exists('consoleDevSecret'))
+{
+  function consoleDevSecret()
+  {
+    Artisan::command('dev-secret', function () {
+      \DB::table('oauth_clients')->WHERE('id',2)->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
+    })->describe('Set dev secret for client 2 passsport');
+  }
+}
+
