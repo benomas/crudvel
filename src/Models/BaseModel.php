@@ -121,8 +121,16 @@ class BaseModel extends Model {
     $query->groupBy($this->getTable().'.'.$this->getKeyName());
   }
 
+  public function scopeOrderByKey($query){
+    $query->orderBy($this->getTable().'.'.$this->getKeyName());
+  }
+
   public function scopeSelectKey($query){
     $query->select($this->getTable().'.'.$this->getKeyName());
+  }
+
+  public function scopeSelectMinKey($query){
+    $query->min($this->getTable().'.'.$this->getKeyName());
   }
 
 // End Scopes
