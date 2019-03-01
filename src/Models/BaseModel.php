@@ -111,6 +111,20 @@ class BaseModel extends Model {
     $query->updatedBefore($date)->updatedAfter($date);
   }
 
+  /**
+   * Weir situation with sql server, where i cant access to other columns that are not definend
+   * into de group by, so this scope add group by his self table key
+   *
+   *
+   * */
+  public function scopeGroupByKey($query){
+    $query->groupBy($this->getTable().'.'.$this->getKeyName());
+  }
+
+  public function scopeSelectKey($query){
+    $query->select($this->getTable().'.'.$this->getKeyName());
+  }
+
 // End Scopes
 
 // Others
