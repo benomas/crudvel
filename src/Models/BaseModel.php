@@ -66,6 +66,10 @@ class BaseModel extends Model {
         $query->where($this->getTable().".name", $name);
     }
 
+    public function scopeDescription($query,$description){
+        $query->where($this->getTable().".description", $description);
+    }
+
     public function scopeValue($query,$value){
         $query->where($this->getTable().".value", $value);
     }
