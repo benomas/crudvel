@@ -20,14 +20,14 @@ class BaseSeeder extends Seeder
    */
   public function run()
   {
-  	if(empty($this->data))
-  		return false;
+    if(empty($this->data))
+      return false;
     $this->explodeClass();
-		disableForeignKeyConstraints();
-  	DB::transaction(function() {
-		foreach ($this->data as $key => $value)
-  		$this->modelInstanciator(true)->fill($value)->save();
-  	});
-		enableForeignKeyConstraints();
+    disableForeignKeyConstraints();
+    DB::transaction(function() {
+    foreach ($this->data as $key => $value)
+      $this->modelInstanciator(true)->fill($value)->save();
+    });
+    enableForeignKeyConstraints();
   }
 }

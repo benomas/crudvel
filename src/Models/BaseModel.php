@@ -2,9 +2,11 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Crudvel\Traits\CrudTrait;
+use Crudvel\Traits\CacheTrait;
 
 class BaseModel extends Model {
   use CrudTrait;
+  use CacheTrait;
   protected $schema;
   protected $hasPropertyActive = true;
   protected $hidden            = ['pivot'];
@@ -180,20 +182,5 @@ class BaseModel extends Model {
     return self::first();
   }
 
-  public function setCacheBoots(){
-    /*
-    $this->cacheBoots['example'] = function(){
-      return 'test';
-    }
-    */
-  }
-
-  public function getCacheData($property){
-    if(isset($GLOBALS['model_cache_'.$property]))
-      return $GLOBALS['model_cache_'.$property];
-    if(isset($this->cacheBoots[$property]))
-      return $GLOBALS['model_cache_'.$property] = $this->cacheBoots[$property]();
-    return null;
-  }
 // Others
 }
