@@ -372,7 +372,6 @@ if ( ! function_exists('consoleLightRefresh'))
     if(empty($worksPace))
       return customLog('proyectSlug. Is undefined');
     Artisan::command("$worksPace:light-refresh {range?}", function ($range='') use($worksPace){
-      customLog("a $range");
 
       if(config('app.production.env')==='production'){
         $this->info('Este comando no puede ser ejecutado en ambiente productivo');
@@ -431,7 +430,6 @@ if ( ! function_exists('consoleMigrateGroup'))
       if(!is_array($paths))
         return ;
       sort($paths);
-      customLog($paths);
       foreach ($paths as $key=>$path)
         if(!is_dir(database_path("migrations/$lastSegment/$path")) && $path!=='BaseMigration.php' && !preg_match('/^Custom+/', $path, $matches, PREG_OFFSET_CAPTURE)){
           $shellEcho = customExec($command="php artisan migrate --path=/database/migrations/$lastSegment/$path");
