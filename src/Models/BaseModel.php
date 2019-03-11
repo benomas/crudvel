@@ -62,6 +62,18 @@ class BaseModel extends Model {
     $query->whereNotIn($this->getTable().".".$this->getKeyName(),$keys);
   }
 
+  public function scopeUuid($query,$uuid){
+    $query->where($this->getTable().".uuid",$uuid);
+  }
+
+  public function scopeUuids($query,$uuids){
+    $query->whereIn($this->getTable().".uuid",$uuids);
+  }
+
+  public function scopeNoUuids($query,$uuids){
+    $query->whereNotIn($this->getTable().".uuid",$uuids);
+  }
+
   public function scopeUnActives($query){
     $query->where($this->getTable().".status",0);
   }
@@ -181,6 +193,22 @@ class BaseModel extends Model {
   public static function accesor(){
     return self::first();
   }
+
+  /*
+  public function setCacheBoots(){
+    $this->cacheBoots['example'] = function(){
+      return 'test';
+    }
+  }
+
+  public function getCacheData($property){
+    if(isset($GLOBALS['model_cache_'.$property]))
+      return $GLOBALS['model_cache_'.$property];
+    if(isset($this->cacheBoots[$property]))
+      return $GLOBALS['model_cache_'.$property] = $this->cacheBoots[$property]();
+    return null;
+  }
+  */
 
 // Others
 }

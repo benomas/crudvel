@@ -379,4 +379,9 @@ private function getIgnore(&$parameters)
           return true;
       return in_array($value,$parameters);
   }
+
+  function validateFileAlreadyExist($attribute, $value, $parameters)
+  {
+    return null;
+  }
 }
