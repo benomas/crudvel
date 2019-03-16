@@ -141,13 +141,6 @@ if(!function_exists("inRoles")){
 	}
 }
 */
-if(!function_exists("customLog")){
-	function customLog(...$params){
-		$params = json_encode($params);
-		$backtrace = debug_backtrace();
-		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]["file"]." - ".$backtrace[1]["function"]." in the line: ".$backtrace[0]["line"]." with message: ".$params);
-	}
-}
 if(!function_exists("ffDebugg")){
 	function ffDebugg(...$params){
 		dd($params);
@@ -258,24 +251,6 @@ if(!function_exists("arrayIntersect")){
 					$result[]=$value;
 		}
 		return $result;
-	}
-}
-if(!function_exists("optionalColumn")){
-	function optionalColumn($context,$column){
-		return !($colConfiguration = config("project.optional_columns"))
-		|| !isset($colConfiguration[$context])
-		|| !isset($colConfiguration[$context][$column])
-		|| $colConfiguration[$context][$column];
-	}
-}
-if(!function_exists("countOptionalColumns")){
-	function countOptionalColumns($context,...$columns){
-		$total = 0;
-		foreach ($columns as $value) {
-			if(optionalColumn($context,$value))
-				$total++;
-		}
-		return $total;
 	}
 }
 if(!function_exists("concatToArray")){
@@ -642,28 +617,6 @@ if(!function_exists("resourceByForeingKey")){
 		return str_slug(str_plural($foreingKey));
 	}
 }
-if(!function_exists("pdd")){
-	function pdd(...$doDebugg)
-	{
-		$backtrace = debug_backtrace();
-		array_unshift(
-			$doDebugg,
-			"from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']);
-		dd($doDebugg);
-	}
-}
-if(!function_exists("jdd")){
-	function jdd(...$doDebugg)
-	{
-		$backtrace = debug_backtrace();
-		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']);
-		array_unshift(
-			$doDebugg,
-			"from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']);
-		echo json_encode($doDebugg);
-		die();
-	}
-}
 if(!function_exists("propertyByPosition")){
 	function propertyByPosition($object,$position)
 	{
@@ -679,13 +632,7 @@ if(!function_exists("propertyByPosition")){
 		return $cellCount===$position?$currentProperty:null;
 	}
 }
-if(!function_exists("customLog")){
-	function customLog(...$params){
-		$params = json_encode($params);
-		$backtrace = debug_backtrace();
-		\Illuminate\Support\Facades\Log::info("Log from ".$backtrace[0]['file']." - ".$backtrace[1]['function']." in the line: ".$backtrace[0]['line']." with message: ".$params);
-	}
-}
+
 if(!function_exists("fixedIsInt")){
 	function fixedIsInt($intTest){
  		return isset($intTest) && strval($intTest) === strval(intval($intTest));
@@ -1078,4 +1025,20 @@ if(!function_exists("facader")){
   {
     return (new $className);
   }
+}
+
+if(!function_exists("pdd")){
+  function pdd(...$doDebugg){CvHelper::pdd(...$doDebugg);}
+}
+
+if(!function_exists("jdd")){
+  function jdd(...$doDebugg){CvHelper::jdd(...$doDebugg);}
+}
+
+if(!function_exists("customLog")){
+  function customLog(...$params){CvHelper::customLog(...$params);}
+}
+
+if(!function_exists("cvTest")){
+  function cvTest($expresion=null){return CvHelper::cvTest($expresion);}
 }

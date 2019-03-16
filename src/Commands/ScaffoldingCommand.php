@@ -1,4 +1,4 @@
-<?php namespace Benomas\Crudvel\Commands;
+<?php namespace Crudvel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class ScaffoldingCommand extends Command {
 
-    protected $signature   = 
+    protected $signature   =
     'scaffold {modo} {classes} {entity} {entity_segments} {api_segments} {web_segments}  ';
     protected $name        = "scaffold";
     protected $description = 'Command description.';
@@ -19,7 +19,7 @@ class ScaffoldingCommand extends Command {
     protected $request_template;
     protected $model_template;
     protected $repository_template;
-    
+
     protected $classes=[];
     protected $entity="";
     protected $snack_entity="";
@@ -105,25 +105,25 @@ class ScaffoldingCommand extends Command {
         }
         if(in_array("web_controller",$this->classes)){
             $webControllerPath  = app_path()."/Http/Controllers/".$webSegment.$fixedEntitySegments."/".($this->entity)."Controller.php";
-            
+
             if(file_exists(($webControllerPath)))
                 unlink($webControllerPath);
         }
         if(in_array("request",$this->classes)){
             $requestPath     = app_path()."/Http/Requests/".$fixedEntitySegments."/".($this->entity)."Request.php";
-            
+
             if(file_exists(($requestPath)))
                 unlink($requestPath);
         }
         if(in_array("model",$this->classes)){
             $modelPath       = app_path()."/Models/".$fixedEntitySegments."/".($this->entity).".php";
-            
+
             if(file_exists(($modelPath)))
                 unlink($modelPath);
         }
         if(in_array("repository",$this->classes)){
             $repositoreyPath = app_path()."/Repository/".$fixedEntitySegments."/".($this->entity)."Repository.php";
-            
+
             if(file_exists(($repositoreyPath)))
                 unlink($repositoreyPath);
 
@@ -177,7 +177,7 @@ class ScaffoldingCommand extends Command {
         $this->api_segments          = $this->argument("api_segments");
         $this->web_segments          = $this->argument("web_segments");
         $this->snack_entity          = str_plural(snake_case($this->entity));
-        
+
         /*
         dd([
             "classes"               =>$this->classes,
@@ -211,7 +211,7 @@ class ScaffoldingCommand extends Command {
                 if(in_array("migration",$this->classes))
                     shell_exec('php artisan make:migration create_'.$this->snack_entity.'_table_'.str_slug(Carbon::today()->toDateString(),""));
                 shell_exec('composer dump-autoload');
-            
+
             }
             catch(\Exception $e){
                 echo "Exception, the proccess fail.";
@@ -228,7 +228,7 @@ class ScaffoldingCommand extends Command {
                 return false;
             }
         }
-        
+
         echo "proccess completed";
     }
 

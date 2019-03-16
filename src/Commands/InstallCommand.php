@@ -1,4 +1,4 @@
-<?php namespace Benomas\Crudvel\Commands;
+<?php namespace Crudvel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -12,7 +12,7 @@ class InstallCommand extends Command {
     protected $description = 'Instala paquete';
     protected $name        = "install:crudvel";
     protected $migrationPath;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -26,9 +26,9 @@ class InstallCommand extends Command {
             if(!file_exists($this->migrationsPath))
                 mkdir($this->migrationsPath);
             $migrations =[];
-            
+
             $this->cloneFileData("User.php",base_path("vendor/benomas/crudvel/src/templates/user.txt"),base_path("app/Models"));
-            
+
             if(!count(glob(database_path()."/migrations/*alter_users_table*.php")))
                 $migrations[]= "alter_users_table";
 
@@ -56,7 +56,7 @@ class InstallCommand extends Command {
             if(!count(glob(database_path()."/migrations/*create_permission_role_table*.php")))
                 $migrations[]= "create_permission_role_table";
 
-            foreach ($migrations  as $baseName) 
+            foreach ($migrations  as $baseName)
                 $this->publishMigration($baseName);
         }
         catch(\Exception $e){
@@ -103,7 +103,7 @@ class InstallCommand extends Command {
         $leftNow   = $now->format("Y_m_d_Gisu"); // note at point on "u"
         $migration = str_replace('leftdatetag',$leftNow , $migration);
         $migration = str_replace('rightdatetag',$rightNow , $migration);
-        
+
         if(!file_exists(($fileName=$this->migrationsPath."/".($leftNow)."_".$baseName."_".$rightNow.".php")))
             file_put_contents($fileName, $migration);
         shell_exec('composer dump-autoload');

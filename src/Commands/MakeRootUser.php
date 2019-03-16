@@ -1,4 +1,4 @@
-<?php namespace Benomas\Crudvel\Commands;
+<?php namespace Crudvel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
