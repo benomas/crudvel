@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Crudvel\Database\Migrations\BaseMigration;
-class CreateCatFilesTable extends BaseMigration
+class CreateCatFilesTablerightdatetag extends BaseMigration
 {
   /**
    * Run the migrations.
