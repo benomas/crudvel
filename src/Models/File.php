@@ -3,7 +3,7 @@
 use Crudvel\Customs\Models\BaseModel;
 
 class File extends \Crudvel\Customs\Models\BaseModel{
-  use \App\Traits\ToVReport;
+  use \Crudvel\Traits\Related;
 
   protected $fillable = [
     "active",

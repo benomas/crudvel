@@ -67,11 +67,7 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
 
   public function preAction($method,$parameters){
     if($method==='index'){
-      $this->model->with(['resource'=>function($query){
-        $query->with(['vReport'=>function($query){
-          $query->select('v_reports.id','v_reports.report_needle');
-        }]);
-      }]);
+      $this->model->with('resource');
     }
   }
 
@@ -80,7 +76,7 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
       return  $this->noPaginatedResponse();
 
     $this->processPaginatedResponse();
-    $this->paginateData=$this->model->with('catFile','resource.vReport');
+    $this->paginateData=$this->model->with('catFile','resource');
     return $this->paginateResponder();
   }
 
