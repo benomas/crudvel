@@ -56,6 +56,16 @@ class InstallCommand extends Command {
       if(!count(glob(database_path()."/migrations/*create_permission_role_table*.php")))
         $migrations[]= "create_permission_role_table";
 
+      if(!count(glob(database_path()."/migrations/*create_cat_files_table*.php"))){
+        $migrations[]= "create_cat_files_table";
+        $this->cloneFileData("CatFile.php",base_path("vendor/benomas/crudvel/src/templates/cat_file.txt"),base_path("app/Models"));
+      }
+
+      if(!count(glob(database_path()."/migrations/*create_files_table*.php"))){
+        $migrations[]= "create_files_table";
+        $this->cloneFileData("File.php",base_path("vendor/benomas/crudvel/src/templates/file.txt"),base_path("app/Models"));
+      }
+
       foreach ($migrations  as $baseName)
         $this->publishMigration($baseName);
     }
