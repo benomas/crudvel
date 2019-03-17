@@ -1,8 +1,6 @@
 <?php namespace Crudvel\Models;
 
-use Crudvel\Models\BaseModel;
-
-class Permission extends BaseModel{
+class Permission extends  \Crudvel\Customs\Models\BaseModel{
 
   public static $enablePermissionCheck = true;
 

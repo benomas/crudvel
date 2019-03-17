@@ -6,7 +6,6 @@
  * @date   2017-05-08
  * modificable Role
  */
-use Crudvel\Models\User AS UserModel;
 
-class User extends UserModel {
+class User extends \Crudvel\Models\User {
 }

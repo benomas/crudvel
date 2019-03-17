@@ -7,5 +7,5 @@
  * modificable Permission
  */
 
-class Permission extends \Crudvel\Models\Permission {
+class File extends \Crudvel\Models\CatFile {
 }

@@ -157,6 +157,12 @@ if ( ! function_exists('consoleProyectDown'))
         foreach (glob(database_path().'/migrations/*create_permission_role_table*.php') as $filename) {
           unlink($filename);
         }
+        foreach (glob(database_path().'/migrations/*create_cat_file_table*.php') as $filename) {
+          unlink($filename);
+        }
+        foreach (glob(database_path().'/migrations/*create_file_table*.php') as $filename) {
+          unlink($filename);
+        }
       }
 
     })->describe('Back to empty proyect');

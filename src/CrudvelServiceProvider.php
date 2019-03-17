@@ -26,6 +26,12 @@ class CrudvelServiceProvider extends ServiceProvider
         base_path('crudvel/customs/Controllers/ApiController.php'),
       __DIR__.'/customs/Controllers/WebController.txt' =>
         base_path('crudvel/customs/Controllers/WebController.php'),
+      __DIR__.'/customs/Controllers/WebController.txt' =>
+        base_path('crudvel/customs/Controllers/WebController.php'),
+      __DIR__.'/customs/Controllers/CatFileController.txt' =>
+        base_path('crudvel/customs/Controllers/CatFileController.php'),
+      __DIR__.'/customs/Controllers/FileController.txt' =>
+        base_path('crudvel/customs/Controllers/FileController.php'),
       __DIR__.'/customs/Database/Migrations/BaseMigration.txt' =>
         base_path('crudvel/customs/Database/Migrations/BaseMigration.php'),
       __DIR__.'/customs/Database/Seeds/BaseSeeder.txt' =>
@@ -42,8 +48,16 @@ class CrudvelServiceProvider extends ServiceProvider
         base_path('crudvel/customs/Models/Role.php'),
       __DIR__.'/customs/Models/User.txt'
         => base_path('crudvel/customs/Models/User.php'),
+      __DIR__.'/customs/Models/CatFile.txt'
+        => base_path('crudvel/customs/Models/CatFile.php'),
+      __DIR__.'/customs/Models/File.txt'
+        => base_path('crudvel/customs/Models/File.php'),
       __DIR__.'/customs/Requests/CrudRequest.txt' =>
         base_path('crudvel/customs/Requests/CrudRequest.php'),
+      __DIR__.'/customs/Requests/CatFileRequest.txt' =>
+        base_path('crudvel/customs/Requests/CatFileRequest.php'),
+      __DIR__.'/customs/Requests/FileRequest.txt' =>
+        base_path('crudvel/customs/Requests/FileRequest.php'),
       __DIR__.'/customs/Validations/CustomValidator.txt' =>
         base_path('crudvel/customs/Validations/CustomValidator.php'),
       __DIR__.'/config' =>

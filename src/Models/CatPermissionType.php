@@ -1,8 +1,6 @@
 <?php namespace Crudvel\Models;
 
-use Crudvel\Models\BaseModel;
-
-class CatPermissionType extends BaseModel{
+class CatPermissionType extends \Crudvel\Customs\Models\BaseModel{
 
   protected $fillable = [
     "name",

@@ -1,8 +1,6 @@
 <?php namespace Crudvel\Models;
 
-use Crudvel\Models\BaseModel;
-
-class Role extends BaseModel{
+class Role extends \Crudvel\Customs\Models\BaseModel{
 
   protected $fillable = [
     "slug",

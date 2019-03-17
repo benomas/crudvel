@@ -1,0 +1,12 @@
+<?php namespace Crudvel\Customs\Controllers;
+/**
+ *
+ *
+ * @author Benomas benomas@gmail.com
+ * @date   2017-05-08
+ * modificable ApiController
+ */
+class FileController extends \Crudvel\Controllers\FileController
+{
+
+}

@@ -6,7 +6,6 @@
  * @date   2017-05-08
  * modificable Role
  */
-use Crudvel\Models\Role AS RoleModel;
 
-class Role extends RoleModel {
+class Role extends \Crudvel\Models\Role {
 }

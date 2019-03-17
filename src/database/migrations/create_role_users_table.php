@@ -6,27 +6,27 @@ use Crudvel\Customs\Database\Migrations\BaseMigration;
 
 class CreateRoleUsersTable extends BaseMigration
 {
-    public function up()
-    {
-        if(!Schema::hasTable($this->mainTable) && Schema::hasTable("roles") && Schema::hasTable("users")){
-            Schema::create($this->mainTable, function (Blueprint $table) {
-                $table->engine = 'InnoDB';
-                
-                $table->bigIncrements('id');
-                $table->integer('role_id')->unsigned();
-                $table->bigInteger('user_id')->unsigned();
-                $table->timestamps();
-                $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-                $table->foreign('role_id')
-                    ->references('id')
-                    ->on('roles')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-            });
-        }
+  public function up()
+  {
+    if(!Schema::hasTable($this->mainTable) && Schema::hasTable("roles") && Schema::hasTable("users")){
+      Schema::create($this->mainTable, function (Blueprint $table) {
+        $table->engine = 'InnoDB';
+
+        $table->bigIncrements('id');
+        $table->integer('role_id')->unsigned();
+        $table->bigInteger('user_id')->unsigned();
+        $table->timestamps();
+        $table->foreign('user_id')
+          ->references('id')
+          ->on('users')
+          ->onUpdate('cascade')
+          ->onDelete('cascade');
+        $table->foreign('role_id')
+          ->references('id')
+          ->on('roles')
+          ->onUpdate('cascade')
+          ->onDelete('cascade');
+      });
     }
+  }
 }
