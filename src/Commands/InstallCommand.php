@@ -88,6 +88,11 @@ class InstallCommand extends Command {
       $myFile->autoload->files[] = 'vendor/benomas/crudvel/src/Helpers/helper.php';
       $saveFile=true;
     }
+
+    if(!in_array('vendor/benomas/crudvel/src/Helpers/consoleHelper.php',$myFile->autoload->files)){
+      $myFile->autoload->files[] = 'vendor/benomas/crudvel/src/Helpers/consoleHelper.php';
+      $saveFile=true;
+    }
     if($saveFile)
       file_put_contents(base_path('').'/composer.json', json_encode($myFile, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
 

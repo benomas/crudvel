@@ -87,7 +87,7 @@ if ( ! function_exists('consoleProyectLightUp'))
   {
     if(empty($worksPace))
       return customLog('proyectSlug. Is undefined');
-    Artisan::command("$worksPace:light-up {range?}", function ($range) {
+    Artisan::command("$worksPace:light-up {range?}", function ($range=null) {
 
       $commands = [
         'php artisan migrate',
