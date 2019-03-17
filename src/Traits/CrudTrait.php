@@ -87,8 +87,12 @@ trait CrudTrait {
   }
 
   public function setModelInstance(){
-    if(($this->model = $this->modelInstanciator()))
+    if(($this->model = $this->modelInstanciator())){
       $this->mainTableName = $this->model->getModel()->getTable().'.';
+      if(!empty($this->currentActionId) && !empty($this->currentAction)){
+        $this->modelInstance = $this->model->id($this->currentActionId)->first();
+      }
+    }
   }
 
   public function userInstance(){

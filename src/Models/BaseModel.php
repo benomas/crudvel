@@ -147,6 +147,9 @@ class BaseModel extends Model {
     $query->min($this->getTable().'.'.$this->getKeyName());
   }
 
+  public function scopeDuplicity($query){
+    $query->name($this->name);
+  }
 // End Scopes
 
 // Others
@@ -194,21 +197,6 @@ class BaseModel extends Model {
     return self::first();
   }
 
-  /*
-  public function setCacheBoots(){
-    $this->cacheBoots['example'] = function(){
-      return 'test';
-    }
-  }
-
-  public function getCacheData($property){
-    if(isset($GLOBALS['model_cache_'.$property]))
-      return $GLOBALS['model_cache_'.$property];
-    if(isset($this->cacheBoots[$property]))
-      return $GLOBALS['model_cache_'.$property] = $this->cacheBoots[$property]();
-    return null;
-  }
-  */
 
 // Others
 }
