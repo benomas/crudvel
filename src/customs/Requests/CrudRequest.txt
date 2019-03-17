@@ -6,8 +6,7 @@
  * @date   2017-05-08
  * modificable CrudRequest
  */
-use Crudvel\Requests\CrudRequest AS defaultRequest;
 
-class CrudRequest extends defaultRequest
+class CrudRequest extends \Crudvel\Requests\CrudRequest
 {
 }
