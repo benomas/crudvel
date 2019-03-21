@@ -5,7 +5,7 @@ trait DebuggTrait
 {
 
   public function pdd(...$doDebugg){
-    $sourcePosition        = ($expresion = $this->debuggExpresion)=== null?2:0;
+    $sourcePosition        = ($expresion = $this->debuggExpresion)=== null?3:0;
     $this->debuggExpresion = null;
     $backtrace             = debug_backtrace();
     array_unshift(
@@ -20,10 +20,9 @@ trait DebuggTrait
 
   public function jdd(...$doDebugg)
   {
-    $sourcePosition        = ($expresion = $this->debuggExpresion)=== null?2:0;
+    $sourcePosition        = ($expresion = $this->debuggExpresion)=== null?3:0;
     $this->debuggExpresion = null;
     $backtrace             = debug_backtrace();
-    $sourcePosition        = 2;
     \Illuminate\Support\Facades\Log::info("Log from ".$backtrace[$sourcePosition]['file']." - ".$backtrace[$sourcePosition+1]['function']." in the line: ".$backtrace[$sourcePosition]['line']);
     array_unshift(
       $doDebugg,
@@ -44,7 +43,7 @@ trait DebuggTrait
       $this->debuggScriptStamp  = $rightNow;
     $params                   = json_encode($params);
     $backtrace                = debug_backtrace();
-    $sourcePosition           = 2;
+    $sourcePosition           = 3;
     \Illuminate\Support\Facades\Log::info(
       $this->debuggMessage($sourcePosition)." with message: ".$params.'. Script ejecution time until here is '.$this->debuggScriptTime. ' Seconds'
     );
