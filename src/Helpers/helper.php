@@ -462,15 +462,13 @@ if(!function_exists("specialAccess")){
 	 * @return array
 	 */
 	function specialAccess($userInstace,$special){
-		if(empty($userInstace))
-            return false;
-		if(!($user = $userInstace->first()))
-		    return false;
+		if(empty($userInstace) || !($user = $userInstace->first()))
+      return false;
 		if($user->isRoot())
-		    return true;
+      return true;
 		if(!\App\Models\Permission::special($special)->count())
-		    return true;
-		return kageBunshinNoJutsu($userInstace)->specialPermission($special)->count();
+      return true;
+		return kageBunshinNoJutsu($userInstace)->specialPermission($special)->count()>0;
 	}
 }
 if(!function_exists("errorClass")){
