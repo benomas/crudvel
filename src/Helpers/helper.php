@@ -496,32 +496,32 @@ if(!function_exists("crudvelResource")){
 		$rowName = str_slug(str_singular(end($urlSegments)),"_");
 		if(!$controller)
 			$controller=studly_case($rowName)."Controller";
-        if(!count($conditionals)){
-	        Route::get($resource."/import", $controller."@import");
-	        Route::get($resource."/export", $controller."@export");
-	        Route::post($resource."/import", $controller."@importing");
-	        Route::post($resource."/export", $controller."@exporting");
-	        Route::put($resource."/{".$rowName."}/activate", $controller."@activate");
-	        Route::put($resource."/{".$rowName."}/deactivate", $controller."@deactivate");
-	        Route::resource($resource, $controller);
-        }
-        else{
-			$only     = empty($conditionals["only"])?[]:$conditionals["only"];
-			$excludes = empty($conditionals["excludes"])?[]:$conditionals["excludes"];
-	        if(validateGetActionResource("activate",$only,$excludes)) Route::get($resource."/{".$rowName."}/activate", $controller."@activate");
-	        if(validateGetActionResource("create",$only,$excludes)) Route::get($resource."/create", $controller."@create");
-	        if(validateGetActionResource("deactivate",$only,$excludes)) Route::get($resource."/{".$rowName."}/deactivate", $controller."@deactivate");
-	        if(validateGetActionResource("edit",$only,$excludes)) Route::get($resource."/{".$rowName."}/edit", $controller."@edit");
-	        if(validateGetActionResource("export",$only,$excludes)) Route::get($resource."/export", $controller."@export");
-	        if(validateGetActionResource("import",$only,$excludes)) Route::get($resource."/import", $controller."@import");
-	        if(validateGetActionResource("index",$only,$excludes)) Route::get($resource, $controller."@index");
-	        if(validateGetActionResource("show",$only,$excludes)) Route::get($resource."/{".$rowName."}/show", $controller."@show");
-	        if(validatePostActionResource("destroy",$only,$excludes)) Route::delete($resource."/{".$rowName."}", $controller."@destroy");
-	        if(validatePostActionResource("exporting",$only,$excludes)) Route::post($resource."/export", $controller."@exporting");
-	        if(validatePostActionResource("importing",$only,$excludes)) Route::post($resource."/import", $controller."@importing");
-	        if(validatePostActionResource("store",$only,$excludes)) Route::post($resource, $controller."@store");
-	        if(validatePostActionResource("update",$only,$excludes)) Route::put($resource."/{".$rowName."}", $controller."@update");
-        }
+    if(!count($conditionals)){
+      Route::get($resource."/import", $controller."@import");
+      Route::get($resource."/export", $controller."@export");
+      Route::post($resource."/import", $controller."@importing");
+      Route::post($resource."/export", $controller."@exporting");
+      Route::put($resource."/{".$rowName."}/activate", $controller."@activate");
+      Route::put($resource."/{".$rowName."}/deactivate", $controller."@deactivate");
+      Route::resource($resource, $controller);
+    }
+    else{
+      $only     = empty($conditionals["only"])?[]:$conditionals["only"];
+      $excludes = empty($conditionals["excludes"])?[]:$conditionals["excludes"];
+      if(validateGetActionResource("activate",$only,$excludes)) Route::get($resource."/{".$rowName."}/activate", $controller."@activate");
+      if(validateGetActionResource("create",$only,$excludes)) Route::get($resource."/create", $controller."@create");
+      if(validateGetActionResource("deactivate",$only,$excludes)) Route::get($resource."/{".$rowName."}/deactivate", $controller."@deactivate");
+      if(validateGetActionResource("edit",$only,$excludes)) Route::get($resource."/{".$rowName."}/edit", $controller."@edit");
+      if(validateGetActionResource("export",$only,$excludes)) Route::get($resource."/export", $controller."@export");
+      if(validateGetActionResource("import",$only,$excludes)) Route::get($resource."/import", $controller."@import");
+      if(validateGetActionResource("index",$only,$excludes)) Route::get($resource, $controller."@index");
+      if(validateGetActionResource("show",$only,$excludes)) Route::get($resource."/{".$rowName."}/show", $controller."@show");
+      if(validatePostActionResource("destroy",$only,$excludes)) Route::delete($resource."/{".$rowName."}", $controller."@destroy");
+      if(validatePostActionResource("exporting",$only,$excludes)) Route::post($resource."/export", $controller."@exporting");
+      if(validatePostActionResource("importing",$only,$excludes)) Route::post($resource."/import", $controller."@importing");
+      if(validatePostActionResource("store",$only,$excludes)) Route::post($resource, $controller."@store");
+      if(validatePostActionResource("update",$only,$excludes)) Route::put($resource."/{".$rowName."}", $controller."@update");
+    }
 	}
 }
 if(!function_exists("crudvelResources")){
@@ -537,21 +537,21 @@ if(!function_exists("apiCrudvelResource")){
 			return false;
 		$urlSegments = explode(".",$resource);
 		$baseSegmentResource = end($urlSegments);
-	  $rowName = !empty($translator[$baseSegmentResource])?
+    $rowName = !empty($translator[$baseSegmentResource])?
       $translator[$baseSegmentResource]:str_slug(str_singular($baseSegmentResource),"_");
-		if(!$controller)
-    	$controller="Api\\".studly_case($rowName)."Controller";
+    if(!$controller)
+      $controller="Api\\".studly_case($rowName)."Controller";
     if(!count($conditionals)){
-    	if(count($urlSegments)>1){
-      	foreach ($urlSegments as $segment){
-      		$i=empty($i)?1:$i+1;
+      if(count($urlSegments)>1){
+        foreach ($urlSegments as $segment){
+          $i=empty($i)?1:$i+1;
           $currentSegment=!empty($translator[$segment])?$segment:str_singular($segment);
-      		$prefixRoute = (empty($prefixRoute)?"":$prefixRoute."/").$segment.($i<count($urlSegments)?"/{".$currentSegment."}":"");
-      	}
-    	}
-    	else{
-    		$prefixRoute = $resource;
-    	}
+          $prefixRoute = (empty($prefixRoute)?"":$prefixRoute."/").$segment.($i<count($urlSegments)?"/{".$currentSegment."}":"");
+        }
+      }
+      else{
+        $prefixRoute = $resource;
+      }
       Route::get($prefixRoute."/sluged", $controller."@sluged")->name($resource.".sluged");
       Route::get($prefixRoute."/import", $controller."@import")->name($resource.".import");
       Route::get($prefixRoute."/exports", $controller."@exports")->name($resource.".exports");
@@ -571,34 +571,34 @@ if(!function_exists("apiCrudvelResource")){
       Route::delete($prefixRoute."/{".$rowName."}", $controller."@destroy")->name($resource.".destroy");
     }
     else{
-    	if(in_array("sluged",$conditionals))
-      	Route::get($resource."/sluged", $controller."@sluged")->name($resource.".sluged");
-    	if(in_array("import",$conditionals))
-      	Route::get($resource."/import", $controller."@import")->name($resource.".import");
-    	if(in_array("exports",$conditionals))
-      	Route::get($resource."/exports", $controller."@exports")->name($resource.".exports");
-    	if(in_array("export",$conditionals))
-      	Route::get($resource."/{".$rowName."}/export", $controller."@export")->name($resource.".export");
-    	if(in_array("importing",$conditionals))
-      	Route::post($resource."/import", $controller."@importing")->name($resource.".importing");
-    	if(in_array("exportings",$conditionals))
-      	Route::post($resource."/exporting", $controller."@exportings")->name($resource.".exportings");
-    	if(in_array("exporting",$conditionals))
-      	Route::post($resource."/{".$rowName."}/exporting", $controller."@exporting")->name($resource.".exporting");
-    	if(in_array("activate",$conditionals))
-      	Route::put($resource."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
-    	if(in_array("deactivate",$conditionals))
-      	Route::put($resource."/{".$rowName."}/deactivate", $controller."@deactivate")->name($resource.".deactivate");
-    	if(in_array("index",$conditionals))
-      	Route::get($resource, $controller."@index")->name($resource.".index");
-    	if(in_array("show",$conditionals))
-      	Route::get($resource."/{".$rowName."}", $controller."@show")->name($resource.".show");
-    	if(in_array("store",$conditionals))
-      	Route::post($resource, $controller."@store")->name($resource.".store");
-    	if(in_array("update",$conditionals))
-      	Route::put($resource."/{".$rowName."}", $controller."@update")->name($resource.".update");
-    	if(in_array("destroy",$conditionals))
-      	Route::delete($resource."/{".$rowName."}", $controller."@destroy")->name($resource.".destroy");
+      if(in_array("sluged",$conditionals))
+        Route::get($resource."/sluged", $controller."@sluged")->name($resource.".sluged");
+      if(in_array("import",$conditionals))
+        Route::get($resource."/import", $controller."@import")->name($resource.".import");
+      if(in_array("exports",$conditionals))
+        Route::get($resource."/exports", $controller."@exports")->name($resource.".exports");
+      if(in_array("export",$conditionals))
+        Route::get($resource."/{".$rowName."}/export", $controller."@export")->name($resource.".export");
+      if(in_array("importing",$conditionals))
+        Route::post($resource."/import", $controller."@importing")->name($resource.".importing");
+      if(in_array("exportings",$conditionals))
+        Route::post($resource."/exporting", $controller."@exportings")->name($resource.".exportings");
+      if(in_array("exporting",$conditionals))
+        Route::post($resource."/{".$rowName."}/exporting", $controller."@exporting")->name($resource.".exporting");
+      if(in_array("activate",$conditionals))
+        Route::put($resource."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
+      if(in_array("deactivate",$conditionals))
+        Route::put($resource."/{".$rowName."}/deactivate", $controller."@deactivate")->name($resource.".deactivate");
+      if(in_array("index",$conditionals))
+        Route::get($resource, $controller."@index")->name($resource.".index");
+      if(in_array("show",$conditionals))
+        Route::get($resource."/{".$rowName."}", $controller."@show")->name($resource.".show");
+      if(in_array("store",$conditionals))
+        Route::post($resource, $controller."@store")->name($resource.".store");
+      if(in_array("update",$conditionals))
+        Route::put($resource."/{".$rowName."}", $controller."@update")->name($resource.".update");
+      if(in_array("destroy",$conditionals))
+        Route::delete($resource."/{".$rowName."}", $controller."@destroy")->name($resource.".destroy");
     }
 	}
 }
@@ -633,7 +633,7 @@ if(!function_exists("propertyByPosition")){
 
 if(!function_exists("fixedIsInt")){
 	function fixedIsInt($intTest){
- 		return isset($intTest) && strval($intTest) === strval(intval($intTest));
+    return isset($intTest) && strval($intTest) === strval(intval($intTest));
 	}
 }
 if(!function_exists("deletePathContent")){
@@ -641,7 +641,7 @@ if(!function_exists("deletePathContent")){
     foreach (($files = array_diff(scandir($path), array('.','..'))) as $file)
       (is_dir("$path/$file")) ? deletePathContent("$path/$file",true) : unlink("$path/$file");
     if($subFolder)
-    	return rmdir($path);
+      return rmdir($path);
 	}
 }
 if(!function_exists("pushCrudvuelActions")){
@@ -662,8 +662,8 @@ if(!function_exists("pushCrudvuelActions")){
 }
 if(!function_exists("recursiveSqlSrvDisableForeing")){
 	function recursiveSqlSrvDisableForeing() {
-  	if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
-  		foreach ($tables AS $table){
+    if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
+      foreach ($tables AS $table){
         $currentTable = \DB::table($table)->get();
         DB::STATEMENT(" ALTER TABLE ".$table." NOCHECK CONSTRAINT fk_name");
       }
@@ -671,8 +671,8 @@ if(!function_exists("recursiveSqlSrvDisableForeing")){
 }
 if(!function_exists("recursiveSqlSrvEnableForeing")){
 	function recursiveSqlSrvEnableForeing() {
-  	if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
-  		foreach ($tables AS $table){
+    if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
+      foreach ($tables AS $table){
         DB::STATEMENT(" ALTER TABLE ".$table." NOCHECK CONSTRAINT fk_name");
       }
   }
