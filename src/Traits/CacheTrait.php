@@ -6,45 +6,45 @@ trait CacheTrait
 {
 
   public function setCacheBoots(){
-    $this->cacheBoots['model_cache_example'] = function(){
+    //setCallback definition example
+    $this->context('cvCacheSetCallBack','model_cache_example',function(){
       return 'test';
-    };
+    });
   }
 
-  public function getCacheData($property){
-    /*
-    if(isset($GLOBALS['model_cache_'.get_class($this).$property]))
-      return $GLOBALS['model_cache_'.get_class($this).$property];
-    if($callBackResponse = $this->getCallBack($property))
-      return $callBackResponse;
-      */
-    if(isset($GLOBALS['model_cache_'.$property]))
-      return $GLOBALS['model_cache_'.$property];
-    if(isset($this->cacheBoots[$property]))
-      return $GLOBALS['model_cache_'.$property] = $this->cacheBoots[$property]();
-    return null;
+  /*
+  public function addContainer(String $containerName=''){
+    return CvCache::addContainer($containerName);
+  }
+  public function removeContainer(String $containerName=''){
+    return CvCache::removeContainer($containerName);
+  }
+  public function getContainer(String $containerName=''){
+    return CvCache::getContainer($containerName);
+  }
+  public function getLastContainer(){
+    return CvCache::getLastContainer();
+  }
+  public function switchContainer(String $containerName=''){
+    return CvCache::switchContainer($containerName);
+  }
+  public function resetContainer(String $property=''){
+    return CvCache::resetContainer($property);
+  }*/
+
+  public function cvCacheGetProperty($property){
+    return $this->context()->getProperty($property);
   }
 
-  public function setCallBack($property,$callBack){
-    $GLOBALS['model_callback_'.get_class($this).$property]=$callBack;
+  public function cvCacheSetCallBack($property, $callback){
+    return $this->context()->setCallBack($property, $callback);
   }
 
-  public function getCallBack($property){
-    if(
-      isset($GLOBALS['model_callback_'.get_class($this).$property]) &&
-      is_callable($GLOBALS['model_callback_'.get_class($this).$property])
-    )
-      return $GLOBALS['model_cache_'.get_class($this).$property] = $GLOBALS['model_callback_'.get_class($this).$property]();
-    return null;
+  public function cvCacheHasEngine(){
+    return $this->context()->hasEngine();
   }
 
-  public function setInstanceReady(){
-    $GLOBALS['model_cache_'.get_class($this).'-ready']=true;
-  }
-
-  public function instanceIsReady(){
-    return
-      isset($GLOBALS['model_cache_'.get_class($this).'-ready']) &&
-      $GLOBALS['model_cache_'.get_class($this).'-ready'];
+  private function context(){
+    return \App::make('cvCache');
   }
 }

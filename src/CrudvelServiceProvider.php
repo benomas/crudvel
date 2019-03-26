@@ -5,6 +5,7 @@ use Crudvel\Commands\InstallCommand;
 use Crudvel\Commands\ScaffoldingCommand;
 use Crudvel\Commands\MakeRootUser;
 use Crudvel\Libraries\Helpers\CrudvelHelper;
+use Crudvel\Libraries\CvCache;
 use Illuminate\Foundation\AliasLoader;
 
 
@@ -93,6 +94,15 @@ class CrudvelServiceProvider extends ServiceProvider
     $this->app->booting(function() {
       $loader =AliasLoader::getInstance();
       $loader->alias('CvHelper', \Crudvel\Facades\CrudvelHelper::class);
+    });
+
+    $this->app->singleton('cvCache', function () {
+      return new CvCache();
+    });
+
+    $this->app->booting(function() {
+      $loader =AliasLoader::getInstance();
+      $loader->alias('CvCache', \Crudvel\Facades\CvCache::class);
     });
   }
 }
