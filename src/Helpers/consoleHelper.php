@@ -470,7 +470,6 @@ if ( ! function_exists('consoleDefPass'))
         return false;
       }
       \App\Models\User::noFilters()->update(["password"=>bcrypt("test")]);
-      \App\Models\UserReminder::noFilters()->update(["reminder"=>"test"]);
     })->describe('Usuarios de prueba creados');
   }
 }
