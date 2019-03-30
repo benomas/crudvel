@@ -33,7 +33,7 @@ trait CacheTrait
   }*/
 
   public function cvCacheGetProperty($property){
-    return $this->context()->getProperty($property);
+    return $this->context()->setAndGetProperty($property);
   }
 
   public function cvCacheSetCallBack($property, $callback){
@@ -42,6 +42,10 @@ trait CacheTrait
 
   public function cvCacheHasEngine(){
     return $this->context()->hasEngine();
+  }
+
+  public function cvCacheSetProperty($property,$value){
+    return $this->context()->setProperty($property,$value);
   }
 
   private function context(){

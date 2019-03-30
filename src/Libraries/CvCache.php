@@ -56,12 +56,33 @@ class CvCache
     return $this;
   }
 
-  public function getProperty(String $property=''){
-    if(isset($this->currentContainer->data[$property]))
-      return $this->currentContainer->data[$property];
-    if(isset($this->currentContainer->callBacks[$property]))
-      return $this->currentContainer->data[$property] = $this->currentContainer->callBacks[$property]();
+  public function setAndGetProperty(String $property=''){
+    if($this->hasProperty($property))
+      return $this->getProperty($property);
+    if($this->hasCallBack($property))
+      return $this->setProperty($property,$this->launchCallBack($property))->getProperty($property);
     return null;
+  }
+
+  private function getProperty($property){
+    return $this->currentContainer->data[$property];
+  }
+
+  public function setProperty($property,$value=null){
+    $this->currentContainer->data[$property]=$value;
+    return $this;
+  }
+
+  public function hasCallBack($property){
+    return !empty($this->currentContainer->callBacks[$property]);
+  }
+
+  public function hasProperty($property){
+    return !empty($this->currentContainer->data[$property]);
+  }
+
+  private function launchCallBack($property){
+    return $this->currentContainer->callBacks[$property]();
   }
 
   public function setCallBack($property, $callBack){
