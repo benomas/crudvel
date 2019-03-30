@@ -7,4 +7,5 @@ class CrudvelHelper{
   protected $debuggScriptTime  = null;
   protected $debuggScriptStamp = null;
   use DebuggTrait;
+  use ObjectTrait;
 }

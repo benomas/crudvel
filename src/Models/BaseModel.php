@@ -196,7 +196,5 @@ class BaseModel extends Model {
   public static function accesor(){
     return self::first();
   }
-
-
 // Others
 }

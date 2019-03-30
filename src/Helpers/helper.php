@@ -1049,3 +1049,11 @@ if(!function_exists("customLog")){
 if(!function_exists("cvTest")){
   function cvTest($expresion=null){return CvHelper::cvTest($expresion);}
 }
+
+if(!function_exists("caller")){
+  function cvCaller($depth=4,$property='function'){return CvHelper::caller($depth,$property);}
+}
+
+if(!function_exists("classFile")){
+  function cvClassFile($className){return CvHelper::classFile($className);}
+}
