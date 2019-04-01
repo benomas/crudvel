@@ -1054,6 +1054,10 @@ if(!function_exists("caller")){
   function cvCaller($depth=4,$property='function'){return CvHelper::caller($depth,$property);}
 }
 
-if(!function_exists("classFile")){
+if(!function_exists("cvClassFile")){
   function cvClassFile($className){return CvHelper::classFile($className);}
+}
+
+if(!function_exists("cvBase64Src")){
+  function cvBase64Src($filePath){return CvHelper::base64Src($filePath);}
 }

@@ -8,4 +8,5 @@ class CrudvelHelper{
   protected $debuggScriptStamp = null;
   use DebuggTrait;
   use ObjectTrait;
+  use FileTrait;
 }
