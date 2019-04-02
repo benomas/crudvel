@@ -679,7 +679,10 @@ if(!function_exists("recursiveSqlSrvEnableForeing")){
 }
 if(!function_exists("disableForeignKeyConstraints")){
 	function disableForeignKeyConstraints($connection=null) {
+    if(!config('project.project_prevent_foreings_conflict') )
+      return ;
     $connection = $connection ?? config('database.default');
+    return \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
     switch ($connection) {
       case 'mysql':
         \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
@@ -704,6 +707,8 @@ if(!function_exists("disableForeignKeyConstraints")){
 }
 if(!function_exists("enableForeignKeyConstraints")){
 	function enableForeignKeyConstraints($connection=null) {
+    if(!config('project.project_prevent_foreings_conflict') )
+      return ;
     $connection = $connection ?? config('database.default');
     switch ($connection) {
       case 'mysql':
