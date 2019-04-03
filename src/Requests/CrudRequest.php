@@ -154,6 +154,20 @@ class CrudRequest extends FormRequest
       $this->fixedAttributes??[]);
   }
 
+  public function simpleAttributeTranslator($depth,$fields,$resource=null){
+    if($resource=$resource??$this->langName){
+      foreach($fields as $field)
+        $this->fixedAttributes[$depth.$field]  = __("crudvel/$resource.fields.$field");
+    }
+  }
+
+  public function fixDepth($rules,$depth){
+    $fixedRules = [];
+    foreach($rules as $rulesIndex => $rulesValue)
+      $fixedRules[$depth.$rulesIndex]=$rulesValue;
+    return $fixedRules;
+  }
+
   //Todo
   public function validateImportingRow($row){
     $this->defaultRules();

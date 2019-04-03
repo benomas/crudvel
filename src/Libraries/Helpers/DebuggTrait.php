@@ -23,7 +23,6 @@ trait DebuggTrait
     $sourcePosition        = ($expresion = $this->debuggExpresion)=== null?3:0;
     $this->debuggExpresion = null;
     $backtrace             = debug_backtrace();
-    \Illuminate\Support\Facades\Log::info("Log from ".$backtrace[$sourcePosition]['file']." - ".$backtrace[$sourcePosition+1]['function']." in the line: ".$backtrace[$sourcePosition]['line']);
     array_unshift(
       $doDebugg,
       $this->debuggMessage($sourcePosition)
