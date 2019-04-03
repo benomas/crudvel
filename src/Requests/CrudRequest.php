@@ -29,6 +29,8 @@ class CrudRequest extends FormRequest
   public $model;
   public $modelInstance;
   protected $fixedAttributes = null;
+  protected $currentDepth='';
+  protected $currentDinamicResource='';
 
   //import/export
   public $exportImportProperties = [];
@@ -48,6 +50,7 @@ class CrudRequest extends FormRequest
       $this->rowName = camel_case($this->getCrudObjectName());
     if(empty($this->baseName))
       $this->baseName = $this->langName;
+    $this->currentDinamicResource=$this->baseName;
   }
 
   /**
@@ -154,17 +157,21 @@ class CrudRequest extends FormRequest
       $this->fixedAttributes??[]);
   }
 
-  public function simpleAttributeTranslator($depth,$fields,$resource=null){
-    if($resource=$resource??$this->langName){
-      foreach($fields as $field)
-        $this->fixedAttributes[$depth.$field]  = __("crudvel/$resource.fields.$field");
-    }
+  public function simpleAttributeTranslator($field){
+    $this->fixedAttributes[$this->currentDepth.$field]  = __("crudvel/".$this->currentDinamicResource.".fields.$field");
   }
 
-  public function fixDepth($rules,$depth){
+  public function simpleAttributesTranslator($fields){
+    foreach($fields as $field)
+      $this->simpleAttributeTranslator($field);
+  }
+
+  public function fixDepth($rules){
     $fixedRules = [];
-    foreach($rules as $rulesIndex => $rulesValue)
-      $fixedRules[$depth.$rulesIndex]=$rulesValue;
+    foreach($rules as $rulesIndex => $rulesValue){
+      $fixedRules[$this->currentDepth.$rulesIndex]=$rulesValue;
+      $this->simpleAttributeTranslator($rulesIndex);
+    }
     return $fixedRules;
   }
 
@@ -257,5 +264,21 @@ class CrudRequest extends FormRequest
     $this->currentActionId = $this->route($this->mainArgumentName());
     $this->setModelInstance();
     $this->loadFields();
+  }
+
+  public function setCurrentDepth($currentDepth=''){
+    $this->currentDepth=$currentDepth;
+    return $this;
+  }
+  public function setCurrentDinamicResource($currentDinamicResource=''){
+    $this->currentDinamicResource=$currentDinamicResource;
+    return $this;
+  }
+
+  public function getCurrentDepth(){
+    return $this->currentDepth;
+  }
+  public function getCurrentDinamicResource(){
+    return $this->currentDinamicResource;
   }
 }
