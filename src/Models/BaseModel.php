@@ -1,6 +1,7 @@
 <?php namespace Crudvel\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 use Crudvel\Traits\CrudTrait;
 use Crudvel\Traits\CacheTrait;
 
@@ -48,6 +49,10 @@ class BaseModel extends Model {
 
   public function scopeNullFilter($query){
     $query->whereNull($this->getTable().".".$this->getKeyName());
+  }
+
+  public function scopeNotNull($query,$columnt){
+    $query->whereNotNull($this->getTable().".".$columnt);
   }
 
   public function scopeId($query,$key){
@@ -129,6 +134,12 @@ class BaseModel extends Model {
     $query->updatedBefore($date)->updatedAfter($date);
   }
 
+  public function scopeDistinctCount($query,$column){
+    if(!in_array($column,$this->getTableColumns()))
+      return 0;
+    return $query->count(DB::raw("DISTINCT ".$this->fixColumnName($column)));
+  }
+
   /**
    * Weir situation with sql server, where i cant access to other columns that are not definend
    * into de group by, so this scope add group by his self table key
@@ -161,6 +172,10 @@ class BaseModel extends Model {
   public function getTable(){
     //TODO, fix schema inclusion
     return parent::getTable();
+  }
+
+  public function getSimpleTable(){
+    return empty($schema = $this->schema)?$this->getTable():str_replace($schema.'.','',$this->getTable());
   }
 
   public function getSchema(){
@@ -199,6 +214,16 @@ class BaseModel extends Model {
 
   public static function accesor(){
     return self::first();
+  }
+
+  //TODO sanatize this method
+  //! important this method need to some be fixed to prevent inyection
+  public function fixColumnName($column){
+    return $this->getTable().'.'.$column;
+  }
+
+  public function getTableColumns() {
+    return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getSimpleTable());
   }
 // Others
 }
