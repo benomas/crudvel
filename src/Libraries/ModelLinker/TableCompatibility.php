@@ -15,6 +15,8 @@ class TableCompatibility
   protected $rightModelInstance;
   protected $leftColumns;
   protected $rightColumns;
+  protected $leftToRight;
+  protected $rightToLeft;
   protected $rightMargin;
   protected $equals;
   protected $columnsCompatibility = [];
@@ -24,8 +26,8 @@ class TableCompatibility
     $this->rightModel         = $rightModel;
     $this->leftModelInstance  = new $this->leftModel();
     $this->rightModelInstance = new $this->rightModel();
-    $this->leftColumns = $this->leftModelInstance->getTableColumns();
-    $this->rightColumns = $this->rightModelInstance->getTableColumns();
+    $this->leftColumns        = $this->leftModelInstance->getTableColumns();
+    $this->rightColumns       = $this->rightModelInstance->getTableColumns();
   }
 
   public function setColumns (String $leftColumn, String $rightColumn){
@@ -36,24 +38,35 @@ class TableCompatibility
   }
 
   public function check(){
+    $columnsCompatibility=[];
     foreach($this->leftColumns as $leftColumn){
       foreach($this->rightColumns as $rightColumn){
         $compatibility = new ColumnCompatibility($this->leftModel , $this->rightModel ,$leftColumn,$rightColumn);
         if(($compatibilityTest = $compatibility->check())['kindOfCompatibility']===static::UNPROBABLE_COMPATIBILITY)
           continue;
         $columnsCompatibility[]=[
-          'leftModel'=>$this->leftModel,
-          'rightModel'=>$this->rightModel,
-          'leftColumn'=>$leftColumn,
-          'rightColumn'=>$rightColumn,
-          'compatibility'=>$compatibilityTest['kindOfCompatibility'],
-          'compatibilityTranslation'=>$this->translateCompatibility($compatibilityTest['kindOfCompatibility']),
-          'leftCount'=>$compatibilityTest['leftCount'],
-          'rightCount'=>$compatibilityTest['rightCount'],
+          'leftModel'                => $this->leftModel,
+          'rightModel'               => $this->rightModel,
+          'leftColumn'               => $leftColumn,
+          'rightColumn'              => $rightColumn,
+          'compatibility'            => $compatibilityTest['kindOfCompatibility'],
+          'compatibilityTranslation' => $this->translateCompatibility($compatibilityTest['kindOfCompatibility']),
+          'leftCount'                => $compatibilityTest['leftCount'],
+          'rightCount'               => $compatibilityTest['rightCount'],
         ];
       }
     }
-    return collect($columnsCompatibility)->sortBy('compatibility');
+    $columnsCompatibility = collect($columnsCompatibility);
+    return $columnsCompatibility->count()?$columnsCompatibility->sortBy('compatibility'):$columnsCompatibility;
+  }
+
+  public function crossRelated(){
+    $this->leftToRight = method_exists($this->leftModelInstance,camel_case(class_basename($this->rightModel)));
+    $this->rightToLeft = method_exists($this->rightModelInstance,camel_case(class_basename($this->leftModel)));
+    return [
+      'leftToRight' => $this->leftToRight,
+      'rightToLeft' => $this->rightToLeft,
+    ];
   }
 
   private function kindOfCompatibility(){
