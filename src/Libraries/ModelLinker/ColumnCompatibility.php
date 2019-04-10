@@ -34,7 +34,7 @@ class ColumnCompatibility
   public function check(){
     $leftCheck  = $this->leftBuilder();
     $rightCheck = $this->rightBuilder();
-    if($this->lCount($leftCheck) > $this->rCount($rightCheck) + $this->rightMargin)
+    if($this->lCount($leftCheck) > $this->rCount($rightCheck) + $this->rightMargin || $this->lCount($leftCheck)===0)
       return $this->noCompatibility();
     $this->equals = $this->lCount($leftCheck) === $this->rCount($rightCheck);
     $modelCollection = collect([]);
@@ -55,11 +55,18 @@ class ColumnCompatibility
   }
 
   private function kindOfCompatibility(){
-    return ['kindOfCompatibility'=>$this->equals? static::PERFECT_COMPATIBILITY:static::PROBABLE_COMPATIBILITY,'leftCount'=>$this->lCount($this->leftBuilder()),'rightCount'=>$this->rCount($this->rightBuilder())];
+    return [
+      'kindOfCompatibility'=>$this->equals? static::PERFECT_COMPATIBILITY:static::PROBABLE_COMPATIBILITY,'leftCount'=>$this->lCount($this->leftBuilder()),
+      'rightCount'=>$this->rCount($this->rightBuilder())
+    ];
   }
 
   private function noCompatibility(){
-    return ['kindOfCompatibility'=>static::UNPROBABLE_COMPATIBILITY,'leftCount'=>null,'rightCount'=>null];
+    return [
+      'kindOfCompatibility' => static::UNPROBABLE_COMPATIBILITY,
+      'leftCount'           => null,
+      'rightCount'          => null
+    ];
   }
 
   private function leftBuilder(){

@@ -44,7 +44,14 @@ class TableCompatibility
         $compatibility = new ColumnCompatibility($this->leftModel , $this->rightModel ,$leftColumn,$rightColumn);
         if(($compatibilityTest = $compatibility->check())['kindOfCompatibility']===static::UNPROBABLE_COMPATIBILITY)
           continue;
+
+        $modelKind                 = preg_match('/Catalogos/',$this->leftModel, $matches)?'Catalogos':"Tbls";
+        $encodedLeftTraitFilePath  = 'app/Traits/'.strtolower($modelKind).'/'.class_basename($this->leftModel).'Trait.php';
+        $modelKind                 = preg_match('/Catalogos/',$this->rightModel, $matches)?'Catalogos':"Tbls";
+        $encodedRightTraitFilePath = 'app/Traits/'.strtolower($modelKind).'/'.class_basename($this->rightModel).'Trait.php';
         $columnsCompatibility[]=[
+          'leftBaseNameModel'        => class_basename($this->leftModel),
+          'rightBaseNameModel'       => class_basename($this->rightModel),
           'leftModel'                => $this->leftModel,
           'rightModel'               => $this->rightModel,
           'leftColumn'               => $leftColumn,
@@ -53,11 +60,23 @@ class TableCompatibility
           'compatibilityTranslation' => $this->translateCompatibility($compatibilityTest['kindOfCompatibility']),
           'leftCount'                => $compatibilityTest['leftCount'],
           'rightCount'               => $compatibilityTest['rightCount'],
+          'encodedLeftTraitFilePath' => file_exists(base_path($encodedLeftTraitFilePath))?
+            base64_encode($encodedLeftTraitFilePath) : null,
+          'encodedRightTraitFilePath' => file_exists(base_path($encodedRightTraitFilePath))?
+            base64_encode($encodedRightTraitFilePath) : null,
+          'encodedLeftModelFilePath' => file_exists(cvClassFile($this->leftModel))?
+            base64_encode(str_replace(base_path().'/','',cvClassFile($this->leftModel))) : null,
+          'encodedRightModelFilePath' => file_exists(cvClassFile($this->rightModel))?
+            base64_encode(str_replace(base_path().'/','',cvClassFile($this->rightModel))) : null,
         ];
       }
     }
     $columnsCompatibility = collect($columnsCompatibility);
-    return $columnsCompatibility->count()?$columnsCompatibility->sortBy('compatibility'):$columnsCompatibility;
+    $columnsCompatibility = $columnsCompatibility->count()?$columnsCompatibility->sortBy('compatibility'):$columnsCompatibility;
+    $fixedColumnsCompatibilityIndex = [];
+    foreach($columnsCompatibility as $key=>$compatibility)
+      $fixedColumnsCompatibilityIndex[] = $compatibility;
+    return collect($fixedColumnsCompatibilityIndex);
   }
 
   public function crossRelated(){
