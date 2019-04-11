@@ -21,13 +21,17 @@ class TableCompatibility
   protected $equals;
   protected $columnsCompatibility = [];
 
-  public function __construct(String $leftModel, String $rightModel){
-    $this->leftModel          = $leftModel;
-    $this->rightModel         = $rightModel;
-    $this->leftModelInstance  = new $this->leftModel();
-    $this->rightModelInstance = new $this->rightModel();
-    $this->leftColumns        = $this->leftModelInstance->getTableColumns();
-    $this->rightColumns       = $this->rightModelInstance->getTableColumns();
+  public function __construct(String $leftModel, String $rightModel, String $destLeftModel, String $destRightModel){
+    $this->leftModel              = $leftModel;
+    $this->rightModel             = $rightModel;
+    $this->leftModelInstance      = new $this->leftModel();
+    $this->rightModelInstance     = new $this->rightModel();
+    $this->leftColumns            = $this->leftModelInstance->getTableColumns();
+    $this->rightColumns           = $this->rightModelInstance->getTableColumns();
+    $this->destLeftModel          = $destLeftModel;
+    $this->destRightModel         = $destRightModel;
+    $this->leftDestModelInstance  = new $this->destLeftModel();
+    $this->rightDestModelInstance = new $this->destRightModel();
   }
 
   public function setColumns (String $leftColumn, String $rightColumn){
@@ -45,10 +49,10 @@ class TableCompatibility
         if(($compatibilityTest = $compatibility->check())['kindOfCompatibility']===static::UNPROBABLE_COMPATIBILITY)
           continue;
 
-        $modelKind                 = preg_match('/Catalogos/',$this->leftModel, $matches)?'Catalogos':"Tbls";
-        $encodedLeftTraitFilePath  = 'app/Traits/'.strtolower($modelKind).'/'.class_basename($this->leftModel).'Trait.php';
-        $modelKind                 = preg_match('/Catalogos/',$this->rightModel, $matches)?'Catalogos':"Tbls";
-        $encodedRightTraitFilePath = 'app/Traits/'.strtolower($modelKind).'/'.class_basename($this->rightModel).'Trait.php';
+        $modelKind                 = preg_match('/Catalogos/',$this->destLeftModel, $matches)?'Catalogos':"Tbls";
+        $encodedLeftTraitFilePath  = 'app/Traits/'.strtolower($modelKind).'/'.class_basename($this->destLeftModel).'Trait.php';
+        $modelKind                 = preg_match('/Catalogos/',$this->destRightModel, $matches)?'Catalogos':"Tbls";
+        $encodedRightTraitFilePath = 'app/Traits/'.strtolower($modelKind).'/'.class_basename($this->destRightModel).'Trait.php';
         $columnsCompatibility[]=[
           'leftBaseNameModel'        => class_basename($this->leftModel),
           'rightBaseNameModel'       => class_basename($this->rightModel),
