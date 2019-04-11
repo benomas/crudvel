@@ -67,9 +67,7 @@ class RelationChecker
   public function eraseRelationCode($rel, $direction, $fileContents){
     $toggleDirection = ucfirst($this->toggleDirect(lcfirst($direction)));
     $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model'])));
-    customLog("antes",$fileContents);
     $fileContents = preg_replace('/public\s+function\s+'.$funcName.'\s*\(\).*\n.*return.*\n.*}/',"", $fileContents);
-    customLog("despues",$fileContents);
     return $fileContents;
   }
 
