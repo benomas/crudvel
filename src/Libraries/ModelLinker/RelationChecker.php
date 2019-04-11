@@ -22,7 +22,7 @@ class RelationChecker
   public function buildTpl($rel, $direction){
     $toggleDirection = $this->toggleDirect(lcfirst($direction));
     $funcRel = ($direction === 'left')?'belongsTo':'hasMany';
-    $funcName = lcfirst(class_basename(base64_decode($rel['encodedRightModel'])));
+    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.ucfirst($toggleDirection).'Model'])));
     $tpl = "\tpublic function " . $funcName. "(){
 \t\treturn \$this->".$funcRel."('".$rel[$toggleDirection.'Model']."','" . $rel[$direction.'Column']. "','" . $rel[$toggleDirection.'Column']. "');
 \t}";
@@ -40,17 +40,20 @@ class RelationChecker
     // search and replace inside the file
     $fileContents = preg_replace('/(\n\/\/\[*End Relationships\]*)/', "\n" . $tpl . "$1", $fileContents);
     // insert new lines in file
-    //file_put_contents(base_path() . $file, $fileContents);
+
+    // pdd($file, $fileContents);
+    file_put_contents($file, $fileContents);
     customLog($fileContents);
   }
 
   public function insertRelationInClass($rel, $direction){
+    $toggleDirection = ucfirst($this->toggleDirect(lcfirst($direction)));
     // is this relation I = Ignored ?
     if($rel[$direction.'Relation'] === 'I') return false;
     $file = base_path().'/'.base64_decode($rel['encoded'.ucfirst($direction).'TargetPath']);
     // open the file to edit contents
     $fileContents = file_get_contents($file);
-    $funcName = lcfirst(class_basename(base64_decode($rel['encodedRightModel'])));
+    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model'])));
     $exist = $this->existRelationCode($fileContents, $funcName);
     if($rel[$direction.'Relation'] === 'F'){
       if($exist) $fileContents = $this->eraseRelationCode($rel, $direction, $fileContents);
@@ -60,7 +63,8 @@ class RelationChecker
   }
 
   public function eraseRelationCode($rel, $direction, $fileContents){
-    $funcName = lcfirst(class_basename(base64_decode($rel['encodedRightModel'])));
+    $toggleDirection = ucfirst($this->toggleDirect(lcfirst($direction)));
+    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model'])));
     $fileContents = preg_replace('/public\s+function\s+'.$funcName.'\s*\(\).*\n.*return.*\n.*}/',"borrada", $fileContents);
     if(is_null($fileContents)) pdd("Error eraseRelation preg_replace", $rel, $fileContents);
     return $fileContents;
