@@ -7,11 +7,8 @@ class RelationChecker
   // Array that contents all relations to check
   protected $relationArray = [];
 
-  public function __construct($relationArray, $leftDestModel, $rightDestModel)
+  public function __construct()
   {
-    $this->relationArray = $relationArray;
-    $this->rightDestModel = base64_decode($rightDestModel);
-    $this->leftDestModel = base64_decode($leftDestModel);
   }
 
   // toggle direction
@@ -81,5 +78,37 @@ class RelationChecker
         array_push($response, $this->insertRelationInClass($rel,'right'));
     }
     return $response;
+  }
+
+  public function setCheckIfRelationsExistInTraits($relationArray, $leftDestModel, $rightDestModel){
+    $this->relationArray = $relationArray;
+    $this->rightDestModel = base64_decode($rightDestModel);
+    $this->leftDestModel = base64_decode($leftDestModel);
+  }
+
+  public function setPreviewRelations($rel, $nItems, $offset){
+    $this->rel= $rel[0];
+    $this->nItems = $nItems;
+    $this->offset= $offset;
+  }
+
+  public function previewRelations()
+  {
+    $direction = 'left';
+    $toggleDirection = $this->toggleDirect($direction);
+    $modelLeft = $this->rel[$direction . 'Model']::groupBy()->limit($this->nItems)->get();
+    $funcRel = ($direction === 'left') ? 'belongsTo' : 'hasMany';
+    foreach ($modelLeft as $item) {
+      $item->leftRelation = $item->$funcRel($this->rel[$toggleDirection . 'Model'], $this->rel[$direction . 'Column'], $this->rel[$toggleDirection . 'Column'])->first();
+    }
+    $modelRight = $this->rel[$toggleDirection . 'Model']::limit($this->nItems)->get();
+    $funcRel = ($direction === 'left') ? 'hasMany' : 'belongsTo';
+    foreach ($modelRight as $item) {
+      $item->rightRelation = $item->$funcRel($this->rel[$direction . 'Model'], $this->rel[$toggleDirection . 'Column'], $this->rel[$direction . 'Column'])->first();
+    }
+    return [
+      'modelRight' => $modelRight,
+      'modelLeft' => $modelLeft,
+    ];
   }
 }
