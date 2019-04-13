@@ -2,8 +2,9 @@
 namespace Crudvel\Libraries\ModelLinker;
 
 class CorreCaminos{
-  protected $srcs    = [];
-  protected $paths   = [];
+  protected $srcs           = [];
+  protected $paths          = [];
+  protected $collectionPath = [];
   protected $leftModel;
   protected $leftModelInstance;
   protected $rightModel;
@@ -19,33 +20,58 @@ class CorreCaminos{
 
   public function checkPaths(){
     $currentModel = $this->leftModel;
-    $this->testPath($currentModel);
+    $this->testPath($currentModel,$this->srcs);
+    $this->fixDots();
+    return $this;
   }
 
-  public function testPath($currentModel){
+  public function testPath($currentModel,$srcs){
     $path = '';
-    foreach($this->srcs as $key=>$model){
-      if($model !==$this->rightModel)
-        unset($this->srcs[$key]);
+    foreach($srcs as $key=>$model){
       $modelBaseName = class_basename($model);
       $relMethod     = camel_case($modelBaseName);
-
       if(method_exists($currentModel,$relMethod) && $model::noFilters()->count()){
-        if($model===$this->rightModel){
-          if($currentModel===$this->leftModel){
-            $this->paths[]=$path;
-            continue;
-          }
-          return $path;
-        }
+        unset($srcs[$key]);
         $path .= $relMethod.'.';
-        if($subPath = $this->testPath($model))
+        //if target was found
+        if($model===$this->rightModel){
+          //if currentModel is different than origin model
+          if($currentModel!==$this->leftModel)
+            return $path;
+          $this->paths[]=$path;
+          continue;
+        }
+        if($subPath = $this->testPath($model,$srcs)){
           $path .= $subPath;
+          if($currentModel===$this->leftModel)
+            $this->paths[]=$path;
+          else
+            return $path;
+        }
       }
     }
   }
 
   public function getPaths(){
     return $this->paths;
+  }
+
+  public function getCollectionPath(){
+    return $this->collectionPath;
+  }
+
+  public function fixDots(){
+    foreach($this->paths as $pathsIndex => $pathsValue)
+      $this->paths[$pathsIndex] = rtrim($pathsValue,'.');
+
+    $this->collectionPath = collect($this->paths)->sort(function($item,$nextItem){
+      if ($item == $nextItem)
+        return 0;
+      return 
+        ((count(explode('.',$item)).'.'.strlen($item)) < 
+        (count(explode('.',$nextItem)).'.'.strlen($nextItem))) ?
+          -1 : 1;
+    });
+    return $this;
   }
 }
