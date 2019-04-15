@@ -21,7 +21,7 @@ class RelationChecker
     $funcRel = ($direction === 'left')?'belongsTo':'hasMany';
     $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.ucfirst($toggleDirection).'Model'])));
     $tpl = "\tpublic function " . $funcName. "(){
-\t\treturn \$this->".$funcRel."('".$rel[$toggleDirection.'Model']."','" . $rel[$direction.'Column']. "','" . $rel[$toggleDirection.'Column']. "');
+\t\treturn \$this->".$funcRel."('".$rel[$toggleDirection.'Model']."','" . $rel['leftColumn']. "','" . $rel['rightColumn']. "');
 \t}";
     return $tpl;
   }
@@ -104,11 +104,11 @@ class RelationChecker
     $modelRight = $this->rel[$toggleDirection . 'Model']::limit($this->nItems)->get();
     $funcRel = ($direction === 'left') ? 'hasMany' : 'belongsTo';
     foreach ($modelRight as $item) {
-      $item->rightRelation = $item->$funcRel($this->rel[$direction . 'Model'], $this->rel[$toggleDirection . 'Column'], $this->rel[$direction . 'Column'])->first();
+      $item->rightRelation = $item->$funcRel($this->rel[$direction . 'Model'], $this->rel[$direction. 'Column'], $this->rel[$toggleDirection. 'Column'])->first();
     }
     return [
-      'modelRight' => $modelRight,
       'modelLeft' => $modelLeft,
+      'modelRight' => $modelRight
     ];
   }
 }
