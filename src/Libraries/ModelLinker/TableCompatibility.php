@@ -77,7 +77,11 @@ class TableCompatibility
       }
     }
     $columnsCompatibility = collect($columnsCompatibility);
-    $columnsCompatibility = $columnsCompatibility->count()?$columnsCompatibility->sortBy('compatibility')->sortByDesc('leftCount'):$columnsCompatibility;
+    $columnsCompatibility = $columnsCompatibility->count()?$columnsCompatibility->sortBy(function($row){
+      if(($diff = $row['leftCount'] - $row['rightCount'])<0)
+        $diff = $diff *-1;
+      return $row['compatibility'].'.'.$diff;
+    }):$columnsCompatibility;
     $fixedColumnsCompatibilityIndex = [];
     foreach($columnsCompatibility as $key=>$compatibility)
       $fixedColumnsCompatibilityIndex[] = $compatibility;
