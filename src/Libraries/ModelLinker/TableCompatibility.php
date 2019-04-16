@@ -44,6 +44,7 @@ class TableCompatibility
   public function check(){
     $columnsCompatibility=[];
     foreach($this->leftColumns as $leftColumn){
+
       foreach($this->rightColumns as $rightColumn){
         $compatibility = new ColumnCompatibility($this->leftModel , $this->rightModel ,$leftColumn,$rightColumn);
         if(($compatibilityTest = $compatibility->check())['kindOfCompatibility']===static::UNPROBABLE_COMPATIBILITY)

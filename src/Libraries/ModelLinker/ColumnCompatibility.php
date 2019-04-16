@@ -19,7 +19,7 @@ class ColumnCompatibility
   protected $rightMargin;
   protected $equals;
 
-  public function __construct(String $leftModel, String $rightModel, String $leftColumn, String $rightColumn, Int $rightMargin=0){
+  public function __construct(String $leftModel, String $rightModel, String $leftColumn, String $rightColumn, Int $rightMargin=3){
     $this->leftModel          = $leftModel;
     $this->rightModel         = $rightModel;
     $this->leftModelInstance  = new $this->leftModel();
@@ -41,6 +41,7 @@ class ColumnCompatibility
     $completed       = false;
     $steps           = 0;
     $limit           = 1000;
+    $lastMargin      = $this->rightMargin;
     $leftCheck->limit($limit);
     $leftCheck->groupBy($this->leftFixedColumn);
     while(!$completed){
@@ -48,8 +49,15 @@ class ColumnCompatibility
       if(empty($leftChunckedData) && $completed=true)
         return $this->kindOfCompatibility();
       $rightCheck = $this->rightModel::whereIn($this->rightFixedColumn,$leftChunckedData);
-      if(count($leftChunckedData) > $this->rCount($rightCheck))
+
+      if($this->rCount($rightCheck)===0)
         return $this->noCompatibility();
+
+      if(count($leftChunckedData) > $this->rCount($rightCheck)){
+        if(count($leftChunckedData) - $this->rCount($rightCheck) > $lastMargin)
+          return $this->noCompatibility();
+        $lastMargin = $lastMargin - count($leftChunckedData) + $this->rCount($rightCheck);
+      }
     }
     return $this->kindOfCompatibility();
   }
