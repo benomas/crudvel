@@ -77,7 +77,7 @@ class TableCompatibility
       }
     }
     $columnsCompatibility = collect($columnsCompatibility);
-    $columnsCompatibility = $columnsCompatibility->count()?$columnsCompatibility->sortBy('compatibility'):$columnsCompatibility;
+    $columnsCompatibility = $columnsCompatibility->count()?$columnsCompatibility->sortBy('compatibility')->sortByDesc('leftCount'):$columnsCompatibility;
     $fixedColumnsCompatibilityIndex = [];
     foreach($columnsCompatibility as $key=>$compatibility)
       $fixedColumnsCompatibilityIndex[] = $compatibility;
