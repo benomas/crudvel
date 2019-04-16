@@ -45,7 +45,10 @@ class ColumnCompatibility
     $leftCheck->limit($limit);
     $leftCheck->groupBy($this->leftFixedColumn);
     while(!$completed){
-      $leftChunckedData = $leftCheck->skip($limit * $steps++)->pluck($this->leftColumn)->toArray();
+      $leftChunckedData = [];
+      $leftCheck->skip($limit * $steps++)->get()->each(function($row) use(&$leftChunckedData){
+        $leftChunckedData[]= $row->getOriginal($this->leftColumn);
+      });
       if(empty($leftChunckedData) && $completed=true)
         return $this->kindOfCompatibility();
       $rightCheck = $this->rightModel::whereIn($this->rightFixedColumn,$leftChunckedData);
