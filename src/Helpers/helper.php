@@ -1066,3 +1066,11 @@ if(!function_exists("cvClassFile")){
 if(!function_exists("cvBase64Src")){
   function cvBase64Src($filePath){return CvHelper::base64Src($filePath);}
 }
+
+if(!function_exists("uCSort")){
+  function uCSort($itemI,$nextItem){return CvHelper::uCSort($itemI,$nextItem);}
+}
+
+if(!function_exists("uCProp")){
+  function uCProp($uCProp){return CvHelper::uCProp($uCProp);}
+}

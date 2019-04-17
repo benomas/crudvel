@@ -76,16 +76,18 @@ class TableCompatibility
         ];
       }
     }
-    $columnsCompatibility = collect($columnsCompatibility);
-    $columnsCompatibility = $columnsCompatibility->count()?$columnsCompatibility->sortBy(function($row){
-      if(($diff = $row['leftCount'] - $row['rightCount'])<0)
-        $diff = $diff *-1;
-      return $row['compatibility'].'.'.$diff;
-    }):$columnsCompatibility;
-    $fixedColumnsCompatibilityIndex = [];
-    foreach($columnsCompatibility as $key=>$compatibility)
-      $fixedColumnsCompatibilityIndex[] = $compatibility;
-    return collect($fixedColumnsCompatibilityIndex);
+
+    foreach($columnsCompatibility as $key => $row){
+      $totalOfPosibibleCompatibility = $row['leftCount'] < $row['rightCount'] ?
+        $row['leftCount'] : $row['rightCount'];
+      $priority = 1/$totalOfPosibibleCompatibility;
+      $columnsCompatibility[$key]['orderColumn'] = $priority;
+    }
+
+    usort($columnsCompatibility, function ($rowI,$nextRow){
+      return uCProp('orderColumn')->uCSort($rowI,$nextRow);
+    });
+    return collect($columnsCompatibility);
   }
 
   public function crossRelated(){
