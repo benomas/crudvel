@@ -6,6 +6,7 @@ class RelationChecker
 {
   // Array that contents all relations to check
   protected $relationArray = [];
+  protected $pattern = '/(\n\s*\/\/\[*End Relationships\]*)/';
 
   public function __construct()
   {
@@ -26,6 +27,15 @@ class RelationChecker
     return $tpl;
   }
 
+  public function insertRelationshipComment($fileContents){
+    $fileContents = preg_replace('/(\}$)/', "\n//Relationships\n//End Relationships\n"."$1", $fileContents);
+    return $fileContents;
+  }
+
+  public function existEndRelationComment($fileContents){
+    return preg_match($this->pattern, $fileContents);
+  }
+
   public function existRelationCode($fileContents, $funcName){
     return preg_match('/public\s+function\s+'.$funcName.'\s*\(\).*/', $fileContents);
   }
@@ -34,8 +44,10 @@ class RelationChecker
     $old = $fileContents;
     // build the template to insert in the file
     $tpl = $this->buildTpl($rel, $direction);
+    if(!$this->existEndRelationComment($fileContents))
+      $fileContents = $this->insertRelationshipComment($fileContents);
     // search and replace inside the file
-    $fileContents = preg_replace('/(\n\/\/\[*End Relationships\]*)/', "\n" . $tpl . "$1", $fileContents);
+    $fileContents = preg_replace($this->pattern, "\n" . $tpl . "$1", $fileContents);
     // insert new lines in file
     file_put_contents($file, $fileContents);
     return $old !== $fileContents;
