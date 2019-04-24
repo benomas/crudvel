@@ -6,18 +6,16 @@ class RelationChecker
 {
   // Array that contents all relations to check
   protected $relationArray = [];
-  protected $pattern = '/(\n\s*\/\/\[*End Relationships\]*)/';
+  protected $patternRel = '/(\n\s*\/\/\[*End Relationships\]*)/';
 
-  public function __construct()
-  {
-  }
+  public function __construct(){}
 
   // toggle direction
   public function toggleDirect($direction){
     return ($direction === 'left')?'right':'left';
   }
 
-  public function buildTpl($rel, $direction){
+  public function buildTplRel($rel, $direction){
     $toggleDirection = $this->toggleDirect(lcfirst($direction));
     $funcRel = ($direction === 'left')?'belongsTo':'hasMany';
     $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.ucfirst($toggleDirection).'Model'])));
@@ -28,29 +26,36 @@ class RelationChecker
   }
 
   public function insertRelationshipComment($fileContents){
-    $fileContents = preg_replace('/(\}$)/', "\n//Relationships\n//End Relationships\n"."$1", $fileContents);
+    $fileContents = preg_replace('/(\}$)/', "\n//\[Relationships\]\n//\[End Relationships\]\n"."$1", $fileContents);
     return $fileContents;
   }
 
   public function existEndRelationComment($fileContents){
-    return preg_match($this->pattern, $fileContents);
+    return preg_match($this->patternRel, $fileContents);
   }
 
   public function existRelationCode($fileContents, $funcName){
     return preg_match('/public\s+function\s+'.$funcName.'\s*\(\).*/', $fileContents);
   }
 
+  public function registerPathsAndRelations($model){
+     // instantiate current model to register and set Withs
+    return (new $model)->setSelfWiths();
+  }
+
   public function writeRelationCodeInFile($rel, $fileContents, $file, $direction){
     $old = $fileContents;
     // build the template to insert in the file
-    $tpl = $this->buildTpl($rel, $direction);
+    $tpl = $this->buildTplRel($rel, $direction);
     if(!$this->existEndRelationComment($fileContents))
       $fileContents = $this->insertRelationshipComment($fileContents);
     // search and replace inside the file
-    $fileContents = preg_replace($this->pattern, "\n" . $tpl . "$1", $fileContents);
+    $fileContents = preg_replace($this->patternRel, "\n" . $tpl . "$1", $fileContents);
     // insert new lines in file
     file_put_contents($file, $fileContents);
-    return $old !== $fileContents;
+    $model = base64_decode($rel['encoded'.ucfirst($direction).'Model']);
+    $isRegistered = $this->registerPathsAndRelations($model);
+    return ($old !== $fileContents) && $isRegistered;
   }
 
   public function insertRelationInClass($rel, $direction){
@@ -80,7 +85,7 @@ class RelationChecker
     return $fileContents;
   }
 
-  public function checkIfRelationsExistInTraits()
+  public function checkIfRelationsExist()
   {
     // Response array to list procced relations
     $response = [];
@@ -92,7 +97,7 @@ class RelationChecker
     return $response;
   }
 
-  public function setCheckIfRelationsExistInTraits($relationArray, $leftDestModel, $rightDestModel){
+  public function setCheckIfRelationsExist($relationArray, $leftDestModel, $rightDestModel){
     $this->relationArray = $relationArray;
     $this->rightDestModel = base64_decode($rightDestModel);
     $this->leftDestModel = base64_decode($leftDestModel);
