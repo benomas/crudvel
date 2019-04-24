@@ -109,6 +109,11 @@ class RelationChecker
     $this->offset= $offset;
   }
 
+  public function getMyOwnWiths($model){
+    $model = base64_decode($model);
+    return (new $model)->myOwnWiths;
+  }
+
   public function previewRelations()
   {
     $direction = 'left';
