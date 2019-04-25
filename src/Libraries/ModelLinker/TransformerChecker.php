@@ -5,6 +5,7 @@ use DB;
 class TransformerChecker
 {
   protected $patternTrans = '/(\n\s*\/\/\[*End Transformers\]*)/';
+  protected $accessors;
 
   public function __construct(){}
 
@@ -14,21 +15,57 @@ class TransformerChecker
   }
 
   public function buildTplTrans($acc){
+    // define functionDef-inition for all get.*Attribute
+    $funcDef= 'public function get'.$acc['destColumn'].'Attribute(){';
     // verify accesorType
     switch($acc['accesorType']){
       case 'simple':
-        return 'return $this->attributes[\''.$acc['destColumn'].'\'];';
+        return $funcDef.'
+          return $this->attributes[\''.$acc['attributeName'].'\'];
+        }';
       break;
 
       case 'complex':
-        return 'return function() { return }();';
+        return $funcDef.'
+          return '.$acc['callBack'].';
+        }';
       break;
 
       case 'direct':
-        return 'return $this->relationResponse('.$acc['relatedDestModel'].');';
+        return $funcDef.'
+          return $this->relationResponse('.$acc['relatedDestModel'].');
+        }';
         // return 'return function() { return ucfirst($this->attributes[\''.$acc['destColumn'].'\'])}();';
       break;
+      case 'direct-custom-column':
+        return $funcDef.'
+          return $this->relationResponse('.$acc['relatedDestModel'].', null, \''.$acc['relatedColumnName'].'\');
+        }';
+      break;
+      case 'recursive':
+        return $funcDef.'
+          return $this->relationResponse('.$acc['relatedDestModel'].', '.$acc['path'].');
+        }';
+      break;
+      case 'recursive-custom-column':
+        return $funcDef.'
+          return $this->relationResponse('.$acc['relatedDestModel'].', '.$acc['path'].',\''.$acc['relatedColumnName'].'\');
+        }';
+      break;
     }
+  }
+
+  public function writeTransformerCodeInFile($acc, $fileContents, $file){
+    $old = $fileContents;
+    // build the template to insert in the file
+    $tpl = $this->buildTplTrans($acc);
+    if(!$this->existEndTransformerComment($fileContents))
+      $fileContents = $this->insertTransformerComment($fileContents);
+    // search and replace inside the file
+    $fileContents = preg_replace($this->patternTrans, "\n" . $tpl . "$1", $fileContents);
+    // insert new lines in file
+    file_put_contents($file, $fileContents);
+    return ($old !== $fileContents);
   }
 
   public function insertTransformerComment($fileContents){
@@ -40,13 +77,22 @@ class TransformerChecker
     return preg_match($this->patternTrans, $fileContents);
   }
 
-  public function setCheckIfRelationsExist(){
-    return true;
+  public function setAccessors($accessors){
+    $this->accessors = $accessors;
   }
 
-  public function checkIfTransformersExist(){
-    // entry
-    return true;
+  public function insertTransformerInClass($acc){
+      $file = cvClassFile($acc['srcModel']);
+      $fileContents = file_get_contents($file);
+      return $this->writeTransformerCodeInFile($acc, $fileContents, $file);
+  }
+
+  public function checkTransformers(){
+    $response = [];
+    // iter models for transformers
+    foreach ($this->accessors as $acc)
+      array_push($response, $this->insertTransformerInClass($acc));
+    return $response;
   }
 
   public function getAllModelAccessors($model){

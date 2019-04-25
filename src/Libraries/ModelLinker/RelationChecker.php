@@ -85,7 +85,7 @@ class RelationChecker
     return $fileContents;
   }
 
-  public function checkIfRelationsExist()
+  public function checkRelations()
   {
     // Response array to list procced relations
     $response = [];
@@ -97,7 +97,7 @@ class RelationChecker
     return $response;
   }
 
-  public function setCheckIfRelationsExist($relationArray, $leftDestModel, $rightDestModel){
+  public function setRelations($relationArray, $leftDestModel, $rightDestModel){
     $this->relationArray = $relationArray;
     $this->rightDestModel = base64_decode($rightDestModel);
     $this->leftDestModel = base64_decode($leftDestModel);
