@@ -52,11 +52,10 @@ class TransformerChecker
   public function getAllModelAccessors($model){
     $fileContents = file_get_contents(cvClassFile($model));
     if(!$this->existEndTransformerComment($fileContents))
-      return [$model, false, '\/\/[End Transformers NOT FOUND'];
+      return ['model'=>$model, 'existAccessors'=>false, 'message'=>'\/\/[End Transformers NOT FOUND', 'accessorsArray'=>[]];
     $match = [];
     preg_match_all('/function get(.*)Attribute.*/', $fileContents, $match);
-    return ['model'=>$model,'existAccessors'=>(count($match[1])>0), 'accessorsArray'=>(count($match)>0)?$match[1]:'No Accessors found'];
-      pdd($match[1]);
-    pdd($fileContents);
+    foreach($match[1] as $key => $value) $match[1][$key] = snake_case($value);
+    return ['model'=>$model,'existAccessors'=>(count($match[1])>0), 'message'=>'ok', 'accessorsArray'=>(count($match)>0)?$match[1]:'No Accessors found'];
   }
 }
