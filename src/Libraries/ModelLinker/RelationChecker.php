@@ -62,7 +62,7 @@ class RelationChecker
     $toggleDirection = ucfirst($this->toggleDirect(lcfirst($direction)));
     $file = base_path().'/'.base64_decode($rel['encoded'.ucfirst($direction).'TargetPath']);
     // is this relation I = Ignored ?
-    if($rel[$direction.'Relation'] === 'I') return [$file, false, 'Ignored'];
+    if($rel[$direction.'Relation'] === 'I') return ['model'=>$file, 'status'=>false, 'message'=>'Ignored'];
     // open the file to edit contents
     $fileContents = file_get_contents($file);
     $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model'])));
@@ -70,12 +70,12 @@ class RelationChecker
     if($rel[$direction.'Relation'] === 'F'){
       if($exist){
         $fileContents = $this->eraseRelationCode($rel, $direction, $fileContents);
-        if(is_null($fileContents)) return [$file,false, 'Null error eraseRelationCode'];
+        if(is_null($fileContents)) return ['model'=>$file, 'status'=>false, 'message'=>'Null error eraseRelationCode'];
         return [$file, $this->writeRelationCodeInFile($rel, $fileContents, $file, $direction),'Forced ok'];
       }
     }
     if(!$exist) return [$file, $this->writeRelationCodeInFile($rel, $fileContents, $file, $direction)];
-    return [$file, false, 'Default no forced'];
+    return ['model'=> $file, 'status'=>false, 'message'=>'Default no forced'];
   }
 
   public function eraseRelationCode($rel, $direction, $fileContents){

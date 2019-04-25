@@ -43,8 +43,20 @@ class TransformerChecker
   public function setCheckIfRelationsExist(){
     return true;
   }
+
   public function checkIfTransformersExist(){
     // entry
     return true;
+  }
+
+  public function getAllModelAccessors($model){
+    $fileContents = file_get_contents(cvClassFile($model));
+    if(!$this->existEndTransformerComment($fileContents))
+      return [$model, false, '\/\/[End Transformers NOT FOUND'];
+    $match = [];
+    preg_match_all('/function get(.*)Attribute.*/', $fileContents, $match);
+    return ['model'=>$model,'existAccessors'=>(count($match[1])>0), 'accessorsArray'=>(count($match)>0)?$match[1]:'No Accessors found'];
+      pdd($match[1]);
+    pdd($fileContents);
   }
 }
