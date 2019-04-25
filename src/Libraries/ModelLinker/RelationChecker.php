@@ -6,7 +6,7 @@ class RelationChecker
 {
   // Array that contents all relations to check
   protected $relationArray = [];
-  protected $patternRel = '/(\n\s*\/\/\[*End Relationships\]*)/';
+  protected $patternRel = '/\n\s*(\/\/\[*End Relationships\]*)/';
 
   public function __construct(){}
 
@@ -26,7 +26,7 @@ class RelationChecker
   }
 
   public function insertRelationshipComment($fileContents){
-    $fileContents = preg_replace('/(\}$)/', "\n//\[Relationships\]\n//\[End Relationships\]\n"."$1", $fileContents);
+    $fileContents = preg_replace('/(\}$)/', "//[Relationships\]\n//[End Relationships\]\n"."$1", $fileContents);
     return $fileContents;
   }
 
