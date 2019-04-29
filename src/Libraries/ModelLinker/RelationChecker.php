@@ -21,12 +21,12 @@ class RelationChecker
     $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.ucfirst($toggleDirection).'Model'])));
     $tpl = "\tpublic function " . $funcName. "(){
 \t\treturn \$this->".$funcRel."('".$rel[$toggleDirection.'Model']."','" . $rel['leftColumn']. "','" . $rel['rightColumn']. "');
-\t}";
+\t}\n";
     return $tpl;
   }
 
   public function insertRelationshipComment($fileContents){
-    $fileContents = preg_replace('/(\}$)/', "//[Relationships\]\n//[End Relationships\]\n"."$1", $fileContents);
+    $fileContents = preg_replace('/(\}$)/', "//[Relationships]\n//[End Relationships]\n"."$1", $fileContents);
     return $fileContents;
   }
 
