@@ -16,7 +16,7 @@ class TransformerChecker
 
   public function buildTplTrans($acc){
     // define functionDef-inition for all get.*Attribute
-    $funcDef= 'public function get'.$acc['destColumn'].'Attribute(){';
+    $funcDef= 'public function get'.ucfirst(camel_case($acc['destColumn'])).'Attribute(){';
     // verify accesorType
     switch($acc['accessorType']){
       case 'simple':
@@ -33,23 +33,23 @@ class TransformerChecker
 
       case 'direct':
         return $funcDef.'
-  return $this->relationResponse('.$acc['relatedDestModel'].');
+  return $this->relationResponse(\''.$acc['relatedDestModel'].'\');
 }';
         // return 'return function() { return ucfirst($this->attributes[\''.$acc['destColumn'].'\'])}();';
       break;
       case 'direct-custom-column':
         return $funcDef.'
-  return $this->relationResponse('.$acc['relatedDestModel'].', null, \''.$acc['relatedColumnName'].'\');
+  return $this->relationResponse(\''.$acc['relatedDestModel'].'\', null, \''.$acc['relatedColumnName'].'\');
 }';
       break;
       case 'recursive':
         return $funcDef.'
-  return $this->relationResponse('.$acc['relatedDestModel'].', '.$acc['path'].');
+  return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\');
 }';
       break;
       case 'recursive-custom-column':
         return $funcDef.'
-  return $this->relationResponse('.$acc['relatedDestModel'].', '.$acc['path'].',\''.$acc['relatedColumnName'].'\');
+  return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\',\''.$acc['relatedColumnName'].'\');
 }';
       break;
     }
@@ -94,7 +94,7 @@ class TransformerChecker
     $file = cvClassFile($acc['srcModel']);
     $fileContents = file_get_contents($file);
     if($acc['mode'] === 'I') return ['model'=>$acc['srcModel'], 'status'=>false, 'message'=>'Ignored.'];
-    if($this->existTransformerCode($fileContents, $acc['destColumn'])){
+    if($this->existTransformerCode($fileContents, ucfirst(camel_case($acc['destColumn'])))){
       if($acc['mode']==='F'){
         $fileContents = $this->eraseTransformerCode($fileContents, $acc['destColumn']);
       }else{
