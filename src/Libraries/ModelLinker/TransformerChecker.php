@@ -18,38 +18,38 @@ class TransformerChecker
     // define functionDef-inition for all get.*Attribute
     $funcDef= 'public function get'.$acc['destColumn'].'Attribute(){';
     // verify accesorType
-    switch($acc['accesorType']){
+    switch($acc['accessorType']){
       case 'simple':
         return $funcDef.'
-          return $this->attributes[\''.$acc['attributeName'].'\'];
+  return $this->attributes[\''.$acc['attributeName'].'\'];
 }';
       break;
 
       case 'complex':
         return $funcDef.'
-          return '.$acc['callBack'].';
+  return '.$acc['callBack'].';
 }';
       break;
 
       case 'direct':
         return $funcDef.'
-          return $this->relationResponse('.$acc['relatedDestModel'].');
+  return $this->relationResponse('.$acc['relatedDestModel'].');
 }';
         // return 'return function() { return ucfirst($this->attributes[\''.$acc['destColumn'].'\'])}();';
       break;
       case 'direct-custom-column':
         return $funcDef.'
-          return $this->relationResponse('.$acc['relatedDestModel'].', null, \''.$acc['relatedColumnName'].'\');
+  return $this->relationResponse('.$acc['relatedDestModel'].', null, \''.$acc['relatedColumnName'].'\');
 }';
       break;
       case 'recursive':
         return $funcDef.'
-          return $this->relationResponse('.$acc['relatedDestModel'].', '.$acc['path'].');
+  return $this->relationResponse('.$acc['relatedDestModel'].', '.$acc['path'].');
 }';
       break;
       case 'recursive-custom-column':
         return $funcDef.'
-          return $this->relationResponse('.$acc['relatedDestModel'].', '.$acc['path'].',\''.$acc['relatedColumnName'].'\');
+  return $this->relationResponse('.$acc['relatedDestModel'].', '.$acc['path'].',\''.$acc['relatedColumnName'].'\');
 }';
       break;
     }
@@ -110,6 +110,7 @@ class TransformerChecker
     $response = [];
     // iter models for transformers
     foreach ($this->accessorsArray as $acc)
+      $acc['srcModel'] = base64_decode($acc['srcModel']);
       array_push($response, $this->insertTransformerInClass($acc));
     return $response;
   }
