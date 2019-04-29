@@ -16,42 +16,37 @@ class TransformerChecker
 
   public function buildTplTrans($acc){
     // define functionDef-inition for all get.*Attribute
-    $funcDef= 'public function get'.ucfirst(camel_case($acc['destColumn'])).'Attribute(){';
+    $funcDef= '  public function get'.ucfirst(camel_case($acc['destColumn'])).'Attribute(){';
     // verify accesorType
     switch($acc['accessorType']){
       case 'simple':
         return $funcDef.'
-  return $this->attributes[\''.$acc['attributeName'].'\'];
-}';
-      break;
-
+    return $this->attributes[\''.$acc['attributeName'].'\'];
+  }';
       case 'complex':
         return $funcDef.'
-  return '.$acc['callBack'].';
-}';
-      break;
-
+    return '.$acc['callBack'].';
+  }';
       case 'direct':
         return $funcDef.'
-  return $this->relationResponse(\''.$acc['relatedDestModel'].'\');
-}';
-        // return 'return function() { return ucfirst($this->attributes[\''.$acc['destColumn'].'\'])}();';
-      break;
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\');
+  }';
       case 'direct-custom-column':
         return $funcDef.'
-  return $this->relationResponse(\''.$acc['relatedDestModel'].'\', null, \''.$acc['relatedColumnName'].'\');
-}';
-      break;
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', null, \''.$acc['relatedColumnName'].'\');
+  }';
       case 'recursive':
         return $funcDef.'
-  return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\');
-}';
-      break;
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\');
+  }';
       case 'recursive-custom-column':
         return $funcDef.'
-  return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\',\''.$acc['relatedColumnName'].'\');
-}';
-      break;
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\',\''.$acc['relatedColumnName'].'\');
+  }';
+      case 'return-null':
+        return $funcDef.'
+    return null;
+  }';
     }
   }
 
