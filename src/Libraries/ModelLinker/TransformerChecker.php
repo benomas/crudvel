@@ -104,9 +104,10 @@ class TransformerChecker
   public function checkTransformers(){
     $response = [];
     // iter models for transformers
-    foreach ($this->accessorsArray as $acc)
+    foreach ($this->accessorsArray as $acc){
       $acc['srcModel'] = base64_decode($acc['srcModel']);
       array_push($response, $this->insertTransformerInClass($acc));
+    }
     return $response;
   }
 
