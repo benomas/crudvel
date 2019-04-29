@@ -89,7 +89,13 @@ class ColumnCompatibility
   }
 
   public function lCount($q){
-    return $q->distinctCount($this->leftColumn);
+    try{
+      return $q->distinctCount($this->leftColumn);
+    }
+    catch(\Exception $e){
+      customLog($this->leftColumn. 'Is invalid for count porpuses');
+      return 0;
+    }
   }
 
   public function rCount($q){
@@ -97,6 +103,7 @@ class ColumnCompatibility
       return $q->distinctCount($this->rightColumn);
     }
     catch(\Exception $e){
+      customLog($this->rightColumn. 'Is invalid for count porpuses');
       return 0;
     }
   }
