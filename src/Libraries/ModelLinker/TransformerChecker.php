@@ -91,7 +91,7 @@ class TransformerChecker
     if($acc['mode'] === 'I') return ['model'=>$acc['srcModel'], 'status'=>false, 'message'=>'Ignored.'];
     if($this->existTransformerCode($fileContents, ucfirst(camel_case($acc['destColumn'])))){
       if($acc['mode']==='F'){
-        $fileContents = $this->eraseTransformerCode($fileContents, $acc['destColumn']);
+        $fileContents = $this->eraseTransformerCode($fileContents, ucfirst(camel_case($acc['destColumn'])));
       }else{
         return ['model' => $acc['srcModel'], 'status' => false, 'message' => 'Transformer code already exist, force it to overwrite.'];
       }
