@@ -26,8 +26,10 @@ class TableCompatibility
     $this->rightModel             = $rightModel;
     $this->leftModelInstance      = new $this->leftModel();
     $this->rightModelInstance     = new $this->rightModel();
-    $this->leftColumns            = $this->leftModelInstance->getTableColumns();
-    $this->rightColumns           = $this->rightModelInstance->getTableColumns();
+    //$this->leftColumns            = $this->leftModelInstance->getTableColumns();
+    //$this->rightColumns            = $this->rightModelInstance->getTableColumns();
+    $this->leftColumns            = $this->filterColumns($this->leftModelInstance->columnDefinitions());
+    $this->rightColumns           = $this->filterColumns($this->rightModelInstance->columnDefinitions());
     $this->destLeftModel          = $destLeftModel;
     $this->destRightModel         = $destRightModel;
     $this->leftDestModelInstance  = new $this->destLeftModel();
@@ -44,7 +46,6 @@ class TableCompatibility
   public function check(){
     $columnsCompatibility=[];
     foreach($this->leftColumns as $leftColumn){
-
       foreach($this->rightColumns as $rightColumn){
         $compatibility = new ColumnCompatibility($this->leftModel , $this->rightModel ,$leftColumn,$rightColumn);
         if(($compatibilityTest = $compatibility->check())['kindOfCompatibility']===static::UNPROBABLE_COMPATIBILITY)
@@ -127,5 +128,25 @@ class TableCompatibility
     if($compatibility===static::UNPROBABLE_COMPATIBILITY)
       return 'Compatibilidad inprobable';
   }
+
+  public function filterColumns($columns=[]){
+    $filteredColumns = [];
+    foreach($columns as $column=>$propertys){
+      if(
+        !in_array(
+          $propertys['type'],
+          [
+            'boolean',
+            'date',
+            'dateTime',
+            'char',
+            //'text',
+          ]
+        )
+      )
+      $filteredColumns[] = $column;
+    }
+    return $filteredColumns;
+  } 
 }
 
