@@ -21,7 +21,7 @@ class TransformerChecker
     switch($acc['accessorType']){
       case 'simple':
         return $funcDef.'
-    return $this->attributes[\''.$acc['attributeName'].'\'];
+    return $this->attributes[\''.$acc['attributeName'].'\']??null;
   }';
       case 'complex':
         return $funcDef.'
