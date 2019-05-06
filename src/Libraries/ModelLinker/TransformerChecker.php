@@ -112,6 +112,16 @@ class TransformerChecker
   }
 
   public function getAllModelAccessors($model){
+    //New Code, calculate  all the accesors including acceros by herence
+    $methods    = get_class_methods($model);
+    $attributes = [];
+    foreach($methods as $key=>$method){
+      if(preg_match('/get(.+)Attribute$/',$method,$match) && $match[1]??null)
+        $attributes[] = snake_case($match[1]);
+    }
+    return ['model' => $model, 'existAccessors' => (count($attributes) > 0), 'message' => 'ok', 'accessorsArray' => (count($attributes) > 0) ? $attributes : 'No Accessors found'];
+
+    //Original Code to calculate accessors based on the model file definition
     $fileContents = file_get_contents(cvClassFile($model));
     if(!$this->existEndTransformerComment($fileContents))
       return ['model' => $model, 'existAccessors' => false, 'message' => '\/\/[End Transformers NOT FOUND', 'accessorsArray' => []];
