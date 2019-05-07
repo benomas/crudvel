@@ -116,6 +116,7 @@ class RelationChecker
 
   public function previewRelations()
   {
+    // baseRelation, ajust to myOwnWiths
     $direction = 'left';
     $toggleDirection = $this->toggleDirect($direction);
     $modelLeft = $this->rel[$direction . 'Model']::groupBy()->limit($this->nItems)->get();
