@@ -16,7 +16,8 @@ class TransformerChecker
 
   public function buildTplTrans($acc){
     // define functionDef-inition for all get.*Attribute
-    $funcDef= '  public function get'.ucfirst(camel_case($acc['destColumn'])).'Attribute(){';
+    $funcDef ='  public function get'.ucfirst(camel_case($acc['destColumn'])).'Attribute(){';
+    if(isset($acc['prefixed'])) $acc['prefixed'] = ucfirst($acc['prefixed']);
     // verify accesorType
     switch($acc['accessorType']){
       case 'simple':
@@ -27,7 +28,9 @@ class TransformerChecker
 
       case 'complex':
         return $funcDef.'
-    return '.$acc['callBack'].';
+      return $this->accessorInterceptor(function($valor){
+        '.$acc['callBack'].'
+      },$this->attributes[\''.$acc['attributeName'].'\']??null);
   }';
       break;
 

@@ -19,6 +19,7 @@ class RelationChecker
     $toggleDirection = $this->toggleDirect(lcfirst($direction));
     $funcRel = ($direction === 'left')?'belongsTo':'hasMany';
     $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.ucfirst($toggleDirection).'Model'])));
+    if(isset($rel['prefixed'])) $funcName = $funcName + ucfirst($rel['prefixed']);
     $tpl = "\tpublic function " . $funcName. "(){
 \t\treturn \$this->".$funcRel."('".$rel[$toggleDirection.'Model']."','" . $rel['leftColumn']. "','" . $rel['rightColumn']. "');
 \t}\n";
