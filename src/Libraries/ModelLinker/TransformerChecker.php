@@ -23,26 +23,46 @@ class TransformerChecker
         return $funcDef.'
     return $this->attributes[\''.$acc['attributeName'].'\']??null;
   }';
+      break;
+
       case 'complex':
         return $funcDef.'
     return '.$acc['callBack'].';
   }';
+      break;
+
       case 'direct':
+      if(!isset($acc['prefixed']))
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\');
   }';
+        return $funcDef.'
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['prefixed'].');
+  }';
+      break;
+
       case 'direct-custom-column':
+      if(!isset($acc['prefixed']))
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\', null, \''.$acc['relatedColumnName'].'\');
   }';
+        return $funcDef.'
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['prefixed'].', \''.$acc['relatedColumnName'].'\');
+  }';
+      break;
+
       case 'recursive':
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\');
   }';
+      break;
+
       case 'recursive-custom-column':
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\',\''.$acc['relatedColumnName'].'\');
   }';
+      break;
+
       case 'return-null':
         return $funcDef.'
     return null;
