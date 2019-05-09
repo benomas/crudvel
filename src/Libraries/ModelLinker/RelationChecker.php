@@ -18,8 +18,7 @@ class RelationChecker
   public function buildTplRel($rel, $direction){
     $toggleDirection = $this->toggleDirect(lcfirst($direction));
     $funcRel = ($direction === 'left')?'belongsTo':'hasMany';
-    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.ucfirst($toggleDirection).'Model'])));
-    if(isset($rel['prefixed'])) $funcName = $funcName + ucfirst($rel['prefixed']);
+    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.ucfirst($toggleDirection).'Model']))).$rel['prefixed'];
     $tpl = "\tpublic function " . $funcName. "(){
 \t\treturn \$this->".$funcRel."('".$rel[$toggleDirection.'Model']."','" . $rel['leftColumn']. "','" . $rel['rightColumn']. "');
 \t}\n";
@@ -66,7 +65,7 @@ class RelationChecker
     if($rel[$direction.'Relation'] === 'I') return ['model'=>$file, 'status'=>false, 'message'=>'Ignored'];
     // open the file to edit contents
     $fileContents = file_get_contents($file);
-    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model'])));
+    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model']))).$rel['prefixed'];
     $exist = $this->existRelationCode($fileContents, $funcName);
     if($rel[$direction.'Relation'] === 'F'){
       if($exist){
@@ -81,7 +80,7 @@ class RelationChecker
 
   public function eraseRelationCode($rel, $direction, $fileContents){
     $toggleDirection = ucfirst($this->toggleDirect(lcfirst($direction)));
-    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model'])));
+    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model']))).$rel['prefixed'];
     $fileContents = preg_replace('/public\s+function\s+'.$funcName.'\s*\(\).*\n.*return.*\n.*}/',"", $fileContents);
     return $fileContents;
   }
@@ -92,6 +91,7 @@ class RelationChecker
     $response = [];
     // iter all relations
     foreach ($this->relationArray as $rel) {
+        if(!empty($rel['prefixed'])) $rel['prefixed'] = ucfirst($rel['prefixed']);
         array_push($response, $this->insertRelationInClass($rel,'left'));
         array_push($response, $this->insertRelationInClass($rel,'right'));
     }
