@@ -29,7 +29,7 @@ class TransformerChecker
       case 'complex':
         return $funcDef.'
       return $this->accessorInterceptor(function($valor){
-        '.$acc['callBack'].'
+        '.base64_decode($acc['callBack']).'
       },$this->attributes[\''.$acc['attributeName'].'\']??null);
   }';
       break;
