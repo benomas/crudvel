@@ -28,9 +28,10 @@ class TransformerChecker
 
       case 'complex':
         return $funcDef.'
-      return $this->accessorInterceptor(function($value){
-        '.base64_decode($acc['callBack']).'
-      },$this->attributes[\''.$acc['attributeName'].'\']??null);
+    return $this->accessorInterceptor(
+      '.$acc['callBack'].'
+    ,$this->attributes[\''.$acc['attributeName'].'\']??null);
+  //endCallback
   }';
       break;
 
@@ -114,12 +115,17 @@ class TransformerChecker
 
   public function eraseTransformerCode($fileContents, $funcName){
     $fileContents = preg_replace('/public\s+function\s+get'.$funcName.'Attribute\s*\(\).*\n.*return.*\n.*}/',"", $fileContents);
+    $fileContents = preg_replace('/public\s+function\s+get'.$funcName.'Attribute.*(\n|.)*\/\/endCallback\n.*\}/',"", $fileContents);
     return $fileContents;
   }
 
   public function insertTransformerInClass($acc){
     $file = cvClassFile($acc['srcModel']);
     $fileContents = file_get_contents($file);
+    // pdd($acc['accessorType']=='complex', empty($acc['callBack']), $this->evalCallBack($acc['callBack']));
+    if($acc['accessorType'] == 'complex' && (empty($acc['callBack']) || !$this->evalCallBack($acc['callBack']))){
+        return ['model' => $acc['srcModel'], 'status' => false, 'message' => 'Error validation code.'];
+    }
     if($acc['mode'] === 'I') return ['model'=>$acc['srcModel'], 'status'=>false, 'message'=>'Ignored.'];
     if($this->existTransformerCode($fileContents, ucfirst(camel_case($acc['destColumn'])))){
       if($acc['mode']==='F'){
@@ -138,6 +144,7 @@ class TransformerChecker
     // iter models for transformers
     foreach ($this->accessorsArray as $acc){
       $acc['srcModel'] = base64_decode($acc['srcModel']);
+      if(isset($acc['callBack'])) $acc['callBack'] = base64_decode($acc['callBack']);
       array_push($response, $this->insertTransformerInClass($acc));
     }
     return $response;
@@ -161,5 +168,14 @@ class TransformerChecker
     preg_match_all('/function get(.*)Attribute.*/', $fileContents, $match);
     foreach ($match[1] as $key => $value) $match[1][$key] = snake_case($value);
     return ['model' => $model, 'existAccessors' => (count($match[1]) > 0), 'message' => 'ok', 'accessorsArray' => (count($match) > 0) ? $match[1] : 'No Accessors found'];
+  }
+
+  public function evalCallBack($callBackCode){
+    try {
+      eval($callBackCode.';');
+    } catch (\Throwable $th) {
+      return false;
+    }
+    return true;
   }
 }
