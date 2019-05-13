@@ -106,9 +106,10 @@ class TransformerChecker
 
   public function eraseSpecificTransformerCode($model, $accessorName){
     $model = base64_decode($model);
-    $file = cvClassFile(base64_decode($model));
+    $file = cvClassFile($model);
     $fileContents = file_get_contents($file);
-    $fileContents = $this->eraseSpecificTransformerCode($fileContents, $accessorName);
+    $accessorName = ucfirst(camel_case($accessorName));
+    $fileContents = $this->eraseTransformerCode($fileContents, $accessorName);
     file_put_contents($file, $fileContents);
     return ['model' => $model, 'status' => true, 'message' => 'Transformer code removed ok.'];
   }
