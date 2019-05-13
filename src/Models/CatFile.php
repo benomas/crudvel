@@ -21,6 +21,9 @@ class CatFile extends \Crudvel\Customs\Models\BaseModel{
 
 //Relationships
 
+  public function file(){
+    return $this->hasMany("\App\Models\File");
+  }
 
 //End Relationships
 
@@ -30,9 +33,23 @@ class CatFile extends \Crudvel\Customs\Models\BaseModel{
     $query->where($this->getTable().'.resource',$resource);
   }
 
+  public function scopeHasFile($query){
+    $query->whereHas('file');
+  }
+
 // End Scopes
 
   public function getCamelResourceAttribute(){
     return empty($this->attributes['resource'])?null:camel_case($this->attributes['resource'],'-');
+  }
+
+  public function modelClassInstance(){
+    $targetModel = camel_case(str_singular($this->attributes['resource']));
+    if (method_exists($this,$targetModel.'ModelClassInstance'))
+      return $this->$targetModel.'ModelClassInstance'();
+    $testModel  = '\App\Models\\'.studly_case(str_singular($this->attributes['resource']));
+    if(class_exists($testModel))
+      return new $testModel;
+    return null;
   }
 }

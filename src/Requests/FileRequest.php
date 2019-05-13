@@ -5,42 +5,6 @@ use App\Models\CatFile;
 
 class FileRequest extends \Crudvel\Customs\Requests\CrudRequest{
   /**
-   * Add parameters to be validated
-   *
-   * @return array
-   */
-  public function all($keys=null)
-  {
-    $resourceName = $this->route('resource');
-    $inputs = !empty($resourceName)?array_replace_recursive(
-        parent::all(),
-        ['resource'=>$resourceName]
-    ):parent::all();
-
-    switch($resourceName){
-      case 'module-densities':
-      case 'module-mixes':
-      case 'module-services':
-      case 'module-distributions':
-      case 'module-precisions':
-      case 'module-abattoirs':
-        $resource = "App\Models\\".studly_case(str_singular($resourceName));
-        if($resourceUuid = $this->route('resource_uuid'))
-          $this->resourceModel = $resource::uuid($resourceUuid)->first();
-        $this->catFile = CatFile::resource($resourceName)->first();
-        break;
-      default: $resource=null;
-    }
-    return !empty($this->resourceModel) && !empty($this->catFile)?array_replace_recursive(
-        $inputs,
-        [
-          'resource_id' => $this->resourceModel->id,
-          'cat_file_id' => $this->catFile->id,
-        ]
-    ):$inputs;
-  }
-
-  /**
    * Get the validation rules that apply to the request.
    *
    * @return array
@@ -55,11 +19,11 @@ class FileRequest extends \Crudvel\Customs\Requests\CrudRequest{
       $this->rules['resource_id'] = 'required|integer|key_exist:'.str_slug($this->fields['resource'],'_').',id';
 
     $this->fileName = '';
-    $this->catFile = $this->catFile??CatFile::where('cat_files.resource',$this->fields['resource'])->first();
+    $this->catFile = $this->catFile??CatFile::id($this->fields['cat_file_id'])->first();
     if(!empty($this->fields['resource']) && $this->catFile){
       $this->fileName .= $this->fields['resource'];
       $this->fixedAttributes                 =  [];
-      $this->fixedAttributes[$this->fileName] = $this->catFile->name;
+      $this->fixedAttributes[$this->fileName] = ' '.$this->catFile->name;
       $this->rules[$this->fileName] = 'required';
     }
 

@@ -404,6 +404,14 @@ class CustomController extends BaseController {
   //rewrite this method
   public function joins(){}
 
+  //rewrite this method for custom logic
+  public function unions(){
+    $union = kageBunshinNoJutsu($this->model);
+    $union->select($this->selectQuery);
+    $union->union($this->model->select($this->selectQuery));
+    $this->model=$union;
+  }
+
   public function setSlugField(){
     if($this->slugField)
       return true;

@@ -254,21 +254,27 @@ class ApiController extends CustomController
   protected function processPaginatedResponse($callBacks=null) {
     //si el modelo no esta definido o es nulo
     if(!isset($this->model) || $this->model===null)
-      return ["data"=>[],"count"=>0];
+      return ;
     //add joins
     $this->joins();
 
     //si existe un array de columnas a seleccionar
     if(customNonEmptyArray($this->selectQuery)){
-      if(
+      if( 0 &&
         isset($callBacks) &&
         isset($callBacks["selectQuery"]) &&
         is_callable($callBacks["selectQuery"])
       )
         $callBacks["selectQuery"]();
-      $this->fixSelectables();
-      $this->model->select($this->selectQuery);
+      else
+        $this->fixSelectables();
     }
+
+    $this->unions();
+    if(!isset($this->model) || $this->model===null)
+      return ;
+    $querySql = $this->model->toSql();
+    $this->model->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($this->model->getBindings()));
 
     //si existe un array de columnas a filtrar
     if(customNonEmptyArray($this->filterQuery)){
@@ -290,7 +296,7 @@ class ApiController extends CustomController
     }
 
     if (isset($this->orderBy) && $this->orderBy){
-      $this->fixOrderBy();
+      //$this->fixOrderBy();
       $direction = isset($this->ascending) && $this->ascending==1?"ASC":"DESC";
       if(
         isset($callBacks) &&
@@ -305,10 +311,16 @@ class ApiController extends CustomController
     }
 
     if($this->modelInstance && !empty($this->modelInstance->id))
-      $this->model->id($this->modelInstance->id);
+      $this->model->id($this->modelInstance->id,false);
   }
 
   protected function paginateResponder(){
+    if(!$this->model)
+      return $this->apiSuccessResponse([
+        "data"   =>[],
+        "count"  =>0,
+        "message" =>trans("crudvel.api.success")
+      ]);
     if(!empty($this->modelInstance->id)|| $this->forceSingleItemPagination)
       $this->paginateData=$this->model->first();
 
@@ -380,7 +392,7 @@ class ApiController extends CustomController
     });
   }
 
-  protected function filter($callBacks) {
+  protected function filter($callBacks=null) {
     if(!isset($this->generalSearch) || !$this->generalSearch)
       return $this->model;
 
@@ -414,7 +426,6 @@ class ApiController extends CustomController
     )
       return false;
 
-    //!$this->request->has("paginate")
     //si la peticion http si solicita paginación
     $paginate = $this->request->get("paginate");
 
@@ -618,6 +629,27 @@ class ApiController extends CustomController
     return false;
   }
 
+  public function fixables($property){
+    $simpleColumns=$this->$property;
+    if(!empty($this->joinables) && count($this->joinables))
+      foreach ($this->joinables as $joinableKey => $joinableValue)
+        foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
+          if(!empty($joinableValue) && $simpleColumnValue===$joinableKey){
+            $this->$property[$simpleColumnKey] = $joinableValue." AS ".$joinableKey;
+            unset($simpleColumns[$simpleColumnKey]);
+          }
+
+    if($simpleColumns && count($simpleColumns)){
+      $columns = $this->modelInstanciator(true)->getTableColumns();
+      foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue){
+        if (in_array($simpleColumnValue,$columns))
+          $this->$property[$simpleColumnKey] = $this->mainTableName.$simpleColumnValue." AS ".$simpleColumnValue;
+        else
+          $this->unsolvedColumns[$simpleColumnValue] = $simpleColumnKey;
+      }
+    }
+  }
+
   /**
    * This function allow to transform simple selectable column to a table.column field, in this way
    * is posible to direct use joinable columns, the model needs to declare de join tables too, maybe * rewriting call_action function for global resource join, or by action for specific join
@@ -628,20 +660,8 @@ class ApiController extends CustomController
    * @date   2018-04-04
    * @return array with fixed seletable columns
    */
-
   public function fixSelectables(){
-    $simpleColumns=$this->selectQuery;
-    if(!empty($this->joinables) && count($this->joinables))
-      foreach ($this->joinables as $joinableKey => $joinableValue)
-        foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
-          if(!empty($joinableValue) && $simpleColumnValue===$joinableKey){
-            $this->selectQuery[$simpleColumnKey] = $joinableValue." AS ".$joinableKey;
-            unset($simpleColumns[$simpleColumnKey]);
-          }
-
-    if($simpleColumns && count($simpleColumns))
-      foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
-        $this->selectQuery[$simpleColumnKey] = $this->mainTableName.$simpleColumnValue;
+    $this->fixables('selectQuery');
   }
 
   /**
@@ -654,23 +674,8 @@ class ApiController extends CustomController
    * @date   2018-04-04
    * @return array with fixed seletable columns
    */
-
   public function fixFilterables(){
-    $simpleColumns=$this->filterQuery;
-    if(!empty($this->joinables) && count($this->joinables))
-      foreach ($this->joinables as $joinableKey => $joinableValue)
-        foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue)
-          if(!empty($joinableValue) && $simpleColumnKey===$joinableKey){
-            $this->filterQuery[$joinableValue] = $simpleColumnValue;
-            unset($simpleColumns[$simpleColumnKey]);
-            unset($this->filterQuery[$simpleColumnKey]);
-          }
-
-    if($simpleColumns && count($simpleColumns))
-      foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue){
-        unset($this->filterQuery[$simpleColumnKey]);
-        $this->filterQuery[$this->mainTableName.$simpleColumnKey] = $simpleColumnValue;
-      }
+    $this->fixables('filterQuery');
   }
 
   /**

@@ -20,117 +20,117 @@ class BaseModel extends Model {
 
 // Scopes
 
-  public function scopeInStatus($query, $status){
+  public function scopeInStatus($query, $status, $preFixed = true){
     if(is_array($status))
-      $query->whereIn($this->getTable().".status",$status);
+      $query->whereIn($this->preFixed('status',$preFixed),$status);
     else
-      $query->whereIn($this->getTable().".status",[$status]);
+      $query->whereIn($this->preFixed('status',$preFixed),[$status]);
   }
 
-  public function scopeNotInStatus($query, $status){
+  public function scopeNotInStatus($query, $status, $preFixed = true){
     if(is_array($status))
-      $query->whereNotIn($this->getTable().".status",$status);
+      $query->whereNotIn($this->preFixed('status',$preFixed),$status);
     else
-      $query->whereNotIn($this->getTable().".status",[$status]);
+      $query->whereNotIn($this->preFixed('status',$preFixed),[$status]);
   }
 
-  public function scopeStatus($query, $status){
-    $query->where($this->getTable().".status",$status);
+  public function scopeStatus($query, $status, $preFixed = true){
+    $query->where($this->preFixed('status',$preFixed),$status);
   }
 
-  public function scopeActives($query){
+  public function scopeActives($query, $preFixed = true){
     if($query->getModel()->hasPropertyActive)
-      $query->where($this->getTable().".active",1);
+      $query->where($this->preFixed('active',$preFixed),1);
   }
 
   public function scopeNoFilters($query){
     $query->whereRaw("1 = 1");
   }
 
-  public function scopeNullFilter($query){
-    $query->whereNull($this->getTable().".".$this->getKeyName());
+  public function scopeNullFilter($query, $preFixed = true){
+    $query->whereNull($this->preFixed($this->getKeyName(),$preFixed));
   }
 
-  public function scopeNotNull($query,$columnt){
-    $query->whereNotNull($this->getTable().".".$columnt);
+  public function scopeNotNull($query,$column, $preFixed = true){
+    $query->whereNotNull($this->preFixed($column,$preFixed));
   }
 
-  public function scopeId($query,$key){
-    $query->where($this->getTable().".".$this->getKeyName(),$key);
+  public function scopeId($query,$key, $preFixed = true){
+    $query->where($this->preFixed($this->getKeyName(),$preFixed),$key);
   }
 
-  public function scopeIds($query,$keys){
-    $query->whereIn($this->getTable().".".$this->getKeyName(),$keys);
+  public function scopeIds($query,$keys, $preFixed = true){
+    $query->whereIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
   }
 
-  public function scopeNoIds($query,$keys){
-    $query->whereNotIn($this->getTable().".".$this->getKeyName(),$keys);
+  public function scopeNoIds($query,$keys, $preFixed = true){
+    $query->whereNotIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
   }
 
-  public function scopeUuid($query,$uuid){
-    $query->where($this->getTable().".uuid",$uuid);
+  public function scopeUuid($query,$uuid, $preFixed = true){
+    $query->where($this->preFixed('uuid',$preFixed),$uuid);
   }
 
-  public function scopeUuids($query,$uuids){
-    $query->whereIn($this->getTable().".uuid",$uuids);
+  public function scopeUuids($query,$uuids, $preFixed = true){
+    $query->whereIn($this->preFixed('uuid',$preFixed),$uuids);
   }
 
-  public function scopeNoUuids($query,$uuids){
-    $query->whereNotIn($this->getTable().".uuid",$uuids);
+  public function scopeNoUuids($query,$uuids, $preFixed = true){
+    $query->whereNotIn($this->preFixed('uuid',$preFixed),$uuids);
   }
 
-  public function scopeUnActives($query){
-    $query->where($this->getTable().".status",0);
+  public function scopeUnActives($query, $preFixed = true){
+    $query->where($this->preFixed('status',$preFixed),0);
   }
 
-  public function scopeName($query,$name){
-    $query->where($this->getTable().".name", $name);
+  public function scopeName($query,$name, $preFixed = true){
+    $query->where($this->preFixed('name',$preFixed), $name);
   }
 
-  public function scopeNombre($query,$nombre){
-    $query->where($this->getTable().".nombre", $nombre);
+  public function scopeNombre($query,$nombre, $preFixed = true){
+    $query->where($this->preFixed('nombre',$preFixed), $nombre);
   }
 
-  public function scopeValue($query,$value){
-    $query->where($this->getTable().".value", $value);
+  public function scopeValue($query,$value, $preFixed = true){
+    $query->where($this->preFixed('value',$preFixed), $value);
   }
 
-  public function scopeSlugs($query,$slug){
-    $query->whereIn($this->getTable().".slug", $slug);
+  public function scopeSlugs($query,$slug, $preFixed = true){
+    $query->whereIn($this->preFixed('slug',$preFixed), $slug);
   }
 
-  public function scopeSlug($query,$slug){
-    $query->where($this->getTable().".slug", $slug);
+  public function scopeSlug($query,$slug, $preFixed = true){
+    $query->where($this->preFixed('slug',$preFixed), $slug);
   }
 
-  public function scopeOfLevel($query,$level_id){
-    $query->where($this->getTable().".level_id", $level_id);
+  public function scopeOfLevel($query,$level_id, $preFixed = true){
+    $query->where($this->preFixed('level_id',$preFixed), $level_id);
   }
 
-  public function scopeOfParent($query,$parent_id){
-    $query->where($this->getTable().".parent_id", $parent_id);
+  public function scopeOfParent($query,$parent_id, $preFixed = true){
+    $query->where($this->preFixed('parent_id',$preFixed), $parent_id);
   }
 
-  public function scopeOfSublevel($query,$sublevel_id){
-    $query->where($this->getTable().".sublevel_id", $sublevel_id);
+  public function scopeOfSublevel($query,$sublevel_id, $preFixed = true){
+    $query->where($this->preFixed('sublevel_id',$preFixed), $sublevel_id);
   }
 
   public function scopeGeneralOwner($query,$userId){
   }
 
   public function scopeParticularOwner($query,$userId){
-    $query->where($this->getTable().".user_id", $userId);
+    $query->where($this->preFixed('user_id',true), $userId);
   }
 
-  public function scopeUpdatedBefore($query,$date){
-    $query->where($this->getTable().".updated_at",'>',$date);
+  public function scopeUpdatedBefore($query,$date, $preFixed = true){
+    $query->where($this->preFixed('updated_at',$preFixed),'>',$date);
   }
 
-  public function scopeUpdatedAfter($query,$date){
-    $query->where($this->getTable().".updated_at",'<',$date);
+  public function scopeUpdatedAfter($query,$date, $preFixed = true){
+    $query->where($this->preFixed('updated_at',$preFixed),'<',$date);
   }
 
-  public function scopeUpdatedBetween($query,$date){
+  public function scopeUpdatedBetween($query,$date, $preFixed = true){
     $query->updatedBefore($date)->updatedAfter($date);
   }
 
@@ -217,13 +217,24 @@ class BaseModel extends Model {
   }
 
   //TODO sanatize this method
-  //! important this method need to some be fixed to prevent inyection
   public function fixColumnName($column){
+    if(!in_array($column,$this->getTableColumns()))
+      return null;
     return $this->getTable().'.'.$column;
   }
 
   public function getTableColumns() {
     return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getSimpleTable());
+  }
+
+  public function getSearchFieldColumn(){
+    return 'search_field';
+  }
+
+  public function preFixed($column,$fixed=true){
+    if(!$fixed)
+      return $column;
+    return $this->getTable().'.'.$column;
   }
 // Others
 }

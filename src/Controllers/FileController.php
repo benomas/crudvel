@@ -1,57 +1,60 @@
 <?php namespace Crudvel\Controllers;
 
 use Illuminate\Support\Facades\Storage;
-use App\Models\CatFile;
+use App\Models\{File,CatFile};
 
 class FileController extends \Crudvel\Customs\Controllers\ApiController{
   protected $selectables = [
-    "absolute_path",
-    "active",
-    "cat_file_id",
-    "cat_file_multiple",
-    "cat_file_name",
-    "cat_file_slug",
-    "cat_file_resorce",
-    "resource_id",
-    "created_at",
-    "id",
-    "path",
-    "updated_at",
+    'absolute_path',
+    'active',
+    'cat_file_id',
+    'cat_file_multiple',
+    'cat_file_name',
+    'cat_file_slug',
+    'cat_file_resorce',
+    'resource_id',
+    'created_at',
+    'id',
+    'path',
+    'updated_at',
+    'search_field'
   ];
   protected $filterables = [
-    "absolute_path",
-    "active",
-    "cat_file_id",
-    "cat_file_multiple",
-    "cat_file_name",
-    "cat_file_slug",
-    "cat_file_resorce",
-    "resource_id",
-    "created_at",
-    "id",
-    "path",
-    "updated_at",
+    'absolute_path',
+    'active',
+    'cat_file_id',
+    'cat_file_multiple',
+    'cat_file_name',
+    'cat_file_slug',
+    'cat_file_resorce',
+    'resource_id',
+    'created_at',
+    'id',
+    'path',
+    'updated_at',
+    'search_field'
   ];
   protected $orderables = [
-    "absolute_path",
-    "active",
-    "cat_file_id",
-    "cat_file_multiple",
-    "cat_file_name",
-    "cat_file_slug",
-    "cat_file_resorce",
-    "resource_id",
-    "created_at",
-    "id",
-    "path",
-    "updated_at",
+    'absolute_path',
+    'active',
+    'cat_file_id',
+    'cat_file_multiple',
+    'cat_file_name',
+    'cat_file_slug',
+    'cat_file_resorce',
+    'resource_id',
+    'created_at',
+    'id',
+    'path',
+    'updated_at',
+    'search_field'
   ];
 
   protected $joinables =[
-    "cat_file_name"              =>"cat_files.name",
-    "cat_file_multiple"          =>"cat_files.multiple",
-    "cat_file_slug"              =>"cat_files.slug",
-    "cat_file_resorce"           =>"cat_files.resource",
+    'cat_file_name'     => 'cat_files.name',
+    'cat_file_multiple' => 'cat_files.multiple',
+    'cat_file_slug'     => 'cat_files.slug',
+    'cat_file_resorce'  => 'cat_files.resource',
   ];
 
   protected $disk = "public";
@@ -65,23 +68,39 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
     $this->addActions('storeUpdate');
   }
 
-  public function preAction($method,$parameters){
-    if($method==='index'){
-      $this->model->with('resource');
+  public function unions(){
+    $catFiles = CatFile::hasFile()->get();
+    $file     = new File;
+    $unions   = null;
+    foreach ($catFiles as $catFile) {
+      $modelResource = $catFile->modelClassInstance();
+      $resourceUnion = kageBunshinNoJutsu($this->model);
+      $resourceUnion->join($modelResource->getTable(),function($j) use($modelResource,$file,$catFile){
+        $j->on($file->getTable().'.resource_id', '=', $modelResource->getTable().'.id')->
+        where($file->getTable().'.cat_file_id', '=', $catFile->id);
+      });
+      if($this->unsolvedColumns[$modelResource->getSearchFieldColumn()]??null)
+        $this->selectQuery[$this->unsolvedColumns[$modelResource->getSearchFieldColumn()]]= $modelResource->getTable().'.'.$modelResource->getSearchFieldColumn()." AS ".$modelResource->getSearchFieldColumn();
+      $resourceUnion->select($this->selectQuery);
+      if($unions)
+        $unions->union($resourceUnion);
+      else
+        $unions = $resourceUnion;
     }
+    $this->model = $unions ;
   }
-
+  
   public function show($id){
     if(!$this->paginable || !$this->extractPaginate())
       return  $this->noPaginatedResponse();
 
     $this->processPaginatedResponse();
-    $this->paginateData=$this->model->with('catFile','resource');
+    $this->paginateData=$this->model->with('catFile');
     return $this->paginateResponder();
   }
 
   public function saveFile($clean=null){
-  $this->resetTransaction();
+    $this->resetTransaction();
     $this->startTranstaction();
     $this->testTransaction(function() use($clean){
       $catFile  = CatFile::id($this->fields["cat_file_id"])->first();

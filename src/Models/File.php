@@ -19,8 +19,8 @@ class File extends \Crudvel\Customs\Models\BaseModel{
     return $this->belongsTo("\App\Models\CatFile");
   }
 
+  //this relation cant work as preload
   public function resource(){
-    customLog($this->catFile()->first()->resource);
     return $this->belongsTo(
       "\App\Models\\".studly_case(str_singular($this->catFile()->first()->resource)),
       'resource_id',
