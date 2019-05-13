@@ -92,6 +92,8 @@ class RelationChecker
     // iter all relations
     foreach ($this->relationArray as $rel) {
         if(!empty($rel['prefixed'])) $rel['prefixed'] = ucfirst($rel['prefixed']);
+        else
+        $rel['prefixed'] = '';
         array_push($response, $this->insertRelationInClass($rel,'left'));
         array_push($response, $this->insertRelationInClass($rel,'right'));
     }
