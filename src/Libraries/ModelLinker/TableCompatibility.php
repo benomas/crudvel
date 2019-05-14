@@ -66,6 +66,7 @@ class TableCompatibility
           'compatibilityTranslation' => $this->translateCompatibility($compatibilityTest['kindOfCompatibility']),
           'leftCount'                => $compatibilityTest['leftCount'],
           'rightCount'               => $compatibilityTest['rightCount'],
+          'totalEquals'              => $compatibilityTest['totalEquals'],
           'encodedLeftTraitFilePath' => file_exists(base_path($encodedLeftTraitFilePath))?
             base64_encode($encodedLeftTraitFilePath) : null,
           'encodedRightTraitFilePath' => file_exists(base_path($encodedRightTraitFilePath))?
@@ -79,14 +80,17 @@ class TableCompatibility
     }
 
     foreach($columnsCompatibility as $key => $row){
+      /*
       $totalOfPosibibleCompatibility = $row['leftCount'] < $row['rightCount'] ?
         $row['leftCount'] : $row['rightCount'];
       $priority = 1/$totalOfPosibibleCompatibility;
-      $columnsCompatibility[$key]['orderColumn'] = $priority;
+      */
+      //$columnsCompatibility[$key]['orderColumn'] = $priority;
+      $columnsCompatibility[$key]['orderColumn'] = $row['totalEquals'];
     }
 
     usort($columnsCompatibility, function ($rowI,$nextRow){
-      return uCProp('orderColumn')->uCSort($rowI,$nextRow);
+      return uCProp('orderColumn')->uCSort($nextRow,$rowI);
     });
     return collect($columnsCompatibility);
   }
@@ -147,6 +151,6 @@ class TableCompatibility
       $filteredColumns[] = $column;
     }
     return $filteredColumns;
-  } 
+  }
 }
 

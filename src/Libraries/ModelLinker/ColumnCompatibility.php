@@ -18,8 +18,9 @@ class ColumnCompatibility
   protected $rightFixedColumn;
   protected $rightMargin;
   protected $equals;
+  protected $totalEquals = 0;
 
-  public function __construct(String $leftModel, String $rightModel, String $leftColumn, String $rightColumn, Int $rightMargin=3){
+  public function __construct(String $leftModel, String $rightModel, String $leftColumn, String $rightColumn, Int $rightMargin=null){
     $this->leftModel          = $leftModel;
     $this->rightModel         = $rightModel;
     $this->leftModelInstance  = new $this->leftModel();
@@ -34,41 +35,56 @@ class ColumnCompatibility
   public function check(){
     $leftCheck  = $this->leftBuilder();
     $rightCheck = $this->rightBuilder();
-    if($this->lCount($leftCheck) > $this->rCount($rightCheck) + $this->rightMargin || $this->lCount($leftCheck)===0)
+    $lCount     = $this->lCount($leftCheck);
+    $rCount     = $this->rCount($rightCheck);
+    $lastMargin = $this->rightMargin?? (int) (max($lCount,1) * .005) + 3;
+    $lastMargin = 0;
+    if($lCount > $rCount + $lastMargin || $lCount===0)
       return $this->noCompatibility();
-    $this->equals = $this->lCount($leftCheck) === $this->rCount($rightCheck);
-    $modelCollection = collect([]);
-    $completed       = false;
-    $steps           = 0;
-    $limit           = 1000;
-    $lastMargin      = $this->rightMargin;
+    $this->equals = $lCount === $rCount;
+    $modelCollection   = collect([]);
+    $completed         = false;
+    $steps             = 0;
+    $limit             = 900;
+    $this->totalEquals = 0;
     $leftCheck->limit($limit);
     $leftCheck->groupBy($this->leftFixedColumn);
-    while(!$completed){
+    while(1){
       $leftChunckedData = [];
       $leftCheck->skip($limit * $steps++)->get()->each(function($row) use(&$leftChunckedData){
         $leftChunckedData[]= $row->getOriginal($this->leftColumn);
       });
-      if(empty($leftChunckedData) && $completed=true)
+      if(empty($leftChunckedData))
         return $this->kindOfCompatibility();
       $rightCheck = $this->rightModel::whereIn($this->rightFixedColumn,$leftChunckedData);
 
-      if($this->rCount($rightCheck)===0)
-        return $this->noCompatibility();
+      $rCount = $this->rCount($rightCheck);
+      $this->totalEquals += $rCount;
+      if($rCount===0)
+        return $this->kindOfCompatibility();
 
-      if(count($leftChunckedData) > $this->rCount($rightCheck)){
-        if(count($leftChunckedData) - $this->rCount($rightCheck) > $lastMargin)
-          return $this->noCompatibility();
-        $lastMargin = $lastMargin - count($leftChunckedData) + $this->rCount($rightCheck);
+      if(count($leftChunckedData) > $rCount){
+        if(count($leftChunckedData) - $rCount > $lastMargin)
+          return $this->kindOfCompatibility();
+        $lastMargin = $lastMargin - count($leftChunckedData) + $rCount;
       }
     }
     return $this->kindOfCompatibility();
   }
 
   private function kindOfCompatibility(){
+    if(
+      ($lCount = $this->lCount($this->leftBuilder())) > 0 &&
+      ($rCount = $this->rCount($this->rightBuilder())) > 0 &&
+      $this->totalEquals === 0
+    )
+      return $this->noCompatibility();
+
     return [
-      'kindOfCompatibility'=>$this->equals? static::PERFECT_COMPATIBILITY:static::PROBABLE_COMPATIBILITY,'leftCount'=>$this->lCount($this->leftBuilder()),
-      'rightCount'=>$this->rCount($this->rightBuilder())
+      'kindOfCompatibility' => $this->equals? static::PERFECT_COMPATIBILITY:static::PROBABLE_COMPATIBILITY,
+      'leftCount'           => $lCount,
+      'rightCount'          => $rCount,
+      'totalEquals'         => $this->totalEquals
     ];
   }
 
@@ -81,11 +97,11 @@ class ColumnCompatibility
   }
 
   private function leftBuilder(){
-    return $this->leftModel::select($this->leftFixedColumn)->notNull($this->leftColumn);
+    return $this->leftModel::select($this->leftFixedColumn)->notNull($this->leftColumn)->selfFilter();
   }
 
   private function rightBuilder(){
-    return $this->rightModel::select($this->rightFixedColumn);
+    return $this->rightModel::select($this->rightFixedColumn)->selfFilter();
   }
 
   public function lCount($q){
