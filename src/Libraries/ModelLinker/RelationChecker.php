@@ -18,7 +18,7 @@ class RelationChecker
   public function buildTplRel($rel, $direction){
     $toggleDirection = $this->toggleDirect(lcfirst($direction));
     $funcRel = ($direction === 'left')?'belongsTo':'hasMany';
-    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.ucfirst($toggleDirection).'Model']))).$rel['prefixed'];
+    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.ucfirst($toggleDirection).'Model']))).$rel['postfixed'];
     $tpl = "\tpublic function " . $funcName. "(){
 \t\treturn \$this->".$funcRel."('".$rel[$toggleDirection.'Model']."','" . $rel['leftColumn']. "','" . $rel['rightColumn']. "');
 \t}\n";
@@ -65,7 +65,7 @@ class RelationChecker
     if($rel[$direction.'Relation'] === 'I') return ['model'=>$file, 'status'=>false, 'message'=>'Ignored'];
     // open the file to edit contents
     $fileContents = file_get_contents($file);
-    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model']))).$rel['prefixed'];
+    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model']))).$rel['postfixed'];
     $exist = $this->existRelationCode($fileContents, $funcName);
     if($rel[$direction.'Relation'] === 'F'){
       if($exist){
@@ -80,7 +80,7 @@ class RelationChecker
 
   public function eraseRelationCode($rel, $direction, $fileContents){
     $toggleDirection = ucfirst($this->toggleDirect(lcfirst($direction)));
-    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model']))).$rel['prefixed'];
+    $funcName = lcfirst(class_basename(base64_decode($rel['encoded'.$toggleDirection.'Model']))).$rel['postfixed'];
     $fileContents = preg_replace('/public\s+function\s+'.$funcName.'\s*\(\).*\n.*return.*\n.*}/',"", $fileContents);
     return $fileContents;
   }
@@ -91,9 +91,9 @@ class RelationChecker
     $response = [];
     // iter all relations
     foreach ($this->relationArray as $rel) {
-        if(!empty($rel['prefixed'])) $rel['prefixed'] = ucfirst($rel['prefixed']);
+        if(!empty($rel['postfixed'])) $rel['postfixed'] = ucfirst($rel['postfixed']);
         else
-        $rel['prefixed'] = '';
+        $rel['postfixed'] = '';
         array_push($response, $this->insertRelationInClass($rel,'left'));
         array_push($response, $this->insertRelationInClass($rel,'right'));
     }
