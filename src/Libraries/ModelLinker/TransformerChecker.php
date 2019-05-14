@@ -14,6 +14,19 @@ class TransformerChecker
     return ($direction === 'left')?'right':'left';
   }
 
+  public function identCallBack($callBackCode){
+    $split = preg_split('/\n/', $callBackCode);
+    $result  = [];
+    foreach($split as $ln => $line){
+      if($ln > 0){
+        $identSize = strlen($line) - strlen(ltrim($line));
+        $line = "\t\t\t".str_repeat("\t",$identSize).ltrim($line);
+      }
+        $result[] = $line;
+    }
+    return implode("\n",$result);
+  }
+
   public function buildTplTrans($acc){
     // define functionDef-inition for all get.*Attribute
     $funcDef ='  public function get'.ucfirst(camel_case($acc['destColumn'])).'Attribute(){';
@@ -27,6 +40,7 @@ class TransformerChecker
       break;
 
       case 'complex':
+        $acc['callBack'] = $this->identCallBack($acc['callBack']);
         return $funcDef.'
     return $this->accessorInterceptor(
       '.$acc['callBack'].'
@@ -106,10 +120,9 @@ class TransformerChecker
 
   public function eraseSpecificTransformerCode($model, $accessorName){
     $model = base64_decode($model);
-    $file = cvClassFile($model);
+    $file = cvClassFile(base64_decode($model));
     $fileContents = file_get_contents($file);
-    $accessorName = ucfirst(camel_case($accessorName));
-    $fileContents = $this->eraseTransformerCode($fileContents, $accessorName);
+    $fileContents = $this->eraseSpecificTransformerCode($fileContents, $accessorName);
     file_put_contents($file, $fileContents);
     return ['model' => $model, 'status' => true, 'message' => 'Transformer code removed ok.'];
   }
