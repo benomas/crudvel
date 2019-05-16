@@ -32,8 +32,7 @@ class CorreCaminos{
         unset($srcs[$key]);
         continue;
       }
-      $modelBaseName = class_basename($model);
-      $relMethod     = camel_case($modelBaseName);
+      $relMethod     = camel_case(class_basename($model));
       if(method_exists($currentModel,$relMethod) && $model::noFilters()->count()){
         unset($srcs[$key]);
         $path = $relMethod.'.';
@@ -48,9 +47,8 @@ class CorreCaminos{
         $subPath = $this->testPath($model,$srcs);
         if($subPath && $subPath !==''){
           $path .= $subPath;
-          if($currentModel===$this->leftModel && !in_array($path,$this->paths)){
+          if($currentModel===$this->leftModel && !in_array($path,$this->paths))
             $this->paths[]=$path;
-          }
           else
             return $path;
         }
