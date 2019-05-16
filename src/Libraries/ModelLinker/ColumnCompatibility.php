@@ -19,6 +19,7 @@ class ColumnCompatibility
   protected $rightMargin;
   protected $equals;
   protected $totalEquals = 0;
+  protected $compatibilityPercentLimit = 75;
 
   public function __construct(String $leftModel, String $rightModel, String $leftColumn, String $rightColumn, Int $rightMargin=null){
     $this->leftModel          = $leftModel;
@@ -79,20 +80,25 @@ class ColumnCompatibility
       $this->totalEquals === 0
     )
       return $this->noCompatibility();
-
+    $compatibilityPercent = 100 * $this->totalEquals / min($lCount,$rCount);
+    if($compatibilityPercent < $this->compatibilityPercentLimit)
+      return $this->noCompatibility();
     return [
-      'kindOfCompatibility' => $this->equals? static::PERFECT_COMPATIBILITY:static::PROBABLE_COMPATIBILITY,
-      'leftCount'           => $lCount,
-      'rightCount'          => $rCount,
-      'totalEquals'         => $this->totalEquals
+      'kindOfCompatibility'  => $this->equals? static::PERFECT_COMPATIBILITY:static::PROBABLE_COMPATIBILITY,
+      'leftCount'            => $lCount,
+      'rightCount'           => $rCount,
+      'totalEquals'          => $this->totalEquals,
+      'compatibilityPercent' => $compatibilityPercent,
     ];
   }
 
   private function noCompatibility(){
     return [
-      'kindOfCompatibility' => static::UNPROBABLE_COMPATIBILITY,
-      'leftCount'           => null,
-      'rightCount'          => null
+      'kindOfCompatibility'  => static::UNPROBABLE_COMPATIBILITY,
+      'leftCount'            => null,
+      'rightCount'           => null,
+      'totalEquals'          => 0,
+      'compatibilityPercent' => 0,
     ];
   }
 
@@ -122,6 +128,16 @@ class ColumnCompatibility
       customLog($this->rightColumn. 'Is invalid for count porpuses');
       return 0;
     }
+  }
+
+  public function setRightMargin($rightMargin){
+    $this->rightMargin = $rightMargin;
+    return $this;
+  }
+
+  public function setCompatibilityPercentLimit($compatibilityPercentLimit){
+    $this->compatibilityPercentLimit = $compatibilityPercentLimit;
+    return $this;
   }
 }
 

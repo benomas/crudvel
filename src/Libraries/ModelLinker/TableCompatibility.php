@@ -9,6 +9,7 @@ class TableCompatibility
   const PERFECT_COMPATIBILITY=1;
   const PROBABLE_COMPATIBILITY=2;
   const UNPROBABLE_COMPATIBILITY=3;
+  protected $srcs           = [];
   protected $leftModel;
   protected $rightModel;
   protected $leftModelInstance;
@@ -20,18 +21,27 @@ class TableCompatibility
   protected $rightMargin;
   protected $equals;
   protected $columnsCompatibility = [];
+  protected $columnsCompatibilities = [];
 
-  public function __construct(String $leftModel, String $rightModel, String $destLeftModel, String $destRightModel){
-    $this->leftModel              = $leftModel;
-    $this->rightModel             = $rightModel;
-    $this->leftModelInstance      = new $this->leftModel();
-    $this->rightModelInstance     = new $this->rightModel();
-    $this->leftColumns            = $this->filterColumns($this->leftModelInstance->columnDefinitions());
-    $this->rightColumns           = $this->filterColumns($this->rightModelInstance->columnDefinitions());
-    $this->destLeftModel          = $destLeftModel;
-    $this->destRightModel         = $destRightModel;
-    $this->leftDestModelInstance  = new $this->destLeftModel();
-    $this->rightDestModelInstance = new $this->destRightModel();
+  public function __construct(String $leftModel = '', String $rightModel = '', String $destLeftModel = '', String $destRightModel = ''){
+    if($leftModel!=''){
+      $this->leftModel              = $leftModel;
+      $this->leftModelInstance      = new $this->leftModel();
+      $this->leftColumns            = $this->filterColumns($this->leftModelInstance->columnDefinitions());
+    }
+    if($rightModel!=''){
+      $this->rightModel             = $rightModel;
+      $this->rightModelInstance     = new $this->rightModel();
+      $this->rightColumns           = $this->filterColumns($this->rightModelInstance->columnDefinitions());
+    }
+    if($destLeftModel !== ''){
+      $this->destLeftModel          = $destLeftModel;
+      $this->leftDestModelInstance  = new $this->destLeftModel();
+    }
+    if($destRightModel !== ''){
+      $this->destRightModel         = $destRightModel;
+      $this->rightDestModelInstance = new $this->destRightModel();
+    }
   }
 
   public function setColumns (String $leftColumn, String $rightColumn){
@@ -143,5 +153,70 @@ class TableCompatibility
     }
     return $filteredColumns;
   }
-}
 
+  public function setSrcs($srcs){
+    $this->srcs = $srcs;
+    return $this;
+  }
+
+  public function bruteForce(){
+    foreach($this->srcs as $leftModel){
+      $leftModelInstance = new $leftModel();
+      $leftColumns       = $this->filterColumns($leftModelInstance->columnDefinitions());
+      foreach($this->srcs as $rightModel){
+        if($leftModel === $rightModel)
+          continue;
+        $rightModelInstance     = new $rightModel();
+        $rightColumns           = $this->filterColumns($rightModelInstance->columnDefinitions()); $columnsCompatibility=[];
+        foreach($leftColumns as $leftColumn){
+          foreach($rightColumns as $rightColumn){
+            $compatibility = new ColumnCompatibility($leftModel , $rightModel ,$leftColumn,$rightColumn);
+            if(($compatibilityTest = $compatibility->setCompatibilityPercentLimit(100)->setRightMargin(5)->check())['kindOfCompatibility']===static::UNPROBABLE_COMPATIBILITY)
+              continue;
+
+            $columnsCompatibility[]=[
+              'leftBaseNameModel'        => class_basename($leftModel),
+              'rightBaseNameModel'       => class_basename($rightModel),
+              'leftModel'                => $leftModel,
+              'rightModel'               => $rightModel,
+              'leftColumn'               => $leftColumn,
+              'rightColumn'              => $rightColumn,
+              'compatibility'            => $compatibilityTest['kindOfCompatibility'],
+              'compatibilityTranslation' => $this->translateCompatibility($compatibilityTest['kindOfCompatibility']),
+              'leftCount'                => $compatibilityTest['leftCount'],
+              'rightCount'               => $compatibilityTest['rightCount'],
+              'totalEquals'              => $compatibilityTest['totalEquals'],
+              'encodedLeftModelFilePath' => file_exists(cvClassFile($leftModel))?
+                base64_encode(str_replace(base_path().'/','',cvClassFile($leftModel))) : null,
+              'encodedRightModelFilePath' => file_exists(cvClassFile($rightModel))?
+                base64_encode(str_replace(base_path().'/','',cvClassFile($rightModel))) : null,
+            ];
+          }
+        }
+
+        if(empty($columnsCompatibility))
+          continue;
+
+        foreach($columnsCompatibility as $key => $row)
+          $columnsCompatibility[$key]['orderColumn'] = $row['totalEquals'];
+
+        usort($columnsCompatibility, function ($rowI,$nextRow){
+          return uCProp('orderColumn')->uCSort($nextRow,$rowI);
+        });
+        echo class_basename($leftModel).' => '.class_basename($rightModel).' - completed. '.count($this->srcs)." left\n";
+        
+        if(empty($this->columnsCompatibilities[$leftModel]))
+          $this->columnsCompatibilities[$leftModel]=[];
+        
+        $this->columnsCompatibilities[$leftModel][$columnsCompatibility[0]['rightModel']]=$columnsCompatibility;
+        /*
+        $i=$i??0;
+        $i++;
+        if($i>3)
+          return $this->columnsCompatibilities;
+        */
+      }
+    }
+    return $this->columnsCompatibilities;
+  }
+}
