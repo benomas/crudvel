@@ -26,8 +26,6 @@ class TableCompatibility
     $this->rightModel             = $rightModel;
     $this->leftModelInstance      = new $this->leftModel();
     $this->rightModelInstance     = new $this->rightModel();
-    //$this->leftColumns            = $this->leftModelInstance->getTableColumns();
-    //$this->rightColumns            = $this->rightModelInstance->getTableColumns();
     $this->leftColumns            = $this->filterColumns($this->leftModelInstance->columnDefinitions());
     $this->rightColumns           = $this->filterColumns($this->rightModelInstance->columnDefinitions());
     $this->destLeftModel          = $destLeftModel;
@@ -79,15 +77,8 @@ class TableCompatibility
       }
     }
 
-    foreach($columnsCompatibility as $key => $row){
-      /*
-      $totalOfPosibibleCompatibility = $row['leftCount'] < $row['rightCount'] ?
-        $row['leftCount'] : $row['rightCount'];
-      $priority = 1/$totalOfPosibibleCompatibility;
-      */
-      //$columnsCompatibility[$key]['orderColumn'] = $priority;
+    foreach($columnsCompatibility as $key => $row)
       $columnsCompatibility[$key]['orderColumn'] = $row['totalEquals'];
-    }
 
     usort($columnsCompatibility, function ($rowI,$nextRow){
       return uCProp('orderColumn')->uCSort($nextRow,$rowI);
