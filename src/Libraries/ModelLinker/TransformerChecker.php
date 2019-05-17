@@ -30,7 +30,7 @@ class TransformerChecker
   public function buildTplTrans($acc){
     // define functionDef-inition for all get.*Attribute
     $funcDef ='  public function get'.ucfirst(camel_case($acc['destColumn'])).'Attribute(){';
-    if(isset($acc['postfixed'])) $acc['postfixed'] = ucfirst($acc['postfixed']);
+    if(isset($acc['prefixed'])) $acc['prefixed'] = ucfirst($acc['prefixed']);
     // verify accesorType
     switch($acc['accessorType']){
       case 'simple':
@@ -50,22 +50,22 @@ class TransformerChecker
       break;
 
       case 'direct':
-      if(!isset($acc['postfixed']))
+      if(!isset($acc['prefixed']))
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\');
   }';
         return $funcDef.'
-    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['postfixed'].');
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['prefixed'].');
   }';
       break;
 
       case 'direct-custom-column':
-      if(!isset($acc['postfixed']))
+      if(!isset($acc['prefixed']))
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\', null, \''.$acc['relatedColumnName'].'\');
   }';
         return $funcDef.'
-    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['postfixed'].', \''.$acc['relatedColumnName'].'\');
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['prefixed'].', \''.$acc['relatedColumnName'].'\');
   }';
       break;
 
@@ -164,24 +164,31 @@ class TransformerChecker
     return $response;
   }
 
+  // return the accessor's php code
+  public function getModelAccessorCode($model, $funcName){
+    $fileContents = file_get_contents(cvClassFile($model));
+    preg_match('/public\s+function\s+get'.$funcName.'Attribute\s*\(\).*\n.*return.*\n.*}/', $fileContents, $match);
+    if(!isset($match[0]))
+    preg_match('/public\s+function\s+get'.$funcName.'Attribute.*(\n|.)*\/\/endCallback\n.*\}/', $fileContents, $match);
+    return (isset($match[0]))?$match[0]:'';
+  }
+
   public function getAllModelAccessors($model){
     //New Code, calculate  all the accesors including acceros by herence
     $methods    = get_class_methods($model);
     $attributes = [];
+    $attributesCode = [];
     foreach($methods as $key=>$method){
       if(preg_match('/get(.+)Attribute$/',$method,$match) && $match[1]??null)
         $attributes[] = snake_case($match[1]);
     }
-    return ['model' => $model, 'existAccessors' => (count($attributes) > 0), 'message' => 'ok', 'accessorsArray' => (count($attributes) > 0) ? $attributes : 'No Accessors found'];
-
-    //Original Code to calculate accessors based on the model file definition
-    $fileContents = file_get_contents(cvClassFile($model));
-    if(!$this->existEndTransformerComment($fileContents))
-      return ['model' => $model, 'existAccessors' => false, 'message' => '\/\/[End Transformers NOT FOUND', 'accessorsArray' => []];
-    $match = [];
-    preg_match_all('/function get(.*)Attribute.*/', $fileContents, $match);
-    foreach ($match[1] as $key => $value) $match[1][$key] = snake_case($value);
-    return ['model' => $model, 'existAccessors' => (count($match[1]) > 0), 'message' => 'ok', 'accessorsArray' => (count($match) > 0) ? $match[1] : 'No Accessors found'];
+    // iter over attribs to get the code of the accessor
+    if(count($attributes) > 0){
+      foreach ($attributes as $attr) {
+        $attributesCode[$attr] = $this->getModelAccessorCode($model,ucfirst(camel_case($attr)));
+      }
+    }
+    return ['model' => $model, 'existAccessors' => (count($attributes) > 0), 'message' => 'ok', 'accessorsArray' => (count($attributes) > 0) ? $attributes : 'No Accessors found', 'accessorsCodeArray' => $attributesCode ];
   }
 
   public function evalCallBack($callBackCode){
