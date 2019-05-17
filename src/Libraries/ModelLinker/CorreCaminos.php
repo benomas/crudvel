@@ -28,11 +28,14 @@ class CorreCaminos{
   public function testPath($currentModel,$srcs){
     $path = '';
     foreach($srcs as $key=>$model){
-      $modelBaseName = class_basename($model);
-      $relMethod     = camel_case($modelBaseName);
+      if(in_array($model,[$this->leftModel,$currentModel])){
+        unset($srcs[$key]);
+        continue;
+      }
+      $relMethod     = camel_case(class_basename($model));
       if(method_exists($currentModel,$relMethod) && $model::noFilters()->count()){
         unset($srcs[$key]);
-        $path .= $relMethod.'.';
+        $path = $relMethod.'.';
         //if target was found
         if($model===$this->rightModel){
           //if currentModel is different than origin model
@@ -41,9 +44,10 @@ class CorreCaminos{
           $this->paths[]=$path;
           continue;
         }
-        if($subPath = $this->testPath($model,$srcs)){
+        $subPath = $this->testPath($model,$srcs);
+        if($subPath && $subPath !==''){
           $path .= $subPath;
-          if($currentModel===$this->leftModel)
+          if($currentModel===$this->leftModel && !in_array($path,$this->paths))
             $this->paths[]=$path;
           else
             return $path;
@@ -67,8 +71,8 @@ class CorreCaminos{
     $this->collectionPath = collect($this->paths)->sort(function($item,$nextItem){
       if ($item == $nextItem)
         return 0;
-      return 
-        ((count(explode('.',$item)).'.'.strlen($item)) < 
+      return
+        ((count(explode('.',$item)).'.'.strlen($item)) <
         (count(explode('.',$nextItem)).'.'.strlen($nextItem))) ?
           -1 : 1;
     });
