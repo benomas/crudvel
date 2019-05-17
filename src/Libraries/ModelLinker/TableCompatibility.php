@@ -160,10 +160,10 @@ class TableCompatibility
   }
 
   public function bruteForce(){
-    foreach($this->srcs as $leftModel){
+    foreach($this->srcs as $leftModelIndex=>$leftModel){
       $leftModelInstance = new $leftModel();
       $leftColumns       = $this->filterColumns($leftModelInstance->columnDefinitions());
-      foreach($this->srcs as $rightModel){
+      foreach($this->srcs as $rightModelIndex=>$rightModel){
         if($leftModel === $rightModel)
           continue;
         $rightModelInstance     = new $rightModel();
@@ -203,7 +203,8 @@ class TableCompatibility
         usort($columnsCompatibility, function ($rowI,$nextRow){
           return uCProp('orderColumn')->uCSort($nextRow,$rowI);
         });
-        echo class_basename($leftModel).' => '.class_basename($rightModel).' - completed. '.count($this->srcs)." left\n";
+        echo class_basename($leftModel).' => '.class_basename($rightModel).
+        ' - completed ('.$rightModelIndex.'). '.$leftModelIndex.'/'.count($this->srcs)." left\n";
         
         if(empty($this->columnsCompatibilities[$leftModel]))
           $this->columnsCompatibilities[$leftModel]=[];
