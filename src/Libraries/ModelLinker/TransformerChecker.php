@@ -6,6 +6,8 @@ class TransformerChecker
 {
   protected $accessors;
   protected $patternTrans = '/\n\s*(\/\/\[*End Transformers\]*)/';
+  protected $comments = [];
+  protected $destModel = '';
 
   public function __construct(){}
 
@@ -148,8 +150,10 @@ class TransformerChecker
         return ['model' => $acc['srcModel'], 'status' => false, 'message' => 'Transformer code already exist, force it to overwrite.'];
       }
     }
-    if($this->writeTransformerCodeInFile($acc, $fileContents, $file))
+    if($this->writeTransformerCodeInFile($acc, $fileContents, $file)){
+      $this->addAccessorComment($acc);
       return ['model' => $acc['srcModel'], 'status' => true, 'message' => 'Transformer code written ok.'];
+    }
     return ['model' => $acc['srcModel'], 'status' => false, 'message' => 'Error writting transformer code.'];
   }
 
@@ -157,10 +161,12 @@ class TransformerChecker
     $response = [];
     // iter models for transformers
     foreach ($this->accessorsArray as $acc){
+      if(isset($acc['destModel'])) $this->destModel = $acc['destModel'];
       $acc['srcModel'] = base64_decode($acc['srcModel']);
       if(isset($acc['callBack'])) $acc['callBack'] = base64_decode($acc['callBack']);
       array_push($response, $this->insertTransformerInClass($acc));
     }
+    $this->writeAccessorsComment();
     return $response;
   }
 
@@ -198,5 +204,40 @@ class TransformerChecker
       return false;
     }
     return true;
+  }
+
+  public function addAccessorComment($acc){
+    $segments = explode('\\',$acc['srcModel']);
+    // types: Q = question, I = info
+    // $acc['comment'] = [
+    //   'type' => 'Q',
+    //   'commentText' => "My comment"
+    // ];
+    $this->comments[substr($segments[5],3).$segments[7]][$acc['destColumn']] = $acc['comment'];
+  }
+
+  public function createFlowCommentsFile($file){
+    return file_put_contents($file,"[{}]");
+  }
+
+  public function writeAccessorsComment(){
+    if(count($this->comments) <= 0) return false;
+    // Verify if comments json file already exist
+    $file = base_path('database/flowComments/'.strtolower($this->destModel).'.json');
+    if(!file_exists($file))
+      $this->createFlowCommentsFile($file);
+    // Open file
+    $fileContents = json_decode(file_get_contents($file), true);
+    foreach($this->comments as $key => $comment){
+      $fileContents[0][$key] = $comment;
+    }
+    // Save file contents
+    file_put_contents($file, json_encode($fileContents));
+  }
+
+  public function getModelComments($model){
+    $model = base64_decode($model);
+    $file = base_path('database/flowComments/'.strtolower($model).'.json');
+    return json_decode(file_get_contents($file), true);
   }
 }
