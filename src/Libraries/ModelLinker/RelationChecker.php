@@ -25,12 +25,13 @@ class RelationChecker
     return $tpl;
   }
 
-  public function insertRelationshipComment($fileContents){
+  public function insertRelationshipEndTagComment($fileContents){
     $fileContents = preg_replace('/(\}$)/', "//[Relationships]\n//[End Relationships]\n"."$1", $fileContents);
     return $fileContents;
   }
 
-  public function existEndRelationComment($fileContents){
+  public function existEndRelationTagComment($fileContents){
+    // Check for relation comment Tag inside the code
     return preg_match($this->patternRel, $fileContents);
   }
 
@@ -47,8 +48,8 @@ class RelationChecker
     $old = $fileContents;
     // build the template to insert in the file
     $tpl = $this->buildTplRel($rel, $direction);
-    if(!$this->existEndRelationComment($fileContents))
-      $fileContents = $this->insertRelationshipComment($fileContents);
+    if(!$this->existEndRelationTagComment($fileContents))
+      $fileContents = $this->insertRelationshipEndTagComment($fileContents);
     // search and replace inside the file
     $fileContents = preg_replace($this->patternRel, "\n" . $tpl . "$1", $fileContents);
     // insert new lines in file
@@ -136,5 +137,12 @@ class RelationChecker
       'modelLeft' => $modelLeft,
       'modelRight' => $modelRight
     ];
+  }
+
+  public function getModelRelationCode($model, $relName){
+    $fileContents = file_get_contents(cvClassFile($model));
+    preg_match( '/public\s+function\s+'.$relName.'.*\s*\(\).*\n.*return.*\n.*(\n)*.*}/', $fileContents, $match);
+    if(isset($match[0]))
+    return (isset($match[0]))?$match[0]:'';
   }
 }
