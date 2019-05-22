@@ -59,7 +59,12 @@ class BaseSeeder extends Seeder
   }
 
   public function chunckedImplementation($modelClass){
-    foreach($this->data->chunk($this->chunkSize()) as $subData)
-      $modelClass::insert($subData->toArray());
+    foreach($this->data->chunk($this->chunkSize()) as $subData){
+      try{
+        $modelClass::insert($subData->toArray());
+      }catch(\Exception $e){
+        customLog('Seeder transaction fail with',$subData);
+      }
+    }
   }
 }
