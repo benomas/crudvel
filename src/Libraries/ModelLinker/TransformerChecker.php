@@ -236,6 +236,7 @@ class TransformerChecker
   }
 
   public function getModelComments($model){
+    return [];
     $model = base64_decode($model);
     $file = base_path('database/flowComments/'.strtolower($model).'.json');
     return json_decode(file_get_contents($file), true);
