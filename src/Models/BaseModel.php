@@ -236,5 +236,9 @@ class BaseModel extends Model {
       return $column;
     return $this->getTable().'.'.$column;
   }
+
+  public function getKeyValue(){
+    return $this->attributes[$this->getKeyName()]??null;
+  }
 // Others
 }
