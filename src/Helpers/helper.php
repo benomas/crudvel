@@ -1074,3 +1074,34 @@ if(!function_exists("uCSort")){
 if(!function_exists("uCProp")){
   function uCProp($uCProp){return CvHelper::uCProp($uCProp);}
 }
+
+if(!function_exists('cvConsoler')){
+  function cvConsoler($message){return CvHelper::cvConsoler($message);}
+}
+if(!function_exists('cvBlackTC')){
+  function cvBlackTC($message){return CvHelper::blackTC($message);}
+}
+if(!function_exists('cvRedCoTC')){
+  function cvRedCoTC($message){return CvHelper::redCoTC($message);}
+}
+if(!function_exists('cvGreenTC')){
+  function cvGreenTC($message){return CvHelper::greenTC($message);}
+}
+if(!function_exists('cvBrownTC')){
+  function cvBrownTC($message){return CvHelper::brownTC($message);}
+}
+if(!function_exists('cvBlueTC')){
+  function cvBlueTC($message){return CvHelper::blueTC($message);}
+}
+if(!function_exists('cvPurpleTC')){
+  function cvPurpleTC($message){return CvHelper::purpleTC($message);}
+}
+if(!function_exists('cvCyanTC')){
+  function cvCyanTC($message){return CvHelper::cyanTC($message);}
+}
+if(!function_exists('cvWhiteTC')){
+  function cvWhiteTC($message){return CvHelper::whiteTC($message);}
+}
+if(!function_exists('cvDefauTC')){
+  function cvDefauTC($message){return CvHelper::defauTC($message);}
+}

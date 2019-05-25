@@ -11,4 +11,5 @@ class CrudvelHelper{
   use ObjectTrait;
   use FileTrait;
   use FunctionTrait;
+  use TerminalTrait;
 }
