@@ -208,11 +208,6 @@ class TransformerChecker
 
   public function addAccessorComment($acc){
     $segments = explode('\\',$acc['srcModel']);
-    // types: Q = question, I = info
-    // $acc['comment'] = [
-    //   'type' => 'Q',
-    //   'commentText' => "My comment"
-    // ];
     $this->comments[substr($segments[5],3).$segments[7]][$acc['destColumn']] = $acc['comment'];
   }
 
@@ -229,6 +224,7 @@ class TransformerChecker
     // Open file
     $fileContents = json_decode(file_get_contents($file), true);
     foreach($this->comments as $key => $comment){
+      if(is_null($comment)) continue;
       $fileContents[0][$key] = $comment;
     }
     // Save file contents
