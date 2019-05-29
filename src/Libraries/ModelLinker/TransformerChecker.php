@@ -32,7 +32,7 @@ class TransformerChecker
   public function buildTplTrans($acc){
     // define functionDef-inition for all get.*Attribute
     $funcDef ='  public function get'.ucfirst(camel_case($acc['destColumn'])).'Attribute(){';
-    if(isset($acc['prefixed'])) $acc['prefixed'] = ucfirst($acc['prefixed']);
+    if(isset($acc['postfixed'])) $acc['postfixed'] = lcfirst($acc['relatedDestModel']).ucfirst($acc['postfixed']);
     // verify accesorType
     switch($acc['accessorType']){
       case 'simple':
@@ -52,22 +52,22 @@ class TransformerChecker
       break;
 
       case 'direct':
-      if(!isset($acc['prefixed']))
+      if(!isset($acc['postfixed']))
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\');
   }';
         return $funcDef.'
-    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['prefixed'].');
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['postfixed'].');
   }';
       break;
 
       case 'direct-custom-column':
-      if(!isset($acc['prefixed']))
+      if(!isset($acc['postfixed']))
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\', null, \''.$acc['relatedColumnName'].'\');
   }';
         return $funcDef.'
-    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['prefixed'].', \''.$acc['relatedColumnName'].'\');
+    return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['postfixed'].', \''.$acc['relatedColumnName'].'\');
   }';
       break;
 
