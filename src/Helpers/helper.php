@@ -1105,3 +1105,6 @@ if(!function_exists('cvWhiteTC')){
 if(!function_exists('cvDefauTC')){
   function cvDefauTC($message){return CvHelper::defauTC($message);}
 }
+if(!function_exists("getCheckPoint")){
+  function getCheckPoint(){return CvHelper::getCheckPoint();}
+}

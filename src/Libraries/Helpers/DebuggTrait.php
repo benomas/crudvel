@@ -57,4 +57,9 @@ trait DebuggTrait
     $this->debuggExpresion=(boolean) $expresion;
     return $this;
   }
+
+  public function getCheckPoint(){
+    $rightNow = microtime(true);
+    return $this->debuggScriptTime = $this->debuggScriptStamp=== null?0:$rightNow-$this->debuggScriptStamp;
+  }
 }
