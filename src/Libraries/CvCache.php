@@ -93,4 +93,16 @@ class CvCache
   public function hasEngine(){
     return count($this->currentContainer->callBacks)>0;
   }
+
+  public function setIncrement($property){
+    if(empty($this->currentContainer->data[$property]))
+      $this->currentContainer->data[$property]=0;
+    return $this->currentContainer->data[$property]++;
+  }
+
+  public function getIncrement($property){
+    if(empty($this->currentContainer->data[$property]))
+      $this->currentContainer->data[$property]=0;
+    $this->currentContainer->data[$property];
+  }
 }

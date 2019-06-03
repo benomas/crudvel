@@ -51,4 +51,12 @@ trait CacheTrait
   private function context(){
     return \App::make('cvCache');
   }
+
+  public function cvSetIncrement($property){
+    return $this->context()->setIncrement($property);
+  }
+
+  public function cvGetIncrement($property){
+    return $this->context()->getIncrement($property);
+  }
 }
