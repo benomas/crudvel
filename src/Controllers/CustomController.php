@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
     the anonymous functions, all this code can be reused, saving a lot of time.
 */
 class CustomController extends BaseController {
-
+  //preparing refactyoring
   protected $crudvel         = true;
   protected $prefix          = "";
   protected $classType       = "Controller";
