@@ -150,4 +150,8 @@ class CvBasePaginator
   public function getModelInstance(){
     return $this->modelInstance??null;
   }
+
+  //rewrite this method for custom logic
+  public function unions(){
+  }
 }
