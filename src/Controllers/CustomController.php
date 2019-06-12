@@ -107,17 +107,25 @@ class CustomController extends BaseController {
     }
   }
 
+  /**
+  * function tu prevent this callAction implementation
+  *
+  * @author benomas benomas@gmail.com
+  * @date   2019-06-12
+  * @return response
+  */
+  public function callActionJump($method,$parameters=[]){
+    return parent::callAction($method,$parameters);
+  }
+
   public function callAction($method,$parameters=[]){
     $this->currentAction  = $method;
     $this->setRequestInstance();
     $this->model         = $this->request->model;
-    if($this->skipModelValidation && empty($this->model))
-      return $this->apiNotFound();
-
     $this->mainTableName = $this->request->mainTableName;
 
     if(!in_array($this->currentAction,$this->actions))
-      return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
+      return $this->webNotFound();
 
     $this->setCurrentUser();
     $this->setLangName();
@@ -133,10 +141,10 @@ class CustomController extends BaseController {
       return $preactionResponse;
     if(in_array($method,$this->rowActions)){
       if(empty($parameters))
-        return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
+        return $this->webNotFound();
       $this->currentActionId=$parameters[$this->mainArgumentName()];
       if(!$this->model->id($this->currentActionId)->count())
-        return $this->request->wantsJson()?$this->apiNotFound():$this->webNotFound();
+        return $this->webNotFound();
       $this->modelInstance =  $this->model->first();
     }
     return parent::callAction($method,$parameters);
@@ -401,17 +409,6 @@ class CustomController extends BaseController {
     $this->viewActions=array_merge($this->viewActions,$moreActions);
   }
 
-  //rewrite this method
-  public function joins(){}
-
-  //rewrite this method for custom logic
-  public function unions(){
-    $union = kageBunshinNoJutsu($this->model);
-    $union->select($this->selectQuery);
-    $union->union($this->model->select($this->selectQuery));
-    $this->model=$union;
-  }
-
   public function setSlugField(){
     if($this->slugField)
       return true;
@@ -422,5 +419,108 @@ class CustomController extends BaseController {
     if(in_array("title",$this->selectables))
       return $this->slugField = "title";
     return false;
+  }
+
+  public function getCrudvel(){
+    return $this->crudvel??null;
+  }
+  public function getPrefix(){
+    return $this->prefix??null;
+  }
+  public function getClassType(){
+    return $this->classType??null;
+  }
+  public function getBaseClass(){
+    return $this->baseClass??null;
+  }
+  public function getResource(){
+    return $this->resource??null;
+  }
+  public function getTransStatus(){
+    return $this->transStatus??null;
+  }
+  public function getCommitter(){
+    return $this->committer??null;
+  }
+  public function getCrudObjectName(){
+    return $this->crudObjectName??null;
+  }
+  public function getModelSource(){
+    return $this->modelSource??null;
+  }
+  public function getRequestSource(){
+    return $this->requestSource??null;
+  }
+  public function getRows(){
+    return $this->rows??null;
+  }
+  public function getRow(){
+    return $this->row??null;
+  }
+  public function getRowName(){
+    return $this->rowName??null;
+  }
+  public function getRowsName(){
+    return $this->rowsName??null;
+  }
+  public function getMainTableName(){
+    return $this->mainTableName??null;
+  }
+  public function getSkipModelValidation(){
+    return $this->skipModelValidation??null;
+  }
+  public function getModel(){
+    return $this->model??null;
+  }
+  public function getModelInstance(){
+    return $this->modelInstance??null;
+  }
+  public function getUserModel(){
+    return $this->userModel??null;
+  }
+  public function getRequest(){
+    return $this->request??null;
+  }
+  public function getCurrentAction(){
+    return $this->currentAction??null;
+  }
+  public function getCurrentActionId(){
+    return $this->currentActionId??null;
+  }
+  public function getFields(){
+    return $this->fields??null;
+  }
+  public function getSlugField(){
+    return $this->slugField??null;
+  }
+  public function getSlugedResponse(){
+    return $this->slugedResponse??null;
+  }
+  public function getDefaultFields(){
+    return $this->defaultFields??null;
+  }
+  public function getCurrentUser(){
+    return $this->currentUser??null;
+  }
+  public function getDirtyPropertys(){
+    return $this->dirtyPropertys??null;
+  }
+  public function getLangName(){
+    return $this->langName??null;
+  }
+  public function getDebugg(){
+    return $this->debugg??null;
+  }
+  public function getActions(){
+    return $this->actions??null;
+  }
+  public function getRowActions(){
+    return $this->rowActions??null;
+  }
+  public function getViewActions(){
+    return $this->viewActions??null;
+  }
+  public function getRowsActions(){
+    return $this->rowsActions??null;
   }
 }

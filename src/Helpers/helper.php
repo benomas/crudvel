@@ -633,7 +633,9 @@ if(!function_exists("propertyByPosition")){
 
 if(!function_exists("fixedIsInt")){
 	function fixedIsInt($intTest){
-    return isset($intTest) && strval($intTest) === strval(intval($intTest));
+    if ($intTest===null)
+      return null;
+    return strval($intTest) === strval(intval($intTest));
 	}
 }
 if(!function_exists("deletePathContent")){
