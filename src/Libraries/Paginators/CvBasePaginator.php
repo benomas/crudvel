@@ -1,6 +1,8 @@
 <?php
 
 namespace Crudvel\Libraries\Paginators;
+use Crudvel\Libraries\DbEngine\EngineContainer;
+
 class CvBasePaginator
 {
   //arreglo con columnas que se permiten filtrar en paginado, si se setea con false, no se permitira filtrado, si se setea con null o no se setea, no se pondran restricciones en filtrado
@@ -28,25 +30,27 @@ class CvBasePaginator
   //array de comparaciones validas
   protected $comparators = [];
   //array de comparaciones validas
-  protected $comparator    = null;
-  protected $paginateCount = 0;
-  protected $paginateData  = null;
-  protected $container     = null;
-  protected $paginate      = null;
-  protected $flexPaginable = true;
-  protected $searchObject  = '';
-  protected $searchMode    = 'cv-simple-paginator';
+  protected $comparator        = null;
+  protected $paginateCount     = 0;
+  protected $paginateData      = null;
+  protected $container         = null;
+  protected $paginate          = null;
+  protected $flexPaginable     = true;
+  protected $searchObject      = '';
+  protected $searchMode        = 'cv-simple-paginator';
+  protected $dbEngineContainer = null;
   protected $model;
   protected $modelInstance;
 
   public function __construct($container){
-    $this->container     = $container;
-    $this->flexPaginable = $this->container->getFlexPaginable();
-    $this->selectables   = $this->container->getSelectables();
-    $this->paginate      = $this->container->getRequest()->get("paginate");
-    $this->model         = $this->container->getModel();
-    $this->modelInstance = $this->container->getModelInstance();
-    $this->joinables     = $this->container->getJoinables();
+    $this->container         = $container;
+    $this->flexPaginable     = $this->container->getFlexPaginable();
+    $this->selectables       = $this->container->getSelectables();
+    $this->paginate          = $this->container->getRequest()->get("paginate");
+    $this->model             = $this->container->getModel();
+    $this->modelInstance     = $this->container->getModelInstance();
+    $this->dbEngineContainer = new EngineContainer($this->model->newModelInstance()->getConnectionName());
+    $this->joinables         = $this->container->getJoinables();
     $this->setBasicPropertys();
   }
 
@@ -64,7 +68,7 @@ class CvBasePaginator
       return $this->selectQuery=false;
 
     //definimos las columnas que deberan mandarse como respuesta a la petición
-    $this->selectQuery   = arrayIntersect($this->paginate["selectQuery"]??null,$this->selectables??null);
+    $this->selectQuery = arrayIntersect($this->paginate["selectQuery"]??null,$this->selectables??null);
   }
 
   public function fixFilterQuery(){
@@ -74,6 +78,7 @@ class CvBasePaginator
 
     //definimos las columnas que podran ser filtradas mediante fluent eloquent
     $this->filterQuery = arrayIntersect($this->paginate["filterQuery"]??null,$this->filterables??null,true);
+    $this->dbEngineContainer->setFilterQueryString($this->filterQuery);
   }
 
   public function fixOrderables(){
@@ -81,7 +86,7 @@ class CvBasePaginator
       return $this->orderBy=false;
 
     //definimos la columna de ordenamiento
-    $this->orderBy = arrayIntersect([$this->paginate["orderBy"]]??null,$this->orderables??null);
+    $this->orderBy = arrayIntersect([$this->paginate["orderBy"]??null],$this->orderables??null);
 
     if(customNonEmptyArray($this->orderBy))
       return $this->orderBy=$this->orderBy[0];

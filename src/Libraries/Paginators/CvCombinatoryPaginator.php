@@ -2,11 +2,15 @@
 
 namespace Crudvel\Libraries\Paginators;
 use Crudvel\Libraries\Paginators\CvPaginate;
+use DB;
 
 class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
 {
-  protected $comparator        = "like";
+  protected $comparator        = 'like';
   protected $combinatoryUnions = [];
+  protected $depthLimit        = 5;
+  protected $numberOfWords     = 0;
+  protected $currentUnionDepth = 0;
 
   /**
    * Carga parametros para paginacion basado en las propiedades pasados desde la peticion http
@@ -49,7 +53,6 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       return ;
     //add joins
     $this->container->joins();
-
     //si existe un array de columnas a seleccionar
     if(customNonEmptyArray($this->selectQuery))
       $this->fixSelectables();
@@ -58,7 +61,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     if($this->model===null)
       return ;
     $querySql = $this->model->toSql();
-    $this->model->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($this->model->getBindings()));
+    $this->model->setQuery(DB::table(DB::raw("($querySql) as cv_pag"))->setBindings($this->model->getBindings()));
     //si existe un array de columnas a filtrar
     if(customNonEmptyArray($this->filterQuery))
       $this->filter();
@@ -105,7 +108,6 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     ]);
   }
 
-
   /**
    * Responde una peticion http de forma paginada de acuerdo a la combinacion de parametros mandados
    *
@@ -142,40 +144,42 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       return $this->model;
     }
 
-    $clonedModel = kageBunshinNoJutsu($this->model);
-    $clonedModel->where(function($query){
-      foreach ($this->filterQuery as $field=>$filter){
-        $method=!isset($method)?"where":"orWhere";
-        $query->{$method}($field,'like',"%{$this->searchObject}%");
-      }
-    });
     $words = preg_split('/\s+/', $this->searchObject);
-    if(count($words)>1)
+    $this->numberOfWords = count($words);
+    //Busqueda por columnas
+    foreach($words AS $word)
+      $this->combinatoryUnions[] = kageBunshinNoJutsu($this->model)->where(DB::raw($this->dbEngineContainer->getFilterQueryString()), 'LIKE', "%{$word}%");
+    //Busqueda por combinaciones
+    /*
+    if($this->numberOfWords < 20){
+      $this->depthLimit = $this->depthLimit - (int) sqrt($this->numberOfWords) + 1;
       $this->depthUnion($words);
-    $this->combinatoryUnions[] = $clonedModel;
+    }*/
+    //Busqueda absoluta
+    $this->combinatoryUnions[] = kageBunshinNoJutsu($this->model)->where(DB::raw($this->dbEngineContainer->getFilterQueryString()), 'LIKE', "%{$this->searchObject}%");
+    $this->unions();
+    //pdd($this->model->count());
   }
 
   protected function depthUnion($words){
-    if(!count($words))
+    if(count($words)<2)
       return null;
+
     foreach($words as $word){
       $clonedModel = kageBunshinNoJutsu($this->model);
       $nextWords = [];
       $method    = null;
-      foreach ($this->filterQuery as $field=>$filter){
-        $method=!$method?"where":"orWhere";
-        $clonedModel->{$method}(function($query) use($field,$words,$word,$method){
-          foreach($words as $nextWord){
-            if($word === $nextWord)
-              continue;
-            $nextWords[] = $nextWord;
-            customLog('asd');
-            $query->where($field,'like',"%{$nextWord}%");
-          }
-          if(count($nextWords)>1)
-            $this->combinatoryUnions[] = $this->depthUnion($nextWords);
-        });
-      }
+      $method=!$method?"where":"orWhere";
+      $clonedModel->{$method}(function($query) use($words,$word,$method,&$nextWords){
+        foreach($words as $nextWord){
+          if($word === $nextWord)
+            continue;
+          $nextWords[] = $nextWord;
+          $query->where(DB::raw($this->dbEngineContainer->getFilterQueryString()), 'LIKE', "%{$nextWord}%");
+        }
+        if( ($this->numberOfWords - $this->depthLimit) < count($nextWords) && count($nextWords)>2)
+          $this->combinatoryUnions[] = $this->depthUnion($nextWords);
+      });
       $this->combinatoryUnions[] = $clonedModel;
     }
   }
@@ -245,6 +249,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     else
       $this->orderBy = $this->mainTableName.$this->orderBy;
   }
+
   public function unions(){
     $allUnions = null;
     foreach(array_reverse($this->combinatoryUnions) as $partialUnion){
