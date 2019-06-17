@@ -150,11 +150,10 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     foreach($words AS $word)
       $this->combinatoryUnions[] = kageBunshinNoJutsu($this->model)->where(DB::raw($this->dbEngineContainer->getFilterQueryString()), 'LIKE', "%{$word}%");
     //Busqueda por combinaciones
-    /*
     if($this->numberOfWords < 20){
       $this->depthLimit = $this->depthLimit - (int) sqrt($this->numberOfWords) + 1;
       $this->depthUnion($words);
-    }*/
+    }
     //Busqueda absoluta
     $this->combinatoryUnions[] = kageBunshinNoJutsu($this->model)->where(DB::raw($this->dbEngineContainer->getFilterQueryString()), 'LIKE', "%{$this->searchObject}%");
     $this->unions();
@@ -165,14 +164,14 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     if(count($words)<2)
       return null;
 
-    foreach($words as $word){
+    foreach($words as $index=>$word){
       $clonedModel = kageBunshinNoJutsu($this->model);
       $nextWords = [];
       $method    = null;
       $method=!$method?"where":"orWhere";
-      $clonedModel->{$method}(function($query) use($words,$word,$method,&$nextWords){
-        foreach($words as $nextWord){
-          if($word === $nextWord)
+      $clonedModel->{$method}(function($query) use($words,$word,$index,$method,&$nextWords){
+        foreach($words as $subIndex=>$nextWord){
+          if($word === $nextWord && $index === $subIndex)
             continue;
           $nextWords[] = $nextWord;
           $query->where(DB::raw($this->dbEngineContainer->getFilterQueryString()), 'LIKE', "%{$nextWord}%");
