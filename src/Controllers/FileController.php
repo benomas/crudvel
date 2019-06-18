@@ -89,7 +89,7 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
     }
     $this->model = $unions ;
   }
-  
+
   public function show($id){
     if(!$this->paginable || !$this->extractPaginate())
       return  $this->noPaginatedResponse();
