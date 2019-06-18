@@ -21,7 +21,7 @@ class BaseDbEngine
       return $this;
     }
     if(count($filterQuery)===1){
-      $this->filterQueryString = $filterQuery[0];
+      $this->filterQueryString = $filterQuery[key($filterQuery)];
       return $this;
     }
     return $this;
