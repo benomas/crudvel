@@ -70,33 +70,50 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
 
   public function unions(){
     $catFiles = CatFile::hasFile()->get();
+    if(!$catFiles || !count($catFiles)){
+      if (($key = array_search('search_field', $this->selectables)) !== false)
+        unset($this->selectables[$key]);
+      if (($key = array_search('search_field', $this->filterables)) !== false)
+        unset($this->filterables[$key]);
+      if (($key = array_search('search_field', $this->orderables)) !== false)
+        unset($this->orderables[$key]);
+      $this->currentPaginator->setFilterables($this->selectables);
+      $this->currentPaginator->setOrderables($this->filterables);
+      $this->currentPaginator->setSelectables($this->orderables);
+      $this->currentPaginator->fixSelectQuery();
+      $this->currentPaginator->fixFilterQuery();
+      $this->currentPaginator->fixOrderables();
+      return parent::unions();
+    }
     $file     = new File;
     $unions   = null;
+    $selectQuery = $this->currentPaginator->getSelectQuery();
     foreach ($catFiles as $catFile) {
       $modelResource = $catFile->modelClassInstance();
-      $resourceUnion = kageBunshinNoJutsu($this->model);
+      $resourceUnion = kageBunshinNoJutsu($this->currentPaginator->getModel());
       $resourceUnion->join($modelResource->getTable(),function($j) use($modelResource,$file,$catFile){
         $j->on($file->getTable().'.resource_id', '=', $modelResource->getTable().'.id')->
         where($file->getTable().'.cat_file_id', '=', $catFile->id);
       });
-      if($this->unsolvedColumns[$modelResource->getSearchFieldColumn()]??null)
-        $this->selectQuery[$this->unsolvedColumns[$modelResource->getSearchFieldColumn()]]= $modelResource->getTable().'.'.$modelResource->getSearchFieldColumn()." AS ".$modelResource->getSearchFieldColumn();
-      $resourceUnion->select($this->selectQuery);
+      if($this->currentPaginator->unsolvedColumns[$modelResource->getSearchFieldColumn()]??null)
+        $selectQuery[$this->currentPaginator->unsolvedColumns[$modelResource->getSearchFieldColumn()]]= $modelResource->getTable().'.'.$modelResource->getSearchFieldColumn()." AS ".$modelResource->getSearchFieldColumn();
+      $resourceUnion->select($selectQuery);
       if($unions)
         $unions->union($resourceUnion);
       else
         $unions = $resourceUnion;
     }
-    $this->model = $unions ;
+    if($unions)
+      $this->model = $this->currentPaginator->setModel($unions)->getModel();
   }
 
   public function show($id){
-    if(!$this->paginable || !$this->extractPaginate())
+    if(!$this->paginable || !$this->currentPaginator->extractPaginate())
       return  $this->noPaginatedResponse();
 
-    $this->processPaginatedResponse();
+    $this->currentPaginator->processPaginatedResponse();
     $this->paginateData=$this->model->with('catFile');
-    return $this->paginateResponder();
+    return $this->currentPaginator->paginateResponder();
   }
 
   public function saveFile($clean=null){
@@ -138,10 +155,10 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
     if(!$this->isTransactionCompleted())
       return $this->apiFailResponse();
 
-    if($this->paginable && $this->extractPaginate()){
-      $this->processPaginatedResponse();
+    if($this->paginable && $this->currentPaginator->extractPaginate()){
+      $this->currentPaginator->processPaginatedResponse();
       $this->paginateData=$this->model->with('catFile');
-      return $this->paginateResponder();
+      return $this->currentPaginator->paginateResponder();
     }
 
     return $this->noPaginatedResponse();

@@ -41,6 +41,7 @@ class CvBasePaginator
   protected $dbEngineContainer = null;
   protected $model;
   protected $modelInstance;
+  public $unsolvedColumns;
 
   public function __construct($container){
     $this->container         = $container;
@@ -159,4 +160,22 @@ class CvBasePaginator
   //rewrite this method for custom logic
   public function unions(){
   }
+  public function setFilterables($filterables){
+    $this->filterables=$filterables;
+    return $this;
+  }
+  public function setOrderables($orderables){
+    $this->orderables=$orderables;
+    return $this;
+  }
+  public function setSelectables($selectables){
+    $this->selectables=$selectables;
+    return $this;
+  }
+  public function setModel($model){
+    $this->model=$model;
+    return $this;
+  }
 }
+
+
