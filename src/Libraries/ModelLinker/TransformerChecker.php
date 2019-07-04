@@ -35,12 +35,13 @@ class TransformerChecker
     if(isset($acc['postfixed'])) $acc['postfixed'] = lcfirst($acc['relatedDestModel']).ucfirst($acc['postfixed']);
     // verify accesorType
     switch($acc['accessorType']){
+      // Columna directa
       case 'simple':
         return $funcDef.'
     return $this->attributes[\''.$acc['attributeName'].'\']??null;
   }';
       break;
-
+    // Columna transformada
       case 'complex':
         $acc['callBack'] = $this->identCallBack($acc['callBack']);
         return $funcDef.'
@@ -50,7 +51,7 @@ class TransformerChecker
   //endCallback
   }';
       break;
-
+    // LLave foranea
       case 'direct':
       if(!isset($acc['postfixed']))
         return $funcDef.'
@@ -60,7 +61,7 @@ class TransformerChecker
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['postfixed'].');
   }';
       break;
-
+    // Columna foranea
       case 'direct-custom-column':
       if(!isset($acc['postfixed']))
         return $funcDef.'
@@ -70,19 +71,19 @@ class TransformerChecker
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\', $this->'.$acc['postfixed'].', \''.$acc['relatedColumnName'].'\');
   }';
       break;
-
+    // LLave foranea path
       case 'recursive':
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\');
   }';
       break;
-
+    // Columna foranea
       case 'recursive-custom-column':
         return $funcDef.'
     return $this->relationResponse(\''.$acc['relatedDestModel'].'\', \''.$acc['path'].'\',\''.$acc['relatedColumnName'].'\');
   }';
       break;
-
+  // Vacio
       case 'return-null':
         return $funcDef.'
     return null;
