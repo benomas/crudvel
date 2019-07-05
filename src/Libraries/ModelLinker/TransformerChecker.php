@@ -132,7 +132,7 @@ class TransformerChecker
 
   public function eraseTransformerCode($fileContents, $funcName){
     $fileContents = preg_replace('/public\s+function\s+get'.$funcName.'Attribute\s*\(\).*\n.*return.*\n.*}/',"", $fileContents);
-    $fileContents = preg_replace('/public\s+function\s+get'.$funcName.'Attribute.*(\n|.)*\/\/endCallback\n.*\}/',"", $fileContents);
+    $fileContents = preg_replace('/public\s+function\s+get'.$funcName.'Attribute.*(\n|.)*?\/\/endCallback\n.*\}/',"", $fileContents);
     return $fileContents;
   }
 
@@ -176,7 +176,7 @@ class TransformerChecker
     $fileContents = file_get_contents(cvClassFile($model));
     preg_match('/public\s+function\s+get'.$funcName.'Attribute\s*\(\).*\n.*return.*\n.*}/', $fileContents, $match);
     if(!isset($match[0]))
-    preg_match('/public\s+function\s+get'.$funcName.'Attribute.*(\n|.)*\/\/endCallback\n.*\}/', $fileContents, $match);
+    preg_match('/public\s+function\s+get'.$funcName.'Attribute.*(\n|.)*?\/\/endCallback\n.*\}/', $fileContents, $match);
     return (isset($match[0]))?$match[0]:'';
   }
 
