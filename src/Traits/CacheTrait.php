@@ -59,4 +59,12 @@ trait CacheTrait
   public function cvGetIncrement($property){
     return $this->context()->getIncrement($property);
   }
+
+  public function cvHasCallBack($property){
+    return $this->context()->hasCallBack($property);
+  }
+
+  public function cvHasProperty($property){
+    return $this->context()->hasProperty($property);
+  }
 }

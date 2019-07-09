@@ -289,7 +289,7 @@ class BaseModel extends Model
     return $this->attributes[$this->getKeyName()] ?? null;
   }
 
-  public function setCacheBoots()
+  public function setCacheColumnDefinitions()
   {
     $this->cvCacheSetCallBack(get_class($this).'columnDefinitions',function(){
       return columnList($this->getConnectionName(),$this->getTable());
@@ -356,6 +356,8 @@ class BaseModel extends Model
     if(!$attribute || !isset($srcRow->$attribute))
       return null;
     $value             = $srcRow->$attribute;
+    if(!$this->cvHasCallBack(get_class($this).'columnDefinitions'))
+      $this->setCacheColumnDefinitions();
     $defs              = $this->cvCacheGetProperty(get_class($this).'columnDefinitions');
     $defArray          = [];
     foreach($defs as $def){
