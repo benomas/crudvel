@@ -1,11 +1,14 @@
-<?php namespace Crudvel\Models;
+<?php
+
+namespace Crudvel\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Crudvel\Traits\CrudTrait;
 use Crudvel\Traits\CacheTrait;
 
-class BaseModel extends Model {
+class BaseModel extends Model
+{
   use CrudTrait;
   use CacheTrait;
   protected $schema;
@@ -13,131 +16,159 @@ class BaseModel extends Model {
   protected $hidden            = ['pivot'];
   protected $cacheBoots        = [];
 
-  public function __construct($attributes = array())  {
+  public function __construct($attributes = array())
+  {
     parent::__construct($attributes);
     $this->setCacheBoots();
   }
 
-// Scopes
+  // Scopes
 
-  public function scopeInStatus($query, $status, $preFixed = true){
-    if(is_array($status))
-      $query->whereIn($this->preFixed('status',$preFixed),$status);
+  public function scopeInStatus($query, $status, $preFixed = true)
+  {
+    if (is_array($status))
+      $query->whereIn($this->preFixed('status', $preFixed), $status);
     else
-      $query->whereIn($this->preFixed('status',$preFixed),[$status]);
+      $query->whereIn($this->preFixed('status', $preFixed), [$status]);
   }
 
-  public function scopeNotInStatus($query, $status, $preFixed = true){
-    if(is_array($status))
-      $query->whereNotIn($this->preFixed('status',$preFixed),$status);
+  public function scopeNotInStatus($query, $status, $preFixed = true)
+  {
+    if (is_array($status))
+      $query->whereNotIn($this->preFixed('status', $preFixed), $status);
     else
-      $query->whereNotIn($this->preFixed('status',$preFixed),[$status]);
+      $query->whereNotIn($this->preFixed('status', $preFixed), [$status]);
   }
 
-  public function scopeStatus($query, $status, $preFixed = true){
-    $query->where($this->preFixed('status',$preFixed),$status);
+  public function scopeStatus($query, $status, $preFixed = true)
+  {
+    $query->where($this->preFixed('status', $preFixed), $status);
   }
 
-  public function scopeActives($query, $preFixed = true){
-    if($query->getModel()->hasPropertyActive)
-      $query->where($this->preFixed('active',$preFixed),1);
+  public function scopeActives($query, $preFixed = true)
+  {
+    if ($query->getModel()->hasPropertyActive)
+      $query->where($this->preFixed('active', $preFixed), 1);
   }
 
-  public function scopeNoFilters($query){
+  public function scopeNoFilters($query)
+  {
     $query->whereRaw("1 = 1");
   }
 
-  public function scopeNullFilter($query, $preFixed = true){
-    $query->whereNull($this->preFixed($this->getKeyName(),$preFixed));
+  public function scopeNullFilter($query, $preFixed = true)
+  {
+    $query->whereNull($this->preFixed($this->getKeyName(), $preFixed));
   }
 
-  public function scopeNotNull($query,$column, $preFixed = true){
-    $query->whereNotNull($this->preFixed($column,$preFixed));
+  public function scopeNotNull($query, $column, $preFixed = true)
+  {
+    $query->whereNotNull($this->preFixed($column, $preFixed));
   }
 
-  public function scopeId($query,$key, $preFixed = true){
-    $query->where($this->preFixed($this->getKeyName(),$preFixed),$key);
+  public function scopeId($query, $key, $preFixed = true)
+  {
+    $query->where($this->preFixed($this->getKeyName(), $preFixed), $key);
   }
 
-  public function scopeIds($query,$keys, $preFixed = true){
-    $query->whereIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
+  public function scopeIds($query, $keys, $preFixed = true)
+  {
+    $query->whereIn($this->preFixed($this->getKeyName(), $preFixed), $keys);
   }
 
-  public function scopeNoIds($query,$keys, $preFixed = true){
-    $query->whereNotIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
+  public function scopeNoIds($query, $keys, $preFixed = true)
+  {
+    $query->whereNotIn($this->preFixed($this->getKeyName(), $preFixed), $keys);
   }
 
-  public function scopeUuid($query,$uuid, $preFixed = true){
-    $query->where($this->preFixed('uuid',$preFixed),$uuid);
+  public function scopeUuid($query, $uuid, $preFixed = true)
+  {
+    $query->where($this->preFixed('uuid', $preFixed), $uuid);
   }
 
-  public function scopeUuids($query,$uuids, $preFixed = true){
-    $query->whereIn($this->preFixed('uuid',$preFixed),$uuids);
+  public function scopeUuids($query, $uuids, $preFixed = true)
+  {
+    $query->whereIn($this->preFixed('uuid', $preFixed), $uuids);
   }
 
-  public function scopeNoUuids($query,$uuids, $preFixed = true){
-    $query->whereNotIn($this->preFixed('uuid',$preFixed),$uuids);
+  public function scopeNoUuids($query, $uuids, $preFixed = true)
+  {
+    $query->whereNotIn($this->preFixed('uuid', $preFixed), $uuids);
   }
 
-  public function scopeUnActives($query, $preFixed = true){
-    $query->where($this->preFixed('status',$preFixed),0);
+  public function scopeUnActives($query, $preFixed = true)
+  {
+    $query->where($this->preFixed('status', $preFixed), 0);
   }
 
-  public function scopeName($query,$name, $preFixed = true){
-    $query->where($this->preFixed('name',$preFixed), $name);
+  public function scopeName($query, $name, $preFixed = true)
+  {
+    $query->where($this->preFixed('name', $preFixed), $name);
   }
 
-  public function scopeNombre($query,$nombre, $preFixed = true){
-    $query->where($this->preFixed('nombre',$preFixed), $nombre);
+  public function scopeNombre($query, $nombre, $preFixed = true)
+  {
+    $query->where($this->preFixed('nombre', $preFixed), $nombre);
   }
 
-  public function scopeValue($query,$value, $preFixed = true){
-    $query->where($this->preFixed('value',$preFixed), $value);
+  public function scopeValue($query, $value, $preFixed = true)
+  {
+    $query->where($this->preFixed('value', $preFixed), $value);
   }
 
-  public function scopeSlugs($query,$slug, $preFixed = true){
-    $query->whereIn($this->preFixed('slug',$preFixed), $slug);
+  public function scopeSlugs($query, $slug, $preFixed = true)
+  {
+    $query->whereIn($this->preFixed('slug', $preFixed), $slug);
   }
 
-  public function scopeSlug($query,$slug, $preFixed = true){
-    $query->where($this->preFixed('slug',$preFixed), $slug);
+  public function scopeSlug($query, $slug, $preFixed = true)
+  {
+    $query->where($this->preFixed('slug', $preFixed), $slug);
   }
 
-  public function scopeOfLevel($query,$level_id, $preFixed = true){
-    $query->where($this->preFixed('level_id',$preFixed), $level_id);
+  public function scopeOfLevel($query, $level_id, $preFixed = true)
+  {
+    $query->where($this->preFixed('level_id', $preFixed), $level_id);
   }
 
-  public function scopeOfParent($query,$parent_id, $preFixed = true){
-    $query->where($this->preFixed('parent_id',$preFixed), $parent_id);
+  public function scopeOfParent($query, $parent_id, $preFixed = true)
+  {
+    $query->where($this->preFixed('parent_id', $preFixed), $parent_id);
   }
 
-  public function scopeOfSublevel($query,$sublevel_id, $preFixed = true){
-    $query->where($this->preFixed('sublevel_id',$preFixed), $sublevel_id);
+  public function scopeOfSublevel($query, $sublevel_id, $preFixed = true)
+  {
+    $query->where($this->preFixed('sublevel_id', $preFixed), $sublevel_id);
   }
 
-  public function scopeGeneralOwner($query,$userId){
+  public function scopeGeneralOwner($query, $userId)
+  { }
+
+  public function scopeParticularOwner($query, $userId)
+  {
+    $query->where($this->preFixed('user_id', true), $userId);
   }
 
-  public function scopeParticularOwner($query,$userId){
-    $query->where($this->preFixed('user_id',true), $userId);
+  public function scopeUpdatedBefore($query, $date, $preFixed = true)
+  {
+    $query->where($this->preFixed('updated_at', $preFixed), '>', $date);
   }
 
-  public function scopeUpdatedBefore($query,$date, $preFixed = true){
-    $query->where($this->preFixed('updated_at',$preFixed),'>',$date);
+  public function scopeUpdatedAfter($query, $date, $preFixed = true)
+  {
+    $query->where($this->preFixed('updated_at', $preFixed), '<', $date);
   }
 
-  public function scopeUpdatedAfter($query,$date, $preFixed = true){
-    $query->where($this->preFixed('updated_at',$preFixed),'<',$date);
-  }
-
-  public function scopeUpdatedBetween($query,$date, $preFixed = true){
+  public function scopeUpdatedBetween($query, $date, $preFixed = true)
+  {
     $query->updatedBefore($date)->updatedAfter($date);
   }
 
-  public function scopeDistinctCount($query,$column){
-    if(!in_array($column,$this->getTableColumns()))
+  public function scopeDistinctCount($query, $column)
+  {
+    if (!in_array($column, $this->getTableColumns()))
       return 0;
-    return $query->count(DB::raw("DISTINCT ".$this->fixColumnName($column)));
+    return $query->count(DB::raw("DISTINCT " . $this->fixColumnName($column)));
   }
 
   /**
@@ -146,99 +177,195 @@ class BaseModel extends Model {
    *
    *
    * */
-  public function scopeGroupByKey($query){
-    $query->groupBy($this->getTable().'.'.$this->getKeyName());
+  public function scopeGroupByKey($query)
+  {
+    $query->groupBy($this->getTable() . '.' . $this->getKeyName());
   }
 
-  public function scopeOrderByKey($query){
-    $query->orderBy($this->getTable().'.'.$this->getKeyName());
+  public function scopeOrderByKey($query)
+  {
+    $query->orderBy($this->getTable() . '.' . $this->getKeyName());
   }
 
-  public function scopeSelectKey($query){
-    $query->select($this->getTable().'.'.$this->getKeyName());
+  public function scopeSelectKey($query)
+  {
+    $query->select($this->getTable() . '.' . $this->getKeyName());
   }
 
-  public function scopeSelectMinKey($query){
-    $query->min($this->getTable().'.'.$this->getKeyName());
+  public function scopeSelectMinKey($query)
+  {
+    $query->min($this->getTable() . '.' . $this->getKeyName());
   }
 
-  public function scopeDuplicity($query){
+  public function scopeDuplicity($query)
+  {
     $query->name($this->name);
   }
-// End Scopes
+  // End Scopes
 
-// Others
+  // Others
 
-  public function getTable(){
+  public function getTable()
+  {
     //TODO, fix schema inclusion
     return parent::getTable();
   }
 
-  public function getSimpleTable(){
-    return empty($schema = $this->schema)?$this->getTable():str_replace($schema.'.','',$this->getTable());
+  public function getSimpleTable()
+  {
+    return empty($schema = $this->schema) ? $this->getTable() : str_replace($schema . '.', '', $this->getTable());
   }
 
-  public function getSchema(){
+  public function getSchema()
+  {
     return $this->schema;
   }
 
-  public function manyToManyToMany($firstLevelRelation,$secondLevelRelation,$secondLevelModel){
-    if(!is_callable(array($secondLevelModel,"nullFilter")))
+  public function manyToManyToMany($firstLevelRelation, $secondLevelRelation, $secondLevelModel)
+  {
+    if (!is_callable(array($secondLevelModel, "nullFilter")))
       return null;
 
-    if(!method_exists($this,$firstLevelRelation))
+    if (!method_exists($this, $firstLevelRelation))
       return null;
 
     $firstLevelRelationInstace = $this->{$firstLevelRelation};
-    if(!$firstLevelRelationInstace)
+    if (!$firstLevelRelationInstace)
       return $secondLevelModel::nullFilter();
 
-    $secondLevelRelationArray=[];
-    foreach ($firstLevelRelationInstace as $firstLevelRelationItem){
-      if(method_exists($firstLevelRelationItem,$secondLevelRelation) && $firstLevelRelationItem->{$secondLevelRelation}()->count())
-          $secondLevelRelationArray = array_unique(array_merge($secondLevelRelationArray,$firstLevelRelationItem->{$secondLevelRelation}()->get()->pluck("id")->toArray()));
+    $secondLevelRelationArray = [];
+    foreach ($firstLevelRelationInstace as $firstLevelRelationItem) {
+      if (method_exists($firstLevelRelationItem, $secondLevelRelation) && $firstLevelRelationItem->{$secondLevelRelation}()->count())
+        $secondLevelRelationArray = array_unique(array_merge($secondLevelRelationArray, $firstLevelRelationItem->{$secondLevelRelation}()->get()->pluck("id")->toArray()));
     }
 
     return $secondLevelModel::ids($secondLevelRelationArray);
   }
 
-  public function shadow(){
-    $clonedInstacse = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
+  public function shadow()
+  {
+    $clonedInstace = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
     $clonedInstace->setModel($this->getModel());
     return $clonedInstace;
   }
 
-  public function getConnectionName(){
+  public function getConnectionName()
+  {
     return $this->connection;
   }
 
-  public static function accesor(){
+  public static function accesor()
+  {
     return self::first();
   }
 
   //TODO sanatize this method
-  public function fixColumnName($column){
-    if(!in_array($column,$this->getTableColumns()))
+  public function fixColumnName($column)
+  {
+    if (!in_array($column, $this->getTableColumns()))
       return null;
-    return $this->getTable().'.'.$column;
+    return $this->getTable() . '.' . $column;
   }
 
-  public function getTableColumns() {
+  public function getTableColumns()
+  {
     return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getSimpleTable());
   }
 
-  public function getSearchFieldColumn(){
+  public function getSearchFieldColumn()
+  {
     return 'search_field';
   }
 
-  public function preFixed($column,$fixed=true){
-    if(!$fixed)
+  public function preFixed($column, $fixed = true)
+  {
+    if (!$fixed)
       return $column;
-    return $this->getTable().'.'.$column;
+    return $this->getTable() . '.' . $column;
   }
 
-  public function getKeyValue(){
-    return $this->attributes[$this->getKeyName()]??null;
+  public function getKeyValue()
+  {
+    return $this->attributes[$this->getKeyName()] ?? null;
   }
-// Others
+
+  public function setCacheBoots()
+  {
+    $this->cvCacheSetCallBack('columnDefinitions',function(){
+      return columnList($this->getConnectionName(),$this->getTable());
+    });
+  }
+
+  public function autoCast($attribute = null)
+  {
+    if(!$attribute || !isset($this->$attribute))
+      return null;
+    $value = $this->$attribute;
+    $defs = $this->cvCacheGetProperty('columnDefinitions');
+    $defArray = [];
+    foreach($defs as $def){
+      $defArray[$def['name']] = $def;
+    }
+    $defs = $defArray;
+    unset($defArray);
+    $types = [
+      'boolean'=> function() use($value) {
+        return (int)$value;
+      },
+      'tinyInteger'=> function() use($value) {
+        return (int)$value;
+      },
+      'smallInteger'=> function() use($value) {
+        return (int)$value;
+      },
+      'integer'=> function() use($value) {
+        return (int)$value;
+      },
+      'float'=> function() use($value) {
+        return (float)$value;
+      },
+      'decimal'=> function() use($value) {
+        return (float)$value;
+      },
+      'date'=> function() use($value) {
+        return trim((string)$value);
+      },
+      'time'=> function() use($value) {
+        return trim((string)$value);
+      },
+      'dateTime'=> function() use($value) {
+        return trim((string)$value);
+      },
+      'string'=> function() use($value) {
+      return trim((string)$value);
+      },
+      'char'=> function() use($value) {
+        return trim((string)$value);
+      },
+      'text'=> function() use($value) {
+        return trim((string)$value);
+      },
+    ];
+    $check = $types[$defs[$attribute]['type']] ?? null;
+    if(!$check) return $types['string']();
+    return $check();
+  }
+  // Others
 }
+
+/*
+$this->cvCacheGetProperty($catalog.'Name') &&
+  'boolean'      => 'App\libraries\dataTypes\CvBoolean',
+  'tinyInteger'  => 'App\libraries\dataTypes\CvTinyInteger',
+  'smallInteger' => 'App\libraries\dataTypes\CvSmallInteger',
+  'integer'      => 'App\libraries\dataTypes\CvInteger',
+  'float'        => 'App\libraries\dataTypes\CvFloat',
+  'decimal'      => 'App\libraries\dataTypes\CvDecimal',
+  'date'         => 'App\libraries\dataTypes\CvDate',
+  'time'         => 'App\libraries\dataTypes\CvTime',
+  'dateTime'     => 'App\libraries\dataTypes\CvDateTime',
+  'string'       => 'App\libraries\dataTypes\CvString',
+  'char'         => 'App\libraries\dataTypes\CvChar',
+  'text'         => 'App\libraries\dataTypes\CvText',
+
+*/
