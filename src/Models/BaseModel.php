@@ -291,7 +291,7 @@ class BaseModel extends Model
 
   public function setCacheBoots()
   {
-    $this->cvCacheSetCallBack('columnDefinitions',function(){
+    $this->cvCacheSetCallBack(get_class($this).'columnDefinitions',function(){
       return columnList($this->getConnectionName(),$this->getTable());
     });
   }
@@ -301,7 +301,7 @@ class BaseModel extends Model
     if(!$attribute || !isset($this->$attribute))
       return null;
     $value = $this->$attribute;
-    $defs = $this->cvCacheGetProperty('columnDefinitions');
+    $defs = $this->cvCacheGetProperty(get_class($this).'columnDefinitions');
     $defArray = [];
     foreach($defs as $def){
       $defArray[$def['name']] = $def;
@@ -350,22 +350,60 @@ class BaseModel extends Model
     if(!$check) return $types['string']();
     return $check();
   }
+
+  public function modelCast($srcRow,$attribute = null)
+  {
+    if(!$attribute || !isset($srcRow->$attribute))
+      return null;
+    $value             = $srcRow->$attribute;
+    $defs              = $this->cvCacheGetProperty(get_class($this).'columnDefinitions');
+    $defArray          = [];
+    foreach($defs as $def){
+      $defArray[$def['name']] = $def;
+    }
+    $defs = $defArray;
+    unset($defArray);
+    $types = [
+      'boolean'=> function() use($value) {
+        return (int)$value;
+      },
+      'tinyInteger'=> function() use($value) {
+        return (int)$value;
+      },
+      'smallInteger'=> function() use($value) {
+        return (int)$value;
+      },
+      'integer'=> function() use($value) {
+        return (int)$value;
+      },
+      'float'=> function() use($value) {
+        return (string)$value;
+      },
+      'decimal'=> function() use($value) {
+        return (string)$value;
+      },
+      'date'=> function() use($value) {
+        return trim((string)$value);
+      },
+      'time'=> function() use($value) {
+        return trim((string)$value);
+      },
+      'dateTime'=> function() use($value) {
+        return trim((string)$value);
+      },
+      'string'=> function() use($value) {
+      return trim((string)$value);
+      },
+      'char'=> function() use($value) {
+        return trim((string)$value);
+      },
+      'text'=> function() use($value) {
+        return trim((string)$value);
+      },
+    ];
+    $check = $types[$defs[$attribute]['type']] ?? null;
+    if(!$check) return $types['string']();
+    return $check();
+  }
   // Others
 }
-
-/*
-$this->cvCacheGetProperty($catalog.'Name') &&
-  'boolean'      => 'App\libraries\dataTypes\CvBoolean',
-  'tinyInteger'  => 'App\libraries\dataTypes\CvTinyInteger',
-  'smallInteger' => 'App\libraries\dataTypes\CvSmallInteger',
-  'integer'      => 'App\libraries\dataTypes\CvInteger',
-  'float'        => 'App\libraries\dataTypes\CvFloat',
-  'decimal'      => 'App\libraries\dataTypes\CvDecimal',
-  'date'         => 'App\libraries\dataTypes\CvDate',
-  'time'         => 'App\libraries\dataTypes\CvTime',
-  'dateTime'     => 'App\libraries\dataTypes\CvDateTime',
-  'string'       => 'App\libraries\dataTypes\CvString',
-  'char'         => 'App\libraries\dataTypes\CvChar',
-  'text'         => 'App\libraries\dataTypes\CvText',
-
-*/
