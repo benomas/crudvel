@@ -379,10 +379,10 @@ class BaseModel extends Model
         return (int)$value;
       },
       'float'=> function() use($value) {
-        return (string)$value;
+        return (string)round($value,2);
       },
       'decimal'=> function() use($value) {
-        return (string)$value;
+        return (string)round($value,2);
       },
       'date'=> function() use($value) {
         return trim((string)$value);
