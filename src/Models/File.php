@@ -52,6 +52,12 @@ class File extends \Crudvel\Customs\Models\BaseModel{
     });
   }
 
+  public function scopeFromResource($query,$resource){
+    $query->whereHas('catFile',function($query) use($resource){
+      $query->where('resource',$resource);
+    });
+  }
+
 // End Scopes
 
 //Scopes
