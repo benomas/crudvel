@@ -53,12 +53,11 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
     if(customNonEmptyArray($this->selectQuery))
       $this->fixSelectables();
 
-    $this->container->unions();
+    $this->container->unions();;
     if($this->model===null)
       return ;
     $querySql = $this->model->toSql();
     $this->model->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($this->model->getBindings()));
-
     //si existe un array de columnas a filtrar
     if(customNonEmptyArray($this->filterQuery))
       $this->filter();
@@ -137,17 +136,21 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
 
   protected function filter() {
     if(!isset($this->searchObject) || !$this->searchObject)
-      return $this->model;
+      $this->searchObject = '';
 
-    $this->model->where(function($query){
-      foreach ($this->filterQuery as $field=>$filter){
-        $method=!isset($method)?"where":"orWhere";
-        if($this->comparator==="like")
+    foreach ($this->filterQuery as $field=>$filter){
+      if(is_array($filter))
+        $this->applyCustomFilter($field,$filter);
+      unset($this->filterQuery,$field);
+    }
+    //default filter
+    if(!empty($this->filterQuery))
+      $this->model->where(function($query){
+        foreach ($this->filterQuery as $field=>$filter){
+          $method=!isset($method)?"where":"orWhere";
           $query->{$method}($field,$this->comparator,"%{$this->searchObject}%");
-        else
-          $query->{$method}($field,$this->comparator,"{$this->searchObject}");
-      }
-    });
+        }
+      });
   }
 
   public function fixables($property){

@@ -28,7 +28,7 @@ class CvBasePaginator
   //arreglo de columnas a seleccionar
   protected $selectQuery;
   //array de comparaciones validas
-  protected $comparators = [];
+  protected $comparators       = ["=","<",">","<>","<=",">=","like"];
   //array de comparaciones validas
   protected $comparator        = null;
   protected $paginateCount     = 0;
@@ -41,6 +41,11 @@ class CvBasePaginator
   protected $dbEngineContainer = null;
   protected $model;
   protected $modelInstance;
+  //array de comparaciones validas
+  protected $logicConnectors  =[
+    'and'=>'where'
+    ,'or'=>'Orwhere'
+  ];
   public $unsolvedColumns;
 
   public function __construct($container){
@@ -175,6 +180,17 @@ class CvBasePaginator
   public function setModel($model){
     $this->model=$model;
     return $this;
+  }
+
+  public function applyCustomFilter($field,$filter){
+    $lop = $filter['lOp'] ?? 'or';
+    $eOp = $filter['eOp'] ?? 'like';
+    if(empty($this->logicConnectors[$lop]))
+      jdd('invalid custom filter, require to define lOp property');
+    if(!in_array($eOp,$this->comparators))
+      jdd('invalid custom filter, require to define eOp property');
+    $lop = $this->logicConnectors[$lop];
+    $this->model->$lop($field,$eOp,$filter['value']);
   }
 }
 
