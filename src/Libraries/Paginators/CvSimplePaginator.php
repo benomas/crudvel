@@ -53,11 +53,12 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
     if(customNonEmptyArray($this->selectQuery))
       $this->fixSelectables();
 
-    $this->container->unions();;
+    $this->container->unions();
     if($this->model===null)
       return ;
     $querySql = $this->model->toSql();
     $this->model->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($this->model->getBindings()));
+
     //si existe un array de columnas a filtrar
     if(customNonEmptyArray($this->filterQuery))
       $this->filter();
