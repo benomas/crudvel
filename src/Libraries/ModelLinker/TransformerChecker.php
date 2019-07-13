@@ -32,7 +32,8 @@ class TransformerChecker
   public function buildTplTrans($acc){
     // define functionDef-inition for all get.*Attribute
     $funcDef ='  public function get'.ucfirst(camel_case($acc['destColumn'])).'Attribute(){';
-    if(isset($acc['postfixed'])) $acc['postfixed'] = lcfirst($acc['relatedDestModel']).ucfirst($acc['postfixed']);
+    // if(isset($acc['postfixed'])) $acc['postfixed'] = lcfirst($acc['relatedDestModel']).$acc[''].ucfirst($acc['postfixed']);
+    if(isset($acc['prefixed'])) $acc['postfixed'] = $acc['prefixed'];
     // verify accesorType
     // Dinamic call to relation data
     $relationCall = 'relationResponse';
@@ -147,7 +148,6 @@ class TransformerChecker
   public function insertTransformerInClass($acc){
     $file = cvClassFile($acc['srcModel']);
     $fileContents = file_get_contents($file);
-    // pdd($acc['accessorType']=='complex', empty($acc['callBack']), $this->evalCallBack($acc['callBack']));
     if($acc['accessorType'] == 'complex' && (empty($acc['callBack']) || !$this->evalCallBack($acc['callBack']))){
         return ['model' => $acc['srcModel'], 'status' => false, 'message' => 'Error validation code.'];
     }
