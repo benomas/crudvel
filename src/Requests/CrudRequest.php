@@ -63,7 +63,6 @@ class CrudRequest extends FormRequest
     $this->prepareRequest();
     if(!$this->currentAction)
       return true;
-
     if($this->owner() && in_array($this->currentAction,['index','show']))
       return true;
 

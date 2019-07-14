@@ -47,7 +47,7 @@ class File extends \Crudvel\Customs\Models\BaseModel{
   }
 
   public function scopeParticularOwner($query,$userId){
-    $query->whereHas('request',function($query) use($userId) {
+    $query->whereHas('resource',function($query) use($userId) {
       $query->particularOwner($userId);
     });
   }
