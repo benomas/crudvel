@@ -4,6 +4,22 @@ use Crudvel\Customs\Requests\CrudRequest;
 use App\Models\CatFile;
 
 class FileRequest extends \Crudvel\Customs\Requests\CrudRequest{
+
+  /**
+   * Determine if the user is authorized to make this request.
+   *
+   * @return bool
+   */
+  /*
+  public function authorize()
+  {
+    if(!parent::authorize())
+      return false;
+
+    if($this->currentAction === 'destroy')
+      return actionAccess($this->userModel,$this->catFile->resource.".update");
+    return true;
+  }*/
   /**
    * Get the validation rules that apply to the request.
    *
@@ -33,6 +49,8 @@ class FileRequest extends \Crudvel\Customs\Requests\CrudRequest{
         if($this->modelInstanciator()->catFileId($this->fields["cat_file_id"])->resourceId($this->fields["resource_id"])->count())
           $this->rules[$this->fileName] = 'file_already_exist';
       }
+      if(!actionAccess($this->userModel,$this->catFile->resource.".update"))
+        $this->rules['cat_file_id'].='|file_resource';
     }
   }
 
@@ -42,5 +60,10 @@ class FileRequest extends \Crudvel\Customs\Requests\CrudRequest{
 
   public function postStoreUpdate(){
     $this->rules[$this->fileName] = 'required';
+  }
+
+  public function deleteDestroy(){
+    if(!actionAccess($this->userModel,$this->modelInstance->catFile.".update"))
+      $this->rules['cat_file_id'].='file_resource';
   }
 }

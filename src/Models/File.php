@@ -47,9 +47,16 @@ class File extends \Crudvel\Customs\Models\BaseModel{
   }
 
   public function scopeParticularOwner($query,$userId){
+    /* TODO this logic needs to be redefined, based on the user,
+      user has access to resourses, on those resources user maybe has records,
+      so particual owner, only can have access to files asociated to those records from the
+      resources that are related to files
+     */
+
+    /*
     $query->whereHas('resource',function($query) use($userId) {
       $query->particularOwner($userId);
-    });
+    });*/
   }
 
   public function scopeFromResource($query,$resource){

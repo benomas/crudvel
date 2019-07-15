@@ -327,7 +327,7 @@ trait CrudTrait {
       $this->currentUser->isRoot()
     )
       return true;
-      ;
+
     if($this->currentUser->specialPermissions()->slug($this->langName.".general-owner")->count())
       $this->model->generalOwner($this->currentUser->id);
     else

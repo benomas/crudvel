@@ -380,7 +380,29 @@ private function getIgnore(&$parameters)
       return in_array($value,$parameters);
   }
 
+  //TODO validate that internally, for now it will be evaluated in request, and if is called will be triggered always as false
+  /**
+  * Detect if file already exist
+  *
+  * @author benomas benomas@gmail.com
+  * @date   2019-07-15
+  * @return void
+  *
+  */
   function validateFileAlreadyExist($attribute, $value, $parameters)
+  {
+    return null;
+  }
+
+  //TODO validate that internally, for now it will be evaluated in request, and if is called will be triggered always as false
+  /**
+  * Validate that the user has permissions to upload files to the associated resource
+  *
+  * @author benomas benomas@gmail.com
+  * @date   2019-07-15
+  * @return void
+  */
+  function validateFileResource($attribute, $value, $parameters)
   {
     return null;
   }
