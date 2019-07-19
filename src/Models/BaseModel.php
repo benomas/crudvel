@@ -403,6 +403,9 @@ class BaseModel extends Model
         return trim((string)$value);
       },
     ];
+
+    if(empty($defs[$attribute]))
+      return $types['string']();
     $check = $types[$defs[$attribute]['type']] ?? null;
     if(!$check) return $types['string']();
     return $check();
