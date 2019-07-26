@@ -776,7 +776,6 @@ if(!function_exists("sqliteColumnList")){
           sql like 'CREATE TABLE \"$table\" (%' OR
           sql like 'CREATE TABLE\"$table\"(%'
       ");
-
     //Remplazamos caracteres invisibles
     if(empty($creationQuery[0])){
       customLog('fail to obtain sqlite create statment log',$table);
@@ -808,7 +807,15 @@ if(!function_exists("sqliteColumnList")){
       $default    = preg_replace('/(.*)(DEFAULT)\s(\d+)(.*)/', '$3', $currentCol);
       if($default === $currentCol)
         $default = 'no-default-value';
-      $type = sqliteDataTypeTraductor($datatype);
+
+      //hardcoded exceptions ;(
+      if(in_array($datatype,['',null])){
+        if($column === 'activo')
+          $type = 'boolean';
+      }
+      else
+        $type = sqliteDataTypeTraductor($datatype);
+      
       if(in_array($type,['string','char'])){
         $maxLength = \DB::connection($connectionName)->select("SELECT MAX(length($column)) FROM $table");
         if($maxLength>255){
