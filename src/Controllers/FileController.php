@@ -54,7 +54,7 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
     'cat_file_name'     => 'cat_files.name',
     'cat_file_multiple' => 'cat_files.multiple',
     'cat_file_slug'     => 'cat_files.slug',
-    'cat_file_resorce'  => 'cat_files.resource',
+    'cat_file_resorce'  => 'cat_files.resource'
   ];
 
   protected $disk = "public";

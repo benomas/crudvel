@@ -53,8 +53,8 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
     if(customNonEmptyArray($this->selectQuery))
       $this->fixSelectables();
 
-    $this->container->unions();;
-    if($this->model===null)
+    $this->container->unions();
+    if($this->model===null || $this->model->count() === 0)
       return ;
     $querySql = $this->model->toSql();
     $this->model->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($this->model->getBindings()));
@@ -78,7 +78,7 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
   }
 
   public function paginateResponder(){
-    if(!$this->model)
+    if(!$this->model || $this->model->count()===0 )
       return $this->container->apiSuccessResponse([
         "data"   =>[],
         "count"  =>0,
