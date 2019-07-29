@@ -86,6 +86,12 @@ class ApiController extends CustomController
         return $this->apiNotFound();
       $this->modelInstance =  $this->model->first();
     }
+    if(in_array($method,$this->rowsActions) && $this->model->count() === 0)
+      return $this->apiSuccessResponse([
+        "data"    => [],
+        "count"   => 0,
+        "message" => trans("crudvel.api.success")
+      ]);
     $this->setPaginator();
     return parent::callActionJump($method,$parameters);
   }

@@ -78,7 +78,7 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
   }
 
   public function paginateResponder(){
-    if(!$this->model || $this->model->count()===0 )
+    if(!$this->model)
       return $this->container->apiSuccessResponse([
         "data"   =>[],
         "count"  =>0,
@@ -92,7 +92,7 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
 
     if(!$this->paginateData){
       $keyed = $this->model->get()->keyBy(function ($item) {
-        return str_slug($item[$this->getSlugField()]);
+        return str_slug($item[$this->container->getSlugField()]);
       });
       $this->paginateData = $keyed->all();
     }
