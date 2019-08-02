@@ -815,7 +815,7 @@ if(!function_exists("sqliteColumnList")){
       }
       else
         $type = sqliteDataTypeTraductor($datatype);
-      
+
       if(in_array($type,['string','char'])){
         $maxLength = \DB::connection($connectionName)->select("SELECT MAX(length($column)) FROM $table");
         if($maxLength>255){
@@ -978,6 +978,8 @@ if(!function_exists("sqliteDataTypeTraductor")){
         return 'decimal';
       case 'real':
         return 'float';
+      case 'numeric':
+        return 'decimal';
 
       default:
         //Hack para identificar tipos de dato no resueltos
