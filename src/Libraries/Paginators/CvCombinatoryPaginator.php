@@ -20,6 +20,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
    * @return boolean    if require pagine or not
    */
   public function extractPaginate(){
+    $this->model = $this->container->getModel();
 
     //si la peticion http solicita paginación de forma incorrecta
     if(!customNonEmptyArray($this->paginate)){

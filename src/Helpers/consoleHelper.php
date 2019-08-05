@@ -17,10 +17,16 @@ if ( ! function_exists('consoleDropTables'))
       $this->info($command.' procesado ');
       DB::purge();
 
-      try{DB::statement('DROP DATABASE fake_database');}
-      catch(\Exception $e){}
+      try{
+        DB::statement('DROP DATABASE fake_database');
+      }
+      catch(\Exception $e){
+        customLog($e->getMessage());
+      }
 
-        try{DB::statement('CREATE DATABASE fake_database');}
+      try{
+        DB::statement('CREATE DATABASE fake_database');
+      }
       catch(\Exception $e){
         $shellEcho  = customExec($command="php artisan migrate:reset");
         $this->info($shellEcho);
@@ -34,19 +40,31 @@ if ( ! function_exists('consoleDropTables'))
       $defaultConnection['database'] ='fake_database';
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
-      DB::statement('DROP DATABASE '.$originalDatabase);
-      try{DB::statement('DROP DATABASE '.$originalDatabase);}
-      catch(\Exception $e){}
-        DB::statement('CREATE DATABASE '.$originalDatabase);
-      try{DB::statement('CREATE DATABASE '.$originalDatabase);}
-      catch(\Exception $e){}
+      DB::statement('DROP DATABASE `'.$originalDatabase.'`');
+      try{
+        DB::statement('DROP DATABASE `'.$originalDatabase.'`');
+      }
+      catch(\Exception $e){
+        customLog($e->getMessage());
+      }
+      DB::statement('CREATE DATABASE `'.$originalDatabase.'`');
+      try{
+        DB::statement('CREATE DATABASE `'.$originalDatabase.'`');
+      }
+      catch(\Exception $e){
+        customLog($e->getMessage());
+      }
 
-        $defaultConnection['database'] =$originalDatabase;
+      $defaultConnection['database'] =$originalDatabase;
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
-      try{DB::statement('DROP DATABASE fake_database');}
-      catch(\Exception $e){}
-        $this->info('tablas eliminadas');
+      try{
+        DB::statement('DROP DATABASE fake_database');
+      }
+      catch(\Exception $e){
+        customLog($e->getMessage());
+      }
+      $this->info('tablas eliminadas');
 
     })->describe('Elimina todas las tablas');
   }
