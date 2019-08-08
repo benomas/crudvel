@@ -1090,8 +1090,8 @@ if(!function_exists('cvConsoler')){
 if(!function_exists('cvBlackTC')){
   function cvBlackTC($message){return CvHelper::blackTC($message);}
 }
-if(!function_exists('cvRedCoTC')){
-  function cvRedCoTC($message){return CvHelper::redCoTC($message);}
+if(!function_exists('cvRedTC')){
+  function cvRedTC($message){return CvHelper::redCoTC($message);}
 }
 if(!function_exists('cvGreenTC')){
   function cvGreenTC($message){return CvHelper::greenTC($message);}
@@ -1116,4 +1116,9 @@ if(!function_exists('cvDefauTC')){
 }
 if(!function_exists("getCheckPoint")){
   function getCheckPoint(){return CvHelper::getCheckPoint();}
+}
+if(!function_exists('cvConsolerLn')){
+  function cvConsolerLn($messageStart='',$messageEnd=''){
+    cvConsoler(cvCyanTC("$messageStart\n---------------------------------------------------------------------------------------------------\n$messageEnd"));
+  }
 }

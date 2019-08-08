@@ -3,7 +3,6 @@
 use Illuminate\Database\Seeder;
 use DB;
 use Crudvel\Traits\CrudTrait;
-use Illuminate\Support\Facades\Schema;
 
 class BaseSeeder extends Seeder
 {
@@ -59,12 +58,15 @@ class BaseSeeder extends Seeder
   }
 
   public function chunckedImplementation($modelClass){
+    $chunkCount = 0;
     foreach($this->data->chunk($this->chunkSize()) as $subData){
+      $chunkCount++;
       try{
         $modelClass::insert($subData->toArray());
+        cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." with ".cvCyanTC(count($subData)).' rows, '.cvGreenTC('completed'));
       }catch(\Exception $e){
         customLog('Seeder transaction fail with',json_encode($subData),json_encode($e));
-        cvConsoler(cvRedCoTC("\n".'Exception when running seeder '.json_encode($e)));
+        cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." with ".cvCyanTC(count($subData)).' rows, '.cvRedTC('fail'));
       }
     }
   }
