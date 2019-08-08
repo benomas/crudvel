@@ -63,10 +63,10 @@ class BaseSeeder extends Seeder
       $chunkCount++;
       try{
         $modelClass::insert($subData->toArray());
-        cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." with ".cvCyanTC(count($subData)).' rows, '.cvGreenTC('completed'));
+        cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." of ".cvBlueTC(class_basename($modelClass))." with ".cvCyanTC(count($subData)).' rows, '.cvGreenTC('completed'));
       }catch(\Exception $e){
         customLog('Seeder transaction fail with',json_encode($subData),json_encode($e));
-        cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." with ".cvCyanTC(count($subData)).' rows, '.cvRedTC('fail'));
+        cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." of ".cvBlueTC(class_basename($modelClass))." with ".cvCyanTC(count($subData)).' rows, '.cvRedTC('fail'));
       }
     }
   }
