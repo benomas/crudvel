@@ -63,10 +63,31 @@ class BaseSeeder extends Seeder
       $chunkCount++;
       try{
         $modelClass::insert($subData->toArray());
-        cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." of ".cvBlueTC(class_basename($modelClass))." with ".cvCyanTC(count($subData)).' rows, '.cvGreenTC('completed'));
+        cvConsoler("\n".cvBlueTC(class_basename($modelClass))." chunk number ".cvBrownTC($chunkCount)." with ".cvCyanTC(count($subData)).' rows, '.cvGreenTC('completed'));
       }catch(\Exception $e){
         customLog('Seeder transaction fail with',json_encode($subData),json_encode($e));
         cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." of ".cvBlueTC(class_basename($modelClass))." with ".cvCyanTC(count($subData)).' rows, '.cvRedTC('fail'));
+        cvConsoler("\n now trying row by row");
+        foreach($subData AS $pos=>$row){
+          try{
+            $modelClass::insert([$row]);
+            cvConsoler(
+              "\n".cvBlueTC(class_basename($modelClass)).
+              " chunk number ".cvBrownTC($chunkCount).
+              " with ".cvCyanTC(count($subData)).' rows '.
+              " with row number $pos, ".cvGreenTC('completed')
+            );
+          }catch(\Exception $e){
+            customLog('Seeder transaction fail with',json_encode($row),json_encode($e));
+            cvConsoler(
+              "\n chunk number ".cvBrownTC($chunkCount).
+              " of ".cvBlueTC(class_basename($modelClass)).
+              " with ".cvCyanTC(count($subData)).' rows '.
+              " with row number $pos, ".cvRedTC('fail')
+            );
+            cvConsoler("\n failed row is".json_encode($row));
+          }
+        }
       }
     }
   }
