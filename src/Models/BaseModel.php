@@ -284,6 +284,14 @@ class BaseModel extends Model
     return $this->getTable() . '.' . $column;
   }
 
+  public static function sPreFixed($column, $fixed = true, $instance = null)
+  {
+    if (!$fixed)
+      return $column;
+    $instance = $instance ?? self::new();
+    return ($instance)->getTable() . '.' . $column;
+  }
+
   public function getKeyValue()
   {
     return $this->attributes[$this->getKeyName()] ?? null;

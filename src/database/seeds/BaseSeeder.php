@@ -65,7 +65,7 @@ class BaseSeeder extends Seeder
         $modelClass::insert($subData->toArray());
         cvConsoler("\n".cvBlueTC(class_basename($modelClass))." chunk number ".cvBrownTC($chunkCount)." with ".cvCyanTC(count($subData)).' rows, '.cvGreenTC('completed'));
       }catch(\Exception $e){
-        cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." of ".cvBlueTC(class_basename($modelClass))." with ".cvCyanTC(count($subData)).' rows, '.cvRedTC('fail'));
+        cvConsoler("\n chunk number ".cvBrownTC($chunkCount)." of ".cvBlueTC(class_basename($modelClass))." with ".cvCyanTC(count($subData)).' rows, '.cvRedTC('fail').' message error '.cvBrownTC($e->getMessage()));
         cvConsoler("\n now trying row by row");
         foreach($subData AS $pos=>$row){
           try{
