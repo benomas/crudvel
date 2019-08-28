@@ -175,7 +175,8 @@ class TransformerChecker
       if(isset($acc['callBack'])) $acc['callBack'] = base64_decode($acc['callBack']);
       array_push($response, $this->insertTransformerInClass($acc));
     }
-    $this->writeAccessorsComment();
+    // TODO:Complete Accessors Comment on frontend, now it's desactivated to avoid create comment files
+    //$this->writeAccessorsComment();
     return $response;
   }
 
