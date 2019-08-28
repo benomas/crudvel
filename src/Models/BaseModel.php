@@ -418,5 +418,9 @@ class BaseModel extends Model
     if(!$check) return $types['string']();
     return $check();
   }
+
+  public function absoluteKey(){
+    return $this->preFixed($this->getKeyName());
+  }
   // Others
 }
