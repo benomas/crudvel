@@ -217,7 +217,7 @@ class TransformerChecker
 
   public function addAccessorComment($acc){
     $segments = explode('\\',$acc['srcModel']);
-    $this->comments[substr($segments[5],3).$segments[7]][$acc['destColumn']] = $acc['comment']??'';
+    //$this->comments[substr($segments[5],3).$segments[7]][$acc['destColumn']] = $acc['comment']??'';
   }
 
   public function createFlowCommentsFile($file){
