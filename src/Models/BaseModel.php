@@ -4,13 +4,12 @@ namespace Crudvel\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
-use Crudvel\Traits\CrudTrait;
-use Crudvel\Traits\CacheTrait;
 
 class BaseModel extends Model
 {
-  use CrudTrait;
-  use CacheTrait;
+  use \Crudvel\Traits\CrudTrait;
+  use \Crudvel\Traits\CacheTrait;
+  use \Crudvel\Traits\CvPatronTrait;
   protected $schema;
   protected $hasPropertyActive = true;
   protected $hidden            = ['pivot'];
