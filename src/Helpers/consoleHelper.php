@@ -487,3 +487,36 @@ if ( ! function_exists('consoleSetMySqlMaxes'))
     })->describe('Recalcular ordenes');
   }
 }
+
+if ( ! function_exists('consoleChunkSeed'))
+{
+  function consoleChunkSeed()
+  {
+    Artisan::command('chunk-seed {path} {size?}', function ($path=null,$size = 1000) {
+      if(!$path)
+        return cvConsoler(cvRedTC("\n path is required \n"));
+      $jsonBasePath = database_path('data/'.$path);
+      if(!file_exists(($jsonPath=$jsonBasePath.'data.json')))
+        return cvConsoler(cvRedTC("\n file $jsonPath doesn't exist \n"));
+      try{
+        $data = json_decode(file_get_contents($jsonPath));
+      }catch(Exception $e){
+        return cvConsoler(cvRedTC("\n unable to decode json \n"));
+      }
+      $chunkCount=0;
+      $chunkedData = [next($data)];
+      while (next($data) !== FALSE){
+        if((key($data)-1)%$size ===0){
+          $chunkCount++;
+          $newChunkFile = $jsonBasePath."data$chunkCount.json";
+          if(file_exists($newChunkFile) && !unlink($newChunkFile))
+            return cvConsoler(cvRedTC("\n file $newChunkFile doesn't exist or can't be deleted \n"));
+          file_put_contents($jsonBasePath."data$chunkCount.json",json_encode($chunkedData));
+          $chunkedData = [];
+        }
+        $chunkedData[] = current($data);
+      }
+      cvConsoler(cvGreenTC("\n chunk seed completed \n"));
+    })->describe('chunk json data');
+  }
+}
