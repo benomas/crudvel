@@ -496,7 +496,7 @@ if ( ! function_exists('consoleChunkSeed'))
       if(!$path)
         return cvConsoler(cvRedTC("\n path is required \n"));
       $jsonBasePath = database_path('data/'.$path);
-      if(!file_exists(($jsonPath=$jsonBasePath.'data.json')))
+      if(!file_exists(($jsonPath=$jsonBasePath.'data.bjson')))
         return cvConsoler(cvRedTC("\n file $jsonPath doesn't exist \n"));
       try{
         $data = json_decode(file_get_contents($jsonPath));
@@ -504,7 +504,11 @@ if ( ! function_exists('consoleChunkSeed'))
         return cvConsoler(cvRedTC("\n unable to decode json \n"));
       }
       $chunkCount=0;
-      $chunkedData = [next($data)];
+      $firstRow = next($data);
+      if(empty($firstRow->id))
+        $firstRow->id = 1;
+      $chunkedData = [];
+      $chunkedData[] = $firstRow;
       while (next($data) !== FALSE){
         if((key($data)-1)%$size ===0){
           $chunkCount++;
@@ -514,7 +518,17 @@ if ( ! function_exists('consoleChunkSeed'))
           file_put_contents($jsonBasePath."data$chunkCount.json",json_encode($chunkedData));
           $chunkedData = [];
         }
+        $currentRow = current($data);
+        if(empty($currentRow->id))
+          $currentRow->id = key($data);
         $chunkedData[] = current($data);
+      }
+      if(count($chunkedData)){
+        $chunkCount++;
+        $newChunkFile = $jsonBasePath."data$chunkCount.json";
+        if(file_exists($newChunkFile) && !unlink($newChunkFile))
+          return cvConsoler(cvRedTC("\n file $newChunkFile doesn't exist or can't be deleted \n"));
+        file_put_contents($jsonBasePath."data$chunkCount.json",json_encode($chunkedData));
       }
       cvConsoler(cvGreenTC("\n chunk seed completed \n"));
     })->describe('chunk json data');
