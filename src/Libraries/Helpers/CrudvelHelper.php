@@ -12,4 +12,5 @@ class CrudvelHelper{
   use FileTrait;
   use FunctionTrait;
   use TerminalTrait;
+  use StringRegexTrait;
 }

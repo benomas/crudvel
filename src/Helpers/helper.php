@@ -1122,3 +1122,30 @@ if(!function_exists('cvConsolerLn')){
     cvConsoler(cvCyanTC("$messageStart\n---------------------------------------------------------------------------------------------------\n$messageEnd"));
   }
 }
+if(!function_exists('cvFindAndReturn')){
+  function cvFindAndReturn($find, $return, $string){
+    return CvHelper::findAndReturn($find, $return, $string);
+  }
+}
+if(!function_exists('cvFindAndReplace')){
+  function cvFindAndReplace($reg, $replace, $string){
+    return CvHelper::findAndReplace($reg, $replace, $string);
+  }
+}
+if(!function_exists('cvConvertRealNull')){
+  function cvConvertRealNull($string){
+    return CvHelper::convertRealNull($string);
+  }
+}
+if(!function_exists('cvFindAlphaNum')){
+  function cvFindAlphaNum($string, $replace=null){
+    return CvHelper::findAlphaNum($string, $replace);
+  }
+}
+if(!function_exists('cvFindAlpha')){
+  function cvFindAlpha($string, $replace=null){
+    return CvHelper::findAlpha($string, $replace);
+  }
+}
+
+
