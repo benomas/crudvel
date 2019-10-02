@@ -1122,14 +1122,14 @@ if(!function_exists('cvConsolerLn')){
     cvConsoler(cvCyanTC("$messageStart\n---------------------------------------------------------------------------------------------------\n$messageEnd"));
   }
 }
-if(!function_exists('cvFindAndReturn')){
-  function cvFindAndReturn($find, $return, $string){
-    return CvHelper::findAndReturn($find, $return, $string);
+if(!function_exists('cvHasAndReturn')){
+  function cvHasAndReturn($find, $return, $string){
+    return CvHelper::hasAndReturn($find, $return, $string);
   }
 }
-if(!function_exists('cvFindAndReplace')){
-  function cvFindAndReplace($reg, $replace, $string){
-    return CvHelper::findAndReplace($reg, $replace, $string);
+if(!function_exists('cvHasAndReplace')){
+  function cvHasAndReplace($reg, $replace, $string){
+    return CvHelper::hasAndReplace($reg, $replace, $string);
   }
 }
 if(!function_exists('cvConvertRealNull')){
@@ -1137,15 +1137,31 @@ if(!function_exists('cvConvertRealNull')){
     return CvHelper::convertRealNull($string);
   }
 }
-if(!function_exists('cvFindAlphaNum')){
-  function cvFindAlphaNum($string, $replace=null){
-    return CvHelper::findAlphaNum($string, $replace);
+if(!function_exists('cvHasAlphaNumReplace')){
+  function cvHasAlphaNumReplace($string, $replace){
+    return CvHelper::hasAlphaNumReplace($string, $replace);
   }
 }
-if(!function_exists('cvFindAlpha')){
-  function cvFindAlpha($string, $replace=null){
-    return CvHelper::findAlpha($string, $replace);
+if(!function_exists('cvHasAlphaReplace')){
+  function cvHasAlphaReplace($string, $replace){
+    return CvHelper::hasAlphaReplace($string, $replace);
   }
 }
+if(!function_exists('cvHasAlphaNum')){
+  function cvHasAlphaNum($string){
+    return CvHelper::hasAlphaNum($string);
+  }
+}
+if(!function_exists('cvHasAlpha')){
+  function cvHasAlpha($string){
+    return CvHelper::hasAlpha($string);
+  }
+}
+if(!function_exists('cvReplaceNull')){
+  function cvReplaceNull($string){
+    return CvHelper::replaceNull($string);
+  }
+}
+
 
 

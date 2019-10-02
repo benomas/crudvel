@@ -4,13 +4,12 @@ namespace Crudvel\Libraries\Helpers;
 trait StringRegexTrait
 {
   // Find a exactly word, if it exists then return $string
-  function findAndReturn($find, $return, $string){
-    if (is_null($string) || strtolower($string) === 'null') return null;
+  function hasAndReturn($find, $return, $string){
     if($string === $find) return $return;
+    return null;
   }
   // Find a regex and replace, then trim
-  function findAndReplace($reg, $replace, $string){
-    if (is_null($string) || trim(strtolower($string) === 'null')) return null;
+  function hasAndReplace($reg, $replace, $string){
     return trim(preg_replace($reg, $replace, $string));
   }
   // Find a string 'null' and return a real null
@@ -18,18 +17,24 @@ trait StringRegexTrait
     if(is_null($string) || trim(strtolower($string) === 'null')) return null;
     return trim($string);
   }
-
-  // Find in a string if it has alphanumeric, if its true, then return a replace or return 1
-  function findAlphaNum($string, $replace=null){
-    $res = preg_match('/[\pL|0-9]+/u', $string);
-    if($res && !is_null($replace)) return $replace;
-    return $res;
+  // Replace a null for something
+  function replaceNull($something, $string){
+    if(is_null($string) || trim(strtolower($string) === 'null')) return $something;
   }
-
-  // Find in a string if it has alpha, if its true, then return a replace or return 1
-  function findAlpha($string, $replace=null){
-    $res = preg_match('/[\pL]+/u', $string);
-    if($res && !is_null($replace)) return $replace;
-    return $res;
+  // Replace string if it has not alphanumeric
+  function hasAlphaNumReplace($string, $replace){
+    if(!preg_match('/[\pL|0-9]+/u', $string)) return $replace;
+    return trim($string);
+  }
+  function hasAlphaNum($string, $replace){
+    return preg_match('/[\pL|0-9]+/u', $string);
+  }
+  // Replace string if it has not alpha
+  function hasAlphaReplace($string, $replace){
+    if(!preg_match('/[\pL]+/u', $string)) return $replace;
+    return trim($string);
+  }
+  function hasAlpha($string, $replace){
+    return preg_match('/[\pL]+/u', $string);
   }
 }
