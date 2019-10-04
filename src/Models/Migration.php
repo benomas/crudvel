@@ -17,7 +17,9 @@ class Migration extends \Crudvel\Customs\Models\BaseModel{
 
 // Scopes
   public function scopeLikeTable($query,$table){
-    $query->where('migration','like','%create_'.str_slug($table,'_').'_table%');
+    $query
+    ->where('migration','like','%create_'.str_slug($table,'_').'_table%')
+    ->orWhere('migration','like','%alter_'.str_slug($table,'_').'_table%');
   }
 // End Scopes
 }
