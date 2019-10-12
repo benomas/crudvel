@@ -26,7 +26,7 @@ trait StringRegexTrait
     if(!preg_match('/[\pL|0-9]+/u', $string)) return $replace;
     return trim($string);
   }
-  function hasAlphaNum($string, $replace){
+  function hasAlphaNum($string){
     return preg_match('/[\pL|0-9]+/u', $string);
   }
   // Replace string if it has not alpha
@@ -34,7 +34,10 @@ trait StringRegexTrait
     if(!preg_match('/[\pL]+/u', $string)) return $replace;
     return trim($string);
   }
-  function hasAlpha($string, $replace){
+  function hasAlpha($string){
     return preg_match('/[\pL]+/u', $string);
+  }
+  function removeNewLinesAndSpaces($string){
+    return trim(preg_replace('/\s\s+/', ' ', $string));
   }
 }

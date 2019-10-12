@@ -1161,7 +1161,9 @@ if(!function_exists('cvReplaceNull')){
   function cvReplaceNull($string){
     return CvHelper::replaceNull($string);
   }
+if(!function_exists('cvRemoveNewLinesAndSpaces')){
+  function cvRemoveNewLinesAndSpaces($string){
+    return CvHelper::removeNewLinesAndSpaces($string);
+  }
 }
-
-
-
+}
