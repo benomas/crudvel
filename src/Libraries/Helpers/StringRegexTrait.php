@@ -22,17 +22,17 @@ trait StringRegexTrait
     if(is_null($string) || trim(strtolower($string) === 'null')) return $something;
   }
   // Replace string if it has not alphanumeric
-  function hasAlphaNumReplace($string, $replace){
+  function replaceIfNotAlphaNum($string, $replace){
     if(!preg_match('/[\pL|0-9]+/u', $string)) return $replace;
+    return trim($string);
+  }
+  // Replace string if it has not alpha
+  function replaceIfNotAlpha($string, $replace){
+    if(!preg_match('/[\pL]+/u', $string)) return $replace;
     return trim($string);
   }
   function hasAlphaNum($string){
     return preg_match('/[\pL|0-9]+/u', $string);
-  }
-  // Replace string if it has not alpha
-  function hasAlphaReplace($string, $replace){
-    if(!preg_match('/[\pL]+/u', $string)) return $replace;
-    return trim($string);
   }
   function hasAlpha($string){
     return preg_match('/[\pL]+/u', $string);

@@ -1137,14 +1137,14 @@ if(!function_exists('cvConvertRealNull')){
     return CvHelper::convertRealNull($string);
   }
 }
-if(!function_exists('cvHasAlphaNumReplace')){
-  function cvHasAlphaNumReplace($string, $replace){
-    return CvHelper::hasAlphaNumReplace($string, $replace);
+if(!function_exists('cvReplaceIfNotAlphaNum')){
+  function cvReplaceIfNotAlphaNum($string, $replace){
+    return CvHelper::replaceIfNotAlphaNum($string, $replace);
   }
 }
-if(!function_exists('cvHasAlphaReplace')){
-  function cvHasAlphaReplace($string, $replace){
-    return CvHelper::hasAlphaReplace($string, $replace);
+if(!function_exists('cvReplaceIfNotAlpha')){
+  function cvReplaceIfNotAlpha($string, $replace){
+    return CvHelper::replaceIfNotAlpha($string, $replace);
   }
 }
 if(!function_exists('cvHasAlphaNum')){
