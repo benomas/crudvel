@@ -392,16 +392,31 @@ class BaseModel extends Model
         return (string)round($value,2);
       },
       'date'=> function() use($value) {
-        return trim((string)$value);
+        try {
+          \Carbon\Carbon::parse($value);
+          return $value;
+        } catch (\Exception $e) {
+        }
+        return null;
       },
       'time'=> function() use($value) {
-        return trim((string)$value);
+        try {
+          \Carbon\Carbon::parse($value);
+          return $value;
+        } catch (\Exception $e) {
+        }
+        return null;
       },
       'dateTime'=> function() use($value) {
-        return trim((string)$value);
+        try {
+          \Carbon\Carbon::parse($value);
+          return $value;
+        } catch (\Exception $e) {
+        }
+        return null;
       },
       'string'=> function() use($value) {
-      return trim((string)$value);
+        return trim((string)$value);
       },
       'char'=> function() use($value) {
         return trim((string)$value);
