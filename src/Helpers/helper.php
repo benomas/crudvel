@@ -902,6 +902,8 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
         return 'boolean';
       case 'boolean':
         return 'boolean';
+      case 'time':
+        return 'time';
       case 'date':
         return 'date';
       case 'datetime':
@@ -948,6 +950,8 @@ if(!function_exists("sqliteDataTypeTraductor")){
         return 'boolean';
       case 'boolean':
         return 'boolean';
+      case 'time':
+        return 'time';
       case 'date':
         return 'date';
       case 'datetime':
