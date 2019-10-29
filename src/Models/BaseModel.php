@@ -66,6 +66,16 @@ class BaseModel extends Model
     $query->whereNotNull($this->preFixed($column, $preFixed));
   }
 
+  public function scopeNonEmpty($query, $column, $preFixed = true)
+  {
+    $query->where($this->preFixed($column, $preFixed),'<>','');
+  }
+
+  public function scopeNonFakeNull($query, $column, $preFixed = true)
+  {
+    $query->where($this->preFixed($column, $preFixed),'<>','null');
+  }
+
   public function scopeId($query, $key, $preFixed = true)
   {
     $query->where($this->preFixed($this->getKeyName(), $preFixed), $key);

@@ -58,7 +58,6 @@ class TableCompatibility
         $compatibility = new ColumnCompatibility($this->leftModel , $this->rightModel ,$leftColumn,$rightColumn);
         if(($compatibilityTest = $compatibility->check())['kindOfCompatibility']===static::UNPROBABLE_COMPATIBILITY)
           continue;
-
         $modelKind                 = preg_match('/Catalogos/',$this->destLeftModel, $matches)?'Catalogos':"Tbls";
         $encodedLeftTraitFilePath  = 'app/Traits/'.strtolower($modelKind).'/'.class_basename($this->destLeftModel).'Trait.php';
         $modelKind                 = preg_match('/Catalogos/',$this->destRightModel, $matches)?'Catalogos':"Tbls";
