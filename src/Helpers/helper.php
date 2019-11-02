@@ -1132,7 +1132,8 @@ if(!function_exists('cvHasAndReturn')){
   }
 }
 if(!function_exists('cvHasAndReplace')){
-  function cvHasAndReplace($string, $replace='', $reg ='/["&\'\*\+<=>\[\]\^`\|\{\}~æÆø£ƒªº®¬½¼¡«»░▒▓│┤©╣║╗╝¢¥┐└┴┬├─┼╚╔╩╦╠═╬¤┘┌█▄¦▀µþ¯´≡±‗¾¶§÷¸°¨·¹³²■]/'){
+  // function cvHasAndReplace($string, $replace='', $reg ='/["&\'\*\+<=>\[\]\^`\|\{\}~æÆø£ƒªº®¬½¼¡«»░▒▓│┤©╣║╗╝¢¥┐└┴┬├─┼╚╔╩╦╠═╬¤┘┌█▄¦▀µþ¯´≡±‗¾¶§÷¸°¨·¹³²■]/'){
+  function cvHasAndReplace($string, $replace='', $reg ='/["&\'\*\+<=>\[\]\^`\|\{\}\~]/'){
     return CvHelper::hasAndReplace($string, $replace, $reg);
   }
 }

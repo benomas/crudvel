@@ -44,7 +44,9 @@ trait StringRegexTrait
     return trim($string, $character_mask);
   }
   function genericTextClean($string){
-    $return = cvHasAndReplace(cvCustomtrim(cvRemoveNewLinesAndSpaces($string)));
+    $string = cvHasAndReplace(cvCustomtrim(cvRemoveNewLinesAndSpaces($string)));
+    //trim ()
+    $string = trim($string, '()');
     return empty($return)? null : $return;
   }
 }
