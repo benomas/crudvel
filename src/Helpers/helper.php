@@ -1173,7 +1173,7 @@ if(!function_exists('cvRemoveNewLinesAndSpaces')){
   }
 }
 if(!function_exists('cvCustomTrim')){
-  function cvCustomTrim($string, $character_mask = ' \t\n\r\0\x0B"&\'*+,-./:;=@\^_`|~æÆ£ƒªº®¬½¼¡«»░▒▓│┤©╣║╗╝¢¥┐└┴┬├─┼╚╔╩╦╠═╬¤┘┌█▄¦Ì▀ßµþÞ¯´≡±‗¾¶§÷¸°¨·¹³²■'){
+  function cvCustomTrim($string, $character_mask = ' \t\n\r\0\x0B"&\'*+,-./:;=@\^_`|~'){
     return CvHelper::customTrim($string, $character_mask);
   }
 }
