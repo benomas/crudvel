@@ -9,7 +9,7 @@ trait StringRegexTrait
     return null;
   }
   // Find a regex and replace, then trim
-  function hasAndReplace($string, $replace, $reg ='/["&\'\*\+\/<\\\=>\[\]\^_`\|\{\}~æÆø£ƒªº®¬½¼¡«»░▒▓│┤©╣║╗╝¢¥┐└┴┬├─┼╚╔╩╦╠═╬¤┘┌█▄¦▀µþ¯´≡±‗¾¶§÷¸°¨·¹³²■]/'){
+  function hasAndReplace($string, $replace='', $reg=null){
     return trim(preg_replace($reg, $replace, $string));
   }
   // Find a string 'null' and return a real null
@@ -40,7 +40,11 @@ trait StringRegexTrait
   function removeNewLinesAndSpaces($string){
     return trim(preg_replace('/\s[\s]+|\t+/', ' ', $string));
   }
-  function customTrim($string, $character_mask = ' \t\n\r\0\x0B "&\'*+,-./:;=@\^_`|~æÆ£ƒªº®¬½¼¡«»░▒▓│┤©╣║╗╝¢¥┐└┴┬├─┼╚╔╩╦╠═╬¤┘┌█▄¦Ì▀ßµþÞ¯´≡±‗¾¶§÷¸°¨·¹³²■'){
+  function customTrim($string, $character_mask){
     return trim($string, $character_mask);
+  }
+  function genericTextClean($string){
+    $return = cvHasAndReplace(cvCustomtrim(cvRemoveNewLinesAndSpaces($string)));
+    return empty($return)? null : $return;
   }
 }

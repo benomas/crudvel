@@ -1132,8 +1132,7 @@ if(!function_exists('cvHasAndReturn')){
   }
 }
 if(!function_exists('cvHasAndReplace')){
-  function cvHasAndReplace($string, $replace, $reg=null){
-    if(is_null($reg)) return CvHelper::hasAndReplace($string, $replace);
+  function cvHasAndReplace($string, $replace='', $reg ='/["&\'\*\+<=>\[\]\^`\|\{\}~æÆø£ƒªº®¬½¼¡«»░▒▓│┤©╣║╗╝¢¥┐└┴┬├─┼╚╔╩╦╠═╬¤┘┌█▄¦▀µþ¯´≡±‗¾¶§÷¸°¨·¹³²■]/'){
     return CvHelper::hasAndReplace($string, $replace, $reg);
   }
 }
@@ -1173,7 +1172,12 @@ if(!function_exists('cvRemoveNewLinesAndSpaces')){
   }
 }
 if(!function_exists('cvCustomTrim')){
-  function cvCustomTrim($string){
-    return CvHelper::customTrim($string);
+  function cvCustomTrim($string, $character_mask = ' \t\n\r\0\x0B"&\'*+,-./:;=@\^_`|~æÆ£ƒªº®¬½¼¡«»░▒▓│┤©╣║╗╝¢¥┐└┴┬├─┼╚╔╩╦╠═╬¤┘┌█▄¦Ì▀ßµþÞ¯´≡±‗¾¶§÷¸°¨·¹³²■'){
+    return CvHelper::customTrim($string, $character_mask);
+  }
+}
+if(!function_exists('cvGenericTextClean')){
+  function cvGenericTextClean($string){
+    return CvHelper::genericTextClean($string);
   }
 }
