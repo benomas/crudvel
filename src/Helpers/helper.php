@@ -1132,8 +1132,9 @@ if(!function_exists('cvHasAndReturn')){
   }
 }
 if(!function_exists('cvHasAndReplace')){
-  function cvHasAndReplace($reg, $replace, $string){
-    return CvHelper::hasAndReplace($reg, $replace, $string);
+  function cvHasAndReplace($string, $replace, $reg=null){
+    if(is_null($reg)) return CvHelper::hasAndReplace($string, $replace);
+    return CvHelper::hasAndReplace($string, $replace, $reg);
   }
 }
 if(!function_exists('cvConvertRealNull')){
@@ -1165,9 +1166,14 @@ if(!function_exists('cvReplaceNull')){
   function cvReplaceNull($string){
     return CvHelper::replaceNull($string);
   }
+}
 if(!function_exists('cvRemoveNewLinesAndSpaces')){
   function cvRemoveNewLinesAndSpaces($string){
     return CvHelper::removeNewLinesAndSpaces($string);
   }
 }
+if(!function_exists('cvCustomTrim')){
+  function cvCustomTrim($string){
+    return CvHelper::customTrim($string);
+  }
 }
