@@ -56,9 +56,12 @@ class ApiController extends CustomController
   //array de comparaciones validas
   protected $operatorTypes       =["con","com"];
   // current comparator;
-  protected $comparator        ="like";
-  protected $paginateCount       =0;
-  protected $paginateData        =null;
+  protected $comparator     = "like";
+  protected $paginateCount  = 0;
+  protected $paginateData   = null;
+  protected $collectionData = null;
+  protected $collectionCount = 0;
+  protected $paginateExtraParams = null;
 
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
@@ -429,6 +432,7 @@ class ApiController extends CustomController
     //si la peticion http si solicita paginación
     $paginate = $this->request->get("paginate");
 
+    $this->paginateExtraParams = $paginate['extraParams'];
     //si la peticion http solicita paginación de forma incorrecta
     if(!customNonEmptyArray($paginate)){
       if(!$this->flexPaginable)
@@ -449,7 +453,6 @@ class ApiController extends CustomController
       );
       $this->generalSearch=isset($paginate["generalSearch"])?$paginate["generalSearch"]:null;
     }
-
     //si filterables esta definida en false, no se aceptara filtrado por ninguna columna
     if(isset($this->filterables) && $this->filterables===false){
       $this->filterQuery=false;
@@ -693,5 +696,47 @@ class ApiController extends CustomController
       $this->orderBy = $this->joinables[$this->orderBy];
     else
       $this->orderBy = $this->mainTableName.$this->orderBy;
+  }
+
+  protected function applyGenerallCollectionFilters(){
+    if(empty($this->generalSearch))
+      return;
+    $collectionData = $this->collectionData->filter(function($item){
+      foreach($this->filterQuery as $filterKey=>$filter){
+        if($filter!==null || !isset($item[$filterKey]))
+          return true;
+        if(stripos($item[$filterKey], (string) $this->generalSearch) !== false)
+          return true;
+      }
+      return false;
+    });
+    $this->collectionData = $collectionData;
+  }
+
+  protected function applyCollectionOrderBy(){
+    $collectionData = $this->collectionData->sortBy($this->orderBy, SORT_REGULAR, !$this->ascending)->values();
+    $this->collectionData = $collectionData;
+  }
+
+  protected function applyCollectionCount(){
+    $this->collectionCount = $this->collectionData->count();
+  }
+
+  protected function applyCollectionPageAndLimit(){
+    if(!$this->collectionCount)
+      return ;
+    $collectionData = $this->collectionData->chunk($this->limit);
+    $this->collectionData = $collectionData[$this->page-1];
+  }
+
+  protected function fixCollectionKeys(){
+    $collectionData = [];
+    foreach($this->collectionData AS $row)
+      $collectionData[] = $row;
+    $this->collectData($collectionData);
+  }
+
+  protected function collectData($data){
+    $this->collectionData = collect($data);
   }
 }
