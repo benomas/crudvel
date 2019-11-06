@@ -432,7 +432,7 @@ class ApiController extends CustomController
     //si la peticion http si solicita paginación
     $paginate = $this->request->get("paginate");
 
-    $this->paginateExtraParams = $paginate['extraParams'];
+    $this->paginateExtraParams = $paginate['extraParams']??null;
     //si la peticion http solicita paginación de forma incorrecta
     if(!customNonEmptyArray($paginate)){
       if(!$this->flexPaginable)
