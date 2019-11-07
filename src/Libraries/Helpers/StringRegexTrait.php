@@ -38,7 +38,7 @@ trait StringRegexTrait
     return preg_match('/[\pL]+/u', $string);
   }
   function removeNewLinesAndSpaces($string){
-    return trim(preg_replace('/\s[\s]+|\t+/', ' ', $string));
+    return trim(preg_replace('/\s[\s]+|\t+|\s+/', ' ', $string));
   }
   function customTrim($string, $character_mask){
     return trim($string, $character_mask);
