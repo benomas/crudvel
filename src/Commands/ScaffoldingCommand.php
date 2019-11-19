@@ -209,7 +209,7 @@ class ScaffoldingCommand extends Command {
           $this->makeRepository();
         $this->saveFiles();
         if(in_array("migration",$this->classes))
-          shell_exec('php artisan make:migration create_'.$this->snack_entity.'_table_'.Str::slug((Carbon::today()->toDateString(),""));
+          shell_exec('php artisan make:migration create_'.$this->snack_entity.'_table_'.Str::slug(Carbon::today()->toDateString(),""));
         shell_exec('composer dump-autoload');
 
       }

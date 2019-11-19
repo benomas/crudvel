@@ -46,9 +46,9 @@ class ApiController extends CustomController{
     if(empty($this->rowsLabel))
       $this->rowsLabel = trans("crudvel/".$this->langName.".rows_label");
     if(empty($this->singularSlug))
-      $this->singularSlug = Str::slug(($this->rowLabel);
+      $this->singularSlug = Str::slug($this->rowLabel);
     if(empty($this->pluralSlug))
-      $this->pluralSlug = Str::slug(($this->rowsLabel);
+      $this->pluralSlug = Str::slug($this->rowsLabel);
     if(empty($this->rowName))
       $this->rowName = snake_case($this->getCrudObjectName());
   }
@@ -215,7 +215,7 @@ class ApiController extends CustomController{
   public function permissions(){
     $actionPermittions=[];
     foreach($this->actions AS $action){
-      if(resourceAccess($this->currentUser,str_plural(Str::slug(($this->crudObjectName)).".".Str::slug(($action)))
+      if(resourceAccess($this->currentUser,str_plural(Str::slug($this->crudObjectName)).".".Str::slug($action)))
         $actionPermittions[$action]=true;
       else
         $actionPermittions[$action]=false;

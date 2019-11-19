@@ -493,7 +493,7 @@ if(!function_exists("crudvelResource")){
 		if(empty($resource))
 			return false;
 		$urlSegments = explode("/",$resource);
-		$rowName = Str::slug((str_singular(end($urlSegments)),"_");
+		$rowName = Str::slug(str_singular(end($urlSegments)),"_");
 		if(!$controller)
 			$controller=studly_case($rowName)."Controller";
     if(!count($conditionals)){
@@ -538,7 +538,7 @@ if(!function_exists("apiCrudvelResource")){
 		$urlSegments = explode(".",$resource);
 		$baseSegmentResource = end($urlSegments);
     $rowName = !empty($translator[$baseSegmentResource])?
-      $translator[$baseSegmentResource]:Str::slug((str_singular($baseSegmentResource),"_");
+      $translator[$baseSegmentResource]:Str::slug(str_singular($baseSegmentResource),"_");
     if(!$controller)
       $controller="Api\\".studly_case($rowName)."Controller";
     if(!count($conditionals)){
@@ -612,7 +612,7 @@ if(!function_exists("apiCrudvelResources")){
 if(!function_exists("resourceByForeingKey")){
 	function resourceByForeingKey($foreingKey){
 		$foreingKey = str_replace("_id","",$foreingKey);
-		return Str::slug((str_plural($foreingKey));
+		return Str::slug(str_plural($foreingKey));
 	}
 }
 if(!function_exists("propertyByPosition")){

@@ -68,7 +68,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     if($this->owner() && in_array($this->currentAction,['index','show']))
       return true;
 
-    return actionAccess($this->userModel,$this->cvResource->getSlugPluralName().".".Str::slug((snake_case($this->currentAction)));
+    return actionAccess($this->userModel,$this->cvResource->getSlugPluralName().".".Str::slug(snake_case($this->currentAction)));
   }
 
   /**
@@ -206,7 +206,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
 
   public function importPropertyFixer($label,$row){
-    $fixedLabel = Str::slug(($label,"_");
+    $fixedLabel = Str::slug($label,"_");
     return (!empty($row->{$fixedLabel}))?$row->{$fixedLabel}:null;
   }
 
@@ -238,7 +238,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
 
   public function slugedImporterRowIdentifier(){
-    return Str::slug(($this->importerRowIdentifier,"_");
+    return Str::slug($this->importerRowIdentifier,"_");
   }
 
   public function langsToImport($properties){
