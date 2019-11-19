@@ -493,7 +493,7 @@ if(!function_exists("crudvelResource")){
 		if(empty($resource))
 			return false;
 		$urlSegments = explode("/",$resource);
-		$rowName = Str::slug(str_singular(end($urlSegments)),"_");
+		$rowName = Str::slug(Str::singular(end($urlSegments)),"_");
 		if(!$controller)
 			$controller=studly_case($rowName)."Controller";
     if(!count($conditionals)){
@@ -538,14 +538,14 @@ if(!function_exists("apiCrudvelResource")){
 		$urlSegments = explode(".",$resource);
 		$baseSegmentResource = end($urlSegments);
     $rowName = !empty($translator[$baseSegmentResource])?
-      $translator[$baseSegmentResource]:Str::slug(str_singular($baseSegmentResource),"_");
+      $translator[$baseSegmentResource]:Str::slug(Str::singular($baseSegmentResource),"_");
     if(!$controller)
       $controller="Api\\".studly_case($rowName)."Controller";
     if(!count($conditionals)){
       if(count($urlSegments)>1){
         foreach ($urlSegments as $segment){
           $i=empty($i)?1:$i+1;
-          $currentSegment=!empty($translator[$segment])?$segment:str_singular($segment);
+          $currentSegment=!empty($translator[$segment])?$segment:Str::singular($segment);
           $prefixRoute = (empty($prefixRoute)?"":$prefixRoute."/").$segment.($i<count($urlSegments)?"/{".$currentSegment."}":"");
         }
       }

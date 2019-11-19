@@ -44,10 +44,10 @@ class CatFile extends \Crudvel\Customs\Models\BaseModel{
   }
 
   public function modelClassInstance(){
-    $targetModel = camel_case(str_singular($this->attributes['resource']));
+    $targetModel = camel_case(Str::singular($this->attributes['resource']));
     if (method_exists($this,$targetModel.'ModelClassInstance'))
       return $this->$targetModel.'ModelClassInstance'();
-    $testModel  = '\App\Models\\'.studly_case(str_singular($this->attributes['resource']));
+    $testModel  = '\App\Models\\'.studly_case(Str::singular($this->attributes['resource']));
     if(class_exists($testModel))
       return new $testModel;
     return null;
