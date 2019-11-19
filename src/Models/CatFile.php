@@ -47,7 +47,7 @@ class CatFile extends \Crudvel\Customs\Models\BaseModel{
     $targetModel = camel_case(Str::singular($this->attributes['resource']));
     if (method_exists($this,$targetModel.'ModelClassInstance'))
       return $this->$targetModel.'ModelClassInstance'();
-    $testModel  = '\App\Models\\'.Str::studly(Str::singular($this->attributes['resource']));
+    $testModel  = '\App\Models\\'.studly_case(Str::singular($this->attributes['resource']));
     if(class_exists($testModel))
       return new $testModel;
     return null;
