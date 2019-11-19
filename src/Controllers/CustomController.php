@@ -126,7 +126,7 @@ class CustomController extends BaseController implements CvCrudInterface{
     if(!in_array($this->currentAction,$this->actions))
       return $this->webNotFound();
 
-    $this->setCurrentUser();
+    //$this->setCurrentUser();
     if(
       $this->skipModelValidation &&
       !specialAccess($this->userModel,"inactives") &&
@@ -140,7 +140,7 @@ class CustomController extends BaseController implements CvCrudInterface{
     if(in_array($method,$this->rowActions)){
       if(empty($parameters))
         return $this->webNotFound();
-      $this->currentActionId=$parameters[$this->mainArgumentName()];
+      $this->currentActionId=$parameters[$this->cvResource->getSnakeSingularName()];
       if(!$this->model->id($this->currentActionId)->count())
         return $this->webNotFound();
       $this->modelInstance =  $this->model->first();

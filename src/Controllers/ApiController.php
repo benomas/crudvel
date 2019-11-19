@@ -56,22 +56,22 @@ class ApiController extends CustomController{
   public function callAction($method,$parameters=[]){
     $this->currentAction  = $method;
     //$this->setRequest();
-    //$this->model         = $this->requestInstance->model;
+    //$this->model         = $this->cvResource->getRequestInstance()->model;
     if($this->skipModelValidation && !$this->cvResource->getModelBuilderInstance())
       return $this->apiNotFound();
 
-    //$this->mainTableName = $this->requestInstance->mainTableName;
+    //$this->mainTableName = $this->cvResource->getRequestInstance()->mainTableName;
 
     if(!in_array($this->currentAction,$this->actions))
       return $this->apiNotFound();
 
-    $this->setCurrentUser();
+    //$this->setCurrentUser();
     if(
       $this->skipModelValidation &&
-      !specialAccess($this->userModel,"inactives") &&
-      !specialAccess($this->userModel,$this->requestInstance->baseName.'.inactives')
+      !specialAccess($this->cvResource->setUserModelBuilderInstance(),"inactives") &&
+      !specialAccess($this->cvResource->setUserModelBuilderInstance(),$this->cvResource->getSlugPluralName().'.inactives')
     )
-      $this->model->actives();
+      $this->cvResource->getModelBuilderInstance()->actives();
     $this->loadFields();
     $preactionResponse = $this->preAction($method,$parameters);
     if($preactionResponse)
@@ -79,12 +79,12 @@ class ApiController extends CustomController{
     if(in_array($method,$this->rowActions)){
       if(empty($parameters))
         return $this->apiNotFound();
-      $this->currentActionId=$parameters[$this->mainArgumentName()];
-      if(!$this->model->id($this->currentActionId)->count())
+      $this->currentActionId=$parameters[$this->cvResource->getSnakeSingularName()];
+      if(!$this->cvResource->getModelBuilderInstance()->id($this->currentActionId)->count())
         return $this->apiNotFound();
-      $this->modelInstance =  $this->model->first();
+      $this->modelInstance =  $this->cvResource->getModelBuilderInstance()->first();
     }
-    if(in_array($method,$this->rowsActions) && $this->model->count() === 0)
+    if(in_array($method,$this->rowsActions) && $this->cvResource->getModelBuilderInstance()->count() === 0)
       return $this->apiSuccessResponse([
         "data"    => [],
         "count"   => 0,
@@ -103,7 +103,7 @@ class ApiController extends CustomController{
   {
     return ($this->paginable && $this->currentPaginator->extractPaginate())?
       $this->currentPaginator->paginatedResponse():
-      $this->apiSuccessResponse($this->model->get());
+      $this->apiSuccessResponse($this->cvResource->getModelBuilderInstance()->get());
   }
 
   //web routes
@@ -196,7 +196,7 @@ class ApiController extends CustomController{
    */
   public function destroy($id)
   {
-    return $this->model->first()->delete()?
+    return $this->cvResource->getModelBuilderInstance()->first()->delete()?
         $this->apiSuccessResponse():
         $this->apiFailResponse();
   }
@@ -225,14 +225,14 @@ class ApiController extends CustomController{
 
   protected function setStamps(){
     //$rightNow = Carbon::now()->toDateTimeString();
-    $this->fields["created_by"] = $this->requestInstance->user()->id??null;
-    $this->fields["updated_by"] = $this->requestInstance->user()->id??null;
+    $this->fields["created_by"] = $this->cvResource->getRequestInstance()->user()->id??null;
+    $this->fields["updated_by"] = $this->cvResource->getRequestInstance()->user()->id??null;
     //$this->fields["created_at"] = $rightNow??null;
     //$this->fields["updated_at"] = $rightNow??null;
   }
 
   protected function getDataRequest(){
-    $this->fields =  $this->requestInstance->all();
+    $this->fields =  $this->cvResource->getRequestInstance()->all();
 
     if(isset($this->forceNulls) && is_array($this->forceNulls)){
       foreach($this->forceNulls AS $forceNull){
@@ -260,7 +260,7 @@ class ApiController extends CustomController{
   }
 
   protected function setPaginator(){
-    $paginatorMode = $this->requestInstance->get("paginate");
+    $paginatorMode = $this->cvResource->getRequestInstance()->get("paginate");
     $paginatorClass = $this->paginators[$paginatorMode['searchMode']??'cv-simple-paginator'];
     $this->currentPaginator = new $paginatorClass($this);
   }
@@ -302,7 +302,7 @@ class ApiController extends CustomController{
   public function unions(){
     $union = kageBunshinNoJutsu($this->model);
     $union->select($this->currentPaginator->getSelectQuery());
-    $union->union($this->model->select($this->currentPaginator->getSelectQuery()));
+    $union->union($this->cvResource->getModelBuilderInstance()->select($this->currentPaginator->getSelectQuery()));
     $this->model=$union;
   }
 }
