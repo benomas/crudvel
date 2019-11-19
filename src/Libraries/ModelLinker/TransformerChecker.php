@@ -124,7 +124,7 @@ class TransformerChecker
     $model        = base64_decode($model);
     $file         = cvClassFile($model);
     $fileContents = file_get_contents($file);
-    $fileContents = $this->eraseTransformerCode($fileContents, studly_case($accessorName));
+    $fileContents = $this->eraseTransformerCode($fileContents, Str::studly($accessorName));
     file_put_contents($file, $fileContents);
     return ['model' => $model, 'status' => true, 'message' => 'Transformer code removed ok.'];
   }
