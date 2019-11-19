@@ -1,28 +1,35 @@
 <?php namespace Crudvel\Controllers;
 
-use DB;
+use Crudvel\Interfaces\CvCrudInterface;
 use Crudvel\Traits\CrudTrait;
+use DB;
 use Illuminate\Routing\Controller as BaseController;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 /*
     This is a customization of the controller, some controllers needs to save multiple data on different tables in one step, doing that without transaction is a bad idea.
     so the options is to doing it manually, but it is a lot of code, and it is always the same, to i get that code and put it togheter as methods, so now with the support of
     the anonymous functions, all this code can be reused, saving a lot of time.
 */
-class CustomController extends BaseController {
+class CustomController extends BaseController implements CvCrudInterface{
   //preparing refactyoring
+  protected $cvResource;
+  protected $modelClassName;
+  protected $requestClassName;
+  protected $slugPluralName;
+  protected $slugSingularName;
+
   protected $crudvel         = true;
   protected $prefix          = "";
   protected $classType       = "Controller";
-  protected $baseClass       = "";
+  protected $baseClass;
   public $resource;
   //public $baseResourceUrl;
   protected $transStatus;
   protected $committer;
   protected $crudObjectName;
   protected $modelSource;
-  protected $requestSource;
+  protected $requestClass;
   public $rows;
   public $row;
   public $rowName;
@@ -34,7 +41,7 @@ class CustomController extends BaseController {
   protected $modelInstance;
   protected $userModel;
   //validador autorizador anonimo
-  protected $request;
+  protected $requestInstance;
   protected $currentAction;
   protected $currentActionId = null;
   protected $fields;
@@ -94,17 +101,14 @@ class CustomController extends BaseController {
 
   public function __construct(...$propertyRewriter){
     $this->autoSetPropertys(...$propertyRewriter);
+    $this->cvResource = \CvResource::boot($this);
+    pdd($this->cvResource->getControllerInstance());
     $this->explodeClass();
   }
 
-  public function setRequestInstance(){
-    $request = $this->requestSource?
-      $this->requestSource:
-      "App\Http\Requests\\".$this->getCrudObjectName()."Request";
-
-    if(is_callable([$request,"capture"])){
-      $this->request = app($request);
-    }
+  public function setRequest(){
+    $this->requestInstanceClass = $this->requestInstanceClass ?? 'App\Http\Requests\\'.$this->getCrudObjectName().'Request';
+    $this->requestInstanceInstance = class_exists($this->requestInstanceClass) ? app($this->requestInstanceClass):null;
   }
 
   /**
@@ -120,9 +124,9 @@ class CustomController extends BaseController {
 
   public function callAction($method,$parameters=[]){
     $this->currentAction  = $method;
-    $this->setRequestInstance();
-    $this->model         = $this->request->model;
-    $this->mainTableName = $this->request->mainTableName;
+    $this->setRequest();
+    $this->model         = $this->requestInstance->model;
+    $this->mainTableName = $this->requestInstance->mainTableName;
 
     if(!in_array($this->currentAction,$this->actions))
       return $this->webNotFound();
@@ -132,7 +136,7 @@ class CustomController extends BaseController {
     if(
       $this->skipModelValidation &&
       !specialAccess($this->userModel,"inactives") &&
-      !specialAccess($this->userModel,$this->request->baseName.'.inactives')
+      !specialAccess($this->userModel,$this->requestInstance->baseName.'.inactives')
     )
       $this->model->actives();
     $this->loadFields();
@@ -310,13 +314,13 @@ class CustomController extends BaseController {
 
   public function export(){
     $data = [];
-    $this->request->langsToImport($this->modelInstanciator(true)->getFillable());
+    $this->requestInstance->langsToImport($this->modelInstanciator(true)->getFillable());
     if(($rows = $this->model->get()))
       foreach($rows as $key=>$row)
-        foreach ($this->request->exportImportProperties as $label=>$field)
-          $data[$key][] = $this->request->exportPropertyFixer($field,$row);
+        foreach ($this->requestInstance->exportImportProperties as $label=>$field)
+          $data[$key][] = $this->requestInstance->exportPropertyFixer($field,$row);
 
-    array_unshift($data, array_keys($this->request->exportImportProperties));
+    array_unshift($data, array_keys($this->requestInstance->exportImportProperties));
     Excel::create(trans("crudvel/".$this->langName.".rows_label")." ".intval(microtime(true)), function ($excel) use ($data) {
       $excel->sheet('Hoja1', function ($sheet) use ($data) {
         $sheet->fromArray($data, "", "A1", true, false);
@@ -337,47 +341,47 @@ class CustomController extends BaseController {
     $fail=true;
     ini_set('max_execution_time',300);
 
-    if ($this->request->hasFile('importation_file')) {
+    if ($this->requestInstance->hasFile('importation_file')) {
       $fail=false;
-      $extension = $this->request->file('importation_file')->getClientOriginalExtension();
+      $extension = $this->requestInstance->file('importation_file')->getClientOriginalExtension();
       $name      = uniqid();
       $filename  = $name . "." . $extension;
       $path      = public_path() . "/upload/importing/" . $filename;
 
-      $this->request->file('importation_file')->move(public_path() . "/upload/importing/", $filename);
+      $this->requestInstance->file('importation_file')->move(public_path() . "/upload/importing/", $filename);
       $reader = Excel::load($path)->get();
-      $this->request->inicializeImporter($this->modelInstanciator(true)->getFillable());
+      $this->requestInstance->inicializeImporter($this->modelInstanciator(true)->getFillable());
       $reader->each(function ($row){
         $this->resetTransaction();
         $this->startTranstaction();
         $this->testTransaction(function() use($row){
-          $this->request->firstImporterCall($row);
-          $this->request->fields = [];
-          foreach ($this->request->exportImportProperties as $label=>$field)
-            if(($dataFiled = $this->request->importPropertyFixer($label,$row))!==null)
-              $this->request->fields[$field] = $dataFiled;
+          $this->requestInstance->firstImporterCall($row);
+          $this->requestInstance->fields = [];
+          foreach ($this->requestInstance->exportImportProperties as $label=>$field)
+            if(($dataFiled = $this->requestInstance->importPropertyFixer($label,$row))!==null)
+              $this->requestInstance->fields[$field] = $dataFiled;
 
-          if(!$this->request->validateImportingRow($row)){
-            $this->request->changeImporter("validationErrors",$this->request->currentValidator->errors());
+          if(!$this->requestInstance->validateImportingRow($row)){
+            $this->requestInstance->changeImporter("validationErrors",$this->requestInstance->currentValidator->errors());
             return false;
           }
 
-          $this->request->changeImporter();
-          if(($model = (  $this->request->currentAction==="store"?
+          $this->requestInstance->changeImporter();
+          if(($model = (  $this->requestInstance->currentAction==="store"?
                             $this->modelInstanciator(true):
-                            $this->modelInstanciator()->id($row->{$this->request->slugedImporterRowIdentifier()})->first()
+                            $this->modelInstanciator()->id($row->{$this->requestInstance->slugedImporterRowIdentifier()})->first()
                       )
               )
           ){
-              $model->fill($this->request->fields);
+              $model->fill($this->requestInstance->fields);
               if(!$model->isDirty()){
-                $this->request->changeTransactionType("Sin cambios");
+                $this->requestInstance->changeTransactionType("Sin cambios");
                 return $this->importCallBack();
               }
               if($model->save())
                 return $this->importCallBack();
 
-              $this->request->changeImporter("validationErrors",'Error de transacción');
+              $this->requestInstance->changeImporter("validationErrors",'Error de transacción');
           }
           return false;
         });
@@ -386,10 +390,10 @@ class CustomController extends BaseController {
       @unlink($path);
     }
 
-    if($this->request->wantsJson())
-      return $fail?$this->apiFailResponse():$this->apiSuccessResponse(["data"=>$this->request->importResults,"status"=>trans("crudvel.api.success")]);
+    if($this->requestInstance->wantsJson())
+      return $fail?$this->apiFailResponse():$this->apiSuccessResponse(["data"=>$this->requestInstance->importResults,"status"=>trans("crudvel.api.success")]);
 
-    Session::flash('importResults', $this->request->importResults);
+    Session::flash('importResults', $this->requestInstance->importResults);
     return $fail?$this->webFailResponse():$this->webSuccessResponse();
   }
 
@@ -449,7 +453,7 @@ class CustomController extends BaseController {
     return $this->modelSource??null;
   }
   public function getRequestSource(){
-    return $this->requestSource??null;
+    return $this->requestInstanceClass??null;
   }
   public function getRows(){
     return $this->rows??null;
@@ -479,7 +483,7 @@ class CustomController extends BaseController {
     return $this->userModel??null;
   }
   public function getRequest(){
-    return $this->request??null;
+    return $this->requestInstance??null;
   }
   public function getCurrentAction(){
     return $this->currentAction??null;
@@ -522,5 +526,12 @@ class CustomController extends BaseController {
   }
   public function getRowsActions(){
     return $this->rowsActions??null;
+  }
+  //----
+  public function getModelClassName(){
+    return $this->modelClassName??null;
+  }
+  public function getRequestClassName(){
+    return $this->requestClassName??null;
   }
 }

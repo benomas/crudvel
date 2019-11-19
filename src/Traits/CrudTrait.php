@@ -9,25 +9,69 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 
 trait CrudTrait {
+  //Getters start
+  public function getControllerClass(){
+    return \CvResource::getControllerClass();
+  }
+  public function getControllerInstance(){
+    return \CvResource::getControllerInstance();
+  }
+  public function getModelClass(){
+    return \CvResource::getModelClass();
+  }
+  public function getModelBuilderInstance(){
+    return \CvResource::getModelBuilderInstance();
+  }
+  public function getModelCollectionInstance(){
+    return \CvResource::getModelCollectionInstance();
+  }
+  public function getRequestClass(){
+    return \CvResource::getRequestClass();
+  }
+  public function getRequestInstance(){
+    return \CvResource::getRequestInstance();
+  }
+  public function getSlugPluralName(){
+    return $this->slugPluralName??null;
+  }
+  public function getSlugSingularName(){
+    return $this->slugSingularName??\Illuminate\Support\Str::snake(str_replace('Controller','',class_basename($this)),'-');
+  }
+  //Getters end
 
+  //Setters start
+  public function setControllerClass($controllerClass){
+    return \CvResource::setControllerClass($controllerClass);
+  }
+  public function setControllerInstance($controllerInstance){
+    return \CvResource::setControllerInstance($controllerInstance);
+  }
+  public function setModelClass($modelClass){
+    return \CvResource::setModelClass($modelClass);
+  }
+  public function setModelBuilderInstance($modelBuilderInstance){
+    return \CvResource::setModelBuilderInstance($modelBuilderInstance);
+  }
+  public function setModelCollectionInstance($modelCollectionInstance){
+    return \CvResource::setModelCollectionInstance($modelCollectionInstance);
+  }
+  public function setRequestClass($requestClass){
+    return \CvResource::setRequestClass($requestClass);
+  }
+  public function setRequestInstance($requestInstance){
+    return \CvResource::setRequestInstance($requestInstance);
+  }
+  //Setters end
+//-----
   public function setEntity(){
-    $this->crudObjectName = str_replace($this->getClassType(),"",$this->baseClass);
+    $this->crudObjectName = str_replace($this->getClassType(),'',$this->baseClass);
   }
 
   public function explodeClass(){
-    if(empty($this->baseClass))
-      $this->baseClass=class_basename(get_class($this));
-
-    if(empty($this->classType)){
-      foreach (["Controller","Request"] as $classType)
-        if($this->testClassType($classType))
-          $this->classType = $classType;
-      if(empty($this->classType))
-        $this->classType = "Model";
-    }
+    $this->baseClass=$this->baseClass ?? class_basename(get_class($this));
 
     if(empty($this->crudObjectName))
-      $this->crudObjectName = str_replace($this->classType,"",$this->baseClass);
+      $this->crudObjectName = str_replace($this->classType,'',$this->baseClass);
   }
 
   public function getClassType(){

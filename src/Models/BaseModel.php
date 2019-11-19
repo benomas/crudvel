@@ -1,14 +1,22 @@
 <?php namespace Crudvel\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use DB;
-use Crudvel\Traits\CrudTrait;
+use Crudvel\Interfaces\CvCrudInterface;
 use Crudvel\Traits\CacheTrait;
+use Crudvel\Traits\CrudTrait;
+use DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-class BaseModel extends Model {
+class BaseModel extends Model implements CvCrudInterface{
   use CrudTrait;
   use CacheTrait;
+
+  protected $slugSingularName;
+
+
+
   protected $schema;
+  protected $classType = 'model';
   protected $hasPropertyActive = true;
   protected $hidden            = ['pivot'];
   protected $cacheBoots        = [];
@@ -19,7 +27,6 @@ class BaseModel extends Model {
   }
 
 // Scopes
-
   public function scopeInStatus($query, $status, $preFixed = true){
     if(is_array($status))
       $query->whereIn($this->preFixed('status',$preFixed),$status);
@@ -203,7 +210,7 @@ class BaseModel extends Model {
   }
 
   public function shadow(){
-    $clonedInstacse = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
+    $clonedInstace = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
     $clonedInstace->setModel($this->getModel());
     return $clonedInstace;
   }
@@ -239,6 +246,10 @@ class BaseModel extends Model {
 
   public function getKeyValue(){
     return $this->attributes[$this->getKeyName()]??null;
+  }
+
+  public function getSlugSingularName(){
+    return $this->slugSingularName??Str::snake(class_basename($this),'-');
   }
 // Others
 }

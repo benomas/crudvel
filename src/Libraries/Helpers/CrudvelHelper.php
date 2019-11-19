@@ -2,7 +2,7 @@
 
 namespace Crudvel\Libraries\Helpers;
 
-class CrudvelHelper{
+class CvHelper{
   protected $debuggExpresion   = null;
   protected $debuggScriptTime  = null;
   protected $debuggScriptStamp = null;

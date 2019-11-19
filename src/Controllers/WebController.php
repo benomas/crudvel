@@ -65,8 +65,8 @@ class WebController extends CustomController
     if(!empty($this->userModel))
       $this->viewSharedPropertys[]="currentUser";
     if(empty($this->resource)){
-      if(!empty($this->request->baseName))
-        $this->resource = $this->request->baseName;
+      if(!empty($this->requestInstance->baseName))
+        $this->resource = $this->requestInstance->baseName;
       else
         $this->resource = str_slug(str_plural($this->getCrudObjectName()));
     }
@@ -144,7 +144,7 @@ class WebController extends CustomController
   public function store(){
     $this->modelInstance = $this->modelInstanciator(true);
     return $this->persist()?$this->webSuccessResponse([
-      "redirector"=>Redirect::to($this->request->fullUrl())
+      "redirector"=>Redirect::to($this->requestInstance->fullUrl())
     ]):$this->webFailResponse();
   }
 

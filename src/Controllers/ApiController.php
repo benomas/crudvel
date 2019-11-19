@@ -9,8 +9,7 @@
 //Se extiende transactionController, para manejo de transacciones
 use Carbon\Carbon;
 
-class ApiController extends CustomController
-{
+class ApiController extends CustomController{
   //arreglo de columnas que deben exisistir almenos como null, se requiere para procedimientos
   protected $forceSingleItemPagination = false;
   //arreglo con columnas que se permiten filtrar en paginado, si se setea con false, no se permitira filtrado, si se setea con null o no se setea, no se pondran restricciones en filtrado
@@ -56,12 +55,12 @@ class ApiController extends CustomController
 
   public function callAction($method,$parameters=[]){
     $this->currentAction  = $method;
-    $this->setRequestInstance();
-    $this->model         = $this->request->model;
+    $this->setRequest();
+    $this->model         = $this->requestInstance->model;
     if($this->skipModelValidation && empty($this->model))
       return $this->apiNotFound();
 
-    $this->mainTableName = $this->request->mainTableName;
+    $this->mainTableName = $this->requestInstance->mainTableName;
 
     if(!in_array($this->currentAction,$this->actions))
       return $this->apiNotFound();
@@ -71,7 +70,7 @@ class ApiController extends CustomController
     if(
       $this->skipModelValidation &&
       !specialAccess($this->userModel,"inactives") &&
-      !specialAccess($this->userModel,$this->request->baseName.'.inactives')
+      !specialAccess($this->userModel,$this->requestInstance->baseName.'.inactives')
     )
       $this->model->actives();
     $this->loadFields();
@@ -227,14 +226,14 @@ class ApiController extends CustomController
 
   protected function setStamps(){
     //$rightNow = Carbon::now()->toDateTimeString();
-    $this->fields["created_by"] = $this->request->user()->id??null;
-    $this->fields["updated_by"] = $this->request->user()->id??null;
+    $this->fields["created_by"] = $this->requestInstance->user()->id??null;
+    $this->fields["updated_by"] = $this->requestInstance->user()->id??null;
     //$this->fields["created_at"] = $rightNow??null;
     //$this->fields["updated_at"] = $rightNow??null;
   }
 
   protected function getDataRequest(){
-    $this->fields =  $this->request->all();
+    $this->fields =  $this->requestInstance->all();
 
     if(isset($this->forceNulls) && is_array($this->forceNulls)){
       foreach($this->forceNulls AS $forceNull){
@@ -262,7 +261,7 @@ class ApiController extends CustomController
   }
 
   protected function setPaginator(){
-    $paginatorMode = $this->request->get("paginate");
+    $paginatorMode = $this->requestInstance->get("paginate");
     $paginatorClass = $this->paginators[$paginatorMode['searchMode']??'cv-simple-paginator'];
     $this->currentPaginator = new $paginatorClass($this);
   }
@@ -295,7 +294,7 @@ class ApiController extends CustomController
     return $this->paginateData??null;
   }
   public function getRequest(){
-    return $this->request??null;
+    return $this->requestInstance??null;
   }
   //rewrite this method
   public function joins(){}

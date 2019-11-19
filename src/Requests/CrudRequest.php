@@ -1,18 +1,22 @@
 <?php namespace Crudvel\Requests;
 
-use Crudvel\Traits\CrudTrait;
 use Crudvel\Exceptions\AuthorizationException;
+use Crudvel\Interfaces\CvCrudInterface;
 use Crudvel\Models\Permission;
 use Crudvel\Models\Role;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use Crudvel\Traits\CrudTrait;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Lang;
 
-class CrudRequest extends FormRequest
-{
+class CrudRequest extends FormRequest implements CvCrudInterface{
+  protected $slugSingularName;
+
+  protected $classType = 'Request';
   public $crudObjectName;
   protected $rules;
   public $currentAction;
@@ -43,8 +47,8 @@ class CrudRequest extends FormRequest
   use CrudTrait;
 
   public function resourcesExplode(){
-    if(empty($this->mainTable))
-      $this->mainTable = str_slug(snake_case(str_plural($this->getCrudObjectName())),"_");
+    $this->mainTable = $this->mainTable ??  str_slug(snake_case(str_plural($this->getCrudObjectName())),"_");
+    \CvHelper::pdd('test');
     $this->setLangName();
     if(empty($this->rowName))
       $this->rowName = camel_case($this->getCrudObjectName());
@@ -279,5 +283,9 @@ class CrudRequest extends FormRequest
   }
   public function getCurrentDinamicResource(){
     return $this->currentDinamicResource;
+  }
+
+  public function getSlugSingularName(){
+    return $this->slugSingularName??Str::snake(str_replace('Request','',class_basename($this)),'-');
   }
 }
