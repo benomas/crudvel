@@ -145,7 +145,7 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
 
     $filePath  = 'uploads/'.$this->modelInstance->catFile->resource.'/'.$this->modelInstance->resource_id;
     $fileInput = $this->modelInstance->catFile->resource;
-    $fileName  = str_slug($this->modelInstance->catFile()->first()->name)."-".$this->modelInstance->id.".".$this->requestInstance->{$fileInput}->extension();
+    $fileName  = Str::slug(($this->modelInstance->catFile()->first()->name)."-".$this->modelInstance->id.".".$this->requestInstance->{$fileInput}->extension();
     if(!$this->modelInstance->path = Storage::disk($this->modelInstance->disk)->putFileAs($filePath, $this->requestInstance->{$fileInput},$fileName))
       return false;
     $this->modelInstance->absolute_path = $this->filePath();

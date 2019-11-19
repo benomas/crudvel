@@ -98,7 +98,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
 
     if(!$this->paginateData){
       $keyed = $this->model->get()->keyBy(function ($item) {
-        return str_slug($item[$this->container->getSlugField()]);
+        return Str::slug(($item[$this->container->getSlugField()]);
       });
       $this->paginateData = $keyed->all();
     }

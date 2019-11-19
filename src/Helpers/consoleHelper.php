@@ -237,8 +237,8 @@ if ( ! function_exists('consoleFixBackup'))
         return false;
       }
       try{
-        $backupFile      = database_path().'/backups/'.str_slug($worksPace,'_').'.sql';
-        $fixedBackupFile = database_path().'/backups/fixed_'.str_slug($worksPace,'_').'.sql';
+        $backupFile      = database_path().'/backups/'.Str::slug(($worksPace,'_').'.sql';
+        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug(($worksPace,'_').'.sql';
         if(!file_exists($backupFile)){
           $this->info('No existe el respaldo');
           return false;
@@ -281,7 +281,7 @@ if ( ! function_exists('consoleLoadBackup'))
       if(config('app.production.env')==='production')
         return $this->info('Este comando no puede ser ejecutado en ambiente productivo');
       try{
-        $fixedBackupFile = database_path().'/backups/fixed_'.str_slug($worksPace,'_').'.sql';
+        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug(($worksPace,'_').'.sql';
 
         if(!file_exists($fixedBackupFile))
           return $this->info('No existe el respaldo');
