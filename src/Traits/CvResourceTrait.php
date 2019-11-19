@@ -6,49 +6,61 @@ trait CvResourceTrait
 {
   //Getters start
   public function getControllerClass(){
-    return $this->controllerClass;
+    return $this->controllerClass??null;
   }
   public function getControllerInstance(){
-    return $this->controllerInstance;
+    return $this->controllerInstance??null;
   }
   public function getModelClass(){
-    return $this->modelClass;
+    return $this->modelClass??null;
   }
   public function getModelBuilderInstance(){
-    return $this->modelBuilderInstance;
+    return $this->modelBuilderInstance??null;
   }
   public function getModelCollectionInstance(){
-    return $this->modelCollectionInstance;
+    return $this->modelCollectionInstance??null;
   }
   public function getRequestClass(){
-    return $this->requestClass;
+    return $this->requestClass??null;
   }
   public function getRequestInstance(){
-    return $this->requestInstance;
+    return $this->requestInstance??null;
+  }
+  public function getUserModelClass(){
+    return $this->userModelClass??null;
+  }
+  public function getUserModelBuilderInstance(){
+    return $this->userModelBuilderInstance??null;
+  }
+  public function getUserModelCollectionInstance(){
+    return $this->userModelCollectionInstance??null;
+  }
+  public function getCvResourceInstance(){
+    return $this;
   }
   public function getCamelPluralName(){
-    return $this->camelPluralName;
+    return $this->camelPluralName??null;
   }
   public function getCamelSingularName(){
-    return $this->camelSingularName;
+    return $this->camelSingularName??null;
   }
   public function getSlugPluralName(){
-    return $this->slugPluralName;
+    return $this->slugPluralName??null;
   }
   public function getSlugSingularName(){
-    return $this->slugSingularName;
+    return $this->slugSingularName??null;
   }
   public function getSnakePluralName(){
-    return $this->snakePluralName;
+    return $this->snakePluralName??null;
   }
   public function getSnakeSingularName(){
-    return $this->snakeSingularName;
+    return $this->snakeSingularName??null;
   }
   public function getStudlyPluralName(){
-    return $this->studlyPluralName;
+    return $this->studlyPluralName??null;
   }
   public function getStudlySingularName(){
-    return $this->studlySingularName;
+    return $this->studlySingularName??null;
   }
   //Getters end
 
@@ -79,6 +91,18 @@ trait CvResourceTrait
   }
   public function setRequestInstance($requestInstance=null){
     $this->requestInstance = $requestInstance;
+    return $this;
+  }
+  public function setUserModelClass($userModelClass=null){
+    $this->userModelClass = $userModelClass??null;
+    return $this;
+  }
+  public function setUserModelBuilderInstance($userModelBuilderInstance=null){
+    $this->userModelBuilderInstance = $userModelBuilderInstance??null;
+    return $this;
+  }
+  public function setUserModelCollectionInstance($userModelCollectionInstance=null){
+    $this->userModelCollectionInstance = $userModelCollectionInstance??null;
     return $this;
   }
   public function setCamelPluralName($camelPluralName=null){

@@ -21,6 +21,9 @@ class CvResource
   protected $modelCollectionInstance;
   protected $requestClass;
   protected $requestInstance;
+  protected $userModelClass='App\Models\User';
+  protected $userModelBuilderInstance;
+  protected $userModelCollectionInstance;
 
   public function __construct(){
   }
@@ -28,9 +31,9 @@ class CvResource
     if(!$controllerInstance)
       return;
     $this->setControllerInstance($controllerInstance);
-    $this->setRequestClass();
-    $this->setModelClass();
     $this->fixCases();
+    $this->loadModel();
+    $this->loadRequest();
     return $this;
   }
 
@@ -100,6 +103,14 @@ class CvResource
       return Str::plural(Str::studly($name));
     return Str::plural(Str::studly($this->getControllerInstance()->getSlugSingularName()));
   }
+  public function loadControlle($controller=null){
+    if(!is_object($controller))
+      return $this;
+    return $this->setControlleClass(get_class($controller))->setControlleBuilderInstance($controller);
+    if(!$controller || !class_exists($controller))
+      return $this->generateControlle();
+    return $this->setControlleClass($controller)->setControlleBuilderInstance($controller::noFilters());
+  }
   public function loadModel($model=null){
     if(is_object($model))
       return $this->setModelClass(get_class($model))->setModelBuilderInstance($model);
@@ -115,7 +126,7 @@ class CvResource
     return $this->setRequestClass($request)->captureRequest();
   }
   public function generateModel(){
-    if(($controller = $this->getControllerInstance()))
+    if(!($controller = $this->getControllerInstance()))
       return $this;
     if(($modelClassName = $controller->getModelClassName()) && class_exists($modelClassName)){
       $this->setModelClass($modelClassName);
@@ -129,20 +140,36 @@ class CvResource
     return $this;
   }
   public function generateRequest(){
-    if(($controller = $this->getControllerInstance()))
+    if(!($controller = $this->getControllerInstance()))
       return $this;
     if(($requestClassName = $controller->getRequestClassName()) && class_exists($requestClassName)){
       $this->setRequestClass($requestClassName);
     }else{
-      if(!($studlySingularName = $this->getStudlySingularName()) || !class_exists('App\Requests\Http\\'.$studlySingularName))
+      if(!($studlySingularName = $this->getStudlySingularName()) || !class_exists('App\Http\Requests\\'.$studlySingularName.'Request'))
         return $this;
-      $requestClassName = 'App\Requests\Http\\'.$studlySingularName;
+      $requestClassName = 'App\Http\Requests\\'.$studlySingularName.'Request';
       $this->setRequestClass($requestClassName);
     }
     return $this->setRequestClass($requestClassName)->captureRequest();
   }
   public function captureRequest(){
-    $this->setRequestInstance(app($this->getRequestClass()));
+    $requestInstance = app($this->getRequestClass());
+    if(!$this->getRequestInstance())
+      $this->setRequestInstance($requestInstance);
     return $this;
+  }
+  public function captureRequestHack($requestInstance){
+    if(!$this->getRequestInstance())
+      $this->setRequestInstance($requestInstance);
+    return $this;
+  }
+  public function langCase(){
+    return $this->getSlugPluralName();
+  }
+  public function assignUser(){
+    if(!($user = $this->getRequestInstance()->user()))
+      return $this;
+    $this->setUserModelBuilderInstance($this->getUserModelClass()::id($user->id));
+    $this->setUserModelCollectionInstance($this->getUserModelBuilderInstance()->first());
   }
 }

@@ -15,6 +15,7 @@ use Lang;
 
 class CrudRequest extends FormRequest implements CvCrudInterface{
   protected $slugSingularName;
+  protected $cvResource;
 
   protected $classType = 'Request';
   public $crudObjectName;
@@ -23,13 +24,13 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public $currentActionId;
   public $userModel;
   public $currentUser;
-  public $baseName;
-  public $mainTable;
+  //public $baseName;
+  //public $mainTable;
   public $fields;
   protected $unauthorizedException;
   protected $customBaseName;
   protected $langName;
-  protected $rowName;
+  //protected $rowName;
   public $model;
   public $modelInstance;
   protected $fixedAttributes = null;
@@ -46,17 +47,14 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public $importerCursor         = 1;
   use CrudTrait;
 
+  /*
   public function resourcesExplode(){
-    $this->mainTable = $this->mainTable ??  str_slug(snake_case(str_plural($this->getCrudObjectName())),"_");
-    \CvHelper::pdd('test');
-    $this->setLangName();
-    if(empty($this->rowName))
-      $this->rowName = camel_case($this->getCrudObjectName());
-    if(empty($this->baseName))
-      $this->baseName = $this->langName;
-    $this->currentDinamicResource=$this->baseName;
+    //$this->rowName = $this->rowName?? $this->cvResource->getCamelSingularName();
+    //if(empty($this->baseName))
+    //  $this->baseName = $this->langName;
+    //$this->currentDinamicResource=$this->baseName;
   }
-
+*/
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -70,7 +68,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     if($this->owner() && in_array($this->currentAction,['index','show']))
       return true;
 
-    return actionAccess($this->userModel,$this->baseName.".".str_slug(snake_case($this->currentAction)));
+    return actionAccess($this->userModel,$this->cvResource->getSlugPluralName().".".str_slug(snake_case($this->currentAction)));
   }
 
   /**
@@ -156,7 +154,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function attributes()
   {
     return array_merge(
-      __("crudvel/".$this->langName.".fields")??[],
+      __("crudvel/".$this->cvResource->getSlugPluralName().".fields")??[],
       $this->fixedAttributes??[]);
   }
 
@@ -261,11 +259,13 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
 
   public function prepareRequest(){
-    $this->resourcesExplode();
-    $this->setCurrentUser();
+    $this->injectCvResource()->captureRequestHack($this)->assignUser();
+    //$this->resourcesExplode();
+    //$this->setCurrentUser();
     $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
-    $this->currentActionId = $this->route($this->mainArgumentName());
-    $this->setModelInstance();
+    $this->currentActionId = $this->route($this->cvResource->getSnakeSingularName());
+    //$this->currentActionId = $this->route($this->mainArgumentName());
+    //$this->setModelInstance();
     $this->loadFields();
   }
 

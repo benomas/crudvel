@@ -101,14 +101,9 @@ class CustomController extends BaseController implements CvCrudInterface{
 
   public function __construct(...$propertyRewriter){
     $this->autoSetPropertys(...$propertyRewriter);
-    $this->cvResource = \CvResource::boot($this);
-    pdd($this->cvResource->getControllerInstance());
-    $this->explodeClass();
-  }
-
-  public function setRequest(){
-    $this->requestInstanceClass = $this->requestInstanceClass ?? 'App\Http\Requests\\'.$this->getCrudObjectName().'Request';
-    $this->requestInstanceInstance = class_exists($this->requestInstanceClass) ? app($this->requestInstanceClass):null;
+    \CvResource::boot($this);
+    $this->injectCvResource();
+    //$this->explodeClass();
   }
 
   /**
@@ -124,15 +119,14 @@ class CustomController extends BaseController implements CvCrudInterface{
 
   public function callAction($method,$parameters=[]){
     $this->currentAction  = $method;
-    $this->setRequest();
-    $this->model         = $this->requestInstance->model;
-    $this->mainTableName = $this->requestInstance->mainTableName;
+    //$this->d();
+    //$this->model         = $this->requestInstance->model;
+    //$this->mainTableName = $this->requestInstance->mainTableName;
 
     if(!in_array($this->currentAction,$this->actions))
       return $this->webNotFound();
 
     $this->setCurrentUser();
-    $this->setLangName();
     if(
       $this->skipModelValidation &&
       !specialAccess($this->userModel,"inactives") &&

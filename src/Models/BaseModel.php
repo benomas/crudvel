@@ -12,6 +12,7 @@ class BaseModel extends Model implements CvCrudInterface{
   use CacheTrait;
 
   protected $slugSingularName;
+  protected $cvResource;
 
 
 
@@ -24,6 +25,7 @@ class BaseModel extends Model implements CvCrudInterface{
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
     $this->setCacheBoots();
+    $this->injectCvResource();
   }
 
 // Scopes

@@ -37,7 +37,7 @@ class ApiController extends CustomController{
     parent::__construct(...$propertyRewriter);
     $this->addActions("select","resourcePermissions");
   }
-
+/*
   public function resourcesExplode(){
     if(empty($this->langName))
       $this->langName = snake_case(str_plural($this->getCrudObjectName()));
@@ -52,21 +52,20 @@ class ApiController extends CustomController{
     if(empty($this->rowName))
       $this->rowName = snake_case($this->getCrudObjectName());
   }
-
+*/
   public function callAction($method,$parameters=[]){
     $this->currentAction  = $method;
-    $this->setRequest();
-    $this->model         = $this->requestInstance->model;
-    if($this->skipModelValidation && empty($this->model))
+    //$this->setRequest();
+    //$this->model         = $this->requestInstance->model;
+    if($this->skipModelValidation && !$this->cvResource->getModelBuilderInstance())
       return $this->apiNotFound();
 
-    $this->mainTableName = $this->requestInstance->mainTableName;
+    //$this->mainTableName = $this->requestInstance->mainTableName;
 
     if(!in_array($this->currentAction,$this->actions))
       return $this->apiNotFound();
 
     $this->setCurrentUser();
-    $this->setLangName();
     if(
       $this->skipModelValidation &&
       !specialAccess($this->userModel,"inactives") &&

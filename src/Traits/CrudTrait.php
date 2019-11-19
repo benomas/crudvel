@@ -11,24 +11,38 @@ use Illuminate\Support\Facades\Redirect;
 trait CrudTrait {
   //Getters start
   public function getControllerClass(){
+    if($this->cvResource)
+      return $this->cvResource->getControllerClass();
     return \CvResource::getControllerClass();
   }
   public function getControllerInstance(){
+    if($this->cvResource)
+      return $this->cvResource->getControllerInstance();
     return \CvResource::getControllerInstance();
   }
   public function getModelClass(){
+    if($this->cvResource)
+      return $this->cvResource->getModelClass();
     return \CvResource::getModelClass();
   }
   public function getModelBuilderInstance(){
+    if($this->cvResource)
+      return $this->cvResource->getModelBuilderInstance();
     return \CvResource::getModelBuilderInstance();
   }
   public function getModelCollectionInstance(){
+    if($this->cvResource)
+      return $this->cvResource->getModelCollectionInstance();
     return \CvResource::getModelCollectionInstance();
   }
   public function getRequestClass(){
+    if($this->cvResource)
+      return $this->cvResource->getRequestClass();
     return \CvResource::getRequestClass();
   }
   public function getRequestInstance(){
+    if($this->cvResource)
+      return $this->cvResource->getRequestInstance();
     return \CvResource::getRequestInstance();
   }
   public function getSlugPluralName(){
@@ -41,28 +55,51 @@ trait CrudTrait {
 
   //Setters start
   public function setControllerClass($controllerClass){
+    if($this->cvResource)
+      return $this->cvResource->setControllerClass($controllerClass);
     return \CvResource::setControllerClass($controllerClass);
   }
   public function setControllerInstance($controllerInstance){
+    if($this->cvResource)
+      return $this->cvResource->setControllerInstance($controllerInstance);
     return \CvResource::setControllerInstance($controllerInstance);
   }
   public function setModelClass($modelClass){
+    if($this->cvResource)
+      return $this->cvResource->setModelClass($modelClass);
     return \CvResource::setModelClass($modelClass);
   }
   public function setModelBuilderInstance($modelBuilderInstance){
+    if($this->cvResource)
+      return $this->cvResource->setModelBuilderInstance($modelBuilderInstance);
     return \CvResource::setModelBuilderInstance($modelBuilderInstance);
   }
   public function setModelCollectionInstance($modelCollectionInstance){
+    if($this->cvResource)
+      return $this->cvResource->setModelCollectionInstance($modelCollectionInstance);
     return \CvResource::setModelCollectionInstance($modelCollectionInstance);
   }
   public function setRequestClass($requestClass){
+    if($this->cvResource)
+      return $this->cvResource->setRequestClass($requestClass);
     return \CvResource::setRequestClass($requestClass);
   }
   public function setRequestInstance($requestInstance){
+    if($this->cvResource)
+      return $this->cvResource->setRequestInstance($requestInstance);
     return \CvResource::setRequestInstance($requestInstance);
+  }
+  //consider to include and interface to ensure CvResource requiriments
+  public function setCvResource($cvResource){
+    $this->cvResource = $cvResource;
+  }
+  public function injectCvResource(){
+    $this->cvResource = \CvResource::getCvResourceInstance();
+    return $this->cvResource;
   }
   //Setters end
 //-----
+/*
   public function setEntity(){
     $this->crudObjectName = str_replace($this->getClassType(),'',$this->baseClass);
   }
@@ -99,6 +136,18 @@ trait CrudTrait {
       $this->rowName = snake_case($this->crudObjectName);
     return snake_case($this->rowName);
   }
+  public function setCurrentUser(){
+    $user = $this->cvResource->getRequestInstance()->user();
+    $userModelSource = "\App\Models\User";
+    $user = $this->getClassType()==="Request"?
+      $this->user():
+      $this->request->user();
+    $this->userModel=$user?
+      $userModelSource::id($user->id):
+      null;
+    $this->currentUser = $this->userModel?$this->userModel->first():null;
+  }
+*/
 
   public function autoSetPropertys(...$propertyRewriter){
     if(!empty($propertyRewriter) && is_array($propertyRewriter))
@@ -107,18 +156,6 @@ trait CrudTrait {
           if(property_exists ( $this , $key))
             $this->{$key} = $value;
   }
-
-  public function setCurrentUser(){
-    $user = $this->getClassType()==="Request"?
-      $this->user():
-      $this->request->user();
-    $userModelSource = "\App\Models\User";
-    $this->userModel=$user?
-      $userModelSource::id($user->id):
-      null;
-    $this->currentUser = $this->userModel?$this->userModel->first():null;
-  }
-
   public function modelInstanciator($new=false){
     $model = $this->modelSource = $this->modelSource?
       $this->modelSource:
@@ -148,16 +185,21 @@ trait CrudTrait {
   }
 
   public function loadFields(){
+    if($this->cvResource->getRequestInstance())
+      $this->fields = $this->cvResource->getRequestInstance()->all();
+    /*
     if($this->getClassType()==="Request")
       $this->fields = $this->all();
     else{
       $this->fields = empty($this->request->fields)?
         $this->request->all():$this->request->fields;
-    }
+    }*/
+    /*
     if(!empty($this->defaultFields))
       foreach ($this->defaultFields as $field => $value)
         if(empty($this->fields[$field]))
           $this->fields[$field]=$value;
+    */
   }
 
   public function apiAlreadyExist($data=null){
@@ -361,21 +403,16 @@ trait CrudTrait {
     return trans("crudvel.web.not_found");
   }
 
-  public function setLangName(){
-    if(empty($this->langName))
-      $this->langName = str_slug(snake_case(str_plural($this->getCrudObjectName())));
-  }
-
   public function owner(){
     if( !$this->currentUser ||
       $this->currentUser->isRoot()
     )
       return true;
 
-    if($this->currentUser->specialPermissions()->slug($this->langName.".general-owner")->count())
+    if($this->currentUser->specialPermissions()->slug($this->cvResourceLangCase().".general-owner")->count())
       $this->model->generalOwner($this->currentUser->id);
     else
-      if($this->currentUser->specialPermissions()->slug($this->langName.".particular-owner")->count())
+      if($this->currentUser->specialPermissions()->slug($this->cvResourceLangCase().".particular-owner")->count())
           $this->model->particularOwner($this->currentUser->id);
 
     if(!$this->currentActionId)
