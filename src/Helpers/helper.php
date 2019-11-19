@@ -495,7 +495,7 @@ if(!function_exists("crudvelResource")){
 		$urlSegments = explode("/",$resource);
 		$rowName = Str::slug(Str::singular(end($urlSegments)),"_");
 		if(!$controller)
-			$controller=\Str::studly($rowName)."Controller";
+			$controller=Str::studly($rowName)."Controller";
     if(!count($conditionals)){
       Route::get($resource."/import", $controller."@import");
       Route::get($resource."/export", $controller."@export");
@@ -540,7 +540,7 @@ if(!function_exists("apiCrudvelResource")){
     $rowName = !empty($translator[$baseSegmentResource])?
       $translator[$baseSegmentResource]:Str::slug(Str::singular($baseSegmentResource),"_");
     if(!$controller)
-      $controller="Api\\".\Str::studly($rowName)."Controller";
+      $controller="Api\\".Str::studly($rowName)."Controller";
     if(!count($conditionals)){
       if(count($urlSegments)>1){
         foreach ($urlSegments as $segment){

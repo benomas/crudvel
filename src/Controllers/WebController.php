@@ -54,7 +54,7 @@ class WebController extends CustomController
     if(empty($this->pluralSlug))
       $this->pluralSlug = Str::slug($this->rowsLabel);
     if(empty($this->viewFolder))
-      $this->viewFolder = kebab_case(str_plural($this->getCrudObjectName()));
+      $this->viewFolder = \Str::kebab(str_plural($this->getCrudObjectName()));
     if(empty($this->rowName))
       $this->rowName = snake_case($this->getCrudObjectName());
   }
