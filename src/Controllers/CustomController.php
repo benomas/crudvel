@@ -19,29 +19,16 @@ class CustomController extends BaseController implements CvCrudInterface{
   protected $slugPluralName;
   protected $slugSingularName;
 
-  protected $crudvel         = true;
-  protected $prefix          = "";
-  protected $classType       = "Controller";
-  protected $baseClass;
-  public $resource;
   //public $baseResourceUrl;
   protected $transStatus;
   protected $committer;
-  protected $crudObjectName;
-  protected $modelSource;
-  protected $requestClass;
   public $rows;
   public $row;
   public $rowName;
   public $rowsName;
   //modelo cargado en memoria
-  protected $mainTableName;
   protected $skipModelValidation=false;
-  protected $model;
-  protected $modelInstance;
-  protected $userModel;
   //validador autorizador anonimo
-  protected $requestInstance;
   protected $currentAction;
   protected $currentActionId = null;
   protected $fields;
@@ -49,9 +36,7 @@ class CustomController extends BaseController implements CvCrudInterface{
   protected $slugedResponse  = false;
   protected $defaultFields;
   //Acciones que se basan en un solo elemento
-  protected $currentUser;
   protected $dirtyPropertys;
-  protected $langName;
   protected $debugg          = false;
   protected $actions         = [
     "index",
@@ -103,7 +88,6 @@ class CustomController extends BaseController implements CvCrudInterface{
     $this->autoSetPropertys(...$propertyRewriter);
     \CvResource::boot($this);
     $this->injectCvResource();
-    //$this->explodeClass();
   }
 
   /**
@@ -119,9 +103,6 @@ class CustomController extends BaseController implements CvCrudInterface{
 
   public function callAction($method,$parameters=[]){
     $this->currentAction  = $method;
-    //$this->d();
-    //$this->model         = $this->requestInstance->model;
-    //$this->mainTableName = $this->requestInstance->mainTableName;
 
     if(!in_array($this->currentAction,$this->actions))
       return $this->webNotFound();
@@ -129,10 +110,10 @@ class CustomController extends BaseController implements CvCrudInterface{
     //$this->setCurrentUser();
     if(
       $this->skipModelValidation &&
-      !specialAccess($this->userModel,"inactives") &&
-      !specialAccess($this->userModel,$this->requestInstance->baseName.'.inactives')
+      !specialAccess($this->cvResource->setUserModelBuilderInstance(),"inactives") &&
+      !specialAccess($this->cvResource->setUserModelBuilderInstance(),$this->cvResource->getSlugPluralName().'.inactives')
     )
-      $this->model->actives();
+      $this->cvResource->getModelBuilderInstance()->actives();
     $this->loadFields();
     $preactionResponse = $this->preAction($method,$parameters);
     if($preactionResponse)
@@ -141,9 +122,9 @@ class CustomController extends BaseController implements CvCrudInterface{
       if(empty($parameters))
         return $this->webNotFound();
       $this->currentActionId=$parameters[$this->cvResource->getSnakeSingularName()];
-      if(!$this->model->id($this->currentActionId)->count())
+      if(!$this->cvResource->getModelBuilderInstance()->id($this->currentActionId)->count())
         return $this->webNotFound();
-      $this->modelInstance =  $this->model->first();
+      $this->modelInstance =  $this->cvResource->getModelBuilderInstance()->first();
     }
     return parent::callAction($method,$parameters);
   }
@@ -309,7 +290,7 @@ class CustomController extends BaseController implements CvCrudInterface{
   public function export(){
     $data = [];
     $this->requestInstance->langsToImport($this->modelInstanciator(true)->getFillable());
-    if(($rows = $this->model->get()))
+    if(($rows = $this->cvResource->getModelBuilderInstance()->get()))
       foreach($rows as $key=>$row)
         foreach ($this->requestInstance->exportImportProperties as $label=>$field)
           $data[$key][] = $this->requestInstance->exportPropertyFixer($field,$row);
@@ -474,7 +455,7 @@ class CustomController extends BaseController implements CvCrudInterface{
     return $this->modelInstance??null;
   }
   public function getUserModel(){
-    return $this->userModel??null;
+    return $this->cvResource->setUserModelBuilderInstance()??null;
   }
   public function getRequest(){
     return $this->requestInstance??null;

@@ -37,35 +37,14 @@ class ApiController extends CustomController{
     parent::__construct(...$propertyRewriter);
     $this->addActions("select","resourcePermissions");
   }
-/*
-  public function resourcesExplode(){
-    if(empty($this->langName))
-      $this->langName = snake_case(str_plural($this->getCrudObjectName()));
-    if(empty($this->rowLabel))
-      $this->rowLabel = trans("crudvel/".$this->langName.".row_label");
-    if(empty($this->rowsLabel))
-      $this->rowsLabel = trans("crudvel/".$this->langName.".rows_label");
-    if(empty($this->singularSlug))
-      $this->singularSlug = Str::slug($this->rowLabel);
-    if(empty($this->pluralSlug))
-      $this->pluralSlug = Str::slug($this->rowsLabel);
-    if(empty($this->rowName))
-      $this->rowName = snake_case($this->getCrudObjectName());
-  }
-*/
   public function callAction($method,$parameters=[]){
     $this->currentAction  = $method;
-    //$this->setRequest();
-    //$this->model         = $this->cvResource->getRequestInstance()->model;
     if($this->skipModelValidation && !$this->cvResource->getModelBuilderInstance())
       return $this->apiNotFound();
-
-    //$this->mainTableName = $this->cvResource->getRequestInstance()->mainTableName;
 
     if(!in_array($this->currentAction,$this->actions))
       return $this->apiNotFound();
 
-    //$this->setCurrentUser();
     if(
       $this->skipModelValidation &&
       !specialAccess($this->cvResource->setUserModelBuilderInstance(),"inactives") &&

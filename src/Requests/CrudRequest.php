@@ -17,22 +17,11 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   protected $slugSingularName;
   protected $cvResource;
 
-  protected $classType = 'Request';
-  public $crudObjectName;
   protected $rules;
   public $currentAction;
   public $currentActionId;
-  public $userModel;
-  public $currentUser;
-  //public $baseName;
-  //public $mainTable;
   public $fields;
   protected $unauthorizedException;
-  protected $customBaseName;
-  protected $langName;
-  //protected $rowName;
-  public $model;
-  public $modelInstance;
   protected $fixedAttributes = null;
   protected $currentDepth='';
   protected $currentDinamicResource='';
@@ -46,15 +35,6 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public $importResults          = [];
   public $importerCursor         = 1;
   use CrudTrait;
-
-  /*
-  public function resourcesExplode(){
-    //$this->rowName = $this->rowName?? $this->cvResource->getCamelSingularName();
-    //if(empty($this->baseName))
-    //  $this->baseName = $this->langName;
-    //$this->currentDinamicResource=$this->baseName;
-  }
-*/
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -81,8 +61,6 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     $this->rules           = [];
     if(!$this->currentAction)
       return $this->rules;
-    if(empty($this->mainTable))
-      $this->prepareRequest();
     if(in_array($this->method(),["POST","PUT"])){
       $this->defaultRules();
     }
@@ -110,7 +88,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
   public function unautorizedRedirect(){
     if($this->wantsJson()){
-      if($this->currentUser && $this->currentUser->active)
+      if($this->cvResource->getUserModelCollectionInstance() && $this->cvResource->getUserModelCollectionInstance()->active)
         return $this->apiUnautorized();
       return $this->apiUnautenticated();
     }
@@ -260,12 +238,8 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
   public function prepareRequest(){
     $this->injectCvResource()->captureRequestHack($this)->assignUser();
-    //$this->resourcesExplode();
-    //$this->setCurrentUser();
     $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
     $this->currentActionId = $this->route($this->cvResource->getSnakeSingularName());
-    //$this->currentActionId = $this->route($this->mainArgumentName());
-    //$this->setModelInstance();
     $this->loadFields();
   }
 

@@ -99,55 +99,6 @@ trait CrudTrait {
   }
   //Setters end
 //-----
-/*
-  public function setEntity(){
-    $this->crudObjectName = str_replace($this->getClassType(),'',$this->baseClass);
-  }
-
-  public function explodeClass(){
-    $this->baseClass=$this->baseClass ?? class_basename(get_class($this));
-
-    if(empty($this->crudObjectName))
-      $this->crudObjectName = str_replace($this->classType,'',$this->baseClass);
-  }
-
-  public function getClassType(){
-    if(empty($this->classType))
-      $this->explodeClass();
-    return $this->classType;
-  }
-
-  public function getBaseClass(){
-    if(empty($this->baseClass))
-      $this->explodeClass();
-    return $this->baseClass;
-  }
-
-  public function getCrudObjectName(){
-    if(empty($this->crudObjectName))
-      $this->explodeClass();
-    return $this->crudObjectName;
-  }
-
-  public function mainArgumentName(){
-    if(empty($this->crudObjectName))
-      $this->explodeClass();
-    if(empty($this->rowName))
-      $this->rowName = snake_case($this->crudObjectName);
-    return snake_case($this->rowName);
-  }
-  public function setCurrentUser(){
-    $user = $this->cvResource->getRequestInstance()->user();
-    $userModelSource = "\App\Models\User";
-    $user = $this->getClassType()==="Request"?
-      $this->user():
-      $this->request->user();
-    $this->userModel=$user?
-      $userModelSource::id($user->id):
-      null;
-    $this->currentUser = $this->userModel?$this->userModel->first():null;
-  }
-*/
 
   public function autoSetPropertys(...$propertyRewriter){
     if(!empty($propertyRewriter) && is_array($propertyRewriter))
@@ -176,30 +127,9 @@ trait CrudTrait {
     }
   }
 
-  public function userInstance(){
-    return $this->userModel->first();
-  }
-
-  public function testClassType($tryClassType){
-    return strstr($this->baseClass,$tryClassType)===$tryClassType;
-  }
-
   public function loadFields(){
     if($this->cvResource->getRequestInstance())
       $this->fields = $this->cvResource->getRequestInstance()->all();
-    /*
-    if($this->getClassType()==="Request")
-      $this->fields = $this->all();
-    else{
-      $this->fields = empty($this->request->fields)?
-        $this->request->all():$this->request->fields;
-    }*/
-    /*
-    if(!empty($this->defaultFields))
-      foreach ($this->defaultFields as $field => $value)
-        if(empty($this->fields[$field]))
-          $this->fields[$field]=$value;
-    */
   }
 
   public function apiAlreadyExist($data=null){
@@ -405,15 +335,15 @@ trait CrudTrait {
 
   public function owner(){
     if( !$this->currentUser ||
-      $this->currentUser->isRoot()
+      $this->cvResource->getUserCollectionInstance()->isRoot()
     )
       return true;
 
-    if($this->currentUser->specialPermissions()->slug($this->cvResourceLangCase().".general-owner")->count())
-      $this->model->generalOwner($this->currentUser->id);
+    if($this->cvResource->getUserCollectionInstance()->specialPermissions()->slug($this->cvResourceLangCase().".general-owner")->count())
+      $this->model->generalOwner($this->cvResource->getUserCollectionInstance()->id);
     else
-      if($this->currentUser->specialPermissions()->slug($this->cvResourceLangCase().".particular-owner")->count())
-          $this->model->particularOwner($this->currentUser->id);
+      if($this->cvResource->getUserCollectionInstance()->specialPermissions()->slug($this->cvResourceLangCase().".particular-owner")->count())
+          $this->model->particularOwner($this->cvResource->getUserCollectionInstance()->id);
 
     if(!$this->currentActionId)
       return true;
