@@ -5,6 +5,31 @@ namespace Crudvel\Traits;
 trait CvResourceTrait
 {
   //Getters start
+  public function getCamelPluralName(){
+    return $this->camelPluralName??null;
+  }
+  public function getCamelSingularName(){
+    return $this->camelSingularName??null;
+  }
+  public function getSlugPluralName(){
+    return $this->slugPluralName??null;
+  }
+  public function getSlugSingularName(){
+    return $this->slugSingularName??null;
+  }
+  public function getSnakePluralName(){
+    return $this->snakePluralName??null;
+  }
+  public function getSnakeSingularName(){
+    return $this->snakeSingularName??null;
+  }
+  public function getStudlyPluralName(){
+    return $this->studlyPluralName??null;
+  }
+  public function getStudlySingularName(){
+    return $this->studlySingularName??null;
+  }
+  //-----------
   public function getControllerClass(){
     return $this->controllerClass??null;
   }
@@ -35,36 +60,67 @@ trait CvResourceTrait
   public function getUserModelCollectionInstance(){
     return $this->userModelCollectionInstance??null;
   }
+  public function getPaginatorClass(){
+    return $this->paginatorClass??null;
+  }
+  public function getPaginatorInstance(){
+    return $this->paginatorInstance??null;
+  }
   public function getCvResourceInstance(){
     return $this;
   }
-  public function getCamelPluralName(){
-    return $this->camelPluralName??null;
+  //-----------
+  public function getRows(){
+    return $this->rows??null;
   }
-  public function getCamelSingularName(){
-    return $this->camelSingularName??null;
+  public function getRow(){
+    return $this->row??null;
   }
-  public function getSlugPluralName(){
-    return $this->slugPluralName??null;
+  public function getCurrentAction(){
+    return $this->currentAction??null;
   }
-  public function getSlugSingularName(){
-    return $this->slugSingularName??null;
+  public function getCurrentActionKey(){
+    return $this->currentActionKey??null;
   }
-  public function getSnakePluralName(){
-    return $this->snakePluralName??null;
-  }
-  public function getSnakeSingularName(){
-    return $this->snakeSingularName??null;
-  }
-  public function getStudlyPluralName(){
-    return $this->studlyPluralName??null;
-  }
-  public function getStudlySingularName(){
-    return $this->studlySingularName??null;
+  public function getFields(){
+    return $this->fields??null;
   }
   //Getters end
 
   //Setters start
+  public function setCamelPluralName($camelPluralName=null){
+    $this->camelPluralName = $camelPluralName;
+    return $this;
+  }
+  public function setCamelSingularName($camelSingularName=null){
+    $this->camelSingularName = $camelSingularName;
+    return $this;
+  }
+  public function setSlugPluralName($slugPluralName=null){
+    $this->slugPluralName = $slugPluralName;
+    return $this;
+  }
+  public function setSlugSingularName($slugSingularName=null){
+    $this->slugSingularName = $slugSingularName;
+    return $this;
+  }
+  public function setSnakePluralName($snakePluralName=null){
+    $this->snakePluralName = $snakePluralName;
+    return $this;
+  }
+  public function setSnakeSingularName($snakeSingularName=null){
+    $this->snakeSingularName = $snakeSingularName;
+    return $this;
+  }
+  public function setStudlyPluralName($studlyPluralName=null){
+    $this->studlyPluralName = $studlyPluralName;
+    return $this;
+  }
+  public function setStudlySingularName($studlySingularName=null){
+    $this->studlySingularName = $studlySingularName;
+    return $this;
+  }
+  //-----------
   public function setControllerClass($controllerClass=null){
     $this->controllerClass = $controllerClass;
     return $this;
@@ -105,36 +161,33 @@ trait CvResourceTrait
     $this->userModelCollectionInstance = $userModelCollectionInstance??null;
     return $this;
   }
-  public function setCamelPluralName($camelPluralName=null){
-    $this->camelPluralName = $camelPluralName;
+  public function setPaginatorClass($paginatorClass=null){
+    $this->paginatorClass = $paginatorClass;
     return $this;
   }
-  public function setCamelSingularName($camelSingularName=null){
-    $this->camelSingularName = $camelSingularName;
+  public function setPaginatorInstance($paginatorInstance=null){
+    $this->paginatorInstance = $paginatorInstance;
     return $this;
   }
-  public function setSlugPluralName($slugPluralName=null){
-    $this->slugPluralName = $slugPluralName;
+  //-----------
+  public function setRows($rows=null){
+    $this->rows=$rows;
     return $this;
   }
-  public function setSlugSingularName($slugSingularName=null){
-    $this->slugSingularName = $slugSingularName;
+  public function setRow($row=null){
+    $this->row=$row;
     return $this;
   }
-  public function setSnakePluralName($snakePluralName=null){
-    $this->snakePluralName = $snakePluralName;
+  public function setCurrentAction($currentAction=null){
+    $this->currentAction=$currentAction;
     return $this;
   }
-  public function setSnakeSingularName($snakeSingularName=null){
-    $this->snakeSingularName = $snakeSingularName;
+  public function setCurrentActionKey($currentActionKey=null){
+    $this->currentActionKey=$currentActionKey;
     return $this;
   }
-  public function setStudlyPluralName($studlyPluralName=null){
-    $this->studlyPluralName = $studlyPluralName;
-    return $this;
-  }
-  public function setStudlySingularName($studlySingularName=null){
-    $this->studlySingularName = $studlySingularName;
+  public function setFields($fields=null){
+    $this->fields=$fields;
     return $this;
   }
   //Setters end

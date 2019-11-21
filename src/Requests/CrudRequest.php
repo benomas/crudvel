@@ -43,12 +43,12 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function authorize()
   {
     $this->prepareRequest();
-    if(!$this->currentAction)
+    if(!$this->getCurrentAction())
       return true;
-    if($this->owner() && in_array($this->currentAction,['index','show']))
+    if($this->owner() && in_array($this->getCurrentAction(),['index','show']))
       return true;
 
-    return actionAccess($this->userModel,$this->cvResource->getSlugPluralName().".".Str::slug(snake_case($this->currentAction)));
+    return actionAccess($this->userModel,$this->getSlugPluralName().".".Str::slug(snake_case($this->getCurrentAction())));
   }
 
   /**
@@ -59,13 +59,13 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function rules()
   {
     $this->rules           = [];
-    if(!$this->currentAction)
+    if(!$this->getCurrentAction())
       return $this->rules;
     if(in_array($this->method(),["POST","PUT"])){
       $this->defaultRules();
     }
 
-    $rulesGenerator = strtolower($this->method()).(ucfirst($this->currentAction));
+    $rulesGenerator = strtolower($this->method()).(ucfirst($this->getCurrentAction()));
     if(method_exists($this,$rulesGenerator))
       $this->{$rulesGenerator}();
     return $this->rules;
@@ -88,7 +88,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
   public function unautorizedRedirect(){
     if($this->wantsJson()){
-      if($this->cvResource->getUserModelCollectionInstance() && $this->cvResource->getUserModelCollectionInstance()->active)
+      if($this->getUserModelCollectionInstance() && $this->getUserModelCollectionInstance()->active)
         return $this->apiUnautorized();
       return $this->apiUnautenticated();
     }
@@ -112,8 +112,8 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   {
       if(!$this->wantsJson()){
         $this->merge([
-          "lastAction"   =>$this->currentAction,
-          "lastActionId" =>$this->currentActionId,
+          "lastAction"   =>$this->getCurrentAction(),
+          "lastActionId" =>$this->getCurrentActionKey(),
         ]);
         Session::flash("error", trans("crudvel.web.validation_errors"));
       }
@@ -132,7 +132,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function attributes()
   {
     return array_merge(
-      __("crudvel/".$this->cvResource->getSlugPluralName().".fields")??[],
+      __("crudvel/".$this->getSlugPluralName().".fields")??[],
       $this->fixedAttributes??[]);
   }
 
@@ -158,10 +158,10 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function validateImportingRow($row){
     $this->defaultRules();
     $identifier = $this->slugedImporterRowIdentifier();
-    $this->currentAction = "store";
+    $this->setCurrentAction('store');
     if($row->{$identifier}){
-      $this->currentAction   = "update";
-      $this->currentActionId = $row->{$identifier};
+      $this->setCurrentAction('update');
+      $this->setCurrentActionKey($row->{$identifier});
       if(method_exists($this,"putUpdate"))
         $this->putUpdate();
     }
@@ -204,7 +204,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
       $this->importResults[$this->importerCursor]=[];
     $this->importResults[$this->importerCursor]["status"]          = $status;
     $this->importResults[$this->importerCursor]["errors"]          = $errors;
-    $this->importResults[$this->importerCursor]["transactionType"] = trans("crudvel.actions.".snake_case($this->currentAction).".call_message");
+    $this->importResults[$this->importerCursor]["transactionType"] = trans("crudvel.actions.".snake_case($this->getCurrentAction()).".call_message");
   }
 
   public function changeTransactionType($transactionType){
@@ -237,9 +237,10 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
 
   public function prepareRequest(){
-    $this->injectCvResource()->captureRequestHack($this)->assignUser();
-    $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
-    $this->currentActionId = $this->route($this->cvResource->getSnakeSingularName());
+    $this->injectCvResource();
+    $this->cvResource->captureRequestHack($this)->assignUser();
+    $this->setCurrentAction($this->route()?explode('@', $this->route()->getActionName())[1]:null);
+    $this->setCurrentActionKey($this->route($this->getSnakeSingularName()));
     $this->loadFields();
   }
 

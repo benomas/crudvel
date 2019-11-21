@@ -10,84 +10,295 @@ use Illuminate\Support\Facades\Redirect;
 
 trait CrudTrait {
   //Getters start
-  public function getControllerClass(){
-    if($this->cvResource)
-      return $this->cvResource->getControllerClass();
-    return \CvResource::getControllerClass();
+  public function getCamelPluralName(){
+      return $this->cvResource ?
+        $this->cvResource->getCamelPluralName():
+        \CvResource::getCamelPluralName();
   }
-  public function getControllerInstance(){
-    if($this->cvResource)
-      return $this->cvResource->getControllerInstance();
-    return \CvResource::getControllerInstance();
-  }
-  public function getModelClass(){
-    if($this->cvResource)
-      return $this->cvResource->getModelClass();
-    return \CvResource::getModelClass();
-  }
-  public function getModelBuilderInstance(){
-    if($this->cvResource)
-      return $this->cvResource->getModelBuilderInstance();
-    return \CvResource::getModelBuilderInstance();
-  }
-  public function getModelCollectionInstance(){
-    if($this->cvResource)
-      return $this->cvResource->getModelCollectionInstance();
-    return \CvResource::getModelCollectionInstance();
-  }
-  public function getRequestClass(){
-    if($this->cvResource)
-      return $this->cvResource->getRequestClass();
-    return \CvResource::getRequestClass();
-  }
-  public function getRequestInstance(){
-    if($this->cvResource)
-      return $this->cvResource->getRequestInstance();
-    return \CvResource::getRequestInstance();
+  public function getCamelSingularName(){
+      return $this->cvResource ?
+        $this->cvResource->getCamelSingularName():
+        \CvResource::getCamelSingularName();
   }
   public function getSlugPluralName(){
-    return $this->slugPluralName??null;
+      return $this->cvResource ?
+        $this->cvResource->getSlugPluralName():
+        \CvResource::getSlugPluralName();
   }
+  //this is the most important case, because all the resource name strategy depends on it
   public function getSlugSingularName(){
-    return $this->slugSingularName??\Illuminate\Support\Str::snake(str_replace('Controller','',class_basename($this)),'-');
+    if(!empty($this->cvResource) && ($slugSingularName=$this->cvResource()->getSlugSingularName()))
+      return $slugSingularName;
+    return !empty($this->slugSingularName)?
+      $this->slugSingularName:
+      \Illuminate\Support\Str::snake(str_replace('Controller','',class_basename($this)),'-');
+  }
+  public function getSnakePluralName(){
+      return $this->cvResource ?
+        $this->cvResource->getSnakePluralName():
+        \CvResource::getSnakePluralName();
+  }
+  public function getSnakeSingularName(){
+      return $this->cvResource ?
+        $this->cvResource->getSnakeSingularName():
+        \CvResource::getSnakeSingularName();
+  }
+  public function getStudlyPluralName(){
+      return $this->cvResource ?
+        $this->cvResource->getStudlyPluralName():
+        \CvResource::getStudlyPluralName();
+  }
+  public function getStudlySingularName(){
+      return $this->cvResource ?
+        $this->cvResource->getStudlySingularName():
+        \CvResource::getStudlySingularName();
+  }
+  //-----------
+  public function getControllerClass(){
+      return $this->cvResource ?
+        $this->cvResource->getControllerClass():
+        \CvResource::getControllerClass();
+  }
+  public function getControllerInstance(){
+      return $this->cvResource ?
+        $this->cvResource->getControllerInstance():
+        \CvResource::getControllerInstance();
+  }
+  public function getModelClass(){
+      return $this->cvResource ?
+        $this->cvResource->getModelClass():
+        \CvResource::getModelClass();
+  }
+  public function getModelBuilderInstance(){
+      return $this->cvResource ?
+        $this->cvResource->getModelBuilderInstance():
+        \CvResource::getModelBuilderInstance();
+  }
+  public function getModelCollectionInstance(){
+      return $this->cvResource ?
+        $this->cvResource->getModelCollectionInstance():
+        \CvResource::getModelCollectionInstance();
+  }
+  public function getRequestClass(){
+      return $this->cvResource ?
+        $this->cvResource->getRequestClass():
+        \CvResource::getRequestClass();
+  }
+  public function getRequestInstance(){
+      return $this->cvResource ?
+        $this->cvResource->getRequestInstance():
+        \CvResource::getRequestInstance();
+  }
+  public function getUserModelClass(){
+      return $this->cvResource ?
+        $this->cvResource->getUserModelClass():
+        \CvResource::getUserModelClass();
+  }
+  public function getUserModelBuilderInstance(){
+      return $this->cvResource ?
+        $this->cvResource->getUserModelBuilderInstance():
+        \CvResource::getUserModelBuilderInstance();
+  }
+  public function getUserModelCollectionInstance(){
+    return $this->cvResource ?
+      $this->cvResource->getUserModelCollectionInstance():
+      \CvResource::getUserModelCollectionInstance();
+  }
+  public function getPaginatorClass(){
+    return $this->cvResource ?
+      $this->cvResource->getPaginatorClass():
+      \CvResource::getPaginatorClass();
+  }
+  public function getPaginatorInstance(){
+    return $this->cvResource ?
+      $this->cvResource->getPaginatorInstance():
+      \CvResource::getPaginatorInstance();
+  }
+  public function getCvResourceInstance(){
+    return $this->cvResource??null;
+  }
+  //-----------
+  public function getRows(){
+    return $this->cvResource ?
+      $this->cvResource->getRows():
+      \CvResource::getRows();
+  }
+  public function getRow(){
+    return $this->cvResource ?
+      $this->cvResource->getRow():
+      \CvResource::getRow();
+  }
+  public function getCurrentAction(){
+    return $this->cvResource ?
+      $this->cvResource->getCurrentAction():
+      \CvResource::getCurrentAction();
+  }
+  public function getCurrentActionKey(){
+    return $this->cvResource ?
+      $this->cvResource->getCurrentActionKey():
+      \CvResource::getCurrentActionKey();
+  }
+  public function getFields(){
+    return $this->cvResource ?
+      $this->cvResource->getFields():
+      \CvResource::getFields();
   }
   //Getters end
 
   //Setters start
-  public function setControllerClass($controllerClass){
-    if($this->cvResource)
-      return $this->cvResource->setControllerClass($controllerClass);
-    return \CvResource::setControllerClass($controllerClass);
+  public function setCamelPluralName($camelPluralName=null){
+    $this->cvResource ?
+      $this->cvResource->setCamelPluralName($camelPluralName):
+      \CvResource::setCamelPluralName($camelPluralName);
+    return $this;
   }
-  public function setControllerInstance($controllerInstance){
-    if($this->cvResource)
-      return $this->cvResource->setControllerInstance($controllerInstance);
-    return \CvResource::setControllerInstance($controllerInstance);
+  public function setCamelSingularName($camelSingularName=null){
+    $this->cvResource ?
+      $this->cvResource->setCamelSingularName($camelSingularName):
+      \CvResource::setCamelSingularName($camelSingularName);
+    return $this;
   }
-  public function setModelClass($modelClass){
-    if($this->cvResource)
-      return $this->cvResource->setModelClass($modelClass);
-    return \CvResource::setModelClass($modelClass);
+  public function setSlugPluralName($slugPluralName=null){
+    $this->cvResource ?
+      $this->cvResource->setSlugPluralName($slugPluralName):
+      \CvResource::setSlugPluralName($this);
+    return $this;
   }
-  public function setModelBuilderInstance($modelBuilderInstance){
-    if($this->cvResource)
-      return $this->cvResource->setModelBuilderInstance($modelBuilderInstance);
-    return \CvResource::setModelBuilderInstance($modelBuilderInstance);
+  public function setSlugSingularName($slugSingularName=null){
+    $this->cvResource ?
+      $this->cvResource->setSlugSingularName($slugSingularName):
+      \CvResource::setSlugSingularName($slugSingularName);
+    return $this;
   }
-  public function setModelCollectionInstance($modelCollectionInstance){
-    if($this->cvResource)
-      return $this->cvResource->setModelCollectionInstance($modelCollectionInstance);
-    return \CvResource::setModelCollectionInstance($modelCollectionInstance);
+  public function setSnakePluralName($snakePluralName=null){
+    $this->cvResource ?
+      $this->cvResource->setSnakePluralName($snakePluralName):
+      \CvResource::setSnakePluralName($snakePluralName);
+    return $this;
   }
-  public function setRequestClass($requestClass){
-    if($this->cvResource)
-      return $this->cvResource->setRequestClass($requestClass);
-    return \CvResource::setRequestClass($requestClass);
+  public function setSnakeSingularName($snakeSingularName=null){
+    $this->cvResource ?
+      $this->cvResource->setSnakeSingularName($snakeSingularName):
+      \CvResource::setSnakeSingularName($snakeSingularName);
+    return $this;
   }
-  public function setRequestInstance($requestInstance){
-    if($this->cvResource)
-      return $this->cvResource->setRequestInstance($requestInstance);
-    return \CvResource::setRequestInstance($requestInstance);
+  public function setStudlyPluralName($studlyPluralName=null){
+    $this->cvResource ?
+      $this->cvResource->setStudlyPluralName($studlyPluralName):
+      \CvResource::setStudlyPluralName($studlyPluralName);
+    return $this;
+  }
+  public function setStudlySingularName($studlySingularName=null){
+    $this->cvResource ?
+      $this->cvResource->setStudlySingularName($studlySingularName):
+      \CvResource::setStudlySingularName($studlySingularName);
+    return $this;
+  }
+  //-----------
+  public function setControllerClass($controllerClass=null){
+    $this->cvResource ?
+      $this->cvResource->setControllerClass($controllerClass):
+      \CvResource::setControllerClass($controllerClass);
+    return $this;
+  }
+  public function setControllerInstance($controllerInstance=null){
+    $this->cvResource ?
+      $this->cvResource->setControllerInstance($controllerInstance):
+      \CvResource::setControllerInstance($controllerInstance);
+    return $this;
+  }
+  public function setModelClass($modelClass=null){
+    $this->cvResource ?
+      $this->cvResource->setModelClass($modelClass):
+      \CvResource::setModelClass($this);
+    return $this;
+  }
+  public function setModelBuilderInstance($modelBuilderInstance=null){
+    $this->cvResource ?
+      $this->cvResource->setModelBuilderInstance($modelBuilderInstance):
+      \CvResource::setModelBuilderInstance($modelBuilderInstance);
+    return $this;
+  }
+  public function setModelCollectionInstance($modelCollectionInstance=null){
+    $this->cvResource ?
+      $this->cvResource->setModelCollectionInstance($modelCollectionInstance):
+      \CvResource::setModelCollectionInstance($modelCollectionInstance);
+    return $this;
+  }
+  public function setRequestClass($requestClass=null){
+    $this->cvResource ?
+      $this->cvResource->setRequestClass($requestClass):
+      \CvResource::setRequestClass($this);
+    return $this;
+  }
+  public function setRequestInstance($requestInstance=null){
+    $this->cvResource ?
+      $this->cvResource->setRequestInstance($requestInstance):
+      \CvResource::setRequestInstance($requestInstance);
+    return $this;
+  }
+  public function setUserModelClass($userModelClass=null){
+    $this->cvResource ?
+      $this->cvResource->setUserModelClass($userModelClass):
+      \CvResource::setUserModelClass($this);
+    return $this;
+  }
+  public function setUserModelBuilderInstance($userModelBuilderInstance=null){
+    $this->cvResource ?
+      $this->cvResource->setUserModelBuilderInstance($userModelBuilderInstance):
+      \CvResource::setUserModelBuilderInstance($userModelBuilderInstance);
+    return $this;
+  }
+  public function setUserModelCollectionInstance($userModelCollectionInstance=null){
+    $this->cvResource ?
+      $this->cvResource->setUserModelCollectionInstance($userModelCollectionInstance):
+      \CvResource::setUserModelCollectionInstance($userModelCollectionInstance);
+    return $this;
+  }
+  public function setPaginatorClass($paginatorClass=null){
+    $this->cvResource ?
+      $this->cvResource->setPaginatorClass($paginatorClass):
+      \CvResource::setPaginatorClass($paginatorClass);
+    return $this;
+  }
+  public function setPaginatorInstance($paginatorInstance=null){
+    $this->cvResource ?
+      $this->cvResource->setPaginatorInstance($paginatorInstance):
+      \CvResource::setPaginatorInstance($paginatorInstance);
+    return $this;
+  }
+
+
+  //-----------
+  public function setRows($rows=null){
+    $this->cvResource ?
+      $this->cvResource->setRows($rows):
+      \CvResource::setRows($rows);
+    return $this;
+  }
+  public function setRow($row=null){
+    $this->cvResource ?
+      $this->cvResource->setRow($row):
+      \CvResource::setRow($this);
+    return $this;
+  }
+  public function setCurrentAction($currentAction=null){
+    $this->cvResource ?
+      $this->cvResource->setCurrentAction($currentAction):
+      \CvResource::setCurrentAction($this);
+    return $this;
+  }
+  public function setCurrentActionKey($currentActionKey=null){
+    $this->cvResource ?
+      $this->cvResource->setCurrentActionKey($currentActionKey):
+      \CvResource::setCurrentActionKey($currentActionKey);
+    return $this;
+  }
+  public function setFields($fields=null){
+    $this->cvResource ?
+      $this->cvResource->setFields($fields):
+      \CvResource::setFields($this);
+    return $this;
   }
   //consider to include and interface to ensure CvResource requiriments
   public function setCvResource($cvResource){
@@ -95,7 +306,7 @@ trait CrudTrait {
   }
   public function injectCvResource(){
     $this->cvResource = \CvResource::getCvResourceInstance();
-    return $this->cvResource;
+    return $this;
   }
   //Setters end
 //-----

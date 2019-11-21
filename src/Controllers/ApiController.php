@@ -10,47 +10,27 @@
 use Carbon\Carbon;
 
 class ApiController extends CustomController{
-  //arreglo de columnas que deben exisistir almenos como null, se requiere para procedimientos
-  protected $forceSingleItemPagination = false;
-  //arreglo con columnas que se permiten filtrar en paginado, si se setea con false, no se permitira filtrado, si se setea con null o no se setea, no se pondran restricciones en filtrado
-  protected $filterables = null;
-  //arreglo con columnas que se permiten ordenar en paginado, si se setea con false, no se permitira ordenar, si se setea con null o no se setea, no se pondran restricciones en ordenar
-  protected $orderables = null;
-  //boleado que indica si el controller permite paginacion de forma general
-  protected $paginable = true;
-  //boleado que indica si el controller permite paginacion de forma general
-  protected $flexPaginable = true;
-  //boleado que indica si el controller permite paginacion de forma general
-  protected $badPaginablePetition = false;
-  //arreglo con columnas que se permiten seleccionar en paginado, si se setea con false, no se permitira seleccionar de forma especifica, si se setea con null o no se setea, no se pondran restricciones en seleccionar de forma especifica
-  protected $selectables = null;
-  //mapa de columnas join,
-  protected $joinables = null;
-  protected $paginators = [
-    'cv-simple-paginator'      => \Crudvel\Libraries\Paginators\CvSimplePaginator::class,
-    'cv-combinatory-paginator' => \Crudvel\Libraries\Paginators\CvCombinatoryPaginator::class
-  ];
-  protected $currentPaginator = null;
-  protected $comparator    = 'like';
 
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
     $this->addActions("select","resourcePermissions");
   }
   public function callAction($method,$parameters=[]){
-    $this->currentAction  = $method;
-    if($this->skipModelValidation && !$this->cvResource->getModelBuilderInstance())
+    if(!$this->getCurrentAction())
+      $this->setCurrentAction($method);
+    if($this->skipModelValidation && !$this->getModelBuilderInstance())
       return $this->apiNotFound();
 
-    if(!in_array($this->currentAction,$this->actions))
+    if(!in_array($this->getCurrentAction(),$this->actions))
       return $this->apiNotFound();
 
     if(
       $this->skipModelValidation &&
-      !specialAccess($this->cvResource->setUserModelBuilderInstance(),"inactives") &&
-      !specialAccess($this->cvResource->setUserModelBuilderInstance(),$this->cvResource->getSlugPluralName().'.inactives')
+      !specialAccess($this->setUserModelBuilderInstance(),"inactives") &&
+      !specialAccess($this->setUserModelBuilderInstance(),$this->getSlugPluralName().'.inactives')
     )
-      $this->cvResource->getModelBuilderInstance()->actives();
+      $this->getModelBuilderInstance()->actives();
+
     $this->loadFields();
     $preactionResponse = $this->preAction($method,$parameters);
     if($preactionResponse)
@@ -58,18 +38,18 @@ class ApiController extends CustomController{
     if(in_array($method,$this->rowActions)){
       if(empty($parameters))
         return $this->apiNotFound();
-      $this->currentActionId=$parameters[$this->cvResource->getSnakeSingularName()];
-      if(!$this->cvResource->getModelBuilderInstance()->id($this->currentActionId)->count())
+      $this->setCurrentActionKey($parameters[$this->getSnakeSingularName()]);
+      if(!$this->getModelBuilderInstance()->key($this->getCurrentActionKey())->count())
         return $this->apiNotFound();
-      $this->modelInstance =  $this->cvResource->getModelBuilderInstance()->first();
+      $this->setModelCollectionInstance($this->getModelBuilderInstance()->first());
     }
-    if(in_array($method,$this->rowsActions) && $this->cvResource->getModelBuilderInstance()->count() === 0)
+    if(in_array($method,$this->rowsActions) && $this->getModelBuilderInstance()->count() === 0)
       return $this->apiSuccessResponse([
         "data"    => [],
         "count"   => 0,
         "message" => trans("crudvel.api.success")
       ]);
-    $this->setPaginator();
+    //$this->setPaginator();
     return parent::callActionJump($method,$parameters);
   }
   //web routes
@@ -82,7 +62,7 @@ class ApiController extends CustomController{
   {
     return ($this->paginable && $this->currentPaginator->extractPaginate())?
       $this->currentPaginator->paginatedResponse():
-      $this->apiSuccessResponse($this->cvResource->getModelBuilderInstance()->get());
+      $this->apiSuccessResponse($this->getModelBuilderInstance()->get());
   }
 
   //web routes
@@ -175,7 +155,7 @@ class ApiController extends CustomController{
    */
   public function destroy($id)
   {
-    return $this->cvResource->getModelBuilderInstance()->first()->delete()?
+    return $this->getModelBuilderInstance()->first()->delete()?
         $this->apiSuccessResponse():
         $this->apiFailResponse();
   }
@@ -204,14 +184,14 @@ class ApiController extends CustomController{
 
   protected function setStamps(){
     //$rightNow = Carbon::now()->toDateTimeString();
-    $this->fields["created_by"] = $this->cvResource->getRequestInstance()->user()->id??null;
-    $this->fields["updated_by"] = $this->cvResource->getRequestInstance()->user()->id??null;
+    $this->fields["created_by"] = $this->getRequestInstance()->user()->key??null;
+    $this->fields["updated_by"] = $this->getRequestInstance()->user()->key??null;
     //$this->fields["created_at"] = $rightNow??null;
     //$this->fields["updated_at"] = $rightNow??null;
   }
 
   protected function getDataRequest(){
-    $this->fields =  $this->cvResource->getRequestInstance()->all();
+    $this->fields =  $this->getRequestInstance()->all();
 
     if(isset($this->forceNulls) && is_array($this->forceNulls)){
       foreach($this->forceNulls AS $forceNull){
@@ -238,12 +218,13 @@ class ApiController extends CustomController{
       $this->orderBy = $this->mainTableName.$this->orderBy;
   }
 
+  /*
   protected function setPaginator(){
-    $paginatorMode = $this->cvResource->getRequestInstance()->get("paginate");
+    $paginatorMode = $this->getRequestInstance()->get("paginate");
     $paginatorClass = $this->paginators[$paginatorMode['searchMode']??'cv-simple-paginator'];
     $this->currentPaginator = new $paginatorClass($this);
   }
-
+  */
   public function getForceSingleItemPagination(){
     return $this->forceSingleItemPagination??null;
   }
@@ -281,7 +262,7 @@ class ApiController extends CustomController{
   public function unions(){
     $union = kageBunshinNoJutsu($this->model);
     $union->select($this->currentPaginator->getSelectQuery());
-    $union->union($this->cvResource->getModelBuilderInstance()->select($this->currentPaginator->getSelectQuery()));
+    $union->union($this->getModelBuilderInstance()->select($this->currentPaginator->getSelectQuery()));
     $this->model=$union;
   }
 }

@@ -2,9 +2,13 @@
 
 namespace Crudvel\Libraries\Paginators;
 use Crudvel\Libraries\DbEngine\EngineContainer;
+use Crudvel\Interfaces\CvCrudInterface;
+use Crudvel\Traits\CrudTrait;
 
-class CvBasePaginator
+class CvBasePaginator implements CvCrudInterface
 {
+  use CrudTrait;
+
   //arreglo con columnas que se permiten filtrar en paginado, si se setea con false, no se permitira filtrado, si se setea con null o no se setea, no se pondran restricciones en filtrado
   protected $filterables = null;
   //arreglo con columnas que se permiten ordenar en paginado, si se setea con false, no se permitira ordenar, si se setea con null o no se setea, no se pondran restricciones en ordenar
@@ -33,7 +37,6 @@ class CvBasePaginator
   protected $comparator        = null;
   protected $paginateCount     = 0;
   protected $paginateData      = null;
-  protected $container         = null;
   protected $paginate          = null;
   protected $flexPaginable     = true;
   protected $searchObject      = '';
@@ -48,15 +51,17 @@ class CvBasePaginator
   ];
   public $unsolvedColumns;
 
-  public function __construct($container){
-    $this->container         = $container;
-    $this->flexPaginable     = $this->container->getFlexPaginable();
-    $this->selectables       = $this->container->getSelectables();
-    $this->paginate          = $this->container->getRequest()->get("paginate");
-    $this->model             = $this->container->getModel();
-    $this->modelInstance     = $this->container->getModelInstance();
+  public function __construct($paginatorDefiner=null){
+    if(!$paginatorDefiner || !is_object($paginatorDefiner))
+      return $this;
+    $this->paginatorDefiner = $paginatorDefiner;
+    $this->flexPaginable     = $this->paginatorDefiner->getFlexPaginable();
+    $this->selectables       = $this->paginatorDefiner->getSelectables();
+    $this->paginate          = $this->paginatorDefiner->getRequestInstance()->get("paginate");
+    $this->model             = $this->paginatorDefiner->getModel();
+    $this->modelInstance     = $this->paginatorDefiner->getModelInstance();
     $this->dbEngineContainer = new EngineContainer($this->model->newModelInstance()->getConnectionName());
-    $this->joinables         = $this->container->getJoinables();
+    $this->joinables         = $this->paginatorDefiner->getJoinables();
     $this->setBasicPropertys();
   }
 
@@ -147,7 +152,7 @@ class CvBasePaginator
     return $this->paginateData??null;
   }
   public function getContainer(){
-    return $this->container??null;
+    return $this->paginatorDefiner??null;
   }
   public function getPaginate(){
     return $this->paginate??null;

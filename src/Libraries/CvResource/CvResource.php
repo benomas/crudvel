@@ -24,6 +24,14 @@ class CvResource
   protected $userModelClass='App\Models\User';
   protected $userModelBuilderInstance;
   protected $userModelCollectionInstance;
+  protected $paginatorClass;
+  protected $paginatorInstance;
+
+  protected $rows;
+  protected $row;
+  protected $currentAction;
+  protected $currentActionKey;
+  protected $fields;
 
   public function __construct(){
   }
@@ -34,6 +42,7 @@ class CvResource
     $this->fixCases();
     $this->loadModel();
     $this->loadRequest();
+    $this->loadPaginator();
     return $this;
   }
 
@@ -103,7 +112,7 @@ class CvResource
       return Str::plural(Str::studly($name));
     return Str::plural(Str::studly($this->getControllerInstance()->getSlugSingularName()));
   }
-  public function loadControlle($controller=null){
+  public function loadController($controller=null){
     if(!is_object($controller))
       return $this;
     return $this->setControlleClass(get_class($controller))->setControlleBuilderInstance($controller);
@@ -124,6 +133,17 @@ class CvResource
     if(!$request || !class_exists($request))
       return $this->generateRequest();
     return $this->setRequestClass($request)->captureRequest();
+  }
+  public function loadPaginator($paginator=null){
+    if(is_object($paginator))
+      return $this->setPaginatorClass(get_class($paginator))->setPaginatorInstance($paginator);
+
+    if(class_exists($paginator))
+      return $this->setPaginatorInstance(new $paginator($this));
+
+    $paginatorMode = $this->getRequestInstance()->get("paginate");
+    $paginatorClass = $this->getControllerInstance()->getPaginator($paginatorMode['searchMode']);
+    return $this->setPaginatorInstance(new $paginatorClass($this));
   }
   public function generateModel(){
     if(!($controller = $this->getControllerInstance()))

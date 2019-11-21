@@ -75,6 +75,18 @@ class BaseModel extends Model implements CvCrudInterface{
     $query->whereNotIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
   }
 
+  public function scopeKey($query,$key, $preFixed = true){
+    $query->where($this->preFixed($this->getKeyName(),$preFixed),$key);
+  }
+
+  public function scopeKeys($query,$keys, $preFixed = true){
+    $query->whereIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
+  }
+
+  public function scopeNoKeys($query,$keys, $preFixed = true){
+    $query->whereNotIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
+  }
+
   public function scopeUuid($query,$uuid, $preFixed = true){
     $query->where($this->preFixed('uuid',$preFixed),$uuid);
   }
@@ -247,10 +259,6 @@ class BaseModel extends Model implements CvCrudInterface{
 
   public function getKeyValue(){
     return $this->attributes[$this->getKeyName()]??null;
-  }
-
-  public function getSlugSingularName(){
-    return $this->slugSingularName??Str::snake(class_basename($this),'-');
   }
 // Others
 }
