@@ -51,17 +51,15 @@ class CvBasePaginator implements CvCrudInterface
   ];
   public $unsolvedColumns;
 
-  public function __construct($paginatorDefiner=null){
-    if(!$paginatorDefiner || !is_object($paginatorDefiner))
-      return $this;
-    $this->paginatorDefiner = $paginatorDefiner;
-    $this->flexPaginable     = $this->paginatorDefiner->getFlexPaginable();
-    $this->selectables       = $this->paginatorDefiner->getSelectables();
-    $this->paginate          = $this->paginatorDefiner->getRequestInstance()->get("paginate");
-    $this->model             = $this->paginatorDefiner->getModel();
-    $this->modelInstance     = $this->paginatorDefiner->getModelInstance();
-    $this->dbEngineContainer = new EngineContainer($this->model->newModelInstance()->getConnectionName());
-    $this->joinables         = $this->paginatorDefiner->getJoinables();
+  public function __construct(){
+    $this->injectCvResource();
+    $this->flexPaginable     = $this->getPaginatorDefiner()->getFlexPaginable();
+    $this->selectables       = $this->getPaginatorDefiner()->getSelectables();
+    $this->paginate          = $this->getPaginatorDefiner()->getRequestInstance()->get("paginate");
+    $this->model             = $this->getPaginatorDefiner()->getModel();
+    $this->modelInstance     = $this->getPaginatorDefiner()->getModelInstance();
+    $this->dbEngineContainer = new EngineContainer(config('database.default'));
+    $this->joinables         = $this->getPaginatorDefiner()->getJoinables();
     $this->setBasicPropertys();
   }
 
@@ -150,9 +148,6 @@ class CvBasePaginator implements CvCrudInterface
   }
   public function getPaginateData(){
     return $this->paginateData??null;
-  }
-  public function getContainer(){
-    return $this->paginatorDefiner??null;
   }
   public function getPaginate(){
     return $this->paginate??null;

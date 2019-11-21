@@ -114,6 +114,11 @@ trait CrudTrait {
       $this->cvResource->getPaginatorInstance():
       \CvResource::getPaginatorInstance();
   }
+  public function getPaginatorDefiner(){
+    return $this->cvResource ?
+      $this->cvResource->getPaginatorDefiner():
+      \CvResource::getPaginatorDefiner();
+  }
   public function getCvResourceInstance(){
     return $this->cvResource??null;
   }
@@ -267,6 +272,12 @@ trait CrudTrait {
       \CvResource::setPaginatorInstance($paginatorInstance);
     return $this;
   }
+  public function setPaginatorDefiner($paginatorDefiner=null){
+    $this->cvResource ?
+      $this->cvResource->setPaginatorDefiner($paginatorDefiner):
+      \CvResource::setPaginatorDefiner($paginatorDefiner);
+    return $this;
+  }
 
 
   //-----------
@@ -319,9 +330,12 @@ trait CrudTrait {
             $this->{$key} = $value;
   }
   public function modelInstanciator($new=false){
+    /*
     $model = $this->modelSource = $this->modelSource?
       $this->modelSource:
       "App\Models\\".$this->getCrudObjectName();
+    */
+    $model = $this->getModelClass();
     if(!class_exists($model))
       return null;
     if($new)
@@ -329,15 +343,16 @@ trait CrudTrait {
     return $model::noFilters();
   }
 
+  /*
   public function setModelInstance(){
     if(($this->model = $this->modelInstanciator())){
-      $this->mainTableName = $this->model->getModel()->getTable().'.';
+      $this->mainTableName = $this->getModelBuilderInstance()->getModel()->getTable().'.';
       if(!empty($this->currentActionId) && !empty($this->currentAction)){
-        $this->modelInstance = $this->model->id($this->currentActionId)->first();
+        $this->modelInstance = $this->getModelBuilderInstance()->id($this->currentActionId)->first();
       }
     }
   }
-
+*/
   public function loadFields(){
     if($this->cvResource->getRequestInstance())
       $this->fields = $this->cvResource->getRequestInstance()->all();
@@ -551,16 +566,16 @@ trait CrudTrait {
       return true;
 
     if($this->cvResource->getUserCollectionInstance()->specialPermissions()->slug($this->cvResourceLangCase().".general-owner")->count())
-      $this->model->generalOwner($this->cvResource->getUserCollectionInstance()->id);
+      $this->getModelBuilderInstance()->generalOwner($this->cvResource->getUserCollectionInstance()->id);
     else
       if($this->cvResource->getUserCollectionInstance()->specialPermissions()->slug($this->cvResourceLangCase().".particular-owner")->count())
-          $this->model->particularOwner($this->cvResource->getUserCollectionInstance()->id);
+          $this->getModelBuilderInstance()->particularOwner($this->cvResource->getUserCollectionInstance()->id);
 
     if(!$this->currentActionId)
       return true;
 
-    $this->model->id($this->currentActionId);
+    $this->getModelBuilderInstance()->id($this->currentActionId);
 
-    return $this->model->count();
+    return $this->getModelBuilderInstance()->count();
   }
 }

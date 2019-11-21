@@ -98,7 +98,7 @@ class ApiController extends CustomController{
   {
     $this->setStamps();
     if($this->persist())
-      return ($this->paginable && $this->currentPaginator->extractPaginate())?
+      return ($this->getPaginatorInstance()->getPaginable() && $this->currentPaginator->extractPaginate())?
         $this->currentPaginator->paginatedResponse():
         $this->currentPaginator->noPaginatedResponse();
     return $this->apiFailResponse();
@@ -112,9 +112,13 @@ class ApiController extends CustomController{
    */
   public function show($id)
   {
-    return ($this->paginable && $this->currentPaginator->extractPaginate())?
-      $this->currentPaginator->paginatedResponse():
-      $this->currentPaginator->noPaginatedResponse();
+    if(
+      $this->getPaginatorDefiner() &&
+      $this->getPaginatorDefiner()->getPaginable() &&
+      $this->getPaginatorInstance()->extractPaginate()
+    )
+      return $this->getPaginatorInstance()->paginatedResponse();
+      $this->getPaginatorInstance()->noPaginatedResponse();
   }
 
   /**
@@ -225,44 +229,14 @@ class ApiController extends CustomController{
     $this->currentPaginator = new $paginatorClass($this);
   }
   */
-  public function getForceSingleItemPagination(){
-    return $this->forceSingleItemPagination??null;
-  }
-  public function getFilterables(){
-    return $this->filterables??null;
-  }
-  public function getOrderables(){
-    return $this->orderables??null;
-  }
-  public function getPaginable(){
-    return $this->paginable??null;
-  }
-  public function getFlexPaginable(){
-    return $this->flexPaginable??null;
-  }
-  public function getBadPaginablePetition(){
-    return $this->badPaginablePetitionx??null;
-  }
-  public function getSelectables(){
-    return $this->selectables??null;
-  }
-  public function getJoinables(){
-    return $this->joinables??null;
-  }
-  public function getPaginateData(){
-    return $this->paginateData??null;
-  }
-  public function getRequest(){
-    return $this->requestInstance??null;
-  }
   //rewrite this method
   public function joins(){}
 
   //rewrite this method for custom logic
   public function unions(){
-    $union = kageBunshinNoJutsu($this->model);
-    $union->select($this->currentPaginator->getSelectQuery());
-    $union->union($this->getModelBuilderInstance()->select($this->currentPaginator->getSelectQuery()));
-    $this->model=$union;
+    $union = kageBunshinNoJutsu($this->getModelBuilderInstance());
+    $union->select($this->getPaginatorInstance()->getSelectQuery());
+    $union->union($this->getModelBuilderInstance()->select($this->getPaginatorInstance()->getSelectQuery()));
+    $this->setModelBuilderInstance($union);
   }
 }

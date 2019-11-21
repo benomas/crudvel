@@ -15,7 +15,6 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
    * @return boolean    if require pagine or not
    */
   public function extractPaginate(){
-    $this->model = $this->container->getModel();
 
     //si la peticion http solicita paginación de forma incorrecta
     if(!customNonEmptyArray($this->paginate)){
@@ -45,59 +44,59 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
    */
   public function processPaginatedResponse() {
     //si el modelo no esta definido o es nulo
-    if($this->model===null)
+    if($this->getModelBuilderInstance()===null)
       return ;
     //add joins
-    $this->container->joins();
+    $this->getPaginatorDefiner()->joins();
 
     //si existe un array de columnas a seleccionar
     if(customNonEmptyArray($this->selectQuery))
       $this->fixSelectables();
 
-    $this->container->unions();
-    if($this->model===null || $this->model->count() === 0)
+    $this->getPaginatorDefiner()->unions();
+    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0)
       return ;
-    $querySql = $this->model->toSql();
-    $this->model->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($this->model->getBindings()));
+    $querySql = $this->getModelBuilderInstance()->toSql();
+    $this->getModelBuilderInstance()->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($this->getModelBuilderInstance()->getBindings()));
     //si existe un array de columnas a filtrar
     if(customNonEmptyArray($this->filterQuery))
       $this->filter();
-    $this->paginateCount = $this->model->count();
+    $this->paginateCount = $this->getModelBuilderInstance()->count();
     //si se solicita limitar el numero de resultados
     if($this->limit){
-      $this->model->limit($this->limit);
+      $this->getModelBuilderInstance()->limit($this->limit);
       //si se especifica una pagina a regresar
       if($this->page && $this->paginateCount >= $this->limit * ($this->page-1))
-        $this->model->skip($this->limit * ($this->page-1));
+        $this->getModelBuilderInstance()->skip($this->limit * ($this->page-1));
     }
 
     if ($this->orderBy)
-      $this->model->orderBy($this->orderBy,$this->ascending==1?"ASC":"DESC");
+      $this->getModelBuilderInstance()->orderBy($this->orderBy,$this->ascending==1?"ASC":"DESC");
 
-    if($this->modelInstance && !empty($this->modelInstance->id))
-      $this->model->id($this->modelInstance->id,false);
+    if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->id))
+      $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id,false);
   }
 
   public function paginateResponder(){
-    if(!$this->model)
-      return $this->container->apiSuccessResponse([
+    if(!$this->getModelBuilderInstance())
+      return $this->getPaginatorDefiner()->apiSuccessResponse([
         "data"   =>[],
         "count"  =>0,
         "message" =>trans("crudvel.api.success")
       ]);
-    if(!empty($this->modelInstance->id) || $this->container->getForceSingleItemPagination())
-      $this->paginateData=$this->model->first();
+    if(!empty($this->getModelCollectionInstance()->id) || $this->getPaginatorDefiner()->getForceSingleItemPagination())
+      $this->paginateData=$this->getModelBuilderInstance()->first();
 
-    if(!$this->paginateData && !$this->container->getSlugedResponse())
-      $this->paginateData = $this->model->get();
+    if(!$this->paginateData && !$this->getPaginatorDefiner()->getSlugedResponse())
+      $this->paginateData = $this->getModelBuilderInstance()->get();
 
     if(!$this->paginateData){
-      $keyed = $this->model->get()->keyBy(function ($item) {
-        return Str::slug($item[$this->container->getSlugField()]);
+      $keyed = $this->getModelBuilderInstance()->get()->keyBy(function ($item) {
+        return Str::slug($item[$this->getPaginatorDefiner()->getSlugField()]);
       });
       $this->paginateData = $keyed->all();
     }
-    return $this->container->apiSuccessResponse([
+    return $this->getPaginatorDefiner()->apiSuccessResponse([
       "data"    => $this->paginateData,
       "count"   => $this->paginateCount,
       "message" => trans("crudvel.api.success")
@@ -121,18 +120,18 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
 
   public function noPaginatedResponse(){
     //add joins
-    $this->container->joins();
+    $this->getPaginatorDefiner()->joins();
 
-    $response = $this->modelInstance;
+    $response = $this->getModelCollectionInstance();
     if(count($this->selectables)){
       $this->selectQuery = $this->selectables;
       $this->fixSelectables();
-      if($this->modelInstance && $this->modelInstance->id)
-        $this->model->id($this->modelInstance->id);
-      $response = $this->model->select($this->selectQuery)->first();
+      if($this->getModelCollectionInstance() && $this->getModelCollectionInstance()->id)
+        $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id);
+      $response = $this->getModelBuilderInstance()->select($this->selectQuery)->first();
     }
 
-    return $this->container->apiSuccessResponse($response);
+    return $this->getPaginatorDefiner()->apiSuccessResponse($response);
   }
 
   protected function filter() {
@@ -146,7 +145,7 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
     }
     //default filter
     if(!empty($this->filterQuery))
-      $this->model->where(function($query){
+      $this->getModelBuilderInstance()->where(function($query){
         foreach ($this->filterQuery as $field=>$filter){
           $method=!isset($method)?"where":"orWhere";
           $query->{$method}($field,$this->comparator,"%{$this->searchObject}%");
@@ -165,10 +164,10 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
           }
 
     if($simpleColumns && count($simpleColumns)){
-      $columns = $this->container->modelInstanciator(true)->getTableColumns();
+      $columns = $this->getPaginatorDefiner()->modelInstanciator(true)->getTableColumns();
       foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue){
         if (in_array($simpleColumnValue,$columns))
-          $this->$property[$simpleColumnKey] = $this->container->getMainTableName().$simpleColumnValue." AS ".$simpleColumnValue;
+          $this->$property[$simpleColumnKey] = $this->getPaginatorDefiner()->getMainTableName().$simpleColumnValue." AS ".$simpleColumnValue;
         else
           $this->unsolvedColumns[$simpleColumnValue] = $simpleColumnKey;
       }

@@ -26,6 +26,7 @@ class CvResource
   protected $userModelCollectionInstance;
   protected $paginatorClass;
   protected $paginatorInstance;
+  protected $paginatorDefiner;
 
   protected $rows;
   protected $row;
@@ -135,6 +136,7 @@ class CvResource
     return $this->setRequestClass($request)->captureRequest();
   }
   public function loadPaginator($paginator=null){
+    $this->setPaginatorDefiner($this->getControllerInstance());
     if(is_object($paginator))
       return $this->setPaginatorClass(get_class($paginator))->setPaginatorInstance($paginator);
 

@@ -66,6 +66,9 @@ trait CvResourceTrait
   public function getPaginatorInstance(){
     return $this->paginatorInstance??null;
   }
+  public function getPaginatorDefiner(){
+    return $this->paginatorDefiner??null;
+  }
   public function getCvResourceInstance(){
     return $this;
   }
@@ -167,6 +170,10 @@ trait CvResourceTrait
   }
   public function setPaginatorInstance($paginatorInstance=null){
     $this->paginatorInstance = $paginatorInstance;
+    return $this;
+  }
+  public function setPaginatorDefiner($paginatorDefiner=null){
+    $this->paginatorDefiner = $paginatorDefiner;
     return $this;
   }
   //-----------

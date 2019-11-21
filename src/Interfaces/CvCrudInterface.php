@@ -59,6 +59,6 @@ interface CvCrudInterface
   public function injectCvResource();
   public function autoSetPropertys(...$propertyRewriter);
   public function modelInstanciator($new=false);
-  public function setModelInstance();
+  //public function setModelInstance();
   public function loadFields();
 }

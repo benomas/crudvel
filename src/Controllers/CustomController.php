@@ -1,6 +1,7 @@
 <?php namespace Crudvel\Controllers;
 
 use Crudvel\Interfaces\CvCrudInterface;
+use Crudvel\Interfaces\CvPaginateInterface;
 use Crudvel\Traits\CrudTrait;
 use DB;
 use Illuminate\Routing\Controller as BaseController;
@@ -11,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
     so the options is to doing it manually, but it is a lot of code, and it is always the same, to i get that code and put it togheter as methods, so now with the support of
     the anonymous functions, all this code can be reused, saving a lot of time.
 */
-class CustomController extends BaseController implements CvCrudInterface{
+class CustomController extends BaseController implements CvCrudInterface,CvPaginateInterface{
   //preparing refactyoring
   protected $cvResource;
   protected $modelClassName;
@@ -529,5 +530,32 @@ class CustomController extends BaseController implements CvCrudInterface{
   }
   public function getPaginator($paginator=null){
     return $this->paginators[$paginator]??$this->paginators['cv-simple-paginator']??null;
+  }
+  public function getForceSingleItemPagination(){
+    return $this->forceSingleItemPagination??null;
+  }
+  public function getFilterables(){
+    return $this->filterables??null;
+  }
+  public function getOrderables(){
+    return $this->orderables??null;
+  }
+  public function getPaginable(){
+    return $this->paginable??null;
+  }
+  public function getFlexPaginable(){
+    return $this->flexPaginable??null;
+  }
+  public function getBadPaginablePetition(){
+    return $this->badPaginablePetitionx??null;
+  }
+  public function getSelectables(){
+    return $this->selectables??null;
+  }
+  public function getJoinables(){
+    return $this->joinables??null;
+  }
+  public function getPaginateData(){
+    return $this->paginateData??null;
   }
 }
