@@ -88,6 +88,9 @@ trait CvResourceTrait
   public function getFields(){
     return $this->fields??null;
   }
+  public function getPaginateFields(){
+    return $this->fields['paginate']??null;
+  }
   //Getters end
 
   //Setters start
@@ -195,6 +198,10 @@ trait CvResourceTrait
   }
   public function setFields($fields=null){
     $this->fields=$fields;
+    return $this;
+  }
+  public function setPaginateFields($paginate=null){
+    $this->fields['paginate'] = $paginate ?? null;
     return $this;
   }
   //Setters end

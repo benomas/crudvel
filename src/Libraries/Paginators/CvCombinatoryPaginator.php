@@ -23,7 +23,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     $this->model = $this->container->getModel();
 
     //si la peticion http solicita paginación de forma incorrecta
-    if(!customNonEmptyArray($this->paginate)){
+    if(!nonEmptyArray($this->paginate)){
       if(!$this->flexPaginable)
         return false;
       $this->paginate["selectQuery"] = $this->selectables;
@@ -55,7 +55,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     //add joins
     $this->container->joins();
     //si existe un array de columnas a seleccionar
-    if(customNonEmptyArray($this->selectQuery))
+    if(nonEmptyArray($this->selectQuery))
       $this->fixSelectables();
 
     $this->container->unions();
@@ -64,7 +64,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     $querySql = $this->model->toSql();
     $this->model->setQuery(DB::table(DB::raw("($querySql) as cv_pag"))->setBindings($this->model->getBindings()));
     //si existe un array de columnas a filtrar
-    if(customNonEmptyArray($this->filterQuery))
+    if(nonEmptyArray($this->filterQuery))
       $this->filter();
     $this->unions();
     $this->paginateCount = $this->model->count();

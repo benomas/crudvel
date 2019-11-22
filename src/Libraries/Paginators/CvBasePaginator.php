@@ -42,8 +42,6 @@ class CvBasePaginator implements CvCrudInterface
   protected $searchObject      = '';
   protected $searchMode        = 'cv-simple-paginator';
   protected $dbEngineContainer = null;
-  protected $model;
-  protected $modelInstance;
   //array de comparaciones validas
   protected $logicConnectors  =[
     'and'=>'where'
@@ -53,31 +51,22 @@ class CvBasePaginator implements CvCrudInterface
 
   public function __construct(){
     $this->injectCvResource();
-    $this->flexPaginable     = $this->getPaginatorDefiner()->getFlexPaginable();
-    $this->selectables       = $this->getPaginatorDefiner()->getSelectables();
-    $this->paginate          = $this->getPaginatorDefiner()->getRequestInstance()->get("paginate");
-    $this->model             = $this->getPaginatorDefiner()->getModel();
-    $this->modelInstance     = $this->getPaginatorDefiner()->getModelInstance();
+    $this->setPaginate($this->getPaginateFields());
+    $this->setFlexPaginable($this->getPaginatorDefiner()->getFlexPaginable());
+    $this->setSelectables($this->getPaginatorDefiner()->getSelectables());
     $this->dbEngineContainer = new EngineContainer(config('database.default'));
-    $this->joinables         = $this->getPaginatorDefiner()->getJoinables();
+    //$this->setJoinables($this->getPaginatorDefiner()->getJoinables());
     $this->setBasicPropertys();
   }
 
-  protected function setBasicPropertys(){
-    $this->limit        = fixedIsInt($this->paginate["limit"]??null)?$this->paginate["limit"]:null;
-    $this->page         = fixedIsInt($this->paginate["page"]??null)?$this->paginate["page"]:null;
-    $this->ascending    = $this->paginate["ascending"]??null;
-    $this->byColumn     = $this->paginate["byColumn"]??null;
-    $this->searchObject = $this->paginate["searchObject"]??'';
-  }
-
   public function fixSelectQuery(){
+    pdd('asdasd');
     //si selectables esta definida en false, no se aceptara seleccion personalizada de columnas
-    if(isset($this->selectables) && $this->selectables===false)
-      return $this->selectQuery=false;
+    if($this->getSelectables()===false)
+      return $this->setSelectQuery(false);
 
     //definimos las columnas que deberan mandarse como respuesta a la petición
-    $this->selectQuery = arrayIntersect($this->paginate["selectQuery"]??null,$this->selectables??null);
+    return $this->setSelectQuery(arrayIntersect($this->getSelectQuery(),$this->getSelectables()));
   }
 
   public function fixFilterQuery(){
@@ -87,7 +76,7 @@ class CvBasePaginator implements CvCrudInterface
 
     //definimos las columnas que podran ser filtradas mediante fluent eloquent
     $this->filterQuery = arrayIntersect($this->paginate["filterQuery"]??null,$this->filterables??null,true);
-    $this->dbEngineContainer->setFilterQueryString($this->filterQuery);
+    //$this->dbEngineContainer->setFilterQueryString($this->filterQuery);
   }
 
   public function fixOrderables(){
@@ -97,18 +86,19 @@ class CvBasePaginator implements CvCrudInterface
     //definimos la columna de ordenamiento
     $this->orderBy = arrayIntersect([$this->paginate["orderBy"]??null],$this->orderables??null);
 
-    if(customNonEmptyArray($this->orderBy))
+    if(nonEmptyArray($this->orderBy))
       return $this->orderBy=$this->orderBy[0];
 
     if(is_array($this->orderBy))
       $this->orderBy=null;
   }
 
-  public function getFilterables(){
-    return $this->filterables??null;
+  //Getters start
+  public function getPaginate(){
+    return $this->paginate??null;
   }
-  public function getOrderables(){
-    return $this->orderables??null;
+  public function getFlexPaginable(){
+    return $this->flexPaginable??null;
   }
   public function getSelectables(){
     return $this->selectables??null;
@@ -116,23 +106,32 @@ class CvBasePaginator implements CvCrudInterface
   public function getJoinables(){
     return $this->joinables??null;
   }
+  public function getLimit(){
+    return $this->limit??null;
+  }
+  public function getPage(){
+    return $this->page??null;
+  }
   public function getAscending(){
     return $this->ascending??null;
   }
   public function getByColumn(){
     return $this->byColumn??null;
   }
+  public function getSearchObject(){
+    return $this->searchObject??null;
+  }
+  public function getFilterables(){
+    return $this->filterables??null;
+  }
+  public function getOrderables(){
+    return $this->orderables??null;
+  }
   public function getFilterQuery(){
     return $this->filterQuery??null;
   }
-  public function getLimit(){
-    return $this->limit??null;
-  }
   public function getOrderBy(){
     return $this->orderBy??null;
-  }
-  public function getPage(){
-    return $this->page??null;
   }
   public function getSelectQuery(){
     return $this->selectQuery??null;
@@ -149,18 +148,53 @@ class CvBasePaginator implements CvCrudInterface
   public function getPaginateData(){
     return $this->paginateData??null;
   }
-  public function getPaginate(){
-    return $this->paginate??null;
+  //Getters end
+
+  //Setters start
+  protected function setBasicPropertys(){
+    $paginate = $this->getPaginateFields();
+    $this->setLimit(fixedIsInt($paginate["limit"]??null)?$paginate["limit"]:null);
+    $this->setPage(fixedIsInt($paginate["page"]??null)?$paginate["page"]:null);
+    $this->setAscending($paginate["ascending"]??null);
+    $this->setByColumn($paginate["byColumn"]??null);
+    $this->setSearchObject($paginate["searchObject"]??'');
   }
-  public function getFlexPaginable(){
-    return $this->flexPaginable??null;
+  public function setPaginate($paginate=null){
+    $this->paginate = $paginate??null;
+    return $this;
   }
-  public function getModel(){
-    return $this->model??null;
+  public function setFlexPaginable($flexPaginable=null){
+    $this->flexPaginable = $flexPaginable??null;
+    return $this;
   }
-  public function getModelInstance(){
-    return $this->modelInstance??null;
+  public function setSelectables($selectables=null){
+    return $this->selectables??null;
   }
+  public function setJoinables($joinables){
+    $this->joinables = $joinables??null;
+    return $this;
+  }
+  public function setLimit($limit=null){
+    $this->limit = $limit??null;
+    return $this;
+  }
+  public function setPage($page=null){
+    $this->page = $page??null;
+    return $this;
+  }
+  public function setAscending($ascending=null){
+    $this->ascending = $ascending??null;
+    return $this;
+  }
+  public function setByColumn($byColumn=null){
+    $this->byColumn=$byColumn??null;
+    return $this;
+  }
+  public function setSearchObject($searchObject=null){
+    $this->searchObject=$searchObject??null;
+    return $this;
+  }
+  //Setters end
 
   //rewrite this method for custom logic
   public function unions(){
@@ -171,14 +205,6 @@ class CvBasePaginator implements CvCrudInterface
   }
   public function setOrderables($orderables){
     $this->orderables=$orderables;
-    return $this;
-  }
-  public function setSelectables($selectables){
-    $this->selectables=$selectables;
-    return $this;
-  }
-  public function setModel($model){
-    $this->model=$model;
     return $this;
   }
 

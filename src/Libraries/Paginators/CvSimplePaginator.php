@@ -15,16 +15,14 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
    * @return boolean    if require pagine or not
    */
   public function extractPaginate(){
-
     //si la peticion http solicita paginación de forma incorrecta
-    if(!customNonEmptyArray($this->paginate)){
-      if(!$this->flexPaginable)
+    if(!nonEmptyArray($this->getPaginate())){
+      if(!$this->getFlexPaginable())
         return false;
-      $this->paginate["selectQuery"] = $this->selectables;
-      $this->paginate["filterQuery"] = $this->filterables;
-      $this->badPaginablePetition=true;
+      $this->setSelectQuery($this->getSelectables());
+      $this->setFilterQuery($this->getFilterables());
+      $this->setBadPaginablePetition(true);
     }
-
     $this->fixSelectQuery();
     $this->fixFilterQuery();
     $this->fixOrderables();
@@ -50,7 +48,7 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
     $this->getPaginatorDefiner()->joins();
 
     //si existe un array de columnas a seleccionar
-    if(customNonEmptyArray($this->selectQuery))
+    if(nonEmptyArray($this->selectQuery))
       $this->fixSelectables();
 
     $this->getPaginatorDefiner()->unions();
@@ -59,7 +57,7 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
     $querySql = $this->getModelBuilderInstance()->toSql();
     $this->getModelBuilderInstance()->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($this->getModelBuilderInstance()->getBindings()));
     //si existe un array de columnas a filtrar
-    if(customNonEmptyArray($this->filterQuery))
+    if(nonEmptyArray($this->filterQuery))
       $this->filter();
     $this->paginateCount = $this->getModelBuilderInstance()->count();
     //si se solicita limitar el numero de resultados
@@ -120,15 +118,16 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
 
   public function noPaginatedResponse(){
     //add joins
-    $this->getPaginatorDefiner()->joins();
+    //$this->getPaginatorDefiner()->joins();
 
     $response = $this->getModelCollectionInstance();
-    if(count($this->selectables)){
-      $this->selectQuery = $this->selectables;
+    $selectables = $this->getSelectables();
+    if($selectables && count($selectables)){
+      $this->selectQuery = $selectables;
       $this->fixSelectables();
       if($this->getModelCollectionInstance() && $this->getModelCollectionInstance()->id)
         $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id);
-      $response = $this->getModelBuilderInstance()->select($this->selectQuery)->first();
+      $response = $this->getModelBuilderInstance()->select($selectables)->first();
     }
 
     return $this->getPaginatorDefiner()->apiSuccessResponse($response);

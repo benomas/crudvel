@@ -30,6 +30,7 @@ interface CvCrudInterface
   public function getCurrentAction();
   public function getCurrentActionKey();
   public function getFields();
+  public function getPaginateFields();
   public function setCamelPluralName($camelPluralName=null);
   public function setCamelSingularName($camelSingularName=null);
   public function setSlugPluralName($slugPluralName=null);
@@ -61,4 +62,5 @@ interface CvCrudInterface
   public function modelInstanciator($new=false);
   //public function setModelInstance();
   public function loadFields();
+  public function setPaginateFields();
 }

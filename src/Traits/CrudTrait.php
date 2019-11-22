@@ -148,6 +148,11 @@ trait CrudTrait {
       $this->cvResource->getFields():
       \CvResource::getFields();
   }
+  public function getPaginateFields(){
+    return $this->cvResource ?
+      $this->cvResource->getPaginateFields():
+      \CvResource::getPaginateFields();
+  }
   //Getters end
 
   //Setters start
@@ -290,13 +295,13 @@ trait CrudTrait {
   public function setRow($row=null){
     $this->cvResource ?
       $this->cvResource->setRow($row):
-      \CvResource::setRow($this);
+      \CvResource::setRow($row);
     return $this;
   }
   public function setCurrentAction($currentAction=null){
     $this->cvResource ?
       $this->cvResource->setCurrentAction($currentAction):
-      \CvResource::setCurrentAction($this);
+      \CvResource::setCurrentAction($currentAction);
     return $this;
   }
   public function setCurrentActionKey($currentActionKey=null){
@@ -308,7 +313,13 @@ trait CrudTrait {
   public function setFields($fields=null){
     $this->cvResource ?
       $this->cvResource->setFields($fields):
-      \CvResource::setFields($this);
+      \CvResource::setFields($fields);
+    return $this;
+  }
+  public function setPaginateFields($paginate=null){
+    $this->cvResource ?
+      $this->cvResource->setPaginateFields($paginate):
+      \CvResource::setPaginateFields($paginate);
     return $this;
   }
   //consider to include and interface to ensure CvResource requiriments
