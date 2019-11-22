@@ -60,9 +60,13 @@ class ApiController extends CustomController{
    */
   public function index()
   {
-    return ($this->paginable && $this->currentPaginator->extractPaginate())?
-      $this->currentPaginator->paginatedResponse():
-      $this->apiSuccessResponse($this->getModelBuilderInstance()->get());
+    if(
+      $this->getPaginatorDefiner() &&
+      $this->getPaginatorDefiner()->getPaginable() &&
+      $this->getPaginatorInstance()->extractPaginate()
+    )
+      return $this->getPaginatorInstance()->paginatedResponse();
+    return$this->apiSuccessResponse($this->getModelBuilderInstance()->get());
   }
 
   //web routes
@@ -118,7 +122,7 @@ class ApiController extends CustomController{
       $this->getPaginatorInstance()->extractPaginate()
     )
       return $this->getPaginatorInstance()->paginatedResponse();
-      $this->getPaginatorInstance()->noPaginatedResponse();
+    return $this->getPaginatorInstance()->noPaginatedResponse();
   }
 
   /**

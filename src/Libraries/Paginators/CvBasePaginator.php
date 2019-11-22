@@ -13,8 +13,6 @@ class CvBasePaginator implements CvCrudInterface
   protected $filterables = null;
   //arreglo con columnas que se permiten ordenar en paginado, si se setea con false, no se permitira ordenar, si se setea con null o no se setea, no se pondran restricciones en ordenar
   protected $orderables = null;
-  //arreglo con columnas que se permiten seleccionar en paginado, si se setea con false, no se permitira seleccionar de forma especifica, si se setea con null o no se setea, no se pondran restricciones en seleccionar de forma especifica
-  protected $selectables = null;
   //mapa de columnas join,
   protected $joinables = null;
   //boleado que indica si el ordenamiento sera ascendente o no
@@ -53,44 +51,44 @@ class CvBasePaginator implements CvCrudInterface
     $this->injectCvResource();
     $this->setPaginate($this->getPaginateFields());
     $this->setFlexPaginable($this->getPaginatorDefiner()->getFlexPaginable());
-    $this->setSelectables($this->getPaginatorDefiner()->getSelectables());
-    $this->dbEngineContainer = new EngineContainer(config('database.default'));
+    //$this->dbEngineContainer = new EngineContainer(config('database.default'));
     //$this->setJoinables($this->getPaginatorDefiner()->getJoinables());
     $this->setBasicPropertys();
   }
 
   public function fixSelectQuery(){
-    pdd('asdasd');
     //si selectables esta definida en false, no se aceptara seleccion personalizada de columnas
     if($this->getSelectables()===false)
       return $this->setSelectQuery(false);
-
     //definimos las columnas que deberan mandarse como respuesta a la petición
     return $this->setSelectQuery(arrayIntersect($this->getSelectQuery(),$this->getSelectables()));
   }
 
   public function fixFilterQuery(){
     //si filterables esta definida en false, no se aceptara filtrado por ninguna columna
-    if(isset($this->filterables) && $this->filterables===false)
-      return $this->filterQuery=false;
+    if($this->getFilterables()===false)
+      return $this->setFilterQuery(false);
 
-    //definimos las columnas que podran ser filtradas mediante fluent eloquent
-    $this->filterQuery = arrayIntersect($this->paginate["filterQuery"]??null,$this->filterables??null,true);
+    $fixFilterQuery = [];
+    foreach($this->getFilterQuery() as $key=>$value)
+      if(in_array($key,$this->getFilterables()))
+        $fixFilterQuery[$key]=$value;
+    return $this->setFilterQuery($fixFilterQuery);
     //$this->dbEngineContainer->setFilterQueryString($this->filterQuery);
   }
 
   public function fixOrderables(){
-    if(isset($this->orderables) && $this->orderables===false)
-      return $this->orderBy=false;
+    if($this->getOrderables()===false)
+      return $this->setOrderBy(false);
 
     //definimos la columna de ordenamiento
-    $this->orderBy = arrayIntersect([$this->paginate["orderBy"]??null],$this->orderables??null);
+    $this->setOrderBy(arrayIntersect($this->getOrderBy(),$this->getOrderables()));
+    if(noEmptyArray($this->getOrderBy()))
+      return $this->setOrderBy($this->getOrderBy()[0]);
 
-    if(nonEmptyArray($this->orderBy))
-      return $this->orderBy=$this->orderBy[0];
-
-    if(is_array($this->orderBy))
-      $this->orderBy=null;
+    if(is_array($this->getOrderBy()))
+      return $this->setOrderBy(null);
+    return $this;
   }
 
   //Getters start
@@ -101,7 +99,7 @@ class CvBasePaginator implements CvCrudInterface
     return $this->flexPaginable??null;
   }
   public function getSelectables(){
-    return $this->selectables??null;
+    return $this->getPaginatorDefiner()->getSelectables();
   }
   public function getJoinables(){
     return $this->joinables??null;
@@ -122,10 +120,10 @@ class CvBasePaginator implements CvCrudInterface
     return $this->searchObject??null;
   }
   public function getFilterables(){
-    return $this->filterables??null;
+    return $this->getPaginatorDefiner()->getFilterables();
   }
   public function getOrderables(){
-    return $this->orderables??null;
+    return $this->getPaginatorDefiner()->getOrderables();
   }
   public function getFilterQuery(){
     return $this->filterQuery??null;
@@ -153,11 +151,14 @@ class CvBasePaginator implements CvCrudInterface
   //Setters start
   protected function setBasicPropertys(){
     $paginate = $this->getPaginateFields();
-    $this->setLimit(fixedIsInt($paginate["limit"]??null)?$paginate["limit"]:null);
-    $this->setPage(fixedIsInt($paginate["page"]??null)?$paginate["page"]:null);
-    $this->setAscending($paginate["ascending"]??null);
-    $this->setByColumn($paginate["byColumn"]??null);
-    $this->setSearchObject($paginate["searchObject"]??'');
+    $this->setLimit(fixedIsInt($paginate["limit"]??null)?$paginate["limit"]:null)
+    ->setPage(fixedIsInt($paginate["page"]??null)?$paginate["page"]:null)
+    ->setAscending($paginate["ascending"]??null)
+    ->setByColumn($paginate["byColumn"]??null)
+    ->setSearchObject($paginate["searchObject"]??'')
+    ->setSelectQuery($paginate["selectQuery"]??null)
+    ->setFilterQuery($paginate["filterQuery"]??null)
+    ->setOrderBy($paginate["orderBy"]??null);
   }
   public function setPaginate($paginate=null){
     $this->paginate = $paginate??null;
@@ -166,9 +167,6 @@ class CvBasePaginator implements CvCrudInterface
   public function setFlexPaginable($flexPaginable=null){
     $this->flexPaginable = $flexPaginable??null;
     return $this;
-  }
-  public function setSelectables($selectables=null){
-    return $this->selectables??null;
   }
   public function setJoinables($joinables){
     $this->joinables = $joinables??null;
@@ -194,19 +192,28 @@ class CvBasePaginator implements CvCrudInterface
     $this->searchObject=$searchObject??null;
     return $this;
   }
+  public function setSelectQuery($selectQuery=null){
+    $this->selectQuery=$selectQuery??null;
+    return $this;
+  }
+  public function setFilterQuery($filterQuery=null){
+    $this->filterQuery=$filterQuery??null;
+    return $this;
+  }
+  public function setOrderBy($OrderBy=null){
+    $this->orderBy=$OrderBy??null;
+    return $this;
+  }
+  public function setComparator($comparator=null){
+    $this->comparator=$comparator;
+    return $this;
+  }
   //Setters end
 
   //rewrite this method for custom logic
+  /*
   public function unions(){
-  }
-  public function setFilterables($filterables){
-    $this->filterables=$filterables;
-    return $this;
-  }
-  public function setOrderables($orderables){
-    $this->orderables=$orderables;
-    return $this;
-  }
+  }*/
 
   public function applyCustomFilter($field,$filter){
     $lop = $filter['lOp'] ?? 'or';

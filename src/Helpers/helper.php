@@ -201,7 +201,7 @@ if(!function_exists("reloadFormValue")){
 		return "";
 	}
 }
-if(!function_exists("nonEmptyArray")){
+if(!function_exists("noEmptyArray")){
 	/**
 	 * Verifica si el parametro mandado es diferente de null, es un array, y tiene almenos un elemento
 	 *
@@ -211,17 +211,17 @@ if(!function_exists("nonEmptyArray")){
 	 * @date   2017-05-08
 	 * @return boolean
 	 */
-	function nonEmptyArray($testArray=null){
+	function noEmptyArray($testArray=null){
 		return $testArray && is_array($testArray) && count($testArray);
 	}
 }
 if(!function_exists("arrayIntersect")){
 	/**
-	 * Si los dos parametros pasados son nonEmptyArrays, entonces
+	 * Si los dos parametros pasados son noEmptyArrays, entonces
 	 * retorna un arreglo con solo los elementos que se repiten en ambos arreglos,
-	 * si el primer parametro no es un nonEmptyArray pero el segundo si, entonces,
+	 * si el primer parametro no es un noEmptyArray pero el segundo si, entonces,
 	 * regresa un arreglo con todos los elementos del segundo arreglo, si ninguno de los arreglos
-	 * es un nonEmptyArray, entonces regresa null
+	 * es un noEmptyArray, entonces regresa null
 	 *
 	 * @param array   array1  primer arreglo
 	 *
@@ -232,13 +232,13 @@ if(!function_exists("arrayIntersect")){
 	 * @return array or null
 	 */
 	function arrayIntersect($array1=null,$array2=null,$isAsociative=false){
-		//si el primer parametro no es un nonEmptyArray
-		if(!nonEmptyArray($array2))
-			return nonEmptyArray($array1)? $array1:null;
-		//si el segundo parametro no es un nonEmptyArray
-		if(!nonEmptyArray($array1))
+		//si el primer parametro no es un noEmptyArray
+		if(!noEmptyArray($array2))
+			return noEmptyArray($array1)? $array1:null;
+		//si el segundo parametro no es un noEmptyArray
+		if(!noEmptyArray($array1))
 			return null;
-		//si ambos parametros son nonEmptyArrays
+		//si ambos parametros son noEmptyArrays
 		$result = [];
 		if($isAsociative){
 			foreach ($array1 as $key=>$value)
@@ -246,9 +246,9 @@ if(!function_exists("arrayIntersect")){
 					$result[$key]=$value;
 		}
 		else{
-			foreach ($array2 as $value)
-				if(in_array($value,$array1))
-					$result[]=$value;
+      foreach ($array2 as $value)
+        if(in_array($value,$array1))
+          $result[]=$value;
 		}
 		return $result;
 	}
@@ -264,7 +264,7 @@ if(!function_exists("concatToArray")){
 	 * @return array
 	 */
 	function concatToArray($prefix=null,$baseArray=null){
-		if(!nonEmptyArray($baseArray))
+		if(!noEmptyArray($baseArray))
 			return $baseArray;
 		foreach ($baseArray as $key=>$column) {
 		}

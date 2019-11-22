@@ -48,7 +48,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     if($this->owner() && in_array($this->getCurrentAction(),['index','show']))
       return true;
 
-    return actionAccess($this->userModel,$this->getSlugPluralName().".".Str::slug(snake_case($this->getCurrentAction())));
+    return actionAccess($this->userModel,$this->getSlugPluralName().".".Str::snake($this->getCurrentAction(),'-'));
   }
 
   /**

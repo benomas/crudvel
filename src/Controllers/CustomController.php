@@ -547,7 +547,7 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
     return $this->flexPaginable??null;
   }
   public function getBadPaginablePetition(){
-    return $this->badPaginablePetitionx??null;
+    return $this->badPaginablePetition??null;
   }
   public function getSelectables(){
     return $this->selectables??null;
@@ -557,5 +557,10 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   }
   public function getPaginateData(){
     return $this->paginateData??null;
+  }
+  
+  public function setBadPaginablePetition($badPaginablePetition=null){
+    $this->badPaginablePetition = $badPaginablePetition??null;
+    return $this;
   }
 }

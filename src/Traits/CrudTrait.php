@@ -284,7 +284,6 @@ trait CrudTrait {
     return $this;
   }
 
-
   //-----------
   public function setRows($rows=null){
     $this->cvResource ?
@@ -366,7 +365,7 @@ trait CrudTrait {
 */
   public function loadFields(){
     if($this->cvResource->getRequestInstance())
-      $this->fields = $this->cvResource->getRequestInstance()->all();
+      $this->setFields($this->cvResource->getRequestInstance()->all());
   }
 
   public function apiAlreadyExist($data=null){

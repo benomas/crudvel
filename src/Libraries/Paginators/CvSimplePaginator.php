@@ -16,16 +16,14 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
    */
   public function extractPaginate(){
     //si la peticion http solicita paginación de forma incorrecta
-    if(!nonEmptyArray($this->getPaginate())){
+    if(!noEmptyArray($this->getPaginate())){
       if(!$this->getFlexPaginable())
         return false;
-      $this->setSelectQuery($this->getSelectables());
-      $this->setFilterQuery($this->getFilterables());
-      $this->setBadPaginablePetition(true);
+      //$this->setSelectQuery($this->getSelectables());
+      //$this->setFilterQuery($this->getFilterables());
+      $this->getPaginatorDefiner()->setBadPaginablePetition(true);
     }
-    $this->fixSelectQuery();
-    $this->fixFilterQuery();
-    $this->fixOrderables();
+    $this->fixSelectQuery()->fixFilterQuery()->fixOrderables();
 
     //se carga el resto de los parametros para paginar
     return true;
@@ -45,19 +43,18 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
     if($this->getModelBuilderInstance()===null)
       return ;
     //add joins
-    $this->getPaginatorDefiner()->joins();
-
+    //$this->getPaginatorDefiner()->joins();
     //si existe un array de columnas a seleccionar
-    if(nonEmptyArray($this->selectQuery))
+    if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
-
-    $this->getPaginatorDefiner()->unions();
+    //$this->getPaginatorDefiner()->unions();
     if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0)
       return ;
-    $querySql = $this->getModelBuilderInstance()->toSql();
-    $this->getModelBuilderInstance()->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($this->getModelBuilderInstance()->getBindings()));
+    //$querySql = $this->getModelBuilderInstance()->toSql();
+    //$this->getModelBuilderInstance()->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings//($this->getModelBuilderInstance()->getBindings()));
     //si existe un array de columnas a filtrar
-    if(nonEmptyArray($this->filterQuery))
+
+    if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
     $this->paginateCount = $this->getModelBuilderInstance()->count();
     //si se solicita limitar el numero de resultados
@@ -134,20 +131,20 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
   }
 
   protected function filter() {
-    if(!isset($this->searchObject) || !$this->searchObject)
-      $this->searchObject = '';
-    foreach ($this->filterQuery as $field=>$filter){
+    if(!$this->getSearchObject())
+      $this->setSearchObject('');
+    foreach ($this->getFilterQuery() as $field=>$filter){
       if(is_array($filter)){
         $this->applyCustomFilter($field,$filter);
-        unset($this->filterQuery,$field);
+        unset($this->filterQuery[$field]);
       }
     }
     //default filter
-    if(!empty($this->filterQuery))
+    if(!empty($this->getFilterQuery()))
       $this->getModelBuilderInstance()->where(function($query){
-        foreach ($this->filterQuery as $field=>$filter){
+        foreach ($this->getFilterQuery() as $field=>$filter){
           $method=!isset($method)?"where":"orWhere";
-          $query->{$method}($field,$this->comparator,"%{$this->searchObject}%");
+          $query->{$method}($field,$this->getComparator(),"%{$this->getSearchObject()}%");
         }
       });
   }
