@@ -5,10 +5,11 @@ namespace Crudvel\Interfaces;
 interface CvPaginateInterface
 {
   public function getFlexPaginable();
-  public function getSelectables();
-  public function getRequestInstance();
-  public function getModelBuilderInstance();
-  public function getModelInstance();
   public function getPaginable();
+  public function getFilterables();
+  public function getOrderables();
+  public function getSelectables();
+  public function getBadPaginablePetition();
+  public function setBadPaginablePetition();
   //public function setBasicPropertys();
 }

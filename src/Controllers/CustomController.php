@@ -426,62 +426,17 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   public function getPrefix(){
     return $this->prefix??null;
   }
-  public function getClassType(){
-    return $this->classType??null;
-  }
-  public function getBaseClass(){
-    return $this->baseClass??null;
-  }
-  public function getResource(){
-    return $this->resource??null;
-  }
   public function getTransStatus(){
     return $this->transStatus??null;
   }
   public function getCommitter(){
     return $this->committer??null;
   }
-  public function getCrudObjectName(){
-    return $this->crudObjectName??null;
-  }
-  public function getModelSource(){
-    return $this->modelSource??null;
-  }
-  public function getRequestSource(){
-    return $this->requestInstanceClass??null;
-  }
-  public function getRows(){
-    return $this->rows??null;
-  }
-  public function getRow(){
-    return $this->row??null;
-  }
-  public function getRowName(){
-    return $this->rowName??null;
-  }
-  public function getRowsName(){
-    return $this->rowsName??null;
-  }
   public function getMainTableName(){
     return $this->mainTableName??null;
   }
   public function getSkipModelValidation(){
     return $this->skipModelValidation??null;
-  }
-  public function getModel(){
-    return $this->model??null;
-  }
-  public function getModelInstance(){
-    return $this->modelInstance??null;
-  }
-  public function getUserModel(){
-    return $this->setUserModelBuilderInstance()??null;
-  }
-  public function getRequest(){
-    return $this->requestInstance??null;
-  }
-  public function getFields(){
-    return $this->fields??null;
   }
   public function getSlugField(){
     return $this->slugField??null;
@@ -491,9 +446,6 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   }
   public function getDefaultFields(){
     return $this->defaultFields??null;
-  }
-  public function getCurrentUser(){
-    return $this->currentUser??null;
   }
   public function getDirtyPropertys(){
     return $this->dirtyPropertys??null;
@@ -523,8 +475,6 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   public function getRequestClassName(){
     return $this->requestClassName??null;
   }
-
-
   public function getPaginators(){
     return $this->paginators??null;
   }
