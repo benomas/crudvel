@@ -68,4 +68,36 @@ class BaseSeeder extends Seeder
       }
     }
   }
+
+  public function getCrudObjectName(){
+    if(empty($this->crudObjectName))
+      $this->explodeClass();
+    return $this->crudObjectName;
+  }
+  public function modelInstanciator($new=false){
+    $model = $this->modelSource = $this->modelSource?
+      $this->modelSource:
+      "App\Models\\".$this->getCrudObjectName();
+    if(!class_exists($model))
+      return null;
+    if($new)
+      return new $model();
+    return $model::noFilters();
+  }
+
+  public function explodeClass(){
+    if(empty($this->baseClass))
+      $this->baseClass=class_basename(get_class($this));
+
+    if(empty($this->classType)){
+      foreach (["Controller","Request"] as $classType)
+        if($this->testClassType($classType))
+          $this->classType = $classType;
+      if(empty($this->classType))
+        $this->classType = "Model";
+    }
+
+    if(empty($this->crudObjectName))
+      $this->crudObjectName = str_replace($this->classType,"",$this->baseClass);
+  }
 }

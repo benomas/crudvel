@@ -60,14 +60,17 @@ trait CvResourceTrait
   public function getUserModelCollectionInstance(){
     return $this->userModelCollectionInstance??null;
   }
+  public function getPermissionModelClass(){
+    return $this->permissionModelClass??null;
+  }
   public function getPaginatorClass(){
     return $this->paginatorClass??null;
   }
   public function getPaginatorInstance(){
     return $this->paginatorInstance??null;
   }
-  public function getPaginatorDefiner(){
-    return $this->paginatorDefiner??null;
+  public function getRootInstance($rootInstance=null){
+    return $this->rootInstance??null;
   }
   public function getCvResourceInstance(){
     return $this;
@@ -90,6 +93,12 @@ trait CvResourceTrait
   }
   public function getPaginateFields(){
     return $this->fields['paginate']??null;
+  }
+  public function getLangName(){
+    return $this->getSlugPluralName();
+  }
+  public function getActionResource($actionResource=null){
+    return $this->actionResource??null;
   }
   //Getters end
 
@@ -167,6 +176,10 @@ trait CvResourceTrait
     $this->userModelCollectionInstance = $userModelCollectionInstance??null;
     return $this;
   }
+  public function setPermissionModelClass($permissionModelClass=null){
+    $this->permissionModelClass = $permissionModelClass??null;
+    return $this;
+  }
   public function setPaginatorClass($paginatorClass=null){
     $this->paginatorClass = $paginatorClass;
     return $this;
@@ -175,8 +188,8 @@ trait CvResourceTrait
     $this->paginatorInstance = $paginatorInstance;
     return $this;
   }
-  public function setPaginatorDefiner($paginatorDefiner=null){
-    $this->paginatorDefiner = $paginatorDefiner;
+  public function setRootInstance($rootInstance=null){
+    $this->rootInstance = $rootInstance;
     return $this;
   }
   //-----------
@@ -194,6 +207,10 @@ trait CvResourceTrait
   }
   public function setCurrentActionKey($currentActionKey=null){
     $this->currentActionKey=$currentActionKey;
+    return $this;
+  }
+  public function setActionResource($actionResource=null){
+    $this->actionResource=$actionResource;
     return $this;
   }
   public function setFields($fields=null){

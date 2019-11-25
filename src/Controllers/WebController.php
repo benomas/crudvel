@@ -50,11 +50,11 @@ class WebController extends CustomController
     if(empty($this->rowsLabel))
       $this->rowsLabel = trans("crudvel/".$this->langName.".rows_label");
     if(empty($this->singularSlug))
-      $this->singularSlug = str_slug($this->rowLabel);
+      $this->singularSlug = Str::slug($this->rowLabel);
     if(empty($this->pluralSlug))
-      $this->pluralSlug = str_slug($this->rowsLabel);
+      $this->pluralSlug = Str::slug($this->rowsLabel);
     if(empty($this->viewFolder))
-      $this->viewFolder = kebab_case(str_plural($this->getCrudObjectName()));
+      $this->viewFolder = \Str::kebab(str_plural($this->getCrudObjectName()));
     if(empty($this->rowName))
       $this->rowName = snake_case($this->getCrudObjectName());
   }
@@ -65,10 +65,10 @@ class WebController extends CustomController
     if(!empty($this->userModel))
       $this->viewSharedPropertys[]="currentUser";
     if(empty($this->resource)){
-      if(!empty($this->request->baseName))
-        $this->resource = $this->request->baseName;
+      if(!empty($this->requestInstance->baseName))
+        $this->resource = $this->requestInstance->baseName;
       else
-        $this->resource = str_slug(str_plural($this->getCrudObjectName()));
+        $this->resource = Str::slug(str_plural($this->getCrudObjectName()));
     }
 
     if(in_array($method,$this->viewActions))
@@ -112,7 +112,7 @@ class WebController extends CustomController
   public function singleRowViewAction($action){
     View::share("page_title", trans("crudvel.actions.".snake_case($action).".called_message")." ".$this->rowLabel);
     View::share("row",$this->model->first());
-    return view("backend.".$this->viewFolder.".".str_slug($action));
+    return view("backend.".$this->viewFolder.".".Str::slug($action));
   }
 
   public function index(){
@@ -123,7 +123,7 @@ class WebController extends CustomController
       " ".
       $this->rowsLabel);
     View::share("rows", $this->model->get());
-    return view("backend.".$this->viewFolder.".".str_slug($this->currentAction));
+    return view("backend.".$this->viewFolder.".".Str::slug($this->currentAction));
   }
 
   public function show($id){
@@ -144,7 +144,7 @@ class WebController extends CustomController
   public function store(){
     $this->modelInstance = $this->modelInstanciator(true);
     return $this->persist()?$this->webSuccessResponse([
-      "redirector"=>Redirect::to($this->request->fullUrl())
+      "redirector"=>Redirect::to($this->requestInstance->fullUrl())
     ]):$this->webFailResponse();
   }
 
@@ -162,7 +162,7 @@ class WebController extends CustomController
       " ".
       $this->rowsLabel);
     View::share("method","post");
-    return view("backend.layout.partials.actions.".str_slug($this->currentAction));
+    return view("backend.layout.partials.actions.".Str::slug($this->currentAction));
   }
 
   //to depreciate

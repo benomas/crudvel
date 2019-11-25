@@ -9,51 +9,400 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 
 trait CrudTrait {
-
-  public function setEntity(){
-    $this->crudObjectName = str_replace($this->getClassType(),"",$this->baseClass);
+  //Getters start
+  public function getCamelPluralName(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getCamelPluralName():
+        $this->getCvResourceClass()::getCamelPluralName();
   }
-
-  public function explodeClass(){
-    if(empty($this->baseClass))
-      $this->baseClass=class_basename(get_class($this));
-
-    if(empty($this->classType)){
-      foreach (["Controller","Request"] as $classType)
-        if($this->testClassType($classType))
-          $this->classType = $classType;
-      if(empty($this->classType))
-        $this->classType = "Model";
-    }
-
-    if(empty($this->crudObjectName))
-      $this->crudObjectName = str_replace($this->classType,"",$this->baseClass);
+  public function getCamelSingularName(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getCamelSingularName():
+        $this->getCvResourceClass()::getCamelSingularName();
   }
-
-  public function getClassType(){
-    if(empty($this->classType))
-      $this->explodeClass();
-    return $this->classType;
+  public function getSlugPluralName(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getSlugPluralName():
+        $this->getCvResourceClass()::getSlugPluralName();
   }
-
-  public function getBaseClass(){
-    if(empty($this->baseClass))
-      $this->explodeClass();
-    return $this->baseClass;
+  //this is the most important case, because all the resource name strategy depends on it
+  public function getSlugSingularName(){
+    if(!empty($this->cvResourceInstance) && ($slugSingularName=$this->cvResourceInstance->getSlugSingularName()))
+      return $slugSingularName;
+    return !empty($this->slugSingularName)?
+      $this->slugSingularName:
+      \Illuminate\Support\Str::snake(str_replace('Controller','',class_basename($this)),'-');
   }
-
-  public function getCrudObjectName(){
-    if(empty($this->crudObjectName))
-      $this->explodeClass();
-    return $this->crudObjectName;
+  public function getSnakePluralName(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getSnakePluralName():
+        $this->getCvResourceClass()::getSnakePluralName();
   }
+  public function getSnakeSingularName(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getSnakeSingularName():
+        $this->getCvResourceClass()::getSnakeSingularName();
+  }
+  public function getStudlyPluralName(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getStudlyPluralName():
+        $this->getCvResourceClass()::getStudlyPluralName();
+  }
+  public function getStudlySingularName(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getStudlySingularName():
+        $this->getCvResourceClass()::getStudlySingularName();
+  }
+  //-----------
+  public function getControllerClass(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getControllerClass():
+        $this->getCvResourceClass()::getControllerClass();
+  }
+  public function getControllerInstance(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getControllerInstance():
+        $this->getCvResourceClass()::getControllerInstance();
+  }
+  public function getModelClass(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getModelClass():
+        $this->getCvResourceClass()::getModelClass();
+  }
+  public function getModelBuilderInstance(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getModelBuilderInstance():
+        $this->getCvResourceClass()::getModelBuilderInstance();
+  }
+  public function getModelCollectionInstance(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getModelCollectionInstance():
+        $this->getCvResourceClass()::getModelCollectionInstance();
+  }
+  public function getRequestClass(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getRequestClass():
+        $this->getCvResourceClass()::getRequestClass();
+  }
+  public function getRequestInstance(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getRequestInstance():
+        $this->getCvResourceClass()::getRequestInstance();
+  }
+  public function getUserModelClass(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getUserModelClass():
+        $this->getCvResourceClass()::getUserModelClass();
+  }
+  public function getUserModelBuilderInstance(){
+      return $this->cvResourceInstance ?
+        $this->cvResourceInstance->getUserModelBuilderInstance():
+        $this->getCvResourceClass()::getUserModelBuilderInstance();
+  }
+  public function getUserModelCollectionInstance(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getUserModelCollectionInstance():
+      $this->getCvResourceClass()::getUserModelCollectionInstance();
+  }
+  public function getPermissionModelClass(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getPermissionModelClass():
+      $this->getCvResourceClass()::getPermissionModelClass();
+  }
+  public function getPaginatorClass(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getPaginatorClass():
+      $this->getCvResourceClass()::getPaginatorClass();
+  }
+  public function getPaginatorInstance(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getPaginatorInstance():
+      $this->getCvResourceClass()::getPaginatorInstance();
+  }
+  public function getRootInstance(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getRootInstance():
+      $this->getCvResourceClass()::getRootInstance();
+  }
+  public function getCvResourceClass(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getRootInstance()->cvResourceClass():
+      'CvResource';
+  }
+  public function getCvResourceInstance(){
+    return $this->cvResourceInstance??null;
+  }
+  //-----------
+  public function getRows(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getRows():
+      $this->getCvResourceClass()::getRows();
+  }
+  public function getRow(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getRow():
+      $this->getCvResourceClass()::getRow();
+  }
+  public function getCurrentAction(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getCurrentAction():
+      $this->getCvResourceClass()::getCurrentAction();
+  }
+  public function getCurrentActionKey(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getCurrentActionKey():
+      $this->getCvResourceClass()::getCurrentActionKey();
+  }
+  public function getActionResource(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getActionResource():
+      $this->getCvResourceClass()::getActionResource();
+  }
+  public function getFields(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getFields():
+      $this->getCvResourceClass()::getFields();
+  }
+  public function getPaginateFields(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getPaginateFields():
+      $this->getCvResourceClass()::getPaginateFields();
+  }
+  public function getLangName(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->getLangName():
+      $this->getCvResourceClass()::getLangName();
+  }
+  //Getters end
 
-  public function mainArgumentName(){
-    if(empty($this->crudObjectName))
-      $this->explodeClass();
-    if(empty($this->rowName))
-      $this->rowName = snake_case($this->crudObjectName);
-    return snake_case($this->rowName);
+  //Setters start
+  public function setCamelPluralName($camelPluralName=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setCamelPluralName($camelPluralName);
+    else
+      $this->getCvResourceClass()::setCamelPluralName($camelPluralName);
+    return $this;
+  }
+  public function setCamelSingularName($camelSingularName=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setCamelSingularName($camelSingularName);
+    else
+      $this->getCvResourceClass()::setCamelSingularName($camelSingularName);
+    return $this;
+  }
+  public function setSlugPluralName($slugPluralName=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setSlugPluralName($slugPluralName);
+    else
+      $this->getCvResourceClass()::setSlugPluralName($this);
+    return $this;
+  }
+  public function setSlugSingularName($slugSingularName=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setSlugSingularName($slugSingularName);
+    else
+      $this->getCvResourceClass()::setSlugSingularName($slugSingularName);
+    return $this;
+  }
+  public function setSnakePluralName($snakePluralName=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setSnakePluralName($snakePluralName);
+    else
+      $this->getCvResourceClass()::setSnakePluralName($snakePluralName);
+    return $this;
+  }
+  public function setSnakeSingularName($snakeSingularName=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setSnakeSingularName($snakeSingularName);
+    else
+      $this->getCvResourceClass()::setSnakeSingularName($snakeSingularName);
+    return $this;
+  }
+  public function setStudlyPluralName($studlyPluralName=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setStudlyPluralName($studlyPluralName);
+    else
+      $this->getCvResourceClass()::setStudlyPluralName($studlyPluralName);
+    return $this;
+  }
+  public function setStudlySingularName($studlySingularName=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setStudlySingularName($studlySingularName);
+    else
+      $this->getCvResourceClass()::setStudlySingularName($studlySingularName);
+    return $this;
+  }
+  //-----------
+  public function setControllerClass($controllerClass=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setControllerClass($controllerClass);
+    else
+      $this->getCvResourceClass()::setControllerClass($controllerClass);
+    return $this;
+  }
+  public function setControllerInstance($controllerInstance=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setControllerInstance($controllerInstance);
+    else
+      $this->getCvResourceClass()::setControllerInstance($controllerInstance);
+    return $this;
+  }
+  public function setModelClass($modelClass=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setModelClass($modelClass);
+    else
+      $this->getCvResourceClass()::setModelClass($this);
+    return $this;
+  }
+  public function setModelBuilderInstance($modelBuilderInstance=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setModelBuilderInstance($modelBuilderInstance);
+    else
+      $this->getCvResourceClass()::setModelBuilderInstance($modelBuilderInstance);
+    return $this;
+  }
+  public function setModelCollectionInstance($modelCollectionInstance=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setModelCollectionInstance($modelCollectionInstance);
+    else
+      $this->getCvResourceClass()::setModelCollectionInstance($modelCollectionInstance);
+    return $this;
+  }
+  public function setRequestClass($requestClass=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setRequestClass($requestClass);
+    else
+      $this->getCvResourceClass()::setRequestClass($this);
+    return $this;
+  }
+  public function setRequestInstance($requestInstance=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setRequestInstance($requestInstance);
+    else
+      $this->getCvResourceClass()::setRequestInstance($requestInstance);
+    return $this;
+  }
+  public function setUserModelClass($userModelClass=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setUserModelClass($userModelClass);
+    else
+      $this->getCvResourceClass()::setUserModelClass($this);
+    return $this;
+  }
+  public function setUserModelBuilderInstance($userModelBuilderInstance=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setUserModelBuilderInstance($userModelBuilderInstance);
+    else
+      $this->getCvResourceClass()::setUserModelBuilderInstance($userModelBuilderInstance);
+    return $this;
+  }
+  public function setUserModelCollectionInstance($userModelCollectionInstance=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setUserModelCollectionInstance($userModelCollectionInstance);
+    else
+      $this->getCvResourceClass()::setUserModelCollectionInstance($userModelCollectionInstance);
+    return $this;
+  }
+  public function setPermissionModelClass($permissionModelClass=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setPermissionModelClass($permissionModelClass);
+    else
+      $this->getCvResourceClass()::setPermissionModelClass($this);
+    return $this;
+  }
+  public function setPaginatorClass($paginatorClass=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setPaginatorClass($paginatorClass);
+    else
+      $this->getCvResourceClass()::setPaginatorClass($paginatorClass);
+    return $this;
+  }
+  public function setPaginatorInstance($paginatorInstance=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setPaginatorInstance($paginatorInstance);
+    else
+      $this->getCvResourceClass()::setPaginatorInstance($paginatorInstance);
+    return $this;
+  }
+  public function setRootInstance($rootInstance=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setRootInstance($rootInstance);
+    else
+      $this->getCvResourceClass()::setRootInstance($rootInstance);
+    return $this;
+  }
+  //-----------
+  public function setRows($rows=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setRows($rows);
+    else
+      $this->getCvResourceClass()::setRows($rows);
+    return $this;
+  }
+  public function setRow($row=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setRow($row);
+    else
+      $this->getCvResourceClass()::setRow($row);
+    return $this;
+  }
+  public function setCurrentAction($currentAction=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setCurrentAction($currentAction);
+    else
+      $this->getCvResourceClass()::setCurrentAction($currentAction);
+    return $this;
+  }
+  public function setCurrentActionKey($currentActionKey=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setCurrentActionKey($currentActionKey);
+    else
+      $this->getCvResourceClass()::setCurrentActionKey($currentActionKey);
+    return $this;
+  }
+  public function setActionResource($actionResource=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setActionResource($actionResource);
+    else
+      $this->getCvResourceClass()::setActionResource($actionResource);
+    return $this;
+  }
+  public function setFields($fields=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setFields($fields);
+    else
+      $this->getCvResourceClass()::setFields($fields);
+    return $this;
+  }
+  public function setPaginateFields($paginate=null){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->setPaginateFields($paginate);
+    else
+      $this->getCvResourceClass()::setPaginateFields($paginate);
+    return $this;
+  }
+  //consider to include and interface to ensure CvResource requiriments
+  public function setCvResource($cvResourceInstance){
+    $this->cvResourceInstance = $cvResourceInstance;
+  }
+  //Setters end
+//-----
+  public function injectCvResource(){
+    //pdd($this->getCvResourceClass()::getCvResourceInstance());
+    $this->cvResourceInstance = $this->getCvResourceClass()::getCvResourceInstance();
+    return $this;
+  }
+  public function fixActionResource(){
+    if($this->cvResourceInstance)
+      $this->cvResourceInstance->fixActionResource();
+    else
+      $this->getCvResourceClass()::fixActionResource();
+    return $this;
+  }
+  public function actionAccess(){
+    return $this->cvResourceInstance ?
+      $this->cvResourceInstance->actionAccess():
+      $this->getCvResourceClass()::actionAccess();
   }
 
   public function autoSetPropertys(...$propertyRewriter){
@@ -63,22 +412,8 @@ trait CrudTrait {
           if(property_exists ( $this , $key))
             $this->{$key} = $value;
   }
-
-  public function setCurrentUser(){
-    $user = $this->getClassType()==="Request"?
-      $this->user():
-      $this->request->user();
-    $userModelSource = "\App\Models\User";
-    $this->userModel=$user?
-      $userModelSource::id($user->id):
-      null;
-    $this->currentUser = $this->userModel?$this->userModel->first():null;
-  }
-
   public function modelInstanciator($new=false){
-    $model = $this->modelSource = $this->modelSource?
-      $this->modelSource:
-      "App\Models\\".$this->getCrudObjectName();
+    $model = $this->getModelClass();
     if(!class_exists($model))
       return null;
     if($new)
@@ -86,34 +421,9 @@ trait CrudTrait {
     return $model::noFilters();
   }
 
-  public function setModelInstance(){
-    if(($this->model = $this->modelInstanciator())){
-      $this->mainTableName = $this->model->getModel()->getTable().'.';
-      if(!empty($this->currentActionId) && !empty($this->currentAction)){
-        $this->modelInstance = $this->model->id($this->currentActionId)->first();
-      }
-    }
-  }
-
-  public function userInstance(){
-    return $this->userModel->first();
-  }
-
-  public function testClassType($tryClassType){
-    return strstr($this->baseClass,$tryClassType)===$tryClassType;
-  }
-
   public function loadFields(){
-    if($this->getClassType()==="Request")
-      $this->fields = $this->all();
-    else{
-      $this->fields = empty($this->request->fields)?
-        $this->request->all():$this->request->fields;
-    }
-    if(!empty($this->defaultFields))
-      foreach ($this->defaultFields as $field => $value)
-        if(empty($this->fields[$field]))
-          $this->fields[$field]=$value;
+    if($this->cvResourceInstance->getRequestInstance())
+      $this->setFields($this->cvResourceInstance->getRequestInstance()->all());
   }
 
   public function apiAlreadyExist($data=null){
@@ -317,28 +627,24 @@ trait CrudTrait {
     return trans("crudvel.web.not_found");
   }
 
-  public function setLangName(){
-    if(empty($this->langName))
-      $this->langName = str_slug(snake_case(str_plural($this->getCrudObjectName())));
-  }
-
   public function owner(){
-    if( !$this->currentUser ||
-      $this->currentUser->isRoot()
-    )
+    if($this->getUserModelCollectionInstance()->isRoot())
       return true;
-
-    if($this->currentUser->specialPermissions()->slug($this->langName.".general-owner")->count())
-      $this->model->generalOwner($this->currentUser->id);
+    if($this->getUserModelCollectionInstance()->
+      specialPermissions()->
+      slug($this->cvResourceInstanceLangCase().".general-owner")->
+      count()
+    )
+      $this->getModelBuilderInstance()->generalOwner($this->getUserModelCollectionInstance()->id);
     else
-      if($this->currentUser->specialPermissions()->slug($this->langName.".particular-owner")->count())
-          $this->model->particularOwner($this->currentUser->id);
+      if($this->getUserModelCollectionInstance()->specialPermissions()->slug($this->ngCase().".particular-owner")->count())
+          $this->getModelBuilderInstance()->particularOwner($this->getUserModelCollectionInstance()->id);
 
     if(!$this->currentActionId)
       return true;
 
-    $this->model->id($this->currentActionId);
+    $this->getModelBuilderInstance()->id($this->currentActionId);
 
-    return $this->model->count();
+    return $this->getModelBuilderInstance()->count();
   }
 }

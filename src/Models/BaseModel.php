@@ -1,13 +1,21 @@
 <?php namespace Crudvel\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use DB;
-use Crudvel\Traits\CrudTrait;
+use Crudvel\Interfaces\CvCrudInterface;
 use Crudvel\Traits\CacheTrait;
+use Crudvel\Traits\CrudTrait;
+use DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-class BaseModel extends Model {
+class BaseModel extends Model implements CvCrudInterface{
   use CrudTrait;
   use CacheTrait;
+
+  protected $slugSingularName;
+  protected $cvResourceInstance;
+
+
+
   protected $schema;
   protected $hasPropertyActive = true;
   protected $hidden            = ['pivot'];
@@ -16,10 +24,10 @@ class BaseModel extends Model {
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
     $this->setCacheBoots();
+    $this->injectCvResource();
   }
 
 // Scopes
-
   public function scopeInStatus($query, $status, $preFixed = true){
     if(is_array($status))
       $query->whereIn($this->preFixed('status',$preFixed),$status);
@@ -64,6 +72,18 @@ class BaseModel extends Model {
   }
 
   public function scopeNoIds($query,$keys, $preFixed = true){
+    $query->whereNotIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
+  }
+
+  public function scopeKey($query,$key, $preFixed = true){
+    $query->where($this->preFixed($this->getKeyName(),$preFixed),$key);
+  }
+
+  public function scopeKeys($query,$keys, $preFixed = true){
+    $query->whereIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
+  }
+
+  public function scopeNoKeys($query,$keys, $preFixed = true){
     $query->whereNotIn($this->preFixed($this->getKeyName(),$preFixed),$keys);
   }
 
@@ -203,7 +223,7 @@ class BaseModel extends Model {
   }
 
   public function shadow(){
-    $clonedInstacse = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
+    $clonedInstace = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
     $clonedInstace->setModel($this->getModel());
     return $clonedInstace;
   }

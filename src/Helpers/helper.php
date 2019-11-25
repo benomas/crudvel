@@ -201,7 +201,7 @@ if(!function_exists("reloadFormValue")){
 		return "";
 	}
 }
-if(!function_exists("customNonEmptyArray")){
+if(!function_exists("noEmptyArray")){
 	/**
 	 * Verifica si el parametro mandado es diferente de null, es un array, y tiene almenos un elemento
 	 *
@@ -211,17 +211,17 @@ if(!function_exists("customNonEmptyArray")){
 	 * @date   2017-05-08
 	 * @return boolean
 	 */
-	function customNonEmptyArray($testArray){
+	function noEmptyArray($testArray=null){
 		return $testArray && is_array($testArray) && count($testArray);
 	}
 }
 if(!function_exists("arrayIntersect")){
 	/**
-	 * Si los dos parametros pasados son customNonEmptyArrays, entonces
+	 * Si los dos parametros pasados son noEmptyArrays, entonces
 	 * retorna un arreglo con solo los elementos que se repiten en ambos arreglos,
-	 * si el primer parametro no es un customNonEmptyArray pero el segundo si, entonces,
+	 * si el primer parametro no es un noEmptyArray pero el segundo si, entonces,
 	 * regresa un arreglo con todos los elementos del segundo arreglo, si ninguno de los arreglos
-	 * es un customNonEmptyArray, entonces regresa null
+	 * es un noEmptyArray, entonces regresa null
 	 *
 	 * @param array   array1  primer arreglo
 	 *
@@ -232,13 +232,13 @@ if(!function_exists("arrayIntersect")){
 	 * @return array or null
 	 */
 	function arrayIntersect($array1=null,$array2=null,$isAsociative=false){
-		//si el primer parametro no es un customNonEmptyArray
-		if(!customNonEmptyArray($array2))
-			return customNonEmptyArray($array1)? $array1:null;
-		//si el segundo parametro no es un customNonEmptyArray
-		if(!customNonEmptyArray($array1))
+		//si el primer parametro no es un noEmptyArray
+		if(!noEmptyArray($array2))
+			return noEmptyArray($array1)? $array1:null;
+		//si el segundo parametro no es un noEmptyArray
+		if(!noEmptyArray($array1))
 			return null;
-		//si ambos parametros son customNonEmptyArrays
+		//si ambos parametros son noEmptyArrays
 		$result = [];
 		if($isAsociative){
 			foreach ($array1 as $key=>$value)
@@ -246,9 +246,9 @@ if(!function_exists("arrayIntersect")){
 					$result[$key]=$value;
 		}
 		else{
-			foreach ($array2 as $value)
-				if(in_array($value,$array1))
-					$result[]=$value;
+      foreach ($array2 as $value)
+        if(in_array($value,$array1))
+          $result[]=$value;
 		}
 		return $result;
 	}
@@ -264,7 +264,7 @@ if(!function_exists("concatToArray")){
 	 * @return array
 	 */
 	function concatToArray($prefix=null,$baseArray=null){
-		if(!customNonEmptyArray($baseArray))
+		if(!noEmptyArray($baseArray))
 			return $baseArray;
 		foreach ($baseArray as $key=>$column) {
 		}
@@ -493,9 +493,9 @@ if(!function_exists("crudvelResource")){
 		if(empty($resource))
 			return false;
 		$urlSegments = explode("/",$resource);
-		$rowName = str_slug(str_singular(end($urlSegments)),"_");
+		$rowName = Str::slug(Str::singular(end($urlSegments)),"_");
 		if(!$controller)
-			$controller=studly_case($rowName)."Controller";
+			$controller=Str::studly($rowName)."Controller";
     if(!count($conditionals)){
       Route::get($resource."/import", $controller."@import");
       Route::get($resource."/export", $controller."@export");
@@ -538,14 +538,14 @@ if(!function_exists("apiCrudvelResource")){
 		$urlSegments = explode(".",$resource);
 		$baseSegmentResource = end($urlSegments);
     $rowName = !empty($translator[$baseSegmentResource])?
-      $translator[$baseSegmentResource]:str_slug(str_singular($baseSegmentResource),"_");
+      $translator[$baseSegmentResource]:Str::slug(Str::singular($baseSegmentResource),"_");
     if(!$controller)
-      $controller="Api\\".studly_case($rowName)."Controller";
+      $controller="Api\\".Str::studly($rowName)."Controller";
     if(!count($conditionals)){
       if(count($urlSegments)>1){
         foreach ($urlSegments as $segment){
           $i=empty($i)?1:$i+1;
-          $currentSegment=!empty($translator[$segment])?$segment:str_singular($segment);
+          $currentSegment=!empty($translator[$segment])?$segment:Str::singular($segment);
           $prefixRoute = (empty($prefixRoute)?"":$prefixRoute."/").$segment.($i<count($urlSegments)?"/{".$currentSegment."}":"");
         }
       }
@@ -612,7 +612,7 @@ if(!function_exists("apiCrudvelResources")){
 if(!function_exists("resourceByForeingKey")){
 	function resourceByForeingKey($foreingKey){
 		$foreingKey = str_replace("_id","",$foreingKey);
-		return str_slug(str_plural($foreingKey));
+		return Str::slug(str_plural($foreingKey));
 	}
 }
 if(!function_exists("propertyByPosition")){

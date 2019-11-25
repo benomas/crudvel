@@ -56,7 +56,7 @@ interface CvCrudInterface
   public function setCurrentAction($currentAction=null);
   public function setCurrentActionKey($currentActionKey=null);
   public function setFields($fields=null);
-  public function setCvResource($cvResource);
+  public function setCvResource($cvResourceInstance);
   public function injectCvResource();
   public function autoSetPropertys(...$propertyRewriter);
   public function modelInstanciator($new=false);

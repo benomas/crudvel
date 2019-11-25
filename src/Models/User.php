@@ -181,10 +181,10 @@ class User extends \Crudvel\Customs\Models\BaseModel{
   public function inRoles(...$roles){
     return $this->roles()->inRoles($roles)->count();
   }
-
+/*
   public function __call($method, $parameters)
   {
-    $checkForRole = explode("-",kebab_case($method));
+    $checkForRole = explode("-",\Str::kebab($method));
     if(count($checkForRole)>2 && head($checkForRole)==="has" && last($checkForRole)==="role"){
       array_pull($checkForRole, (count($checkForRole)-1));
       array_pull($checkForRole, 0);
@@ -192,6 +192,6 @@ class User extends \Crudvel\Customs\Models\BaseModel{
       return $this->inRoles($roleToFind);
     }
     return is_callable(["parent", "__call"]) ? parent::__call($method, $parameters) : null;
-  }
+  }*/
 // End others
 }

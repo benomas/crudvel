@@ -1,12 +1,6 @@
 <?php namespace Benomas\Crudvel;
 
 use Illuminate\Support\ServiceProvider;
-use Crudvel\Commands\InstallCommand;
-use Crudvel\Commands\ScaffoldingCommand;
-use Crudvel\Commands\MakeRootUser;
-use Crudvel\Libraries\Helpers\CrudvelHelper;
-use Crudvel\Libraries\CvCache;
-use Illuminate\Foundation\AliasLoader;
 
 
 class CrudvelServiceProvider extends ServiceProvider
@@ -73,36 +67,36 @@ class CrudvelServiceProvider extends ServiceProvider
   public function register()
   {
     $this->app->singleton('install:crudvel', function () {
-      return new InstallCommand();
+      return new \Crudvel\Commands\InstallCommand();
     });
     $this->commands('install:crudvel');
 
     $this->app->singleton('make:scaffold', function () {
-      return new ScaffoldingCommand();
+      return new \Crudvel\Commands\ScaffoldingCommand();
     });
     $this->commands('make:scaffold');
 
     $this->app->singleton('make:root-user', function () {
-      return new MakeRootUser();
+      return new \Crudvel\Commands\MakeRootUser();
     });
     $this->commands('make:root-user');
 
     $this->app->singleton('cvHelper', function () {
-      return new CrudvelHelper();
+      return new  \Crudvel\Libraries\Helpers\CvHelper();
     });
-
-    $this->app->booting(function() {
-      $loader =AliasLoader::getInstance();
-      $loader->alias('CvHelper', \Crudvel\Facades\CrudvelHelper::class);
-    });
-
     $this->app->singleton('cvCache', function () {
-      return new CvCache();
+      return new \Crudvel\Libraries\CvCache();
+    });
+
+    $this->app->singleton('cvResource', function ($app) {
+      return new \Crudvel\Libraries\CvResource\CvResource($app);
     });
 
     $this->app->booting(function() {
-      $loader =AliasLoader::getInstance();
+      $loader =\Illuminate\Foundation\AliasLoader::getInstance();
       $loader->alias('CvCache', \Crudvel\Facades\CvCache::class);
+      $loader->alias('CvHelper', \Crudvel\Facades\CvHelper::class);
+      $loader->alias('CvResource', \Crudvel\Facades\CvResource::class);
     });
   }
 }
