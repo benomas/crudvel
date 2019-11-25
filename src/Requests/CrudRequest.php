@@ -1,27 +1,33 @@
 <?php namespace Crudvel\Requests;
 
+use Crudvel\Traits\CrudTrait;
 use Crudvel\Exceptions\AuthorizationException;
-use Crudvel\Interfaces\CvCrudInterface;
 use Crudvel\Models\Permission;
 use Crudvel\Models\Role;
-use Crudvel\Traits\CrudTrait;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 use Lang;
 
-class CrudRequest extends FormRequest implements CvCrudInterface{
-  protected $slugSingularName;
-  protected $cvResource;
-
+class CrudRequest extends FormRequest
+{
+  public $crudObjectName;
   protected $rules;
   public $currentAction;
   public $currentActionId;
+  public $userModel;
+  public $currentUser;
+  public $baseName;
+  public $mainTable;
   public $fields;
   protected $unauthorizedException;
+  protected $customBaseName;
+  protected $langName;
+  protected $rowName;
+  public $model;
+  public $modelInstance;
   protected $fixedAttributes = null;
   protected $currentDepth='';
   protected $currentDinamicResource='';
@@ -35,6 +41,18 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public $importResults          = [];
   public $importerCursor         = 1;
   use CrudTrait;
+
+  public function resourcesExplode(){
+    if(empty($this->mainTable))
+      $this->mainTable = str_slug(snake_case(str_plural($this->getCrudObjectName())),"_");
+    $this->setLangName();
+    if(empty($this->rowName))
+      $this->rowName = camel_case($this->getCrudObjectName());
+    if(empty($this->baseName))
+      $this->baseName = $this->langName;
+    $this->currentDinamicResource=$this->baseName;
+  }
+
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -43,12 +61,12 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function authorize()
   {
     $this->prepareRequest();
-    if(!$this->getCurrentAction())
+    if(!$this->currentAction)
       return true;
-    if($this->owner() && in_array($this->getCurrentAction(),['index','show']))
+    if($this->owner() && in_array($this->currentAction,['index','show']))
       return true;
 
-    return actionAccess($this->userModel,$this->getSlugPluralName().".".Str::snake($this->getCurrentAction(),'-'));
+    return actionAccess($this->userModel,$this->baseName.".".str_slug(snake_case($this->currentAction)));
   }
 
   /**
@@ -59,13 +77,15 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function rules()
   {
     $this->rules           = [];
-    if(!$this->getCurrentAction())
+    if(!$this->currentAction)
       return $this->rules;
+    if(empty($this->mainTable))
+      $this->prepareRequest();
     if(in_array($this->method(),["POST","PUT"])){
       $this->defaultRules();
     }
 
-    $rulesGenerator = strtolower($this->method()).(ucfirst($this->getCurrentAction()));
+    $rulesGenerator = strtolower($this->method()).(ucfirst($this->currentAction));
     if(method_exists($this,$rulesGenerator))
       $this->{$rulesGenerator}();
     return $this->rules;
@@ -88,7 +108,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
   public function unautorizedRedirect(){
     if($this->wantsJson()){
-      if($this->getUserModelCollectionInstance() && $this->getUserModelCollectionInstance()->active)
+      if($this->currentUser && $this->currentUser->active)
         return $this->apiUnautorized();
       return $this->apiUnautenticated();
     }
@@ -112,8 +132,8 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   {
       if(!$this->wantsJson()){
         $this->merge([
-          "lastAction"   =>$this->getCurrentAction(),
-          "lastActionId" =>$this->getCurrentActionKey(),
+          "lastAction"   =>$this->currentAction,
+          "lastActionId" =>$this->currentActionId,
         ]);
         Session::flash("error", trans("crudvel.web.validation_errors"));
       }
@@ -132,7 +152,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function attributes()
   {
     return array_merge(
-      __("crudvel/".$this->getSlugPluralName().".fields")??[],
+      __("crudvel/".$this->langName.".fields")??[],
       $this->fixedAttributes??[]);
   }
 
@@ -158,10 +178,10 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function validateImportingRow($row){
     $this->defaultRules();
     $identifier = $this->slugedImporterRowIdentifier();
-    $this->setCurrentAction('store');
+    $this->currentAction = "store";
     if($row->{$identifier}){
-      $this->setCurrentAction('update');
-      $this->setCurrentActionKey($row->{$identifier});
+      $this->currentAction   = "update";
+      $this->currentActionId = $row->{$identifier};
       if(method_exists($this,"putUpdate"))
         $this->putUpdate();
     }
@@ -184,7 +204,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
 
   public function importPropertyFixer($label,$row){
-    $fixedLabel = Str::slug($label,"_");
+    $fixedLabel = str_slug($label,"_");
     return (!empty($row->{$fixedLabel}))?$row->{$fixedLabel}:null;
   }
 
@@ -204,7 +224,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
       $this->importResults[$this->importerCursor]=[];
     $this->importResults[$this->importerCursor]["status"]          = $status;
     $this->importResults[$this->importerCursor]["errors"]          = $errors;
-    $this->importResults[$this->importerCursor]["transactionType"] = trans("crudvel.actions.".snake_case($this->getCurrentAction()).".call_message");
+    $this->importResults[$this->importerCursor]["transactionType"] = trans("crudvel.actions.".snake_case($this->currentAction).".call_message");
   }
 
   public function changeTransactionType($transactionType){
@@ -216,7 +236,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
 
   public function slugedImporterRowIdentifier(){
-    return Str::slug($this->importerRowIdentifier,"_");
+    return str_slug($this->importerRowIdentifier,"_");
   }
 
   public function langsToImport($properties){
@@ -237,10 +257,11 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
 
   public function prepareRequest(){
-    $this->injectCvResource();
-    $this->cvResource->captureRequestHack($this)->assignUser();
-    $this->setCurrentAction($this->route()?explode('@', $this->route()->getActionName())[1]:null);
-    $this->setCurrentActionKey($this->route($this->getSnakeSingularName()));
+    $this->resourcesExplode();
+    $this->setCurrentUser();
+    $this->currentAction   = $this->route()?explode('@', $this->route()->getActionName())[1]:null;
+    $this->currentActionId = $this->route($this->mainArgumentName());
+    $this->setModelInstance();
     $this->loadFields();
   }
 
@@ -258,9 +279,5 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
   public function getCurrentDinamicResource(){
     return $this->currentDinamicResource;
-  }
-
-  public function getSlugSingularName(){
-    return $this->slugSingularName??Str::snake(str_replace('Request','',class_basename($this)),'-');
   }
 }

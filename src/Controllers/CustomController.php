@@ -1,61 +1,50 @@
 <?php namespace Crudvel\Controllers;
 
-use Crudvel\Interfaces\CvCrudInterface;
-use Crudvel\Interfaces\CvPaginateInterface;
-use Crudvel\Traits\CrudTrait;
 use DB;
+use Crudvel\Traits\CrudTrait;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
 /*
     This is a customization of the controller, some controllers needs to save multiple data on different tables in one step, doing that without transaction is a bad idea.
     so the options is to doing it manually, but it is a lot of code, and it is always the same, to i get that code and put it togheter as methods, so now with the support of
     the anonymous functions, all this code can be reused, saving a lot of time.
 */
-class CustomController extends BaseController implements CvCrudInterface,CvPaginateInterface{
+class CustomController extends BaseController {
   //preparing refactyoring
-  protected $cvResource;
-  protected $modelClassName;
-  protected $requestClassName;
-  protected $slugPluralName;
-  protected $slugSingularName;
-
-  //arreglo de columnas que deben exisistir almenos como null, se requiere para procedimientos
-  protected $forceSingleItemPagination = false;
-  //arreglo con columnas que se permiten filtrar en paginado, si se setea con false, no se permitira filtrado, si se setea con null o no se setea, no se pondran restricciones en filtrado
-  protected $filterables = null;
-  //arreglo con columnas que se permiten ordenar en paginado, si se setea con false, no se permitira ordenar, si se setea con null o no se setea, no se pondran restricciones en ordenar
-  protected $orderables = null;
-  //boleado que indica si el controller permite paginacion de forma general
-  protected $paginable = true;
-  //boleado que indica si el controller permite paginacion de forma general
-  protected $flexPaginable = true;
-  //boleado que indica si el controller permite paginacion de forma general
-  protected $badPaginablePetition = false;
-  //arreglo con columnas que se permiten seleccionar en paginado, si se setea con false, no se permitira seleccionar de forma especifica, si se setea con null o no se setea, no se pondran restricciones en seleccionar de forma especifica
-  protected $selectables = null;
-  //mapa de columnas join,
-  protected $joinables = null;
-  protected $paginators = [
-    'cv-simple-paginator'      => \Crudvel\Libraries\Paginators\CvSimplePaginator::class,
-    'cv-combinatory-paginator' => \Crudvel\Libraries\Paginators\CvCombinatoryPaginator::class
-  ];
-  protected $currentPaginator = null;
-  protected $comparator    = 'like';
-
+  protected $crudvel         = true;
+  protected $prefix          = "";
+  protected $classType       = "Controller";
+  protected $baseClass       = "";
+  public $resource;
   //public $baseResourceUrl;
   protected $transStatus;
   protected $committer;
-  //public $rowName;
-  //public $rowsName;
+  protected $crudObjectName;
+  protected $modelSource;
+  protected $requestSource;
+  public $rows;
+  public $row;
+  public $rowName;
+  public $rowsName;
   //modelo cargado en memoria
+  protected $mainTableName;
   protected $skipModelValidation=false;
+  protected $model;
+  protected $modelInstance;
+  protected $userModel;
   //validador autorizador anonimo
+  protected $request;
+  protected $currentAction;
+  protected $currentActionId = null;
+  protected $fields;
   protected $slugField       = null;
   protected $slugedResponse  = false;
   protected $defaultFields;
   //Acciones que se basan en un solo elemento
+  protected $currentUser;
   protected $dirtyPropertys;
+  protected $langName;
   protected $debugg          = false;
   protected $actions         = [
     "index",
@@ -105,8 +94,17 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
 
   public function __construct(...$propertyRewriter){
     $this->autoSetPropertys(...$propertyRewriter);
-    \CvResource::boot($this);
-    $this->injectCvResource();
+    $this->explodeClass();
+  }
+
+  public function setRequestInstance(){
+    $request = $this->requestSource?
+      $this->requestSource:
+      "App\Http\Requests\\".$this->getCrudObjectName()."Request";
+
+    if(is_callable([$request,"capture"])){
+      $this->request = app($request);
+    }
   }
 
   /**
@@ -121,19 +119,22 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   }
 
   public function callAction($method,$parameters=[]){
-    if(!$this->getCurrentAction())
-      $this->setCurrentAction($method);
+    $this->currentAction  = $method;
+    $this->setRequestInstance();
+    $this->model         = $this->request->model;
+    $this->mainTableName = $this->request->mainTableName;
 
-    if(!in_array($this->getCurrentAction(),$this->actions))
+    if(!in_array($this->currentAction,$this->actions))
       return $this->webNotFound();
 
-    //$this->setCurrentUser();
+    $this->setCurrentUser();
+    $this->setLangName();
     if(
       $this->skipModelValidation &&
-      !specialAccess($this->setUserModelBuilderInstance(),"inactives") &&
-      !specialAccess($this->setUserModelBuilderInstance(),$this->getSlugPluralName().'.inactives')
+      !specialAccess($this->userModel,"inactives") &&
+      !specialAccess($this->userModel,$this->request->baseName.'.inactives')
     )
-      $this->getModelBuilderInstance()->actives();
+      $this->model->actives();
     $this->loadFields();
     $preactionResponse = $this->preAction($method,$parameters);
     if($preactionResponse)
@@ -141,10 +142,10 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
     if(in_array($method,$this->rowActions)){
       if(empty($parameters))
         return $this->webNotFound();
-      $this->setCurrentActionKey($parameters[$this->getSnakeSingularName()]);
-      if(!$this->getModelBuilderInstance()->key($this->getCurrentActionKey())->count())
+      $this->currentActionId=$parameters[$this->mainArgumentName()];
+      if(!$this->model->id($this->currentActionId)->count())
         return $this->webNotFound();
-      $this->setModelCollectionInstance($this->getModelBuilderInstance()->first());
+      $this->modelInstance =  $this->model->first();
     }
     return parent::callAction($method,$parameters);
   }
@@ -309,13 +310,13 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
 
   public function export(){
     $data = [];
-    $this->requestInstance->langsToImport($this->modelInstanciator(true)->getFillable());
-    if(($rows = $this->getModelBuilderInstance()->get()))
+    $this->request->langsToImport($this->modelInstanciator(true)->getFillable());
+    if(($rows = $this->model->get()))
       foreach($rows as $key=>$row)
-        foreach ($this->requestInstance->exportImportProperties as $label=>$field)
-          $data[$key][] = $this->requestInstance->exportPropertyFixer($field,$row);
+        foreach ($this->request->exportImportProperties as $label=>$field)
+          $data[$key][] = $this->request->exportPropertyFixer($field,$row);
 
-    array_unshift($data, array_keys($this->requestInstance->exportImportProperties));
+    array_unshift($data, array_keys($this->request->exportImportProperties));
     Excel::create(trans("crudvel/".$this->langName.".rows_label")." ".intval(microtime(true)), function ($excel) use ($data) {
       $excel->sheet('Hoja1', function ($sheet) use ($data) {
         $sheet->fromArray($data, "", "A1", true, false);
@@ -336,47 +337,47 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
     $fail=true;
     ini_set('max_execution_time',300);
 
-    if ($this->requestInstance->hasFile('importation_file')) {
+    if ($this->request->hasFile('importation_file')) {
       $fail=false;
-      $extension = $this->requestInstance->file('importation_file')->getClientOriginalExtension();
+      $extension = $this->request->file('importation_file')->getClientOriginalExtension();
       $name      = uniqid();
       $filename  = $name . "." . $extension;
       $path      = public_path() . "/upload/importing/" . $filename;
 
-      $this->requestInstance->file('importation_file')->move(public_path() . "/upload/importing/", $filename);
+      $this->request->file('importation_file')->move(public_path() . "/upload/importing/", $filename);
       $reader = Excel::load($path)->get();
-      $this->requestInstance->inicializeImporter($this->modelInstanciator(true)->getFillable());
+      $this->request->inicializeImporter($this->modelInstanciator(true)->getFillable());
       $reader->each(function ($row){
         $this->resetTransaction();
         $this->startTranstaction();
         $this->testTransaction(function() use($row){
-          $this->requestInstance->firstImporterCall($row);
-          $this->requestInstance->fields = [];
-          foreach ($this->requestInstance->exportImportProperties as $label=>$field)
-            if(($dataFiled = $this->requestInstance->importPropertyFixer($label,$row))!==null)
-              $this->requestInstance->fields[$field] = $dataFiled;
+          $this->request->firstImporterCall($row);
+          $this->request->fields = [];
+          foreach ($this->request->exportImportProperties as $label=>$field)
+            if(($dataFiled = $this->request->importPropertyFixer($label,$row))!==null)
+              $this->request->fields[$field] = $dataFiled;
 
-          if(!$this->requestInstance->validateImportingRow($row)){
-            $this->requestInstance->changeImporter("validationErrors",$this->requestInstance->currentValidator->errors());
+          if(!$this->request->validateImportingRow($row)){
+            $this->request->changeImporter("validationErrors",$this->request->currentValidator->errors());
             return false;
           }
 
-          $this->requestInstance->changeImporter();
-          if(($model = (  $this->requestInstance->currentAction==="store"?
+          $this->request->changeImporter();
+          if(($model = (  $this->request->currentAction==="store"?
                             $this->modelInstanciator(true):
-                            $this->modelInstanciator()->key($row->{$this->requestInstance->slugedImporterRowIdentifier()})->first()
+                            $this->modelInstanciator()->id($row->{$this->request->slugedImporterRowIdentifier()})->first()
                       )
               )
           ){
-              $model->fill($this->requestInstance->fields);
+              $model->fill($this->request->fields);
               if(!$model->isDirty()){
-                $this->requestInstance->changeTransactionType("Sin cambios");
+                $this->request->changeTransactionType("Sin cambios");
                 return $this->importCallBack();
               }
               if($model->save())
                 return $this->importCallBack();
 
-              $this->requestInstance->changeImporter("validationErrors",'Error de transacción');
+              $this->request->changeImporter("validationErrors",'Error de transacción');
           }
           return false;
         });
@@ -385,10 +386,10 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
       @unlink($path);
     }
 
-    if($this->requestInstance->wantsJson())
-      return $fail?$this->apiFailResponse():$this->apiSuccessResponse(["data"=>$this->requestInstance->importResults,"status"=>trans("crudvel.api.success")]);
+    if($this->request->wantsJson())
+      return $fail?$this->apiFailResponse():$this->apiSuccessResponse(["data"=>$this->request->importResults,"status"=>trans("crudvel.api.success")]);
 
-    Session::flash('importResults', $this->requestInstance->importResults);
+    Session::flash('importResults', $this->request->importResults);
     return $fail?$this->webFailResponse():$this->webSuccessResponse();
   }
 
@@ -426,17 +427,68 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   public function getPrefix(){
     return $this->prefix??null;
   }
+  public function getClassType(){
+    return $this->classType??null;
+  }
+  public function getBaseClass(){
+    return $this->baseClass??null;
+  }
+  public function getResource(){
+    return $this->resource??null;
+  }
   public function getTransStatus(){
     return $this->transStatus??null;
   }
   public function getCommitter(){
     return $this->committer??null;
   }
+  public function getCrudObjectName(){
+    return $this->crudObjectName??null;
+  }
+  public function getModelSource(){
+    return $this->modelSource??null;
+  }
+  public function getRequestSource(){
+    return $this->requestSource??null;
+  }
+  public function getRows(){
+    return $this->rows??null;
+  }
+  public function getRow(){
+    return $this->row??null;
+  }
+  public function getRowName(){
+    return $this->rowName??null;
+  }
+  public function getRowsName(){
+    return $this->rowsName??null;
+  }
   public function getMainTableName(){
     return $this->mainTableName??null;
   }
   public function getSkipModelValidation(){
     return $this->skipModelValidation??null;
+  }
+  public function getModel(){
+    return $this->model??null;
+  }
+  public function getModelInstance(){
+    return $this->modelInstance??null;
+  }
+  public function getUserModel(){
+    return $this->userModel??null;
+  }
+  public function getRequest(){
+    return $this->request??null;
+  }
+  public function getCurrentAction(){
+    return $this->currentAction??null;
+  }
+  public function getCurrentActionId(){
+    return $this->currentActionId??null;
+  }
+  public function getFields(){
+    return $this->fields??null;
   }
   public function getSlugField(){
     return $this->slugField??null;
@@ -446,6 +498,9 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   }
   public function getDefaultFields(){
     return $this->defaultFields??null;
+  }
+  public function getCurrentUser(){
+    return $this->currentUser??null;
   }
   public function getDirtyPropertys(){
     return $this->dirtyPropertys??null;
@@ -467,50 +522,5 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   }
   public function getRowsActions(){
     return $this->rowsActions??null;
-  }
-  //----
-  public function getModelClassName(){
-    return $this->modelClassName??null;
-  }
-  public function getRequestClassName(){
-    return $this->requestClassName??null;
-  }
-  public function getPaginators(){
-    return $this->paginators??null;
-  }
-  public function getPaginator($paginator=null){
-    return $this->paginators[$paginator]??$this->paginators['cv-simple-paginator']??null;
-  }
-  public function getForceSingleItemPagination(){
-    return $this->forceSingleItemPagination??null;
-  }
-  public function getFilterables(){
-    return $this->filterables??null;
-  }
-  public function getOrderables(){
-    return $this->orderables??null;
-  }
-  public function getPaginable(){
-    return $this->paginable??null;
-  }
-  public function getFlexPaginable(){
-    return $this->flexPaginable??null;
-  }
-  public function getBadPaginablePetition(){
-    return $this->badPaginablePetition??null;
-  }
-  public function getSelectables(){
-    return $this->selectables??null;
-  }
-  public function getJoinables(){
-    return $this->joinables??null;
-  }
-  public function getPaginateData(){
-    return $this->paginateData??null;
-  }
-  
-  public function setBadPaginablePetition($badPaginablePetition=null){
-    $this->badPaginablePetition = $badPaginablePetition??null;
-    return $this;
   }
 }

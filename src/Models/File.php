@@ -22,7 +22,7 @@ class File extends \Crudvel\Customs\Models\BaseModel{
   //this relation cant work as preload
   public function resource(){
     return $this->belongsTo(
-      "\App\Models\\".Str::studly(Str::singular($this->catFile()->first()->resource)),
+      "\App\Models\\".studly_case(str_singular($this->catFile()->first()->resource)),
       'resource_id',
       'id'
     );

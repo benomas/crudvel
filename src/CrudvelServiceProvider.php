@@ -1,6 +1,12 @@
 <?php namespace Benomas\Crudvel;
 
 use Illuminate\Support\ServiceProvider;
+use Crudvel\Commands\InstallCommand;
+use Crudvel\Commands\ScaffoldingCommand;
+use Crudvel\Commands\MakeRootUser;
+use Crudvel\Libraries\Helpers\CrudvelHelper;
+use Crudvel\Libraries\CvCache;
+use Illuminate\Foundation\AliasLoader;
 
 
 class CrudvelServiceProvider extends ServiceProvider
@@ -67,36 +73,36 @@ class CrudvelServiceProvider extends ServiceProvider
   public function register()
   {
     $this->app->singleton('install:crudvel', function () {
-      return new \Crudvel\Commands\InstallCommand();
+      return new InstallCommand();
     });
     $this->commands('install:crudvel');
 
     $this->app->singleton('make:scaffold', function () {
-      return new \Crudvel\Commands\ScaffoldingCommand();
+      return new ScaffoldingCommand();
     });
     $this->commands('make:scaffold');
 
     $this->app->singleton('make:root-user', function () {
-      return new \Crudvel\Commands\MakeRootUser();
+      return new MakeRootUser();
     });
     $this->commands('make:root-user');
 
     $this->app->singleton('cvHelper', function () {
-      return new  \Crudvel\Libraries\Helpers\CvHelper();
-    });
-    $this->app->singleton('cvCache', function () {
-      return new \Crudvel\Libraries\CvCache();
-    });
-
-    $this->app->singleton('cvResource', function ($app) {
-      return new \Crudvel\Libraries\CvResource\CvResource($app);
+      return new CrudvelHelper();
     });
 
     $this->app->booting(function() {
-      $loader =\Illuminate\Foundation\AliasLoader::getInstance();
+      $loader =AliasLoader::getInstance();
+      $loader->alias('CvHelper', \Crudvel\Facades\CrudvelHelper::class);
+    });
+
+    $this->app->singleton('cvCache', function () {
+      return new CvCache();
+    });
+
+    $this->app->booting(function() {
+      $loader =AliasLoader::getInstance();
       $loader->alias('CvCache', \Crudvel\Facades\CvCache::class);
-      $loader->alias('CvHelper', \Crudvel\Facades\CvHelper::class);
-      $loader->alias('CvResource', \Crudvel\Facades\CvResource::class);
     });
   }
 }
