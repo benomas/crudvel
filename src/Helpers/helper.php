@@ -428,9 +428,9 @@ if(!function_exists("actionAccess")){
 		if(empty($userModel))
       return ($GLOBALS[$actionResource]=false);
       if(!empty($GLOBALS["userInstance"]) && $GLOBALS["userInstance"])
-      	$user = $GLOBALS["userInstance"];
+        $user = $GLOBALS["userInstance"];
       else
-      	$user = $GLOBALS["userInstance"] = $userModel->first();
+        $user = $GLOBALS["userInstance"] = $userModel->first();
 		if(!$user || !$user->active)
       return ($GLOBALS[$actionResource]=false);
     //if permission revision is disabled through the model

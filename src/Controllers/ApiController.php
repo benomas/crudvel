@@ -12,30 +12,30 @@ class ApiController extends CustomController{
 
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
-    $this->addActions("select","resourcePermissions");
+    $this->addAction("select","resourcePermissions");
   }
   public function callAction($method,$parameters=[]){
     $this->prepareResource();
     if(!$this->getCurrentAction())
       $this->setCurrentAction($method)->fixActionResource();
-
     if($this->skipModelValidation && !$this->getModelBuilderInstance())
       return $this->apiNotFound();
 
-    if(!in_array($this->getCurrentAction(),$this->actions))
+    if(!in_array($this->getCurrentAction(),$this->getActions()))
       return $this->apiNotFound();
 
     if(
       $this->skipModelValidation &&
-      !specialAccess($this->setUserModelBuilderInstance(),"inactives") &&
-      !specialAccess($this->setUserModelBuilderInstance(),$this->getSlugPluralName().'.inactives')
+      !$this->specialAccess('inactives') &&
+      !$this->specialAccess($this->getSlugPluralName().'.inactives')
     )
       $this->getModelBuilderInstance()->actives();
-    $this->loadFields();
+    if(!$this->getFields())
+      $this->loadFields();
     $preactionResponse = $this->preAction($method,$parameters);
     if($preactionResponse)
       return $preactionResponse;
-    if(in_array($method,$this->rowActions)){
+    if(in_array($method,$this->getRowActions())){
       if(empty($parameters))
         return $this->apiNotFound();
       $this->setCurrentActionKey($parameters[$this->getSnakeSingularName()]);
@@ -43,7 +43,7 @@ class ApiController extends CustomController{
         return $this->apiNotFound();
       $this->setModelCollectionInstance($this->getModelBuilderInstance()->first());
     }
-    if(in_array($method,$this->rowsActions) && $this->getModelBuilderInstance()->count() === 0)
+    if(in_array($method,$this->getRowsActions()) && $this->getModelBuilderInstance()->count() === 0)
       return $this->apiSuccessResponse([
         "data"    => [],
         "count"   => 0,
@@ -93,16 +93,13 @@ class ApiController extends CustomController{
   /**
    * Store a newly created resource in storage.
    *
-   * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
   public function store()
   {
     $this->setStamps();
     if($this->persist())
-      return ($this->getPaginatorInstance()->getPaginable() && $this->currentPaginator->extractPaginate())?
-        $this->currentPaginator->paginatedResponse():
-        $this->currentPaginator->noPaginatedResponse();
+      return $this->show(1);
     return $this->apiFailResponse();
   }
 
@@ -137,19 +134,16 @@ class ApiController extends CustomController{
   /**
    * Update the specified resource in storage.
    *
-   * @param  \Illuminate\Http\Request  $request
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
   public function update($id)
   {
-    $this->fields["id"] = $id;
+    $this->addField('id',$id);
     $this->setStamps();
-    unset($this->fields["created_by"]);
+    $this->removeField('created_by');
     if($this->persist())
-      return ($paginable = $this->paginable && $this->currentPaginator->extractPaginate())?
-        $this->currentPaginator->paginatedResponse():
-        $this->currentPaginator->noPaginatedResponse();
+      return $this->show($id);
     return $this->apiFailResponse();
   }
 
@@ -166,17 +160,6 @@ class ApiController extends CustomController{
         $this->apiFailResponse();
   }
 
-
-  public function activate($id){
-    $this->fields["status"]=1;
-    return $this->update($id);
-  }
-
-  public function deactivate($id){
-    $this->fields["status"]=0;
-    return $this->update($id);
-  }
-
   public function permissions(){
     $actionPermittions=[];
     foreach($this->actions AS $action){
@@ -186,14 +169,6 @@ class ApiController extends CustomController{
         $actionPermittions[$action]=false;
     }
     return $this->apiSuccessResponse($actionPermittions);
-  }
-
-  protected function setStamps(){
-    //$rightNow = Carbon::now()->toDateTimeString();
-    $this->fields["created_by"] = $this->getRequestInstance()->user()->key??null;
-    $this->fields["updated_by"] = $this->getRequestInstance()->user()->key??null;
-    //$this->fields["created_at"] = $rightNow??null;
-    //$this->fields["updated_at"] = $rightNow??null;
   }
 
   protected function getDataRequest(){
@@ -222,23 +197,5 @@ class ApiController extends CustomController{
       $this->orderBy = $this->joinables[$this->orderBy];
     else
       $this->orderBy = $this->mainTableName.$this->orderBy;
-  }
-
-  /*
-  protected function setPaginator(){
-    $paginatorMode = $this->getRequestInstance()->get("paginate");
-    $paginatorClass = $this->paginators[$paginatorMode['searchMode']??'cv-simple-paginator'];
-    $this->currentPaginator = new $paginatorClass($this);
-  }
-  */
-  //rewrite this method
-  public function joins(){}
-
-  //rewrite this method for custom logic
-  public function unions(){
-    $union = kageBunshinNoJutsu($this->getModelBuilderInstance());
-    $union->select($this->getPaginatorInstance()->getSelectQuery());
-    $union->union($this->getModelBuilderInstance()->select($this->getPaginatorInstance()->getSelectQuery()));
-    $this->setModelBuilderInstance($union);
   }
 }

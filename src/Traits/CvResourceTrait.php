@@ -97,8 +97,21 @@ trait CvResourceTrait
   public function getLangName(){
     return $this->getSlugPluralName();
   }
-  public function getActionResource($actionResource=null){
+  public function getActionResource(){
     return $this->actionResource??null;
+  }
+  //-----------
+  public function getActions(){
+    return $this->actions??null;
+  }
+  public function getViewActions(){
+    return $this->viewActions??null;
+  }
+  public function getRowActions(){
+    return $this->rowActions??null;
+  }
+  public function getRowsActions(){
+    return $this->rowsActions??null;
   }
   //Getters end
 
@@ -192,7 +205,6 @@ trait CvResourceTrait
     $this->rootInstance = $rootInstance;
     return $this;
   }
-  //-----------
   public function setRows($rows=null){
     $this->rows=$rows;
     return $this;
@@ -219,6 +231,23 @@ trait CvResourceTrait
   }
   public function setPaginateFields($paginate=null){
     $this->fields['paginate'] = $paginate ?? null;
+    return $this;
+  }
+  //-----------
+  public function setActions($actions=null){
+    $this->actions=$actions;
+    return $this;
+  }
+  public function setViewActions($viewActions=null){
+    $this->viewActions=$viewActions;
+    return $this;
+  }
+  public function setRowActions($rowActions=null){
+    $this->rowActions=$rowActions;
+    return $this;
+  }
+  public function setRowsActions($rowsActions=null){
+    $this->rowsActions=$rowsActions;
     return $this;
   }
   //Setters end

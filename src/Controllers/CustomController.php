@@ -131,20 +131,21 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
     if(!$this->getCurrentAction())
       $this->setCurrentAction($method)->fixActionResource();
 
-    if(!in_array($this->getCurrentAction(),$this->actions))
+    if(!in_array($this->getCurrentAction(),$this->getActions()))
       return $this->webNotFound();
 
     if(
       $this->skipModelValidation &&
-      !specialAccess($this->setUserModelBuilderInstance(),"inactives") &&
-      !specialAccess($this->setUserModelBuilderInstance(),$this->getSlugPluralName().'.inactives')
+      !$this->specialAccess('inactives') &&
+      !$this->specialAccess($this->getSlugPluralName().'.inactives')
     )
       $this->getModelBuilderInstance()->actives();
-    $this->loadFields();
+    if(!$this->getFields())
+      $this->loadFields();
     $preactionResponse = $this->preAction($method,$parameters);
     if($preactionResponse)
       return $preactionResponse;
-    if(in_array($method,$this->rowActions)){
+    if(in_array($method,$this->getRowActions())){
       if(empty($parameters))
         return $this->webNotFound();
       $this->setCurrentActionKey($parameters[$this->getSnakeSingularName()]);
@@ -286,14 +287,15 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
     $this->resetTransaction();
     $this->startTranstaction();
     $this->testTransaction(function() use($callBack){
-      $this->modelInstance = $this->modelInstance ?? $this->modelInstanciator(true);
-      $this->modelInstance->fill($this->fields);
-      if(!empty($this->fields['created_by']))
-        $this->modelInstance->created_by=$this->fields['created_by'];
-      if(!empty($this->fields['updated_by']))
-        $this->modelInstance->updated_by=$this->fields['updated_by'];
-      $this->dirtyPropertys = $this->modelInstance->getDirty();
-      if(!$this->modelInstance->save())
+      $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
+      $fields = $this->getFields();
+      $this->getModelCollectionInstance()->fill($fields);
+      if(!empty($fields['created_by']))
+        $this->getModelCollectionInstance()->created_by=$fields['created_by'];
+      if(!empty($fields['updated_by']))
+        $this->getModelCollectionInstance()->updated_by=$fields['updated_by'];
+      $this->dirtyPropertys = $this->getModelCollectionInstance()->getDirty();
+      if(!$this->getModelCollectionInstance()->save())
         return false;
       if($callBack && is_callable($callBack))
         return $callBack();
@@ -304,12 +306,12 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   }
 
   public function activate($id){
-    $this->fields["status"]=1;
+    $this->addField('status',1);
     return $this->update($id);
   }
 
   public function deactivate($id){
-    $this->fields["status"]=0;
+    $this->addField('status',0);
     return $this->update($id);
   }
 
@@ -338,6 +340,7 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
     //Todo, implement a general logic for these methods
     return false;
   }
+  //Todo, re-implement
   public function importing(){
     $fail=true;
     ini_set('max_execution_time',300);
@@ -417,21 +420,15 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   public function setSlugField(){
     if($this->slugField)
       return true;
-    if(in_array("slug",$this->selectables))
+    if(in_array("slug",(array) $this->getSelectables()))
       return $this->slugField = "slug";
-    if(in_array("name",$this->selectables))
+    if(in_array("name",(array) $this->getSelectables()))
       return $this->slugField = "name";
-    if(in_array("title",$this->selectables))
+    if(in_array("title",(array) $this->getSelectables()))
       return $this->slugField = "title";
     return false;
   }
 
-  public function getCrudvel(){
-    return $this->crudvel??null;
-  }
-  public function getPrefix(){
-    return $this->prefix??null;
-  }
   public function getTransStatus(){
     return $this->transStatus??null;
   }
@@ -519,4 +516,13 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   public function getCvResourceClass(){
     return $this->cvResourceClass;
   }
+
+  protected function setStamps(){
+    //$rightNow = Carbon::now()->toDateTimeString();
+    $this->addField('created_by',$this->getRequestInstance()->user()->key??null);
+    $this->addField('updated_by',$this->getRequestInstance()->user()->key??null);
+    //$this->addFields('created_at',$rightNow??null);
+    //$this->addFields('updated_at',$rightNow??null);
+  }
+
 }
