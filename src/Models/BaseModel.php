@@ -13,9 +13,6 @@ class BaseModel extends Model implements CvCrudInterface{
 
   protected $slugSingularName;
   protected $cvResourceInstance;
-
-
-
   protected $schema;
   protected $hasPropertyActive = true;
   protected $hidden            = ['pivot'];

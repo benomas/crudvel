@@ -20,49 +20,7 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
     'updated_at',
     'search_field'
   ];
-  protected $filterables = [
-    'absolute_path',
-    'active',
-    'cat_file_id',
-    'cat_file_multiple',
-    'cat_file_name',
-    'cat_file_slug',
-    'cat_file_resorce',
-    'resource_id',
-    'created_at',
-    'id',
-    'path',
-    'updated_at',
-    'search_field'
-  ];
-  protected $orderables = [
-    'absolute_path',
-    'active',
-    'cat_file_id',
-    'cat_file_multiple',
-    'cat_file_name',
-    'cat_file_slug',
-    'cat_file_resorce',
-    'resource_id',
-    'created_at',
-    'id',
-    'path',
-    'updated_at',
-    'search_field'
-  ];
-
-  protected $joinables =[
-    'cat_file_name'     => 'cat_files.name',
-    'cat_file_multiple' => 'cat_files.multiple',
-    'cat_file_slug'     => 'cat_files.slug',
-    'cat_file_resorce'  => 'cat_files.resource'
-  ];
-
   protected $disk = "public";
-
-  public function joins(){
-    $this->model->join('cat_files', 'files.cat_file_id', '=', 'cat_files.id');
-  }
 
   public function __construct(){
     parent::__construct();

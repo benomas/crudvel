@@ -181,21 +181,4 @@ class ApiController extends CustomController{
       }
     }
   }
-
-  /**
-   * This function allow to transform simple orderBy column to a table.column field, in this way
-   * is posible to direct use joinable columns, the model needs to declare de join tables too, maybe * rewriting call_action function for global resource join, or by action for specific join
-   *
-   * @param simpleColumns   string of orderBy
-   *
-   * @author Benomas benomas@gmail.com
-   * @date   2018-04-04
-   * @return string with fixed orderBy column
-   */
-  public function fixOrderBy(){
-    if(!empty($this->joinables[$this->orderBy]))
-      $this->orderBy = $this->joinables[$this->orderBy];
-    else
-      $this->orderBy = $this->mainTableName.$this->orderBy;
-  }
 }

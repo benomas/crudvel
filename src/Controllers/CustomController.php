@@ -36,7 +36,6 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   //arreglo con columnas que se permiten seleccionar en paginado, si se setea con false, no se permitira seleccionar de forma especifica, si se setea con null o no se setea, no se pondran restricciones en seleccionar de forma especifica
   protected $selectables = null;
   //mapa de columnas join,
-  protected $joinables = null;
   protected $paginators = [
     'cv-simple-paginator'      => \Crudvel\Libraries\Paginators\CvSimplePaginator::class,
     'cv-combinatory-paginator' => \Crudvel\Libraries\Paginators\CvCombinatoryPaginator::class

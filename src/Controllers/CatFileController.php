@@ -19,39 +19,6 @@ class CatFileController extends \Crudvel\Customs\Controllers\ApiController{
     'resource',
   ];
 
-  protected $filterables = [
-    'active',
-    'created_at',
-    'description',
-    'group',
-    'id',
-    'max_size',
-    'min_size',
-    'multiple',
-    'name',
-    'required',
-    'slug',
-    'types',
-    'updated_at',
-    'resource',
-  ];
-  protected $orderables = [
-    'active',
-    'created_at',
-    'description',
-    'group',
-    'id',
-    'max_size',
-    'min_size',
-    'multiple',
-    'name',
-    'required',
-    'slug',
-    'types',
-    'updated_at',
-    'resource',
-  ];
-
   public function __construct(){
     parent::__construct();
   }

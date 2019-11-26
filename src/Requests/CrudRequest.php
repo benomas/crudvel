@@ -18,9 +18,6 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   protected $cvResourceInstance;
 
   protected $rules;
-  public $currentAction;
-  public $currentActionId;
-  public $fields;
   protected $unauthorizedException;
   protected $fixedAttributes = null;
   protected $currentDepth='';
@@ -135,7 +132,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
 
   public function simpleAttributeTranslator($field){
-    $this->fixedAttributes[$this->currentDepth.$field]  = __("crudvel/".$this->currentDinamicResource.".fields.$field");
+    $this->fixedAttributes[$this->currentDepth.$field]  = __("crudvel/".$this->getCurrentDinamicResource().".fields.$field");
   }
 
   public function simpleAttributesTranslator($fields){
