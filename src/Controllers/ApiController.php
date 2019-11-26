@@ -51,7 +51,6 @@ class ApiController extends CustomController{
       ]);
     return parent::callActionJump($method,$parameters);
   }
-  //web routes
   /**
    * Display a listing of the resource.
    *
