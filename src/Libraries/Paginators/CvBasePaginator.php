@@ -3,12 +3,10 @@
 namespace Crudvel\Libraries\Paginators;
 use Crudvel\Libraries\DbEngine\EngineContainer;
 use Crudvel\Interfaces\CvCrudInterface;
-use Crudvel\Traits\CrudTrait;
 
 class CvBasePaginator implements CvCrudInterface
 {
-  use CrudTrait;
-
+  use \Crudvel\Traits\CrudTrait;
   protected $cvResourceInstance;
 
   //arreglo con columnas que se permiten filtrar en paginado, si se setea con false, no se permitira filtrado, si se setea con null o no se setea, no se pondran restricciones en filtrado
@@ -54,6 +52,7 @@ class CvBasePaginator implements CvCrudInterface
     $this->setPaginate($this->getPaginateFields());
     $this->setFlexPaginable($this->getRootInstance()->getFlexPaginable());
     $this->loadBasicPropertys();
+    $this->setDbEngineContainer(new EngineContainer($this->getModelclass()::cvIam()->getConnectionName()));
   }
 
   /**
@@ -103,8 +102,8 @@ class CvBasePaginator implements CvCrudInterface
     foreach((array) $this->getFilterQuery() as $key=>$value)
       if(in_array($key,$this->fixedFilterables()))
         $fixFilterQuery[$key]=$value;
-    return $this->setFilterQuery($fixFilterQuery);
-    //$this->dbEngineContainer->setFilterQueryString($this->filterQuery);
+    $this->setFilterQuery($fixFilterQuery)->getDbEngineContainer()->setFilterQueryString($this->getFilterQuery());
+    return $this;
   }
 
   public function fixOrderables(){
@@ -342,6 +341,9 @@ class CvBasePaginator implements CvCrudInterface
   public function getUnsolvedColumns(){
     return $this->unsolvedColumns??null;
   }
+  public function getDbEngineContainer(){
+    return $this->dbEngineContainer??null;
+  }
   //Getters end
 
   //Setters start
@@ -397,7 +399,9 @@ class CvBasePaginator implements CvCrudInterface
     $this->unsolvedColumns=$unsolvedColumns;
     return $this;
   }
+  public function setDbEngineContainer($dbEngineContainer=null){
+    $this->dbEngineContainer=$dbEngineContainer;
+    return $this;
+  }
   //Setters end
 }
-
-

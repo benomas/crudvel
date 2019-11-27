@@ -236,7 +236,9 @@ class BaseModel extends Model implements CvCrudInterface{
   }
 
   public function getConnectionName(){
-    return $this->connection;
+    if(!is_null($this->connection))
+      return $this->connection;
+    return config('database.default');
   }
 
   public static function accesor(){
