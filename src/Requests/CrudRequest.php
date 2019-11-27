@@ -2,16 +2,12 @@
 
 use Crudvel\Exceptions\AuthorizationException;
 use Crudvel\Interfaces\CvCrudInterface;
-use Crudvel\Models\Permission;
-use Crudvel\Models\Role;
-use Crudvel\Traits\CrudTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Lang;
 
 class CrudRequest extends FormRequest implements CvCrudInterface{
   protected $slugSingularName;
@@ -31,7 +27,8 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   //imports/export
   public $importResults          = [];
   public $importerCursor         = 1;
-  use CrudTrait;
+  use \Crudvel\Traits\CrudTrait;
+  use \Crudvel\Traits\CvPatronTrait;
   /**
    * Determine if the user is authorized to make this request.
    *

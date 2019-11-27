@@ -1,15 +1,13 @@
 <?php namespace Crudvel\Models;
 
 use Crudvel\Interfaces\CvCrudInterface;
-use Crudvel\Traits\CacheTrait;
-use Crudvel\Traits\CrudTrait;
 use DB;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class BaseModel extends Model implements CvCrudInterface{
-  use CrudTrait;
-  use CacheTrait;
+  use \Crudvel\Traits\CrudTrait;
+  use \Crudvel\Traits\CacheTrait;
+  use \Crudvel\Traits\CvPatronTrait;
 
   protected $slugSingularName;
   protected $cvResourceInstance;

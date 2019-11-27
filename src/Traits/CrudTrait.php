@@ -80,7 +80,7 @@ trait CrudTrait {
       $this->getCvResourceClass()::getModelCollectionInstance();
   }
   public function getMainTable(){
-    return $this->modelInstanciator(true)->getTable();
+    return$this->getModelClass()::cvIam()->getTable();
   }
   public function getRequestClass(){
     return $this->cvResourceInstance ?
@@ -777,4 +777,25 @@ trait CrudTrait {
 
     return $this->getModelBuilderInstance()->count();
   }
+
+  public function selfPreBuilder($alias=null){
+    if(!$alias){
+      customLog('alias required');
+      die('alias required');
+    }
+    $table = $this->getMainTable();
+    return kageBunshinNoJutsu($this->getModelBuilderInstance())
+    ->from("$table as $alias")
+    ->whereColumn("$alias.id", "$table.id")
+    ->limit(1);
+  }
+
+  public function catPreBuilder($source){
+    if(!class_exists($source))
+      $catModel = 'App\Models\\'.\Str::studly($source);
+
+    $foreintColumn = \Str::snake(\Str::singular($catModel::cvIam()->getTable())).'_id';
+    return $catModel::whereColumn('id', $this->getMainTable().'.'.$foreintColumn)->limit(1);
+  }
+
 }

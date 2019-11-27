@@ -2,8 +2,6 @@
 
 use Crudvel\Interfaces\CvCrudInterface;
 use Crudvel\Interfaces\CvPaginateInterface;
-use Crudvel\Traits\CrudTrait;
-use DB;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
@@ -102,7 +100,8 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
     "exportings",
   ];
 
-  use CrudTrait;
+  use \Crudvel\Traits\CrudTrait;
+  use \Crudvel\Traits\CvPatronTrait;
 
   public function __construct(...$propertyRewriter){
     $this->autoSetPropertys(...$propertyRewriter);
@@ -188,7 +187,7 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
       return true;
 
     $this->transStatus='transaction-in-progress';
-    DB::beginTransaction();
+    \DB::beginTransaction();
   }
 
   /**
@@ -200,7 +199,7 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
    */
   protected function transactionFail($cBFail=null){
     $this->transStatus='transaction-fail';
-    DB::rollBack();
+    \DB::rollBack();
 
     if($cBFail && is_callable($cBFail))
       $cBFail();
@@ -221,7 +220,7 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
       return false;
 
     if($this->transStatus==='transaction-in-progress'){
-      DB::commit();
+      \DB::commit();
 
       $this->transStatus='transaction-completed';
     }
