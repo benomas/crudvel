@@ -789,13 +789,4 @@ trait CrudTrait {
     ->whereColumn("$alias.id", "$table.id")
     ->limit(1);
   }
-
-  public function catPreBuilder($source){
-    if(!class_exists($source))
-      $catModel = 'App\Models\\'.\Str::studly($source);
-
-    $foreintColumn = \Str::snake(\Str::singular($catModel::cvIam()->getTable())).'_id';
-    return $catModel::whereColumn('id', $this->getMainTable().'.'.$foreintColumn)->limit(1);
-  }
-
 }

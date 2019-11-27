@@ -22,15 +22,13 @@ class User extends \Crudvel\Customs\Models\BaseModel{
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
   }
-//Relationships
-
+// [Relationships]
   public function roles(){
     return $this->belongsToMany("App\Models\Role", "role_user");
   }
-//End Relationships
+// [End Relationships]
 
 //Non standar Relationships
-
   public function rolesPermissions()
   {
     return $this->manyToManyToMany("roles","permissions","App\Models\Permission");
@@ -65,10 +63,9 @@ class User extends \Crudvel\Customs\Models\BaseModel{
   {
     return $this->rolesPermissions()->specialPermissions();
   }
-
 //End Non standar Relationships
-// Scopes
 
+// [Scopes]
   public function scopeHidden($query){
     $query->whereHas("roles",function($query){
       $query->whereNotIn("roles.slug",["root"]);
@@ -150,8 +147,9 @@ class User extends \Crudvel\Customs\Models\BaseModel{
   public function scopeParticularOwner($query,$userId){
     $query->where($this->getTable().".id", $userId);
   }
-// End Scopes
+// [End Scopes]
 
+// [Others]
   public static function getLogginPropertys(){
     return self::staticloginNames;
   }
@@ -167,9 +165,6 @@ class User extends \Crudvel\Customs\Models\BaseModel{
     }
     return $loginTest;
   }
-
-// Others
-
   public function isRoot(){
     return $this->roles()->withRoot()->count();
   }
@@ -181,17 +176,5 @@ class User extends \Crudvel\Customs\Models\BaseModel{
   public function inRoles(...$roles){
     return $this->roles()->inRoles($roles)->count();
   }
-/*
-  public function __call($method, $parameters)
-  {
-    $checkForRole = explode("-",\Str::kebab($method));
-    if(count($checkForRole)>2 && head($checkForRole)==="has" && last($checkForRole)==="role"){
-      array_pull($checkForRole, (count($checkForRole)-1));
-      array_pull($checkForRole, 0);
-      $roleToFind =  implode("_",$checkForRole);
-      return $this->inRoles($roleToFind);
-    }
-    return is_callable(["parent", "__call"]) ? parent::__call($method, $parameters) : null;
-  }*/
-// End others
+// [End Others]
 }

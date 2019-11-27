@@ -12,16 +12,18 @@ class CatPermissionType extends \Crudvel\Customs\Models\BaseModel{
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
   }
-//Relationships
-
+// [Relationships]
   public function permissions(){
     return $this->hasMany("Crudvel\Models\Permission");
   }
+// [End Relationships]
 
-//End Relationships
+// [Transformers]
+// [End Transformers]
 
-// Scopes
+// [Scopes]
+// [End Scopes]
 
-
-// End Scopes
+// [Others]
+// [End Others]
 }

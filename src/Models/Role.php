@@ -13,8 +13,7 @@ class Role extends \Crudvel\Customs\Models\BaseModel{
     parent::__construct($attributes);
   }
 
-//Relationships
-
+// [Relationships]
   public function users(){
     return $this->belongsToMany("App\Models\User", "role_user");
   }
@@ -30,11 +29,9 @@ class Role extends \Crudvel\Customs\Models\BaseModel{
   public function roles(){
     return $this->belongsToMany("App\Models\Role", 'role_role', 'domineering_role_id', 'domined_role_id');
   }
-
-//End Relationships
+// [End Relationships]
 
 //Non standar Relationships
-
   public function sectionPermissions(){
     return $this->belongsToMany("App\Models\Permission", "permission_role")->secctionPermissions();
   }
@@ -54,10 +51,12 @@ class Role extends \Crudvel\Customs\Models\BaseModel{
   public function specialPermissions(){
     return $this->belongsToMany("App\Models\Permission", "permission_role")->specialPermissions();
   }
-
 //End Non standar Relationships
 
-// Scopes
+// [Transformers]
+// [End Transformers]
+
+// [Scopes]
   public function scopeInRoles($query,$rolesSlug){
     $query->whereIn($this->getTable().".slug",$rolesSlug);
   }
@@ -89,8 +88,6 @@ class Role extends \Crudvel\Customs\Models\BaseModel{
   public function scopeWithoutAdmin($query){
     $this->scopeWithoutRole($query,"adminsitrator");
   }
-
-  //others
   public function scopeWithManager($query){
     $this->scopeWithRole($query,"manager");
   }
@@ -114,5 +111,8 @@ class Role extends \Crudvel\Customs\Models\BaseModel{
     else
       $query->ids($user->rolesroles()->get()->pluck("id")->toArray());
   }
-// End Scopes
+// [End Scopes]
+
+// [Others]
+// [End Others]
 }

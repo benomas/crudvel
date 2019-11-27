@@ -2,15 +2,13 @@
 
 use Crudvel\Interfaces\CvCrudInterface;
 use Crudvel\Interfaces\CvPaginateInterface;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 /*
     This is a customization of the controller, some controllers needs to save multiple data on different tables in one step, doing that without transaction is a bad idea.
     so the options is to doing it manually, but it is a lot of code, and it is always the same, to i get that code and put it togheter as methods, so now with the support of
     the anonymous functions, all this code can be reused, saving a lot of time.
 */
-class CustomController extends BaseController implements CvCrudInterface,CvPaginateInterface{
+class CustomController extends \Illuminate\Routing\Controller implements CvCrudInterface,CvPaginateInterface{
   //preparing refactoring
   protected $cvResourceClass='CvResource';
   protected $cvResourceInstance;
@@ -45,8 +43,6 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   //public $baseResourceUrl;
   protected $transStatus;
   protected $committer;
-  //public $rowName;
-  //public $rowsName;
   //modelo cargado en memoria
   protected $skipModelValidation=false;
   //validador autorizador anonimo
@@ -175,17 +171,14 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
    * @return  void
    */
   protected function startTranstaction($committer=null){
-
     if( isset($this->transStatus) && $this->transStatus)
       return true;
-
     if(!isset($this->committer) && !$this->committer){
       if($committer)
         $this->committer = $committer;
     }
     else
       return true;
-
     $this->transStatus='transaction-in-progress';
     \DB::beginTransaction();
   }
@@ -200,7 +193,6 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
   protected function transactionFail($cBFail=null){
     $this->transStatus='transaction-fail';
     \DB::rollBack();
-
     if($cBFail && is_callable($cBFail))
       $cBFail();
   }
@@ -215,13 +207,10 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
    * @return  void
    */
   protected function transactionComplete($committer=null){
-
     if( isset($this->committer) &&  $this->committer && $this->committer !== $committer)
       return false;
-
     if($this->transStatus==='transaction-in-progress'){
       \DB::commit();
-
       $this->transStatus='transaction-completed';
     }
     else
@@ -395,7 +384,7 @@ class CustomController extends BaseController implements CvCrudInterface,CvPagin
     if($this->getRequestInstance()->wantsJson())
       return $fail?$this->apiFailResponse():$this->apiSuccessResponse(["data"=>$this->getRequestInstance()->importResults,"status"=>trans("crudvel.api.success")]);
 
-    Session::flash('importResults', $this->getRequestInstance()->importResults);
+    \Illuminate\Support\Facades\Session::flash('importResults', $this->getRequestInstance()->importResults);
     return $fail?$this->webFailResponse():$this->webSuccessResponse();
   }
 

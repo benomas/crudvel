@@ -22,7 +22,13 @@ class BaseModel extends Model implements CvCrudInterface{
     $this->injectCvResource();
   }
 
-// Scopes
+// [Relationships]
+// [End Relationships]
+
+// [Transformers]
+// [End Transformers]
+
+// [Scopes]
   public function scopeInStatus($query, $status, $preFixed = true){
     if(is_array($status))
       $query->whereIn($this->preFixed('status',$preFixed),$status);
@@ -180,10 +186,16 @@ class BaseModel extends Model implements CvCrudInterface{
   public function scopeDuplicity($query){
     $query->name($this->name);
   }
-// End Scopes
 
-// Others
+  public function scopeInvokeSearch($query,$related){
+    $foreintColumn = \Str::snake(\Str::singular(($table=$this->getTable()))).'_id';
+    $query->select("$table.name as cv_search")
+    ->whereColumn($related::cvIam()->getTable().".$foreintColumn", "$table.id")
+    ->limit(1);
+  }
+// [End Scopes]
 
+// [Others]
   public function getTable(){
     //TODO, fix schema inclusion
     return parent::getTable();
@@ -255,5 +267,5 @@ class BaseModel extends Model implements CvCrudInterface{
   public function getKeyValue(){
     return $this->attributes[$this->getKeyName()]??null;
   }
-// Others
+// [End Others]
 }

@@ -77,13 +77,13 @@ class CvResource
 
   public function fixedSlugSingularName($name = null){
     if($name)
-      return Str::snake($name,'-');
+      return \Str::slug(\Str::kebab($name));
     return $this->getRootInstance()->getSlugSingularName();
   }
 
   public function fixedSlugPluralName($name = null){
     if($name)
-      return Str::plural(Str::snake($name,'-'));
+      return Str::plural(\Str::slug(\Str::kebab($name)));
     return Str::plural($this->getRootInstance()->getSlugSingularName());
   }
 
@@ -101,14 +101,14 @@ class CvResource
 
   public function fixedSnakeSingularName($name = null){
     if($name)
-      return Str::snake($name);
-    return Str::snake($this->getRootInstance()->getSlugSingularName());
+      return Str::snake(\Str::camel($name));
+    return Str::snake(\Str::camel($this->getRootInstance()->getSlugSingularName()));
   }
 
   public function fixedSnakePluralName($name = null){
     if($name)
-      return Str::plural(Str::snake($name));
-    return Str::plural(Str::snake($this->getRootInstance()->getSlugSingularName()));
+      return Str::plural(Str::snake(\Str::camel($name)));
+    return Str::plural(Str::snake(\Str::camel($this->getRootInstance()->getSlugSingularName())));
   }
 
   public function fixedStudlySingularName($name = null){

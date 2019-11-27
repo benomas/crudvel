@@ -13,8 +13,7 @@ class File extends \Crudvel\Customs\Models\BaseModel{
     "resource_id",
   ];
 
-//Relationships
-
+// [Relationships]
   public function catFile(){
     return $this->belongsTo("\App\Models\CatFile");
   }
@@ -27,11 +26,12 @@ class File extends \Crudvel\Customs\Models\BaseModel{
       'id'
     );
   }
+// [End Relationships]
 
-//End Relationships
+// [Transformers]
+// [End Transformers]
 
-//Scopes
-
+// [End Scopes]
   public function scopeCatFileId($query,$catFileId){
     $query->where($this->getTable().'.cat_file_id',$catFileId);
   }
@@ -64,18 +64,8 @@ class File extends \Crudvel\Customs\Models\BaseModel{
       $query->where('resource',$resource);
     });
   }
+// [End Scopes]
 
-// End Scopes
-
-//Scopes
-
-
-
-// End Scopes
-
-//Others
-
-
-
-//End Others
+// [Others]
+// [End Others]
 }

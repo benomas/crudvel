@@ -15,8 +15,7 @@ class Permission extends  \Crudvel\Customs\Models\BaseModel{
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
   }
-//Relationships
-
+// [Relationships]
   public function roles(){
     return $this->belongsToMany("Crudvel\Models\Role", "permission_role");
   }
@@ -24,11 +23,12 @@ class Permission extends  \Crudvel\Customs\Models\BaseModel{
   public function catPermissionType(){
     return $this->belongsTo("Crudvel\Models\CatPermissionType");
   }
+// [End Relationships]
 
-//End Relationships
+// [Transformers]
+// [End Transformers]
 
-// Scopes
-
+// [Scopes]
   //general
   public function scopePermissionsOfType($query,$type){
     $query->whereHas('catPermissionType',function($query) use($type){
@@ -106,6 +106,8 @@ class Permission extends  \Crudvel\Customs\Models\BaseModel{
       });
     });
   }
+// [End Scopes]
 
-// End Scopes
+// [Others]
+// [End Others]
 }

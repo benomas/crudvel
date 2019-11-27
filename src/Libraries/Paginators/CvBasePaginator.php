@@ -89,6 +89,8 @@ class CvBasePaginator implements CvCrudInterface
     if($this->fixedSelectables()===false)
       return $this->setSelectQuery(false);
     //define columns to be present in the response
+    if(!noEmptyArray($this->getSelectQuery()))
+      return $this->setSelectQuery($this->fixedSelectables());
     return $this->setSelectQuery(arrayIntersect($this->getSelectQuery(),$this->fixedSelectables()));
   }
 
