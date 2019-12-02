@@ -13,7 +13,7 @@ class CreateRolesTable extends BaseMigration
       Schema::create('roles', function (Blueprint $table) {
         $table->engine = 'InnoDB';
 
-        $table->increments('id');
+        $table->bigIncrements('id');
         $table->string('slug');
         $table->string('name');
         $table->string('description');

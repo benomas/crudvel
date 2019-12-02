@@ -12,7 +12,7 @@ class CreatePermissionRoleTable extends BaseMigration
       Schema::create($this->mainTable, function (Blueprint $table) {
         $table->engine = 'InnoDB';
 
-        $table->increments('id');
+        $table->bigIncrements('id');
         $table->bigInteger('permission_id')->unsigned();
         $table->bigInteger('role_id')->unsigned();
         $table->timestamps();

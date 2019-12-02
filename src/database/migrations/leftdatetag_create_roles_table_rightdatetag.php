@@ -11,7 +11,7 @@ class CreateRolesTablerightdatetag extends BaseMigration
     {
       Schema::create('roles', function (Blueprint $table) {
         disableForeignKeyConstraints();
-        $table->increments('id');
+        $table->bigIncrements('id');
         $table->string('slug');
         $table->string('name');
         $table->string('description')->nullable();

@@ -17,16 +17,10 @@ if ( ! function_exists('consoleDropTables'))
       $this->info($command.' procesado ');
       DB::purge();
 
-      try{
-        DB::statement('DROP DATABASE fake_database');
-      }
-      catch(\Exception $e){
-        customLog($e->getMessage());
-      }
+      try{DB::statement('DROP DATABASE fake_database');}
+      catch(\Exception $e){}
 
-      try{
-        DB::statement('CREATE DATABASE fake_database');
-      }
+        try{DB::statement('CREATE DATABASE fake_database');}
       catch(\Exception $e){
         $shellEcho  = customExec($command="php artisan migrate:reset");
         $this->info($shellEcho);
@@ -40,31 +34,19 @@ if ( ! function_exists('consoleDropTables'))
       $defaultConnection['database'] ='fake_database';
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
-      DB::statement('DROP DATABASE `'.$originalDatabase.'`');
-      try{
-        DB::statement('DROP DATABASE `'.$originalDatabase.'`');
-      }
-      catch(\Exception $e){
-        customLog($e->getMessage());
-      }
-      DB::statement('CREATE DATABASE `'.$originalDatabase.'`');
-      try{
-        DB::statement('CREATE DATABASE `'.$originalDatabase.'`');
-      }
-      catch(\Exception $e){
-        customLog($e->getMessage());
-      }
+      DB::statement('DROP DATABASE '.$originalDatabase);
+      try{DB::statement('DROP DATABASE '.$originalDatabase);}
+      catch(\Exception $e){}
+        DB::statement('CREATE DATABASE '.$originalDatabase);
+      try{DB::statement('CREATE DATABASE '.$originalDatabase);}
+      catch(\Exception $e){}
 
-      $defaultConnection['database'] =$originalDatabase;
+        $defaultConnection['database'] =$originalDatabase;
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
-      try{
-        DB::statement('DROP DATABASE fake_database');
-      }
-      catch(\Exception $e){
-        customLog($e->getMessage());
-      }
-      $this->info('tablas eliminadas');
+      try{DB::statement('DROP DATABASE fake_database');}
+      catch(\Exception $e){}
+        $this->info('tablas eliminadas');
 
     })->describe('Elimina todas las tablas');
   }
@@ -237,8 +219,8 @@ if ( ! function_exists('consoleFixBackup'))
         return false;
       }
       try{
-        $backupFile      = database_path().'/backups/'.Str::slug($worksPace,'_').'.sql';
-        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug($worksPace,'_').'.sql';
+        $backupFile      = database_path().'/backups/'.str_slug($worksPace,'_').'.sql';
+        $fixedBackupFile = database_path().'/backups/fixed_'.str_slug($worksPace,'_').'.sql';
         if(!file_exists($backupFile)){
           $this->info('No existe el respaldo');
           return false;
@@ -281,7 +263,7 @@ if ( ! function_exists('consoleLoadBackup'))
       if(config('app.production.env')==='production')
         return $this->info('Este comando no puede ser ejecutado en ambiente productivo');
       try{
-        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug($worksPace,'_').'.sql';
+        $fixedBackupFile = database_path().'/backups/fixed_'.str_slug($worksPace,'_').'.sql';
 
         if(!file_exists($fixedBackupFile))
           return $this->info('No existe el respaldo');

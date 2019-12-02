@@ -15,7 +15,7 @@ class CreateCatFilesTablerightdatetag extends BaseMigration
       Schema::create($this->mainTable, function (Blueprint $table) {
         $table->engine = 'InnoDB';
 
-        $table->increments("id");
+        $table->bigIncrements("id");
         $table->string("name");
         $table->string("slug");
         $table->text("description");

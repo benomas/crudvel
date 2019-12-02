@@ -11,7 +11,7 @@ class CreateRoleRoleTablerightdatetag extends BaseMigration
   {
     Schema::create($this->mainTable, function (Blueprint $table) {
     disableForeignKeyConstraints();
-      $table->increments('id');
+      $table->bigIncrements('id');
       $table->bigInteger('domineering_role_id')->unsigned();
       $table->bigInteger('domined_role_id')->unsigned();
       $table->engine = 'InnoDB';

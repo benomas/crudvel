@@ -10,7 +10,7 @@ class CreatePermissionsTablerightdatetag extends BaseMigration
     if(!Schema::hasTable($this->mainTable)){
       Schema::create($this->mainTable, function (Blueprint $table) {
         disableForeignKeyConstraints();
-        $table->increments('id');
+        $table->bigIncrements('id');
         $table->bigInteger('cat_permission_type_id')->unsigned();
         $table->string('slug');
         $table->string('name');

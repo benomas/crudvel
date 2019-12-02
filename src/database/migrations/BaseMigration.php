@@ -64,7 +64,7 @@ class BaseMigration extends Migration
   public function catalog($blueprintTable){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
     $blueprintTable->engine = 'InnoDB';
-    $blueprintTable->increments('id');
+    $blueprintTable->bigIncrements('id');
     $blueprintTable->string('name');
     $blueprintTable->text('description')->nullable();
     $this->defaultColumns($blueprintTable);

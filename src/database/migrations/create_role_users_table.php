@@ -13,7 +13,7 @@ class CreateRoleUsersTable extends BaseMigration
         $table->engine = 'InnoDB';
 
         $table->bigIncrements('id');
-        $table->bigInteger('role_id')->unsigned();
+        $table->integer('role_id')->unsigned();
         $table->bigInteger('user_id')->unsigned();
         $table->timestamps();
         $table->foreign('user_id')
