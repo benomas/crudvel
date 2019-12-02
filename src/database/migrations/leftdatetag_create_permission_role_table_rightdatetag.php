@@ -11,8 +11,8 @@ class CreatePermissionRoleTablerightdatetag extends BaseMigration
       Schema::create($this->mainTable, function (Blueprint $table) {
         disableForeignKeyConstraints();
         $table->increments('id');
-        $table->integer('permission_id')->unsigned();
-        $table->integer('role_id')->unsigned();
+        $table->bigInteger('permission_id')->unsigned();
+        $table->bigInteger('role_id')->unsigned();
         $table->foreign('permission_id')
           ->references('id')
           ->on('permissions')

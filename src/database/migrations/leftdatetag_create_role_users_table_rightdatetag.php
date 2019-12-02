@@ -10,8 +10,8 @@ class CreateRoleUsersTablerightdatetag extends BaseMigration
     if(!Schema::hasTable($this->mainTable) && Schema::hasTable("roles") && Schema::hasTable("users")){
       Schema::create($this->mainTable, function (Blueprint $table) {
         $table->increments('id');
-        $table->integer('role_id')->unsigned();
-        $table->integer('user_id')->unsigned();
+        $table->bigInteger('role_id')->unsigned();
+        $table->bigInteger('user_id')->unsigned();
         $table->timestamps();
         $table->foreign('user_id')
           ->references('id')

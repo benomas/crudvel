@@ -20,7 +20,7 @@ class CreateFilesTablerightdatetag extends BaseMigration
         $table->string("disk")->default("public");
         $table->string("path");
         $table->string("absolute_path")->default("");
-        $table->integer("cat_file_id")->unsigned();
+        $table->bigInteger("cat_file_id")->unsigned();
         $table->bigInteger("resource_id")->unsigned();
         $this->defaultColumns($table);
 

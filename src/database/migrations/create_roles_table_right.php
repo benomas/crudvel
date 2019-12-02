@@ -19,8 +19,8 @@ class CreateRolesTable extends BaseMigration
         $table->string('description');
         $table->boolean('active')->default(true);
         $table->timestamps();
-        $table->integer('created_by')->nullable();
-        $table->integer('updated_by')->nullable();
+        $table->bigInteger('created_by')->nullable();
+        $table->bigInteger('updated_by')->nullable();
         $table->engine = 'InnoDB';
         $table->unique('slug');
 

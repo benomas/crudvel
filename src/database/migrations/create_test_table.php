@@ -10,8 +10,8 @@ class CreateTestTable extends BaseMigration
     if(!Schema::hasTable("test") && Schema::hasTable("roles") && Schema::hasTable("permissions")){
       Schema::create("test", function (Blueprint $table) {
         $table->increments("id");
-        $table->integer("permission_id")->unsigned();
-        $table->integer("role_id")->unsigned();
+        $table->bigInteger("permission_id")->unsigned();
+        $table->bigInteger("role_id")->unsigned();
         $table->timestamps();
         $table->foreign("permission_id")
           ->references("id")
