@@ -16,15 +16,15 @@ class CatFileRequest extends \Crudvel\Customs\Requests\CrudRequest{
       "min_size"    => "required|numeric",
       "multiple"    => "boolean",
       "resource"    => "required",
-      "name"        => "required|unique:".$this->mainTable.",name",
+      "name"        => "required|unique:".$this->getMainTable().",name",
       "required"    => "boolean",
-      "slug"        => "required|unique:".$this->mainTable.",slug",
+      "slug"        => "required|unique:".$this->getMainTable().",slug",
       "types"       => "required",
     ];
   }
 
   public function putUpdate(){
-    $this->rules["name"] .=",".$this->currentActionId;
-    $this->rules["slug"] .=",".$this->currentActionId;
+    $this->rules["name"] .=",".$this->getCurrentActionKey();
+    $this->rules["slug"] .=",".$this->getCurrentActionKey();
   }
 }

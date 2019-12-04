@@ -32,7 +32,7 @@ class FileRequest extends \Crudvel\Customs\Requests\CrudRequest{
       'cat_file_id' => 'required|integer|key_exist:cat_files,id,active,1',
     ];
     if(!empty($this->fields['resource']))
-      $this->rules['resource_id'] = 'required|integer|key_exist:'.Str::slug($this->fields['resource'],'_').',id';
+      $this->rules['resource_id'] = 'required|integer|key_exist:'.\Str::slug($this->fields['resource'],'_').',id';
 
     $this->fileName = '';
     $this->catFile = $this->catFile??CatFile::id($this->fields['cat_file_id']??null)->first();
