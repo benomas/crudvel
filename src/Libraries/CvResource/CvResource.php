@@ -208,6 +208,7 @@ class CvResource
     return $this->setRequestClass($requestClassName)->captureRequest();
   }
   public function captureRequest(){
+    pdd($this->getRequestClass());
     $requestInstance = app($this->getRequestClass());
     if(!$this->getRequestInstance())
       $this->setRequestInstance($requestInstance);

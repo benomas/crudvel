@@ -1110,3 +1110,15 @@ if(!function_exists('cvDefauTC')){
 if(!function_exists("getCheckPoint")){
   function getCheckPoint(){return CvHelper::getCheckPoint();}
 }
+
+if(!function_exists("fixedSlug")){
+  function fixedSlug($identifier = ''){
+    return \Str::slug(\Str::kebab($identifier));
+  }
+}
+
+if(!function_exists("fixedCamel")){
+  function fixedCamel($identifier = ''){
+    return Str::snake(\Str::camel($identifier));
+  }
+}
