@@ -1117,8 +1117,8 @@ if(!function_exists("fixedSlug")){
   }
 }
 
-if(!function_exists("fixedCamel")){
-  function fixedCamel($identifier = ''){
+if(!function_exists("fixedSnake")){
+  function fixedSnake($identifier = ''){
     return Str::snake(\Str::camel($identifier));
   }
 }

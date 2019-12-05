@@ -752,7 +752,7 @@ trait CrudTrait {
       $label = in_array($this->currentAction,$this->rowsActions)?
         $this->rowsLabelTrans():
         $this->rowLabelTrans();
-    return trans("crudvel.actions.".snake_case($this->currentAction).".success")." ".$label." ".trans("crudvel.actions_extra.common.correctly");
+    return trans("crudvel.actions.".fixedSnake($this->currentAction).".success")." ".$label." ".trans("crudvel.actions_extra.common.correctly");
     }
     return trans("crudvel.web.not_found");
   }
@@ -762,7 +762,7 @@ trait CrudTrait {
     return true;
     if($this->getUserModelCollectionInstance()->
       specialPermissions()->
-      slug($this->cvResourceInstanceLangCase().".general-owner")->
+      slug($this->getSlugPluralName().".general-owner")->
       count()
     )
       $this->getModelBuilderInstance()->generalOwner($this->getUserModelCollectionInstance()->id);
