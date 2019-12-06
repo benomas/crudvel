@@ -252,7 +252,7 @@ class CvResource
       return $this->actionsAccess[$this->getActionResource()] = false;
     if($this->getUserModelCollectionInstance()->isRoot())
       return $this->actionsAccess[$this->getActionResource()] = true;
-    if(!$this->getPermissionModelClass::action($this->getActionResource())->count())
+    if(!$this->getPermissionModelClass()::action($this->getActionResource())->count())
       return $this->actionsAccess[$this->getActionResource()] = true;
     if(kageBunshinNoJutsu($this->getUserModelBuilderInstance())->actionPermission($this->getActionResource())->count())
       return $this->actionsAccess[$this->getActionResource()] = true;

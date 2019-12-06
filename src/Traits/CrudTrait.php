@@ -759,19 +759,19 @@ trait CrudTrait {
 
   public function owner(){
     if($this->getUserModelCollectionInstance()->isRoot())
-    return true;
+      return true;
     if($this->getUserModelCollectionInstance()->
       specialPermissions()->
       slug($this->getSlugPluralName().".general-owner")->
       count()
-    )
+    ){
       $this->getModelBuilderInstance()->generalOwner($this->getUserModelCollectionInstance()->id);
-    else
-      if($this->getUserModelCollectionInstance()->specialPermissions()->slug($this->ngCase().".particular-owner")->count())
-          $this->getModelBuilderInstance()->particularOwner($this->getUserModelCollectionInstance()->id);
-
+    }else{
+      if($this->getUserModelCollectionInstance()->specialPermissions()->slug($this->getSlugPluralName().".particular-owner")->count())
+        $this->getModelBuilderInstance()->particularOwner($this->getUserModelCollectionInstance()->id);
+    }
     if(!$this->currentActionId)
-    return true;
+      return true;
 
     $this->getModelBuilderInstance()->id($this->currentActionId);
 

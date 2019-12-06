@@ -12,26 +12,6 @@ trait CacheTrait
     });
   }
 
-  /*
-  public function addContainer(String $containerName=''){
-    return CvCache::addContainer($containerName);
-  }
-  public function removeContainer(String $containerName=''){
-    return CvCache::removeContainer($containerName);
-  }
-  public function getContainer(String $containerName=''){
-    return CvCache::getContainer($containerName);
-  }
-  public function getLastContainer(){
-    return CvCache::getLastContainer();
-  }
-  public function switchContainer(String $containerName=''){
-    return CvCache::switchContainer($containerName);
-  }
-  public function resetContainer(String $property=''){
-    return CvCache::resetContainer($property);
-  }*/
-
   public function cvCacheGetProperty($property){
     return $this->context()->setAndGetProperty($property);
   }
