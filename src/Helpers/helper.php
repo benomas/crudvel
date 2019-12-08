@@ -1122,3 +1122,6 @@ if(!function_exists("fixedSnake")){
     return Str::snake(\Str::camel($identifier));
   }
 }
+if(!function_exists("ptPermutations")){
+  function ptPermutations(...$params){return CvHelper::ptPermutations(...$params);}
+}

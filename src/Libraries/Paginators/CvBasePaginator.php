@@ -208,17 +208,17 @@ class CvBasePaginator implements CvCrudInterface
 
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
-    $this->paginateCount = $this->getModelBuilderInstance()->count();
+    $this->setPaginateCount($this->getModelBuilderInstance()->count());
     //si se solicita limitar el numero de resultados
-    if($this->limit){
-      $this->getModelBuilderInstance()->limit($this->limit);
+    if($this->getLimit()){
+      $this->getModelBuilderInstance()->limit($this->getLimit());
       //si se especifica una pagina a regresar
-      if($this->page && $this->paginateCount >= $this->limit * ($this->page-1))
-        $this->getModelBuilderInstance()->skip($this->limit * ($this->page-1));
+      if($this->getPage() && $this->getPaginateCount() >= $this->getLimit() * ($this->getPage()-1))
+        $this->getModelBuilderInstance()->skip($this->getLimit() * ($this->getPage()-1));
     }
 
-    if ($this->orderBy)
-      $this->getModelBuilderInstance()->orderBy($this->orderBy,$this->ascending==1?"ASC":"DESC");
+    if ($this->getOrderBy())
+      $this->getModelBuilderInstance()->orderBy($this->getOrderBy(),$this->getAscending()==1?"ASC":"DESC");
 
     if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->id))
       $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id,false);
@@ -232,20 +232,20 @@ class CvBasePaginator implements CvCrudInterface
         "message" =>trans("crudvel.api.success")
       ]);
     if(!empty($this->getModelCollectionInstance()->id) || $this->getRootInstance()->getForceSingleItemPagination())
-      $this->paginateData=$this->getModelBuilderInstance()->first();
+      $this->setPaginateData($this->getModelBuilderInstance()->first());
 
-    if(!$this->paginateData && !$this->getRootInstance()->getSlugedResponse())
-      $this->paginateData = $this->getModelBuilderInstance()->get();
+    if(!$this->getPaginateData() && !$this->getRootInstance()->getSlugedResponse())
+      $this->setPaginateData($this->getModelBuilderInstance()->get());
 
-    if(!$this->paginateData){
+    if(!$this->getPaginateData()){
       $keyed = $this->getModelBuilderInstance()->get()->keyBy(function ($item) {
-        return Str::slug($item[$this->getRootInstance()->getSlugField()]);
+        return fixedSlug($item[$this->getRootInstance()->getSlugField()]);
       });
-      $this->paginateData = $keyed->all();
+      $this->setPaginateData($keyed->all());
     }
     return $this->getRootInstance()->apiSuccessResponse([
-      "data"    => $this->paginateData,
-      "count"   => $this->paginateCount,
+      "data"    => $this->getPaginateData(),
+      "count"   => $this->getPaginateCount(),
       "message" => trans("crudvel.api.success")
     ]);
   }
@@ -347,8 +347,16 @@ class CvBasePaginator implements CvCrudInterface
   //Getters end
 
   //Setters start
+  public function setPaginateCount($paginateCount=null){
+    $this->paginateCount = $paginateCount??null;
+    return $this;
+  }
   public function setPaginate($paginate=null){
     $this->paginate = $paginate??null;
+    return $this;
+  }
+  public function setPaginateData($paginateData=null){
+    $this->paginateData = $paginateData??null;
     return $this;
   }
   public function setFlexPaginable($flexPaginable=null){
@@ -392,15 +400,15 @@ class CvBasePaginator implements CvCrudInterface
     return $this;
   }
   public function setComparator($comparator=null){
-    $this->comparator=$comparator;
+    $this->comparator=$comparator??null;
     return $this;
   }
   public function setUnsolvedColumns($unsolvedColumns=null){
-    $this->unsolvedColumns=$unsolvedColumns;
+    $this->unsolvedColumns=$unsolvedColumns??null;
     return $this;
   }
   public function setDbEngineContainer($dbEngineContainer=null){
-    $this->dbEngineContainer=$dbEngineContainer;
+    $this->dbEngineContainer=$dbEngineContainer??null;
     return $this;
   }
   //Setters end
