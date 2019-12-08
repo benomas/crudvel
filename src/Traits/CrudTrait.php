@@ -82,6 +82,9 @@ trait CrudTrait {
   public function getMainTable(){
     return$this->getModelClass()::cvIam()->getTable();
   }
+  public function getModelReference(){
+    return$this->getModelClass()::cvIam();
+  }
   public function getRequestClass(){
     return $this->cvResourceInstance ?
       $this->cvResourceInstance->getRequestClass():

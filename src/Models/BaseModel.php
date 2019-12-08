@@ -167,8 +167,8 @@ class BaseModel extends Model implements CvCrudInterface{
    *
    *
    * */
-  public function scopeGroupByKey($query){
-    $query->groupBy($this->getTable().'.'.$this->getKeyName());
+  public function scopeGroupByKey($query, $preFixed = true){
+    $query->groupBy($this->preFixed($this->getKeyName(),$preFixed));
   }
 
   public function scopeOrderByKey($query){
