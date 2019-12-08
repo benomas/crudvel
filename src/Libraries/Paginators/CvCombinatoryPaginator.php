@@ -15,13 +15,13 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
   protected $permutedWords            = [];
 
   /**
-   * Responde una peticion http de forma paginada de acuerdo a la combinacion de parametros mandados
+   * Respond to the paginate request with permutation strategy
    */
   public function processPaginatedResponse() {
-    //si el modelo no esta definido o es nulo
+    //if no model builder instance defined
     if($this->getModelBuilderInstance()===null)
       return ;
-    //si existe un array de columnas a seleccionar
+    //if it is not a select query defined
     if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
 
@@ -29,15 +29,19 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       return ;
     $this->setPreProcessedQueryBuilder(kageBunshinNoJutsu($this->getModelBuilderInstance()));
     $this->tempQuery();
-    //si existe un array de columnas a filtrar
+    //if it is not a filter quary defined
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
-    //$this->getModelBuilderInstance()->groupBy(\DB::raw('id'));
-    $this->setPaginateCount($this->getModelBuilderInstance()->count());
-    //si se solicita limitar el numero de resultados
+
+    $this->setPaginateCount(
+      $this->getModelBuilderInstance()->distinctCount($this->getModelReference()->getKeyName(),false)
+    );
+
+    $this->getModelBuilderInstance()->groupBy($this->getModelReference()->getKeyName());
+    //if limit for que query is defined
     if($this->getLimit()){
       $this->getModelBuilderInstance()->limit($this->getLimit());
-      //si se especifica una pagina a regresar
+      //if a page number to get is defined
       if($this->getPage() && $this->getPaginateCount() >= $this->getLimit() * ($this->getPage()-1))
         $this->getModelBuilderInstance()->skip($this->getLimit() * ($this->getPage()-1));
     }
@@ -46,7 +50,6 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       $this->getModelBuilderInstance()
       ->orderBy('pt_order',$this->getAscending()==1?"ASC":"DESC")
       ->orderBy($this->getOrderBy(),$this->getAscending()==1?"ASC":"DESC");
-    //pdd($this->getModelBuilderInstance()->get()->toArray());
     if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->id))
       $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id,false);
   }
@@ -65,7 +68,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       $words = array_slice($words,0,10);
 
     $fixedWords = [];
-    //Busqueda por columnas
+    //Search by individual column first
     foreach($words AS $key=>$word){
       $match = kageBunshinNoJutsu($this->getModelBuilderInstance())->where(DB::raw($this->getDbEngineContainer()->getFilterQueryString()), 'LIKE', "%{$word}%");
       if($match->count())
@@ -158,6 +161,13 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       else
         $allUnions->union($partialUnion);
     }
+    //ident all unios as one select
+
+    $allUnions
+      ->setQuery(
+        \DB::table(\DB::raw('('.$allUnions->toSql().') as cv_pag'))
+        ->setBindings($allUnions->getBindings())
+      );
     $this->setModelBuilderInstance($allUnions);
   }
 

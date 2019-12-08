@@ -9,29 +9,28 @@ class CvBasePaginator implements CvCrudInterface
   use \Crudvel\Traits\CrudTrait;
   protected $cvResourceInstance;
 
-  //arreglo con columnas que se permiten filtrar en paginado, si se setea con false, no se permitira filtrado, si se setea con null o no se setea, no se pondran restricciones en filtrado
+  //valid columns to be filtered
   protected $filterables = null;
-  //arreglo con columnas que se permiten ordenar en paginado, si se setea con false, no se permitira ordenar, si se setea con null o no se setea, no se pondran restricciones en ordenar
+  //valid columns to be ordered
   protected $orderables = null;
-  //mapa de columnas join,
+  //map of joined columns
   protected $joinables = null;
-  //boleado que indica si el ordenamiento sera ascendente o no
+  //order direction
   protected $ascending;
-  //boleado que indica si se permite filtrado columna por columna
+  //is filter by column enabled?
   protected $byColumn;
-  //arreglo de columnas a filtrar, cuando byColumn es verdadero, se debera agregar un valor de busqueda por cada columna
+  //query to be filtered, when byColumn is enabled, every column can have is own individual search
   protected $filterQuery;
-  //entero con limite de valores a regresar por paginado
+  //limit of records to be collected
   protected $limit;
-  //cadena con nombre de columna por la que se ordenaran los resultados de paginado
+  //name of the column to order
   protected $orderBy;
-  //entero con pagina que se requiere obtener por paginado
+  //wich page will be required
   protected $page;
-  //arreglo de columnas a seleccionar
+  //list of columns to be selected
   protected $selectQuery;
-  //array de comparaciones validas
+  //valir comparator operators
   protected $comparators       = ["=","<",">","<>","<=",">=","like"];
-  //array de comparaciones validas
   protected $comparator        = null;
   protected $paginateCount     = 0;
   protected $paginateData      = null;
@@ -40,7 +39,7 @@ class CvBasePaginator implements CvCrudInterface
   protected $searchObject      = '';
   protected $searchMode        = 'cv-simple-paginator';
   protected $dbEngineContainer = null;
-  //array de comparaciones validas
+  //valid conectors
   protected $logicConnectors  =[
     'and'=>'where'
     ,'or'=>'Orwhere'
@@ -94,7 +93,7 @@ class CvBasePaginator implements CvCrudInterface
   }
 
   public function fixFilterQuery(){
-    //si filterables esta definida en false, no se aceptara filtrado por ninguna columna
+    //if filterables is false, filter by column will no be supported
     if($this->fixedFilterables()===false)
       return $this->setFilterQuery(false);
 
@@ -110,7 +109,7 @@ class CvBasePaginator implements CvCrudInterface
     if($this->fixedOrderables()===false)
       return $this->setOrderBy(false);
 
-    //definimos la columna de ordenamiento
+    //set order by column
     $this->setOrderBy(arrayIntersect([$this->getOrderBy()],$this->fixedOrderables())[0]??null);
     return $this;
   }
@@ -190,13 +189,13 @@ class CvBasePaginator implements CvCrudInterface
     }
   }
   /**
-   * Responde una peticion http de forma paginada de acuerdo a la combinacion de parametros mandados
+   * make http request with a paginate set of data, accorded to the given parameters
    */
   public function processPaginatedResponse() {
-    //si el modelo no esta definido o es nulo
+    //if no model builder instance defined
     if($this->getModelBuilderInstance()===null)
       return ;
-    //si existe un array de columnas a seleccionar
+      //if it is not a select query defined
     if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
 
@@ -204,15 +203,15 @@ class CvBasePaginator implements CvCrudInterface
       return ;
 
     $this->tempQuery();
-    //si existe un array de columnas a filtrar
+    //if it is not a filter quary defined
 
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
     $this->setPaginateCount($this->getModelBuilderInstance()->count());
-    //si se solicita limitar el numero de resultados
+    //if limit for que query is defined
     if($this->getLimit()){
       $this->getModelBuilderInstance()->limit($this->getLimit());
-      //si se especifica una pagina a regresar
+      //if a page number to get is defined
       if($this->getPage() && $this->getPaginateCount() >= $this->getLimit() * ($this->getPage()-1))
         $this->getModelBuilderInstance()->skip($this->getLimit() * ($this->getPage()-1));
     }
@@ -251,7 +250,7 @@ class CvBasePaginator implements CvCrudInterface
   }
 
   /**
-   * Responde una peticion http de forma paginada de acuerdo a la combinacion de parametros mandados
+   * respond http request with a paginate set of data, accorded to the given parameters
    */
   public function paginatedResponse() {
     $this->processPaginatedResponse();

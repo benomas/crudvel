@@ -155,10 +155,10 @@ class BaseModel extends Model implements CvCrudInterface{
     $query->updatedBefore($date)->updatedAfter($date);
   }
 
-  public function scopeDistinctCount($query,$column){
+  public function scopeDistinctCount($query,$column,$preFixed=true){
     if(!in_array($column,$this->getTableColumns()))
       return 0;
-    return $query->count(DB::raw("DISTINCT ".$this->fixColumnName($column)));
+    return kageBunshinNoJutsu($query)->count(DB::raw("DISTINCT ".$this->preFixed($column,$preFixed)));
   }
 
   /**
