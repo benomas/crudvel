@@ -78,11 +78,20 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     if($this->getNumberOfWords()>1){
       $this->permute($fixedWords);
       if(count($words) === $this->getNumberOfWords())
-        array_unshift($this->permutedWords,[$this->getSearchObject()],$fixedWords);
-      foreach($this->permutedWords as $position=>$permutedWorks)
-        $this->loadLike($permutedWorks,$position);
-      foreach($this->permutedWords as $position=>$permutedWorks)
-        $this->loadAndLike($permutedWorks,$position);
+        array_unshift($this->permutedWords,$fixedWords);
+      $this->loadLike([$this->getSearchObject()],'a.1');
+      foreach($this->permutedWords as $position=>$permutedWorks){
+        if(count($permutedWorks) > 1){
+          $fixWeight1 = 'b.'.((string)($this->getNumberOfWords() - count($permutedWorks))).'.'.$position;
+          $fixWeight2 = 'b.'.((string)($this->getNumberOfWords() - count($permutedWorks) + 1 )).'.'.$position;
+          $this->loadLike($permutedWorks,$fixWeight1);
+          $this->loadAndLike($permutedWorks,$fixWeight2);
+        }else{
+          $this->loadLike($permutedWorks,'c.'.$position);
+        }
+      }
+      if(count($words) === $this->getNumberOfWords())
+        array_unshift($this->permutedWords,[$this->getSearchObject()]);
     }
     else
       $this->loadLike([$this->getSearchObject()],0);
@@ -123,7 +132,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
         'LIKE',
         "%{$this->makeLike($words)}%"
       );
-    $querySql = preg_replace('/^select \* from/','select *,1.'.$position.'  as pt_order from',$likeBuilder->toSql());
+    $querySql = preg_replace('/^select \* from/','select *,"'.($position).'" as pt_order from',$likeBuilder->toSql());
     $likeBuilder
       ->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))
       ->setBindings($likeBuilder
@@ -132,18 +141,14 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     $this->combinatoryUnions[] = $likeBuilder;
   }
   public function loadAndLike($words,$position){
-    $andLike = '';
+    $likeBuilder = kageBunshinNoJutsu($this->getModelBuilderInstance());
     foreach($words as $work)
-      $andLike = "LIKE %$work% AND";
-    $andLike = rtrim($andLike, ' AND');
-
-    $likeBuilder = kageBunshinNoJutsu($this->getModelBuilderInstance())
-      ->where(
-        DB::raw($this->getDbEngineContainer()->getFilterQueryString()),
-        'LIKE',
-        "$andLike"
+      $likeBuilder->where(
+          DB::raw($this->getDbEngineContainer()->getFilterQueryString()),
+          'LIKE',
+          "%$work%"
       );
-    $querySql = preg_replace('/^select \* from/','select *,2.'.$position.'  as pt_order from',$likeBuilder->toSql());
+    $querySql = preg_replace('/^select \* from/','select *,"'.($position).'" as pt_order from',$likeBuilder->toSql());
     $likeBuilder
       ->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))
       ->setBindings($likeBuilder
