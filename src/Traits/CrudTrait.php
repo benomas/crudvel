@@ -787,7 +787,7 @@ trait CrudTrait {
       die('alias required');
     }
     $table = $this->getMainTable();
-    return kageBunshinNoJutsu($this->getModelBuilderInstance())
+    return $this->getModelClass()::noFilters()
     ->from("$table as $alias")
     ->whereColumn("$alias.id", "$table.id")
     ->limit(1);

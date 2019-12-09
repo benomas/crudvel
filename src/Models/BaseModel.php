@@ -187,6 +187,13 @@ class BaseModel extends Model implements CvCrudInterface{
     $query->name($this->name);
   }
 
+  public function scopeInvokePosfix($query,$related,$posfix){
+    $foreintColumn = \Str::snake(\Str::singular(($table=$this->getTable()))).'_id';
+    $query->select("$table.$posfix as $table".'_'.$posfix)
+    ->whereColumn($related::cvIam()->getTable().".$foreintColumn", "$table.id")
+    ->limit(1);
+  }
+
   public function scopeInvokeSearch($query,$related){
     $foreintColumn = \Str::snake(\Str::singular(($table=$this->getTable()))).'_id';
     $query->select("$table.name as cv_search")

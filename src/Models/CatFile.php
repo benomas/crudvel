@@ -26,7 +26,7 @@ class CatFile extends \Crudvel\Customs\Models\BaseModel{
 
 // [Transformers]
   public function getCamelResourceAttribute(){
-    return empty($this->attributes['resource'])?null:camel_case($this->attributes['resource'],'-');
+    return empty($this->attributes['resource'])?null:\Str::camel($this->attributes['resource'],'-');
   }
 // [End Transformers]
 
@@ -42,10 +42,10 @@ class CatFile extends \Crudvel\Customs\Models\BaseModel{
 
 // [Others]
   public function modelClassInstance(){
-    $targetModel = camel_case(Str::singular($this->attributes['resource']));
+    $targetModel = \Str::camel(Str::singular($this->attributes['resource']));
     if (method_exists($this,$targetModel.'ModelClassInstance'))
       return $this->$targetModel.'ModelClassInstance'();
-    $testModel  = '\App\Models\\'.Str::studly(Str::singular($this->attributes['resource']));
+    $testModel  = '\App\Models\\'.\Str::studly(\Str::singular($this->attributes['resource']));
     if(class_exists($testModel))
       return new $testModel;
     return null;

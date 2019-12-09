@@ -12,13 +12,13 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
     'cat_file_multiple',
     'cat_file_name',
     'cat_file_slug',
-    'cat_file_resorce',
+    'cat_file_resource',
     'resource_id',
     'created_at',
     'id',
     'path',
     'updated_at',
-    'search_field'
+    'cv_search'
   ];
   protected $disk = "public";
 
@@ -27,14 +27,33 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
     $this->addActions('storeUpdate');
   }
 
+  public function addedCvSearch(){
+    return $this->selfPreBuilder('f')
+      ->join('cat_files as cf', 'f.cat_file_id', '=', 'cf.id')
+      ->selectRaw("CONCAT(cf.name, ' ',cf.resource, ' ',f.id)");
+  }
+
+  public function addedCatFileMultiple(){
+    return CatFile::invokePosfix($this->getModelClass(),'multiple');
+  }
+  public function addedCatFileName(){
+    return CatFile::invokePosfix($this->getModelClass(),'name');
+  }
+  public function addedCatFileSlug(){
+    return CatFile::invokePosfix($this->getModelClass(),'slug');
+  }
+  public function addedCatFileResource(){
+    return CatFile::invokePosfix($this->getModelClass(),'resource');
+  }
+
   public function unions(){
     $catFiles = CatFile::hasFile()->get();
     if(!$catFiles || !count($catFiles)){
-      if (($key = array_search('search_field', $this->selectables)) !== false)
+      if (($key = array_search('cv_search', $this->selectables)) !== false)
         unset($this->selectables[$key]);
-      if (($key = array_search('search_field', $this->filterables)) !== false)
+      if (($key = array_search('cv_search', $this->filterables)) !== false)
         unset($this->filterables[$key]);
-      if (($key = array_search('search_field', $this->orderables)) !== false)
+      if (($key = array_search('cv_search', $this->orderables)) !== false)
         unset($this->orderables[$key]);
       $this->currentPaginator->setFilterables($this->selectables);
       $this->currentPaginator->setOrderables($this->filterables);
@@ -67,75 +86,80 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
   }
 
   public function show($id){
-    if(!$this->paginable || !$this->currentPaginator->extractPaginate())
-      return  $this->noPaginatedResponse();
-
-    $this->currentPaginator->processPaginatedResponse();
-    $this->paginateData=$this->model->with('catFile');
-    return $this->currentPaginator->paginateResponder();
+    $this->getModelBuilderInstance()->with('catFile');
+    if(
+      $this->getRootInstance() &&
+      $this->getRootInstance()->getPaginable() &&
+      $this->getPaginatorInstance()->extractPaginate()
+    )
+      return $this->getPaginatorInstance()->paginatedResponse();
+    return $this->getPaginatorInstance()->noPaginatedResponse();
   }
 
   public function saveFile($clean=null){
+    $fields =  $this->getFields();
     $this->resetTransaction();
     $this->startTranstaction();
-    $this->testTransaction(function() use($clean){
-      $catFile  = CatFile::id($this->fields["cat_file_id"])->first();
+    $this->testTransaction(function() use($clean,$fields){
+      $catFile  = CatFile::id($fields["cat_file_id"])->first();
 
       if(!$catFile->multiple || $clean){
-        foreach ($this->modelInstance as $file) {
+        foreach ($this->getModelCollectionInstance() as $file) {
           $this->deleteFile($file);
           if($catFile->multiple)
             $file->delete();
         }
       }
 
-    if($this->currentAction==='store')
+    if($this->getCurrentAction()==='store')
       $this->modelInstanciator(true);
 
-    $this->modelInstance = $this->modelInstance->first()??$this->modelInstanciator(true);
+    $this->setModelCollectionInstance(
+      $this->getModelCollectionInstance()->first()??$this->modelInstanciator(true)
+    );
     $this->setStamps();
-    $this->fields["path"]="";
-    $this->fields["disk"]=$this->disk;
-    $this->modelInstance->fill($this->fields);
-    $this->dirtyPropertys = $this->modelInstance->getDirty();
-    if(!$this->modelInstance->save())
+    $fields["path"]="";
+    $fields["disk"]=$this->disk;
+    $this->getModelCollectionInstance()->fill($fields);
+    $this->dirtyPropertys = $this->getModelCollectionInstance()->getDirty();
+    if(!$this->getModelCollectionInstance()->save())
       return false;
 
-    $filePath  = 'uploads/'.$this->modelInstance->catFile->resource.'/'.$this->modelInstance->resource_id;
-    $fileInput = $this->modelInstance->catFile->resource;
-    $fileName  = Str::slug($this->modelInstance->catFile()->first()->name)."-".$this->modelInstance->id.".".$this->requestInstance->{$fileInput}->extension();
-    if(!$this->modelInstance->path = Storage::disk($this->modelInstance->disk)->putFileAs($filePath, $this->requestInstance->{$fileInput},$fileName))
+    $filePath  = 'uploads/'.$this->getModelCollectionInstance()->catFile->resource.'/'.$this->getModelCollectionInstance()->resource_id;
+    $fileInput = $this->getModelCollectionInstance()->catFile->resource;
+    $fileName  = \Str::slug($this->getModelCollectionInstance()->catFile()->first()->name)."-".$this->getModelCollectionInstance()->id.".".$this->getRequestInstance()->{$fileInput}->extension();
+    if(!$this->getModelCollectionInstance()->path = Storage::disk($this->getModelCollectionInstance()->disk)->putFileAs($filePath, $this->getRequestInstance()->{$fileInput},$fileName))
       return false;
-    $this->modelInstance->absolute_path = $this->filePath();
-      return $this->modelInstance->save();
+    $this->getModelCollectionInstance()->absolute_path = $this->filePath();
+      return $this->getModelCollectionInstance()->save();
     });
-    $this->modelInstance->resource->touch();
+    $this->getModelCollectionInstance()->resource->touch();
     $this->transactionComplete();
     if(!$this->isTransactionCompleted())
       return $this->apiFailResponse();
 
-    if($this->paginable && $this->currentPaginator->extractPaginate()){
-      $this->currentPaginator->processPaginatedResponse();
-      $this->paginateData=$this->model->with('catFile');
-      return $this->currentPaginator->paginateResponder();
-    }
-
-    return $this->noPaginatedResponse();
+    return $this->show(0);
   }
 
   public function store(){
-    $catFile  = CatFile::id($this->fields["cat_file_id"])->first();
-    $this->modelInstance = $this->model->catFileId($this->fields["cat_file_id"])->resourceId($this->fields["resource_id"])->get();
+    $fields =  $this->getFields();
+    $catFile  = CatFile::id($fields["cat_file_id"])->first();
+    $this->setModelCollectionInstance(
+      $this->getModelBuilderInstance()->catFileId($fields["cat_file_id"])->resourceId($fields["resource_id"])->get()
+    );
     return $this->saveFile();
   }
 
   public function update($id){
-    $this->modelInstance = $this->model->get();
+    $this->setModelCollectionInstance($this->getModelBuilderInstance()->get());
     return $this->saveFile(true);
   }
 
   public function storeUpdate(){
-    $this->modelInstance = $this->model->catFileId($this->fields["cat_file_id"])->resourceId($this->fields["resource_id"])->get();
+    $fields =  $this->getFields();
+    $this->setModelCollectionInstance(
+      $this->getModelBuilderInstance()->catFileId($fields["cat_file_id"])->resourceId($fields["resource_id"])->get()
+    );
     return $this->saveFile(true);
   }
 
@@ -147,17 +171,17 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
    */
   public function destroy($id)
   {
-    return $this->deleteFile() && $this->model->first()->delete()?
+    return $this->deleteFile() && $this->getModelBuilderInstance()->first()->delete()?
       $this->apiSuccessResponse():
       $this->apiFailResponse();
   }
 
   public function filePath(){
-    return $this->modelInstance? asset("storage/".$this->modelInstance->path):"";
+    return $this->getModelCollectionInstance()? asset("storage/".$this->getModelCollectionInstance()->path):"";
   }
 
   public function deleteFile($file = null){
-    $file=$file??$this->modelInstance;
+    $file=$file??$this->getModelBuilderInstance();
     if(!$file)
       return true;
     if(!Storage::disk($file->disk)->exists($file->path))
