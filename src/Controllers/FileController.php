@@ -63,7 +63,7 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
     $this->resetTransaction();
     $this->startTranstaction();
     $this->testTransaction(function() use($clean,$fields){
-      $catFile  = CatFile::id($fields["cat_file_id"])->first();
+      $catFile  = CatFile::id($fields["cat_file_id"]??$this->getModelCollectionInstance()->cat_file_id)->first();
 
       if(!$catFile->multiple || $clean){
         foreach ($this->getModelCollectionInstance() as $file) {
@@ -113,7 +113,6 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
   }
 
   public function update($id){
-    $this->setModelCollectionInstance($this->getModelBuilderInstance()->get());
     return $this->saveFile(true);
   }
 
@@ -133,7 +132,7 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
    */
   public function destroy($id)
   {
-    return $this->deleteFile() && $this->getModelBuilderInstance()->first()->delete()?
+    return $this->deleteFile() && $this->getModelCollectionInstance()->delete()?
       $this->apiSuccessResponse():
       $this->apiFailResponse();
   }
@@ -143,12 +142,25 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
   }
 
   public function deleteFile($file = null){
-    $file=$file??$this->getModelBuilderInstance();
-    if(!$file)
+    if(!($file??$this->getModelCollectionInstance()))
       return true;
     if(!Storage::disk($file->disk)->exists($file->path))
       return true;
 
     return Storage::disk($file->disk)->delete($file->path);
+  }
+
+  public function activate($id){
+    $this->addField('active',1);
+    $this->addField('id',$id);
+    $this->setStamps();
+    return parent::update($id);
+  }
+
+  public function deactivate($id){
+    $this->addField('active',0);
+    $this->addField('id',$id);
+    $this->setStamps();
+    return parent::update($id);
   }
 }

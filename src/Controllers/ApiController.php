@@ -12,13 +12,12 @@ class ApiController extends CustomController{
 
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
-    $this->addAction("select","resourcePermissions");
   }
   public function callAction($method,$parameters=[]){
     $this->setCallActionMethod($method)
       ->setCallActionParameters($parameters)
       ->prepareResource();
-    return parent::callActionJump($method,$parameters);
+    return $this->getFlowControl() ? $this->getFlowControl()():parent::callActionJump($method,$parameters);
   }
   /**
    * Display a listing of the resource.

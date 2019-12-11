@@ -74,20 +74,20 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       if($match->count())
         $fixedWords[]=$word;
     }
+
     $this->setNumberOfWords(count($fixedWords));
-    if($this->getNumberOfWords()>1){
+    if($this->getNumberOfWords()>0){
       $this->permute($fixedWords);
-      if(count($words) === $this->getNumberOfWords())
-        array_unshift($this->permutedWords,$fixedWords);
+      array_unshift($this->permutedWords,$fixedWords);
       $this->loadLike([$this->getSearchObject()],'a.1');
-      foreach($this->permutedWords as $position=>$permutedWorks){
-        if(count($permutedWorks) > 1){
-          $fixWeight1 = 'b.'.((string)($this->getNumberOfWords() - count($permutedWorks))).'.'.$position;
-          $fixWeight2 = 'b.'.((string)($this->getNumberOfWords() - count($permutedWorks) + 1 )).'.'.$position;
-          $this->loadLike($permutedWorks,$fixWeight1);
-          $this->loadAndLike($permutedWorks,$fixWeight2);
+      foreach($this->permutedWords as $position=>$permutedWord){
+        if(count($permutedWord) > 1){
+          $fixWeight1 = 'b.'.((string)($this->getNumberOfWords() - count($permutedWord))).'.'.$position;
+          $fixWeight2 = 'b.'.((string)($this->getNumberOfWords() - count($permutedWord) + 1 )).'.'.$position;
+          $this->loadLike($permutedWord,$fixWeight1);
+          $this->loadAndLike($permutedWord,$fixWeight2);
         }else{
-          $this->loadLike($permutedWorks,'c.'.$position);
+          $this->loadLike($permutedWord,'c.'.$position);
         }
       }
       if(count($words) === $this->getNumberOfWords())

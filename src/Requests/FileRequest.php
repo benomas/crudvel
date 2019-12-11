@@ -44,6 +44,7 @@ class FileRequest extends \Crudvel\Customs\Requests\CrudRequest{
       $this->rules[$this->fileName] = 'required';
     }
 
+    //pdd($this->catFile->toArray());
     if($this->catFile){
       $this->rules[$this->fileName] .= '|min:'.$this->catFile->min_size.'|max:'.$this->catFile->max_size.'|mimes:'.$this->catFile->types;
       if(!$this->catFile->multiple && $fields['resource_id']){
@@ -64,9 +65,6 @@ class FileRequest extends \Crudvel\Customs\Requests\CrudRequest{
   }
 
   public function deleteDestroy(){
-    pdd(
-      $this->getModelCollectionInstance()
-    );
     if(!actionAccess($this->getUserModelBuilderInstance(),$this->getModelCollectionInstance()->catFile.".update"))
       $this->rules['cat_file_id'].='file_resource';
   }

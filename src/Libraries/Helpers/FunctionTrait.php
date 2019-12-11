@@ -28,6 +28,9 @@ trait FunctionTrait
     $this->ptTotalElements           = count((array) $items);
     if($this->ptTotalElements === 0)
       return [];
+    if($this->ptTotalElements === 1)
+      return [$items];
+
     while($this->ptRange < $this->ptTotalElements){
       if($this->ptRestartPermutationSerie){
         $this->ptPermutePath[] = $this->ptPermutedSerie = $this->ptInitializeCollection();

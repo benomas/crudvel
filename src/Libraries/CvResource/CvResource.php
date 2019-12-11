@@ -225,7 +225,7 @@ class CvResource
         return $preactionResponse;
       });
     $this->generateModelCollectionInstance();
-    if(!$this->getModelCollectionInstance() || !$this->getModelCollectionInstance()->count())
+    if($this->getModelBuilderInstance() && !$this->getModelBuilderInstance()->count())
       return $this->setFlowControl(function(){
         return $this->getRootInstance()->apiSuccessResponse([
           "data"    => [],

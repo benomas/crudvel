@@ -148,6 +148,15 @@ trait CrudTrait {
   public function getSkipModelValidation(){
     return $this->getCvResourceInstanceMethod('getSkipModelValidation');
   }
+  public function getCallActionMethod(){
+    return $this->getCvResourceInstanceMethod('getCallActionMethod');
+  }
+  public function getCallActionParameters(){
+    return $this->getCvResourceInstanceMethod('getCallActionParameters');
+  }
+  public function getFlowControl(){
+    return $this->getCvResourceInstanceMethod('getFlowControl');
+  }
   //Getters end
 
   //Setters start
@@ -266,6 +275,15 @@ trait CrudTrait {
   }
   public function setSkipModelValidation($skipModelValidation=null){
     return $this->setCvResourceInstanceMethod('setSkipModelValidation',$skipModelValidation);
+  }
+  public function setCallActionMethod($callActionMethod=null){
+    return $this->setCvResourceInstanceMethod('setSkipModelValidation',$callActionMethod);
+  }
+  public function setCallActionParameters($callActionParameters=null){
+    return $this->setCvResourceInstanceMethod('setCallActionParameters',$callActionParameters);
+  }
+  public function setFlowControl($flowControl=null){
+    return $this->setCvResourceInstanceMethod('setFlowControl',$flowControl);
   }
   //Setters end
 //-----
