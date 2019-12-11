@@ -233,7 +233,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     $this->cvResourceInstance->captureRequestHack($this);
     $this->setCurrentAction($this->route()?explode('@', $this->route()->getActionName())[1]:null);
     $this->setCurrentActionKey($this->route($this->getSnakeSingularName()))->fixActionResource();
-    $this->setFields($this->all());
+    $this->fixFlowControl();
   }
 
   public function setCurrentDepth($currentDepth=''){

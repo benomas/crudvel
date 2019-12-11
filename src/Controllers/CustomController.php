@@ -38,20 +38,22 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   ];
   protected $defaultPaginator = 'cv-simple-paginator';
   protected $currentPaginator = null;
-  protected $comparator    = 'like';
+  protected $comparator       = 'like';
 
   //public $baseResourceUrl;
   protected $transStatus;
   protected $committer;
   //modelo cargado en memoria
-  protected $skipModelValidation=false;
+  protected $skipModelValidation = false;
   //validador autorizador anonimo
-  protected $slugField       = null;
-  protected $slugedResponse  = false;
+  protected $slugField      = null;
+  protected $slugedResponse = false;
   protected $defaultFields;
   //Acciones que se basan en un solo elemento
   protected $dirtyPropertys;
-  protected $debugg          = false;
+  protected $debugg = false;
+  protected $callActionMethod = null;
+  protected $callActionParameters = null;
   protected $actions         = [
     "index",
     "sluged",
@@ -105,7 +107,6 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function prepareResource(){
     $this->getCvResourceClass()::setRootInstance($this)->boot($this);
-    $this->injectCvResource();
     return $this;
   }
 
@@ -121,6 +122,8 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   }
 
   public function callAction($method,$parameters=[]){
+    $this->setCallActionMethod($method);
+    $this->setCallActionParameters($parameters);
     $this->prepareResource();
     if(!$this->getCurrentAction())
       $this->setCurrentAction($method)->fixActionResource();
@@ -129,7 +132,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       return $this->webNotFound();
 
     if(
-      $this->skipModelValidation &&
+      $this->getSkipModelValidation() &&
       !$this->specialAccess('inactives') &&
       !$this->specialAccess($this->getSlugPluralName().'.inactives')
     )
@@ -392,7 +395,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return true;
   }
 
-  public function addActions(...$moreActions){
+  public function addAction(...$moreActions){
     $this->actions=array_merge($this->actions,$moreActions);
   }
 
@@ -424,9 +427,6 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   }
   public function getMainTableName(){
     return $this->mainTableName??null;
-  }
-  public function getSkipModelValidation(){
-    return $this->skipModelValidation??null;
   }
   public function getSlugField(){
     return $this->slugField??null;
@@ -495,13 +495,35 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   public function getPaginateData(){
     return $this->paginateData??null;
   }
-
+  public function getSkipModelValidation(){
+    return $this->skipModelValidation??null;
+  }
+  public function getCallActionMethod(){
+    return $this->callActionMethod??null;
+  }
+  public function getCallActionParameters(){
+    return $this->callActionParameters??null;
+  }
+  public function getCvResourceClass(){
+    return $this->cvResourceClass;
+  }
+//------------------
   public function setBadPaginablePetition($badPaginablePetition=null){
     $this->badPaginablePetition = $badPaginablePetition??null;
     return $this;
   }
-  public function getCvResourceClass(){
-    return $this->cvResourceClass;
+  public function setSkipModelValidation($skipModelValidation=null){
+    $this->skipModelValidation = $skipModelValidation??null;
+    return $this;
+  }
+
+  public function setCallActionMethod($callActionMethod=null){
+    $this->callActionMethod = $callActionMethod??null;
+    return $this;
+  }
+  public function setCallActionParameters($callActionParameters=null){
+    $this->callActionParameters = $callActionParameters??null;
+    return $this;
   }
 
   protected function setStamps(){

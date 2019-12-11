@@ -102,16 +102,35 @@ trait CvResourceTrait
   }
   //-----------
   public function getActions(){
-    return $this->actions??null;
+    return $this->getRootInstance()->getActions();
   }
   public function getViewActions(){
-    return $this->viewActions??null;
+    return $this->getRootInstance()->getViewActions();
   }
   public function getRowActions(){
-    return $this->rowActions??null;
+    return $this->getRootInstance()->getRowActions();
   }
   public function getRowsActions(){
-    return $this->rowsActions??null;
+    return $this->getRootInstance()->getRowsActions();
+  }
+  public function getSkipModelValidation(){
+    if($this->getRootInstance())
+      return $this->getRootInstance()->getSkipModelValidation();
+    return null;
+  }
+  public function getCallActionMethod(){
+    if($this->getRootInstance())
+      return $this->getRootInstance()->getCallActionMethod();
+    return null;
+  }
+  public function getCallActionParameters(){
+    if($this->getRootInstance())
+      return $this->getRootInstance()->getCallActionParameters();
+    return null;
+  }
+
+  public function getFlowControl(){
+    return $this->flowControl??null;
   }
   //Getters end
 
@@ -235,19 +254,32 @@ trait CvResourceTrait
   }
   //-----------
   public function setActions($actions=null){
-    $this->actions=$actions;
+    if($this->getRootInstance())
+      $this->getRootInstance()->setActions($actions);
     return $this;
   }
   public function setViewActions($viewActions=null){
-    $this->viewActions=$viewActions;
+    if($this->getRootInstance())
+      $this->getRootInstance()->setViewActions($viewActions);
     return $this;
   }
   public function setRowActions($rowActions=null){
-    $this->rowActions=$rowActions;
+    if($this->getRootInstance())
+      $this->getRootInstance()->setRowActions($rowActions);
     return $this;
   }
   public function setRowsActions($rowsActions=null){
-    $this->rowsActions=$rowsActions;
+    if($this->getRootInstance())
+      $this->getRootInstance()->setRowsActions($rowsActions);
+    return $this;
+  }
+  public function setSkipModelValidation($skipModelValidation=null){
+    if($this->getRootInstance())
+      $this->getRootInstance()->setSkipModelValidation($skipModelValidation??null);
+    return $this;
+  }
+  public function setFlowControl($flowControl){
+    $this->flowControl=$flowControl;
     return $this;
   }
   //Setters end

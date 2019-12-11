@@ -38,20 +38,25 @@ class CvResource
   protected $actionsAccess;
   protected $fields;
 
-  protected $actions;
   protected $rowActions;
   protected $viewActions;
   protected $rowsActions;
+  protected $flowControl;
 
   public function __construct(){
   }
   public function boot($controllerInstance=null){
     if(!$controllerInstance)
       return;
-    $this->setControllerInstance($controllerInstance)->assignUser();
-    $this->loadActions()->loadViewActions()->loadRowActions()->loadRowsActions();
-    $this->fixCases()->loadModel()->loadRequest()->loadPaginator();
-    return $this;
+    $params = $this->setControllerInstance($controllerInstance)
+    ->getControllerInstance()
+    ->setCvResourceInstance($this)
+    ->getRootInstance()
+    ->getCallActionParameters();
+    return $this->assignUser()->fixCases()
+    ->setCurrentActionKey($params[$this->getSnakeSingularName()]??null)
+    ->setCurrentAction($this->getRootInstance()->getCallActionMethod())
+    ->loadModel()->loadRequest()->loadPaginator();
   }
 
   public function startModelBuilderInstance(){
@@ -123,30 +128,6 @@ class CvResource
     return Str::plural(Str::studly($this->getRootInstance()->getSlugSingularName()));
   }
 
-  public function loadActions(){
-    if($this->getRootInstance())
-      $this->setActions($this->getRootInstance()->actions??null);
-    return $this;
-  }
-
-  public function loadViewActions(){
-    if($this->getRootInstance())
-      $this->setActions($this->getRootInstance()->viewActions??null);
-    return $this;
-  }
-
-  public function loadRowActions(){
-    if($this->getRootInstance())
-      $this->setActions($this->getRootInstance()->rowActions??null);
-    return $this;
-  }
-
-  public function loadRowsActions(){
-    if($this->getRootInstance())
-      $this->setActions($this->getRootInstance()->rowsActions??null);
-    return $this;
-  }
-
   public function loadController($controller=null){
     if(!is_object($controller))
       return $this;
@@ -207,6 +188,54 @@ class CvResource
     }
     return $this->setRequestClass($requestClassName)->captureRequest();
   }
+
+  public function generateModelCollectionInstance($key=null){
+    if($key || in_array($this->getCurrentAction(),$this->getRowActions())){
+      $key = $key ?? $this->getCurrentActionKey();
+      return $this->setModelCollectionInstance($this->getModelBuilderInstance()->key($key)->first());
+    }
+    return $this;
+  }
+
+  public function fixFlowControl(){
+    if(!$this->getSkipModelValidation() && !$this->getModelBuilderInstance())
+      return $this->setFlowControl(function () {
+        return $this->getRootInstance()->apiNotFound();
+      });
+
+    if(!in_array($this->getCurrentAction(),$this->getActions()))
+      return $this->setFlowControl(function () {
+        return $this->getRootInstance()->apiNotFound();
+      });
+
+    if(
+      $this->getSkipModelValidation() &&
+      !$this->specialAccess('inactives') &&
+      !$this->specialAccess($this->getSlugPluralName().'.inactives')
+    )
+      $this->getModelBuilderInstance()->actives();
+    $this->getRootInstance()->loadFields();
+    if(
+      ($preactionResponse = $this->getRootInstance()->preAction(
+        $this->getCallActionParameters(),
+        $this->getSnakeSingularName()
+      ))
+    )
+      return $this->setFlowControl(function () use($preactionResponse){
+        return $preactionResponse;
+      });
+    $this->generateModelCollectionInstance();
+    if(!$this->getModelCollectionInstance() || !$this->getModelCollectionInstance()->count())
+      return $this->setFlowControl(function(){
+        return $this->getRootInstance()->apiSuccessResponse([
+          "data"    => [],
+          "count"   => 0,
+          "message" => trans("crudvel.api.success")
+        ]);
+      });
+    return $this;
+  }
+
   public function captureRequest(){
     $requestInstance = app($this->getRequestClass());
     if(!$this->getRequestInstance())

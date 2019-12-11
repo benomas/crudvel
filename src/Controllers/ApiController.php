@@ -15,40 +15,9 @@ class ApiController extends CustomController{
     $this->addAction("select","resourcePermissions");
   }
   public function callAction($method,$parameters=[]){
-    $this->prepareResource();
-    if(!$this->getCurrentAction())
-      $this->setCurrentAction($method)->fixActionResource();
-    if($this->skipModelValidation && !$this->getModelBuilderInstance())
-      return $this->apiNotFound();
-
-    if(!in_array($this->getCurrentAction(),$this->getActions()))
-      return $this->apiNotFound();
-
-    if(
-      $this->skipModelValidation &&
-      !$this->specialAccess('inactives') &&
-      !$this->specialAccess($this->getSlugPluralName().'.inactives')
-    )
-      $this->getModelBuilderInstance()->actives();
-    if(!$this->getFields())
-      $this->loadFields();
-    $preactionResponse = $this->preAction($method,$parameters);
-    if($preactionResponse)
-      return $preactionResponse;
-    if(in_array($method,$this->getRowActions())){
-      if(empty($parameters))
-        return $this->apiNotFound();
-      $this->setCurrentActionKey($parameters[$this->getSnakeSingularName()]);
-      if(!$this->getModelBuilderInstance()->key($this->getCurrentActionKey())->count())
-        return $this->apiNotFound();
-      $this->setModelCollectionInstance($this->getModelBuilderInstance()->first());
-    }
-    if(in_array($method,$this->getRowsActions()) && $this->getModelBuilderInstance()->count() === 0)
-      return $this->apiSuccessResponse([
-        "data"    => [],
-        "count"   => 0,
-        "message" => trans("crudvel.api.success")
-      ]);
+    $this->setCallActionMethod($method)
+      ->setCallActionParameters($parameters)
+      ->prepareResource();
     return parent::callActionJump($method,$parameters);
   }
   /**
