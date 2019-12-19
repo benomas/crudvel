@@ -207,7 +207,6 @@ class CvResource
       return $this->setFlowControl(function () {
         return $this->getRootInstance()->apiNotFound();
       });
-
     if(
       $this->getSkipModelValidation() &&
       !$this->specialAccess('inactives') &&
@@ -225,7 +224,10 @@ class CvResource
         return $preactionResponse;
       });
     $this->generateModelCollectionInstance();
-    if($this->getModelBuilderInstance() && !$this->getModelBuilderInstance()->count())
+    if( in_array($this->getCurrentAction(),$this->getRowsActions()) &&
+        $this->getModelBuilderInstance() &&
+        !$this->getModelBuilderInstance()->count()
+    )
       return $this->setFlowControl(function(){
         return $this->getRootInstance()->apiSuccessResponse([
           "data"    => [],
