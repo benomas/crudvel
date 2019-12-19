@@ -150,7 +150,7 @@ class CvBasePaginator implements CvCrudInterface
     if(!in_array($eOp,$this->comparators))
       jdd('invalid custom filter, require to define eOp property');
     $lop = $this->logicConnectors[$lop];
-    $this->model->$lop($field,$eOp,$filter['value']);
+    $this->getModelBuilderInstance()->$lop($field,$eOp,$filter['value']);
   }
 
   public function fixables($property){
