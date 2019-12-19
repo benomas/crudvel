@@ -200,6 +200,21 @@ class BaseModel extends Model implements CvCrudInterface{
     ->whereColumn($related::cvIam()->getTable().".$foreintColumn", "$table.id")
     ->limit(1);
   }
+
+  /**
+  * this function is defined to work only with mysql
+  */
+  public static function defCvSearch(...$columns){
+    $columns = (array) $columns;
+    if(empty($columns))
+      $columns = ['name'];
+    $model = self::cvIam();
+    pdd($model);
+    foreach($columns as $column){
+
+    }
+
+  }
 // [End Scopes]
 
 // [Others]

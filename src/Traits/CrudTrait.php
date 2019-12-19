@@ -599,9 +599,19 @@ trait CrudTrait {
       die('alias required');
     }
     $table = $this->getMainTable();
-    return $this->getModelClass()::noFilters()
-    ->from("$table as $alias")
+    return $this->getModelClass()::from("$table as $alias")
     ->whereColumn("$alias.id", "$table.id")
     ->limit(1);
+  }
+
+  /**
+  * this function is defined to work only with
+  *
+  * @author benomas benomas@gmail.com
+  * @date   2019-12-18
+  * @return void
+  */
+  public function defCvSearch(){
+    return $this->selfPreBuilder('self')->selectRaw("CONCAT(self.name, '')");
   }
 }

@@ -197,46 +197,46 @@ private function getIgnore(&$parameters)
  */
   function validateCompositives($attribute, $value, $parameters)
   {
-  	if(!is_array($parameters) || count($parameters)===0)
-  		return true;
+    if(!is_array($parameters) || count($parameters)===0)
+      return true;
 
-  	$table = $parameters[0];
-  	unset($parameters[0]);
+    $table = $parameters[0];
+    unset($parameters[0]);
 
-  	$columnName=null;
-  	$columnValue=null;
-  	$pairData[$attribute]=$value;
+    $columnName=null;
+    $columnValue=null;
+    $pairData[$attribute]=$value;
 
-  	foreach ($parameters as $key) {
+    foreach ($parameters as $key) {
 
-  		if(	$columnName && $columnValue){
-  			$pairData[$columnName]=$columnValue;
-      	$columnName=null;
-      	$columnValue=null;
-  		}
-  		else{
-  			if($columnName)
-  				$columnValue=$key;
-  			else
-  	    	$columnName=$key;
-  		}
-  	}
+      if(	$columnName && $columnValue){
+        $pairData[$columnName]=$columnValue;
+        $columnName=null;
+        $columnValue=null;
+      }
+      else{
+        if($columnName)
+          $columnValue=$key;
+        else
+          $columnName=$key;
+      }
+    }
 
-  	if(	$columnName && $columnValue)
-    	$pairData[$columnName]=$columnValue;
+    if(	$columnName && $columnValue)
+      $pairData[$columnName]=$columnValue;
     else{
-  		if($columnName)
-  			unset($pairData[$columnName]);
-  	}
+      if($columnName)
+        unset($pairData[$columnName]);
+    }
 
-  	$result=DB::table($table)->where(function ($query) use ($pairData) {
+    $result=DB::table($table)->where(function ($query) use ($pairData) {
       foreach ($pairData as $key=>$value)
       {
           $query->where($key,$value);
       }
-  	});
+    });
 
-  	return $result->count()===0;
+    return $result->count()===0;
   }
 
   /**
@@ -250,17 +250,17 @@ private function getIgnore(&$parameters)
   {
     if(empty($value))
       return true;
-  	if(!isset($parameters[0]) || !is_array($value) || count($value)===0)
-  		return false;
+    if(!isset($parameters[0]) || !is_array($value) || count($value)===0)
+      return false;
 
-  	$query = DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],'=',$value[0]);
-  	foreach($value AS $identifier){
-  		if(!is_int($identifier + 0))
-  			return false;
-  		$query->orWhere($parameters[0].'.'.$parameters[1],'=',$identifier);
-  	}
+    $query = DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],'=',$value[0]);
+    foreach($value AS $identifier){
+      if(!is_int($identifier + 0))
+        return false;
+      $query->orWhere($parameters[0].'.'.$parameters[1],'=',$identifier);
+    }
 
-  	return $query->count() === count($value);
+    return $query->count() === count($value);
   }
 
   /**
@@ -272,32 +272,32 @@ private function getIgnore(&$parameters)
    */
   function validateNoDuplicateValues($attribute, $value, $parameters)
   {
-  	if(!isset($value) || !is_array($value) || count($value)<2)
-  		return true;
-  	$uniques = array_unique($value);
+    if(!isset($value) || !is_array($value) || count($value)<2)
+      return true;
+    $uniques = array_unique($value);
 
-  	if(count($value) !== count($uniques))
-  		return false;
+    if(count($value) !== count($uniques))
+      return false;
 
-  	return true;
+    return true;
 
   }
 
- function validateKeyExist($attribute, $value, $parameters){
+  function validateKeyExist($attribute, $value, $parameters){
 
-  	if(!isset($parameters[0]))
-  		return false;
+    if(!isset($parameters[0]))
+      return false;
 
-  	if(!isset($parameters[1]))
-  		$parameters[1]='id';
+    if(!isset($parameters[1]))
+      $parameters[1]='id';
 
       $hasExceptions = 0;
       $exceptions    = [];
-  	try{
-  		$test = DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],$value);
-  		foreach ($parameters as $key => $property) {
-  			if($key<2)
-  				continue;
+    try{
+      $test = DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],$value);
+      foreach ($parameters as $key => $property) {
+        if($key<2)
+          continue;
 
         if($hasExceptions){
           if($key===$hasExceptions+1)
@@ -317,7 +317,7 @@ private function getIgnore(&$parameters)
             $temp = $property;
           else
             $test->where($parameters[0].'.'.$temp,$property);
-    		}
+        }
       }
       if($test->count()>0)
         return true;
@@ -332,8 +332,8 @@ private function getIgnore(&$parameters)
         return true;
       }
 
-    		return false;
-  	}
+      return false;
+    }
     catch(\Exception $e){
       customLog($e);
     }
@@ -349,8 +349,7 @@ private function getIgnore(&$parameters)
    */
   function validateUserName($attribute, $value, $parameters)
   {
-  	return preg_match('/^[a-zA-Z0-9_\-\.@]+?$/',$value);
-
+    return preg_match('/^[a-zA-Z0-9_\-\.@]+?$/',$value);
   }
 
   /**
@@ -362,8 +361,7 @@ private function getIgnore(&$parameters)
    */
   function validateRfc($attribute, $value, $parameters)
   {
-  	return preg_match('/^\w{3,4}\d{6,6}\w{2,3}$/',$value);
-
+    return preg_match('/^\w{3,4}\d{6,6}\w{2,3}$/',$value);
   }
 
   /**
@@ -405,5 +403,62 @@ private function getIgnore(&$parameters)
   function validateFileResource($attribute, $value, $parameters)
   {
     return null;
+  }
+
+  function validateCvKeyExist($attribute, $value, $parameters){
+
+    if(!isset($parameters[0]))
+      return false;
+
+    if(!isset($parameters[1]))
+      $parameters[1]='id';
+
+      $hasExceptions = 0;
+      $exceptions    = [];
+    try{
+      $test = DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],$value);
+      foreach ($parameters as $key => $property) {
+        if($key<2)
+          continue;
+
+        if($hasExceptions){
+          if($key===$hasExceptions+1)
+            $exceptionTable = $property;
+          if($key===$hasExceptions+2)
+            $exceptionTableColumn= $property;
+          if($key===$hasExceptions+3)
+            $exceptionTableValue= $property;
+        }
+        else{
+          if($property==="exception"){
+            $hasExceptions = $key;
+            continue;
+          }
+
+          if($key%2===0)
+            $temp = $property;
+          else
+            $test->where($parameters[0].'.'.$temp,$property);
+        }
+      }
+      if($test->count()>0)
+        return true;
+      if($hasExceptions && DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],'=',$value)->count()){
+        $exceptionQuery = DB::table($exceptionTable)->where($exceptionTable.".".$attribute,$value);
+        if(!$exceptionQuery->count())
+          return false;
+        if(!empty($exceptionTableColumn) && !empty($exceptionTableValue))
+          return $exceptionQuery->
+            where($exceptionTable.".".$exceptionTableColumn,$exceptionTableValue)->
+            count();
+        return true;
+      }
+
+      return false;
+    }
+    catch(\Exception $e){
+      customLog($e);
+    }
+    return false;
   }
 }
