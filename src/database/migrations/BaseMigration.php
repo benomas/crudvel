@@ -25,12 +25,12 @@ class BaseMigration extends Migration
   public function up()
   {
     if (!Schema::hasTable($this->getTable())) {
-      disableForeignKeyConstraints();
+      Schema::disableForeignKeyConstraints();
       Schema::create($this->getSchemaTable(), function (Blueprint $blueprintTable) {
         $this->setBlueprintTable($blueprintTable);
         $this->catalog($blueprintTable);
       });
-      enableForeignKeyConstraints();
+      Schema::enableForeignKeyConstraints();
     }
   }
 
@@ -82,9 +82,9 @@ class BaseMigration extends Migration
   public function down()
   {
     if(Schema::hasTable($this->getTable())){
-      disableForeignKeyConstraints();
+      Schema::disableForeignKeyConstraints();
       Schema::drop($this->getSchemaTable());
-      enableForeignKeyConstraints();
+      Schema::enableForeignKeyConstraints();
     }
   }
 
@@ -92,9 +92,9 @@ class BaseMigration extends Migration
     if(!is_callable($callBack))
       return false;
     Schema::table($this->getSchemaTable(), function($blueprintTable) use($callBack){
-      disableForeignKeyConstraints();
+      Schema::disableForeignKeyConstraints();
       $callBack($blueprintTable);
-      enableForeignKeyConstraints();
+      Schema::enableForeignKeyConstraints();
     });
   }
 
