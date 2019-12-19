@@ -69,7 +69,7 @@ class CvBasePaginator implements CvCrudInterface
   }
 
   public function fixedSelectables(){
-    return $this->getSelectables();
+    return array_intersect((array) $this->getSelectQuery(),(array) $this->getSelectables());
   }
   public function fixedFilterables(){
     if($this->getFilterables()!==null)
@@ -84,12 +84,12 @@ class CvBasePaginator implements CvCrudInterface
 
   public function fixSelectQuery(){
     //if selectables is disabled
-    if($this->fixedSelectables()===false)
+    if($this->getSelectables()===false)
       return $this->setSelectQuery(false);
     //define columns to be present in the response
-    if(!noEmptyArray($this->getSelectQuery()))
+    if(noEmptyArray($this->getSelectQuery()))
       return $this->setSelectQuery($this->fixedSelectables());
-    return $this->setSelectQuery(arrayIntersect($this->getSelectQuery(),$this->fixedSelectables()));
+    return $this->setSelectQuery($this->getSelectables());
   }
 
   public function fixFilterQuery(){
@@ -224,6 +224,7 @@ class CvBasePaginator implements CvCrudInterface
   }
 
   public function paginateResponder(){
+    $this->getModelBuilderInstance()->select($this->getSelectQuery());
     if(!$this->getModelBuilderInstance())
       return $this->getRootInstance()->apiSuccessResponse([
         "data"   =>[],
@@ -387,6 +388,7 @@ class CvBasePaginator implements CvCrudInterface
     return $this;
   }
   public function setSelectQuery($selectQuery=null){
+    customLog($selectQuery);
     $this->selectQuery=$selectQuery??null;
     return $this;
   }

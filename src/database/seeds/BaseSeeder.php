@@ -28,7 +28,7 @@ class BaseSeeder extends Seeder
       return false;
     $this->data = collect($this->data);
     $this->explodeClass();
-    Schema::disableForeignKeyConstraints()();
+    Schema::disableForeignKeyConstraints();
     $modelClass = get_class($this->modelInstanciator(true));
     if($this->deleteBeforeInsert)
       $this->modelInstanciator()->delete();
