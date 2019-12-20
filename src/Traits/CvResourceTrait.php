@@ -132,6 +132,9 @@ trait CvResourceTrait
   public function getFlowControl(){
     return $this->flowControl??null;
   }
+  public function getPaginated(){
+    return $this->getRootInstance()->getPaginated();
+  }
   //Getters end
 
   //Setters start
@@ -280,6 +283,10 @@ trait CvResourceTrait
   }
   public function setFlowControl($flowControl){
     $this->flowControl=$flowControl;
+    return $this;
+  }
+  public function setPaginated($paginated=null){
+    $this->getRootInstance()->setPaginated($paginated);
     return $this;
   }
   //Setters end

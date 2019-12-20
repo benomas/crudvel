@@ -39,6 +39,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   protected $defaultPaginator = 'cv-simple-paginator';
   protected $currentPaginator = null;
   protected $comparator       = 'like';
+  protected $isPaginated      = false;
 
   //public $baseResourceUrl;
   protected $transStatus;
@@ -118,6 +119,12 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   * @return response
   */
   public function callActionJump($method,$parameters=[]){
+    if(
+      $this->getRootInstance() &&
+      $this->getRootInstance()->getPaginable() &&
+      $this->getPaginatorInstance()->extractPaginate()
+    )
+      $this->setPaginated(true);
     return parent::callAction($method,$parameters);
   }
 
@@ -480,6 +487,9 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   public function getPaginable(){
     return $this->paginable??null;
   }
+  public function getPaginated(){
+    return $this->paginated??null;
+  }
   public function getFlexPaginable(){
     return $this->flexPaginable??null;
   }
@@ -523,6 +533,11 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   }
   public function setCallActionParameters($callActionParameters=null){
     $this->callActionParameters = $callActionParameters??null;
+    return $this;
+  }
+
+  public function setPaginated($paginated=null){
+    $this->paginated = $paginated??null;
     return $this;
   }
 

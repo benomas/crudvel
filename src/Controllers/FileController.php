@@ -49,13 +49,7 @@ class FileController extends \Crudvel\Customs\Controllers\ApiController{
 
   public function show($id){
     $this->getModelBuilderInstance()->with('catFile');
-    if(
-      $this->getRootInstance() &&
-      $this->getRootInstance()->getPaginable() &&
-      $this->getPaginatorInstance()->extractPaginate()
-    )
-      return $this->getPaginatorInstance()->paginatedResponse();
-    return $this->getPaginatorInstance()->noPaginatedResponse();
+    return $this->actionResponse();
   }
 
   public function saveFile($clean=null){

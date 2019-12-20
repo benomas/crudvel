@@ -157,6 +157,9 @@ trait CrudTrait {
   public function getFlowControl(){
     return $this->getCvResourceInstanceMethod('getFlowControl');
   }
+  public function getPaginated(){
+    return $this->getCvResourceInstanceMethod('getPaginated');
+  }
   //Getters end
 
   //Setters start
@@ -284,6 +287,9 @@ trait CrudTrait {
   }
   public function setFlowControl($flowControl=null){
     return $this->setCvResourceInstanceMethod('setFlowControl',$flowControl);
+  }
+  public function setPaginated($paginated=null){
+    return $this->setCvResourceInstanceMethod('setPaginated',$paginated);
   }
   //Setters end
 //-----

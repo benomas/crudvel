@@ -19,6 +19,13 @@ class ApiController extends CustomController{
       ->prepareResource();
     return $this->getFlowControl() ? $this->getFlowControl()():parent::callActionJump($method,$parameters);
   }
+
+  public function actionResponse(){
+    return $this->getPaginated()?
+      $this->getPaginatorInstance()->paginatedResponse():
+      $this->apiSuccessResponse($this->getModelBuilderInstance()->get());
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -26,13 +33,7 @@ class ApiController extends CustomController{
    */
   public function index()
   {
-    if(
-      $this->getRootInstance() &&
-      $this->getRootInstance()->getPaginable() &&
-      $this->getPaginatorInstance()->extractPaginate()
-    )
-      return $this->getPaginatorInstance()->paginatedResponse();
-    return$this->apiSuccessResponse($this->getModelBuilderInstance()->get());
+    return $this->actionResponse();
   }
 
   //web routes
@@ -45,7 +46,7 @@ class ApiController extends CustomController{
   {
     if($this->setSlugField())
       $this->slugedResponse=true;
-    return $this->index();
+    return $this->actionResponse();
   }
 
   /**
@@ -67,7 +68,7 @@ class ApiController extends CustomController{
   {
     $this->setStamps();
     if($this->persist())
-      return $this->show(1);
+      return $this->actionResponse();
     return $this->apiFailResponse();
   }
 
@@ -79,13 +80,7 @@ class ApiController extends CustomController{
    */
   public function show($id)
   {
-    if(
-      $this->getRootInstance() &&
-      $this->getRootInstance()->getPaginable() &&
-      $this->getPaginatorInstance()->extractPaginate()
-    )
-      return $this->getPaginatorInstance()->paginatedResponse();
-    return $this->getPaginatorInstance()->noPaginatedResponse();
+    return $this->actionResponse();
   }
 
   /**
@@ -111,7 +106,7 @@ class ApiController extends CustomController{
     $this->setStamps();
     $this->removeField('created_by');
     if($this->persist())
-      return $this->show($id);
+      return $this->actionResponse();
     return $this->apiFailResponse();
   }
 
