@@ -291,5 +291,10 @@ class BaseModel extends Model implements CvCrudInterface{
   public function getKeyValue(){
     return $this->attributes[$this->getKeyName()]??null;
   }
+
+  public function getConnectionTables(){
+    return $this->getConnection()->getDoctrineSchemaManager()->listTableNames();
+  }
+
 // [End Others]
 }

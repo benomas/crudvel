@@ -9,6 +9,7 @@ class BaseMigration extends Migration
 {
   protected $schema;
   protected $mainTable;
+  protected $autoForeingModels;
   public $blueprintTable=null;
   public function __construct(){
     if(empty($this->mainTable)){
@@ -174,5 +175,33 @@ class BaseMigration extends Migration
     if($blueprintTable)
       $this->blueprintTable = $blueprintTable;
     return $this->blueprintTable;
+  }
+
+  public function automaticStandarForeings(){
+    $this->autoForeingModels = $this->autoForeingModels ?? [];
+    Schema::disableForeignKeyConstraints();
+    foreach($this->autoForeingModels as $autoForeingModel=>$foreingsConfig){
+      $table = $autoForeingModel::cvIam()->getTable();
+      foreach($foreingsConfig AS $foreingColumn=>$configForeing){
+        try{
+          Schema::table($table, function($table) use($foreingColumn,$configForeing){
+            $foreingModel  = $configForeing['model']??null;
+            if(!class_exists($foreingModel))
+              return true;
+            $referencedColumn = $configForeing['referenced']??$configForeing['model']::cvIam()->getKeyName();
+            $referencedTable = $configForeing['model']::cvIam()->getTable();
+            $table->foreign($foreingColumn)
+            ->references($referencedColumn)
+            ->on($referencedTable)
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+          });
+        }
+        catch(\Exception $e){
+          customLog("error when try to alter $table table");
+        }
+      }
+    }
+    Schema::enableForeignKeyConstraints();
   }
 }
