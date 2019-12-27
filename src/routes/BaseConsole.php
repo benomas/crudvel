@@ -426,7 +426,7 @@ class BaseConsole{
         return cvConsoler(cvRedTC('model required')."\n");
       if(!class_exists($model))
         return cvConsoler(cvRedTC("model $model doesnt exist")."\n");
-      $model::cvIam()->autoFixModelMetaData();
+      $model::cvIam()->autoFixModelMetaData($force);
       cvConsoler(cvGreenTC('model meta data fixed')."\n");
     };
     Artisan::command("fix-model-meta-data {model?} {force?}",$callBack)->describe('autogenerate def model meta data');
@@ -441,7 +441,7 @@ class BaseConsole{
         Artisan::call('fix-model-meta-data',['model'=>$model,'force'=>$force]);
       }
     };
-    Artisan::command("fix-models-meta-data {model?} {force?}",$callBack)->describe('autogenerate def model meta data');
+    Artisan::command("fix-models-meta-data {force?}",$callBack)->describe('autogenerate def model meta data');
     return $this;
   }
 }

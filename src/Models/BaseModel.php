@@ -3,6 +3,7 @@
 use Crudvel\Interfaces\CvCrudInterface;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class BaseModel extends Model implements CvCrudInterface{
   use \Crudvel\Traits\CrudTrait;
@@ -306,11 +307,77 @@ class BaseModel extends Model implements CvCrudInterface{
     return $this;
   }
 
-  public function autoFixModelMetaData(){
-    $tables  = $this->getConnectionTables();
-    $columns = $this->getTableColumns();
-
-    pdd($tables,$columns,classFile($this));
+  public function autoFixModelMetaData($force=false){
+    $tables                   = $this->getConnectionTables();
+    $columns                  = $this->getTableColumns();
+    $modelContent             = file_get_contents(cvClassFile($this));
+    $defined                  = null;
+    $declaredAndDefined       = null;
+    $declared                 = null;
+    $declaredAndDefinedPatern = '/class\s*\w+\s*extends\s*.+{(?>\s|\S)*?protected\s+(\$modelMetaData=)\'((?>\s|\S)+)\'\s*;/';
+    $declaredPatern           = '/class\s*\w+\s*extends\s*.+{(?>\s|\S)*?protected\s+(\$modelMetaData\s*;)/';
+    $undeclaredPatern         = '/class\s*\w+\s*extends\s*.+{\n/';
+    preg_match($declaredAndDefinedPatern,$modelContent, $matches);
+    $declaredAndDefined = $matches[2]??null;
+    if(!$declaredAndDefined){
+      preg_match($declaredPatern,$modelContent, $matches);
+      $declared = $matches[1]??null;
+    }
+    if($declaredAndDefined)
+      $defined = json_decode($defined,true);
+    else
+      $defined = [];
+    $foreings = $this->autoFixModelForeings($tables,$columns);
+    if(isset($defined['foreings'])){
+      foreach($foreings AS $key=>$value){
+        if($force)
+          $defined['foreings'][$key]=$value;
+        else
+          if(empty($defined['foreings'][$key]))
+            $defined['foreings'][$key]=$value;
+      }
+    }
+    else
+      $defined['foreings'] = $foreings;
+    if($declaredAndDefined){
+      preg_replace($declaredAndDefinedPatern,'',$modelContent);
+    }else{
+      if($declared){
+        preg_replace($declaredPatern,'',$modelContent);
+      }else{
+        $modelContent = preg_replace(
+          $undeclaredPatern,
+          '$1'."\tprotected \$modelMetaData = ".json_encode($defined,JSON_PRETTY_PRINT)."\n",
+          $modelContent
+        );
+        pdd($modelContent);
+      }
+    }
+    file_put_contents(cvClassFile($this), $modelContent, $fileToMod));
+    //file_put_contents($pathFile, str_replace($matches[1],$idColName, $fileToMod));
+    //pdd($tables,$columns,cvClassFile($this));
+  }
+  public function autoFixModelForeings($tables,$columns){
+    $foreings = [];
+    foreach($tables AS $table){
+      foreach($columns AS $column){
+        $singularTable = Str::singular($table);
+        preg_match('/^('.$singularTable.')_(.+)/',$column, $matches);
+        if(count($matches)){
+          $testModel     = 'App\Models\\'.Str::studly($singularTable);
+          $relatedColumn = $matches[2]??null;
+          if(!class_exists($testModel) || !in_array($relatedColumn,$testModel::cvIam()->getTableColumns()))
+            continue;
+          $foreings[$column]=[
+            'relatedModel'  => $testModel,
+            'relatedColumn' => $relatedColumn
+          ];
+        }
+      }
+    }
+    return $foreings;
+  }
+  public function autoFixModelRelations($force=false){
   }
 // [End Others]
 }
