@@ -89,7 +89,10 @@ class BaseConsole{
 
   public function loadWorskpaceUp($callBack=null){
     $callBack = $callBack ?? function (){
-      \Crudvel\Routes\BaseConsole::cvIam()->caller($this->getWorkspace().':dev-refresh',$this->getWorkspace().':light-up');
+      \Crudvel\Routes\BaseConsole::cvIam()->caller(
+        \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().':dev-refresh',
+        \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().':light-up'
+      );
     };
     Artisan::command($this->getWorkspace().':up', $callBack)->describe('Inicialize proyect from zero');
     return $this;
@@ -149,7 +152,7 @@ class BaseConsole{
         }
       }
     };
-    Artisan::command("{$this->getWorkspace()}:down {destroyMigrations?}",$callBack)->describe('Back to empty proyect');
+    Artisan::command($this->getWorkspace().':down {destroyMigrations?}',$callBack)->describe('Back to empty proyect');
     return $this;
   }
 
@@ -277,7 +280,7 @@ class BaseConsole{
           'test:seed',
         );
     };
-    Artisan::command("{$this->getWorkspace()}:refresh {skipeDev?} {range?}",$callBack)->describe('Restart the proyect from 0');
+    Artisan::command($this->getWorkspace().':refresh {skipeDev?} {range?}',$callBack)->describe('Restart the proyect from 0');
     return $this;
   }
 
@@ -292,7 +295,7 @@ class BaseConsole{
         'test:seed',
       );
     };
-    Artisan::command("{$this->getWorkspace()}:light-refresh {range?}",$callBack)->describe('Restart the proyect from 0');
+    Artisan::command($this->getWorkspace().':light-refresh {range?}',$callBack)->describe('Restart the proyect from 0');
     return $this;
   }
 
