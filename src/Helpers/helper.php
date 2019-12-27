@@ -1083,8 +1083,8 @@ if(!function_exists('cvConsoler')){
 if(!function_exists('cvBlackTC')){
   function cvBlackTC($message){return CvHelper::blackTC($message);}
 }
-if(!function_exists('cvRedCoTC')){
-  function cvRedCoTC($message){return CvHelper::redCoTC($message);}
+if(!function_exists('cvRedTC')){
+  function cvRedTC($message){return CvHelper::redTC($message);}
 }
 if(!function_exists('cvGreenTC')){
   function cvGreenTC($message){return CvHelper::greenTC($message);}

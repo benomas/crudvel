@@ -3,29 +3,29 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class BaseConsole{
   use \Crudvel\Traits\CacheTrait;
   use \Crudvel\Traits\CvPatronTrait;
   public $workspace;
   public function __construct(){
-    $this->worksPace = fixedSlug(config('app.name'));
+    $this->workspace = fixedSlug(config('app.name'));
   }
 
   public function caller(...$commands){
     foreach ($commands as $command) {
-      if($command['command']==='db:seed')
-        cvConsoler(cvBlueTC('A continuacion se ejecutan seeders, este proceso puede tardar varios minutos'));
-      Artisan::call($command['command'],$command['params']??[]);
+      $currentCommand = $command['command'] ?? $command['command'];
+      if($currentCommand==='db:seed')
+        cvConsoler(cvBlueTC('A continuacion se ejecutan seeders, este proceso puede tardar varios minutos'."\n"));
+      Artisan::call($currentCommand,$command['params']??[]);
     }
   }
 
-  public function loadDropTables(){
-    Artisan::command('drop:tables', function () {
-      if(config('app.production.env')==='production'){
-        cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo'));
-        return false;
-      }
+  public function loadDropTables($callBack=null){
+    $callBack = $callBack ?? function () {
+      if(config('app.production.env')==='production')
+        return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo'));
 
       Artisan::call('logs:clear');
       DB::purge();
@@ -36,7 +36,6 @@ class BaseConsole{
       try{DB::statement('CREATE DATABASE fake_database');}
       catch(\Exception $e){
         Artisan::call('migrate:reset');
-        return ;
       }
 
       $defaultConnectionName         = config('database.default');
@@ -45,10 +44,8 @@ class BaseConsole{
       $defaultConnection['database'] ='fake_database';
       config(['database.connections.'.$defaultConnectionName=>$defaultConnection]);
       DB::purge();
-      DB::statement('DROP DATABASE '.$originalDatabase);
       try{DB::statement('DROP DATABASE '.$originalDatabase);}
       catch(\Exception $e){}
-        DB::statement('CREATE DATABASE '.$originalDatabase);
       try{DB::statement('CREATE DATABASE '.$originalDatabase);}
       catch(\Exception $e){}
 
@@ -58,21 +55,23 @@ class BaseConsole{
       try{DB::statement('DROP DATABASE fake_database');}
       catch(\Exception $e){}
       cvConsoler(cvGreenTC('tablas eliminadas'));
-
-    })->describe('Elimina todas las tablas');
+    };
+    Artisan::command('drop:tables',$callBack)->describe('Elimina todas las tablas');
     return $this;
   }
 
-  public function loadWoskpaceUp(){
-    Artisan::command($this->worksPace.':up', function (){
-      $this->caller($this->worksPace.':dev-refresh',$this->worksPace.':light-up');
-    })->describe('Inicialize proyect from zero');
+  public function loadWoskpaceUp($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance){
+      $instance->caller($this->workspace.':dev-refresh',$this->workspace.':light-up');
+    };
+    Artisan::command($this->workspace.':up', $callBack)->describe('Inicialize proyect from zero');
     return $this;
   }
 
-  public function loadWoskpaceLightUp(){
-    Artisan::command("$this->worksPace:light-up {range?}", function () {
-
+  public function loadWoskpaceLightUp($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance){
       $commands = [
         [
           'command'=>'migrate'
@@ -99,27 +98,26 @@ class BaseConsole{
       ];
 
       if(Schema::hasTable('oauth_clients')){
-        cvConsoler(cvBrownTC('Ya se habia inicializado el proyecto, se remueven comandos que generarian conflictos'));
+        cvConsoler(cvBrownTC('Ya se habia inicializado el proyecto, se remueven comandos que generarian conflictos')."\n");
         unset($commands[1]);
         unset($commands[2]);
         unset($commands[5]);
         unset($commands[6]);
       }
 
-      $this->caller(...$commands);
-
+      $instance->caller(...$commands);
       if(config('app.env')!=='production')
         DB::table('oauth_clients')->WHERE('id',2)->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
 
-    })->describe('Inicialize proyect from zero');
+    };
+    Artisan::command("$this->workspace:light-up {range?}", $callBack)->describe('Inicialize proyect from zero');
     return $this;
   }
 
-  public function loadWoskpaceDown(){
-    Artisan::command("{$this->worksPace}:down {destroyMigrations?}", function ($destroyMigrations=null) {
-
-      $this->caller('drop:tables');
-
+  public function loadWoskpaceDown($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function ($destroyMigrations=null) use($instance){
+      $instance->caller('drop:tables');
       if(!empty($destroyMigrations) && $destroyMigrations){
         foreach (glob(database_path().'/migrations/*alter_users_table*.php') as $filename) {
           unlink($filename);
@@ -143,244 +141,182 @@ class BaseConsole{
           unlink($filename);
         }
       }
+    };
+    Artisan::command("{$this->workspace}:down {destroyMigrations?}",$callBack)->describe('Back to empty proyect');
+    return $this;
+  }
 
-    })->describe('Back to empty proyect');
+  public function loadTestSeed($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance){
+      $instance->caller(['command'=>'db:seed','params'=>['--class'=>'Database\Seeds\Test\DatabaseSeeder']]);
+    };
+    Artisan::command('test:seed',$callBack)->describe('Run test seeders');
+    return $this;
+  }
+
+  public function loadFixBackup($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance) {
+      if(config('app.production.env')==='production')
+        return cvConsoler(cvRedTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
+
+      Schema::disableForeignKeyConstraints();
+      try{
+        $backupFile      = database_path().'/backups/'.Str::slug($instance->workspace,'_').'.sql';
+        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug($instance->workspace,'_').'.sql';
+        if(!file_exists($backupFile))
+          return cvConsoler(cvRedTC('No existe el respaldo')."\n");
+
+        if(!($sql = file_get_contents($backupFile)))
+          return cvConsoler(cvRedTC('No existe el respaldo')."\n");
+
+        $sql = preg_replace('/`.*?`@`.*?`/', 'CURRENT_USER', $sql);
+        if(file_exists($fixedBackupFile))
+          unlink($fixedBackupFile);
+
+        if(file_exists($fixedBackupFile))
+          return cvConsoler(cvRedTC('No se pudo eliminar respaldo anterior')."\n");
+
+        file_put_contents($fixedBackupFile, $sql);
+        cvConsoler(cvGreenTC('Respaldo cargado')."\n");
+      }
+      catch(\Exception $e){
+        cvConsoler(cvRedTC('Error al cargar respaldo')."\n");
+        Schema::enableForeignKeyConstraints();
+      }
+      Schema::enableForeignKeyConstraints();
+    };
+    Artisan::command("fix:backup",$callBack)->describe('Respaldo corregido');
+    return $this;
+  }
+
+  public function loadLoadBackup($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance) {
+      if(config('app.production.env')==='production')
+        return cvConsoler(cvRedTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
+      Schema::disableForeignKeyConstraints();
+      try{
+        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug($instance->workspace,'_').'.sql';
+
+        if(!file_exists($fixedBackupFile))
+          return cvConsoler(cvRedTC('No existe el respaldo')."\n");
+        Schema::disableForeignKeyConstraints();
+        try{
+          $currentMax = DB::select('SELECT @@global.max_allowed_packet AS max_allowed_packet');
+          $currentMax = $currentMax[0]->max_allowed_packet;
+          DB::unprepared('SET GLOBAL max_allowed_packet=524288000');
+        }
+        catch(\Exception $e){}
+          DB::unprepared(file_get_contents($fixedBackupFile));
+        try{
+          DB::unprepared('SET GLOBAL max_allowed_packet='.((int) $currentMax));
+        }
+        catch(\Exception $e){}
+          Schema::enableForeignKeyConstraints();
+        cvConsoler(cvGreenTC('Respaldo cargado')."\n");
+      }
+      catch(\Exception $e){
+        cvConsoler(cvRedTC('Error al cargar respaldo')."\n");
+        Schema::enableForeignKeyConstraints();
+      }
+      Schema::enableForeignKeyConstraints();
+    };
+    Artisan::command('load:backup',$callBack)->describe('Carga respaldo');
+    return $this;
+  }
+
+  public function loadReloadBackup($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance) {
+      if(config('app.production.env')==='production')
+        return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
+      $instance->caller(
+        'drop:tables',
+        'fix:backup',
+        'load:backup',
+        'def-pass',
+      );
+    };
+    Artisan::command('reload:backup',$callBack)->describe('Elimina todas las tablas y carga respaldo');
+    return $this;
+  }
+
+  public function loadWorkspaceDevRefresh($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance) {
+      Artisan::call('config:cache');
+      cvConsoler(cvBrownTC(customExec('composer update'))."\n");
+      cvConsoler(cvBrownTC('composer update procesado ')."\n");
+      cvConsoler(cvBrownTC(customExec('composer install'))."\n");
+      cvConsoler(cvBrownTC('composer install procesado ')."\n");
+      cvConsoler(cvBrownTC(customExec('composer update'))."\n");
+      cvConsoler(cvBrownTC('composer update procesado ')."\n");
+      Artisan::call('cache:clear');
+      Artisan::call('config:cache');
+      cvConsoler(cvBrownTC(customExec('composer dump-autoload'))."\n");
+      cvConsoler(cvBrownTC('composer dump-autoload procesado ')."\n");
+    };
+    Artisan::command("{$this->workspace}:dev-refresh",$callBack)->describe('Install dependencies');
+    return $this;
+  }
+
+  public function loadWorkspaceRefresh($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function ($skipeDev=null, $range='') use($instance) {
+      if(config('app.production.env')==='production')
+        return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
+      if($skipeDev)
+        $instance->caller("{$instance->workspace}:light-refresh $range");
+      else
+        $instance->caller(
+          "{$instance->workspace}:down",
+          "{$instance->workspace}:up",
+          "test:seed",
+        );
+    };
+    Artisan::command("{$this->workspace}:refresh {skipeDev?} {range?}",$callBack)->describe('Restart the proyect from 0');
+    return $this;
+  }
+
+  public function loadWorkspaceLightRefresh($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function ($range='') use($instance) {
+      if(config('app.production.env')==='production')
+        return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
+
+      $instance->caller(
+        "{$this->workspace}:down",
+        "{$this->workspace}:light-up $range",
+        "test:seed",
+      );
+    };
+    Artisan::command("{$this->workspace}:light-refresh {range?}",$callBack)->describe('Restart the proyect from 0');
+    return $this;
+  }
+
+  public function loadScaff($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function ($resourceName=null) use($instance) {
+      if(config('app.production.env')==='production')
+        return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
+
+      if(!$resourceName)
+      return cvConsoler(cvBlueTC('Nombre de recurso requerido')."\n");
+
+      foreach ([
+        "pscaff -a scaff -R $resourceName",
+      ] as $command) {
+        $shellEcho  = customExec($command);
+        cvConsoler(cvBrownTC($shellEcho)."\n");
+        cvConsoler(cvBrownTC($command.' procesado ')."\n");
+      }
+    };
+    Artisan::command('scaff {resourceName?}',$callBack)->describe('Alias for pscaff command');
     return $this;
   }
 /*
-
-  Artisan::command("$worksPace:down {destroyMigrations?}", function ($destroyMigrations=null) {
-
-    $commands = [
-      'php artisan drop:tables'
-    ];
-
-    foreach ($commands as $command) {
-      $shellEcho  = customExec($command);
-      $this->info($shellEcho);
-      $this->info($command.' procesado ');
-    }
-
-    if(!empty($destroyMigrations) && $destroyMigrations){
-      foreach (glob(database_path().'/migrations/*alter_users_table*.php') as $filename) {
-        unlink($filename);
-      }
-      foreach (glob(database_path().'/migrations/*create_roles_table*.php') as $filename) {
-        unlink($filename);
-      }
-      foreach (glob(database_path().'/migrations/*create_role_user_table*.php') as $filename) {
-        unlink($filename);
-      }
-      foreach (glob(database_path().'/migrations/*create_permissions_table*.php') as $filename) {
-        unlink($filename);
-      }
-      foreach (glob(database_path().'/migrations/*create_permission_role_table*.php') as $filename) {
-        unlink($filename);
-      }
-      foreach (glob(database_path().'/migrations/*create_cat_file_table*.php') as $filename) {
-        unlink($filename);
-      }
-      foreach (glob(database_path().'/migrations/*create_file_table*.php') as $filename) {
-        unlink($filename);
-      }
-    }
-
-  })->describe('Back to empty proyect');
-
-  Artisan::command('test:seed', function () {
-
-    $commands = [
-      'php artisan db:seed --class="Database\Seeds\Test\DatabaseSeeder"',
-    ];
-    foreach ($commands as $command) {
-      $shellEcho  = customExec($command);
-      $this->info($shellEcho);
-      $this->info($command.' procesado ');
-    }
-
-  })->describe('Run test seeders');
-
-  Artisan::command('mutate:seed', function () {
-
-    $commands = [
-      'php artisan db:seed --class="Database\Seeds\MutateSeeder"',
-    ];
-    foreach ($commands as $command) {
-      $shellEcho  = customExec($command);
-      $this->info($shellEcho);
-      $this->info($command.' procesado ');
-    }
-
-  })->describe('Run mutator seeders');
-
-  Artisan::command('fix:backup', function () use($worksPace) {
-    if(config('app.production.env')==='production'){
-      $this->info('Este comando no puede ser ejecutado en ambiente productivo');
-      return false;
-    }
-    try{
-      $backupFile      = database_path().'/backups/'.str_slug($worksPace,'_').'.sql';
-      $fixedBackupFile = database_path().'/backups/fixed_'.str_slug($worksPace,'_').'.sql';
-      if(!file_exists($backupFile)){
-        $this->info('No existe el respaldo');
-        return false;
-      }
-
-      $sql = file_get_contents($backupFile);
-      if(!$sql){
-        $this->info('No existe el respaldo');
-        return false;
-      }
-
-      $sql = preg_replace('/`.*?`@`.*?`/', 'CURRENT_USER', $sql);
-      if(file_exists($fixedBackupFile))
-        unlink($fixedBackupFile);
-
-      if(file_exists($fixedBackupFile)){
-        $this->info('No se pudo eliminar respaldo anterior');
-        return false;
-      }
-
-      file_put_contents($fixedBackupFile, $sql);
-      $this->info('Respaldo cargado');
-    }
-    catch(\Exception $e){
-      $this->info('Error al cargar respaldo');
-      \Illuminate\Support\Facades\enableForeignKeyConstraints();
-    }
-
-  })->describe('Respaldo corregido');
-
-  Artisan::command('load:backup', function () use($worksPace) {
-    if(config('app.production.env')==='production')
-      return $this->info('Este comando no puede ser ejecutado en ambiente productivo');
-    try{
-      $fixedBackupFile = database_path().'/backups/fixed_'.str_slug($worksPace,'_').'.sql';
-
-      if(!file_exists($fixedBackupFile))
-        return $this->info('No existe el respaldo');
-      \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
-      try{
-        $currentMax = \DB::select('SELECT @@global.max_allowed_packet AS max_allowed_packet');
-        $currentMax = $currentMax[0]->max_allowed_packet;
-        \DB::unprepared('SET GLOBAL max_allowed_packet=524288000');
-      }
-      catch(\Exception $e){}
-        \DB::unprepared(file_get_contents($fixedBackupFile));
-      try{
-        \DB::unprepared('SET GLOBAL max_allowed_packet='.((int) $currentMax));
-      }
-      catch(\Exception $e){}
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
-      $this->info('Respaldo cargado');
-
-    }
-    catch(\Exception $e){
-      $this->info('Error al cargar respaldo');
-      \Illuminate\Support\Facades\enableForeignKeyConstraints();
-    }
-
-  })->describe('Carga respaldo');
-
-  Artisan::command('reload:backup', function () {
-    if(config('app.production.env')==='production'){
-      $this->info('Este comando no puede ser ejecutado en ambiente productivo');
-      return false;
-    }
-    $commands = [
-      'php artisan drop:tables',
-      'php artisan fix:backup',
-      'php artisan load:backup',
-      'php artisan def-pass',
-    ];
-    foreach ($commands as $command) {
-      customExec($command);
-      $this->info($command.' procesado ');
-    }
-  })->describe('Elimina todas las tablas y carga respaldo');
-
-  Artisan::command("$worksPace:dev-refresh", function () {
-
-    $commands = [
-      'php artisan config:cache',
-      'composer update',
-      'composer install',
-      'composer update',
-      'php artisan cache:clear',
-      'php artisan config:cache',
-      'composer dump-autoload',
-    ];
-
-    foreach ($commands as $command) {
-      $shellEcho  = customExec($command);
-      $this->info($shellEcho);
-      $this->info($command.' procesado ');
-    }
-
-  })->describe('Install dependencies');
-
-  Artisan::command("$worksPace:refresh {skipeDev?} {range?}", function ($skipeDev=null, $range='') use($worksPace){
-
-    if(config('app.production.env')==='production'){
-      $this->info('Este comando no puede ser ejecutado en ambiente productivo');
-      return false;
-    }
-    $commands = $skipeDev?["php artisan $worksPace:light-refresh $range"]:[
-      "php artisan $worksPace:down",
-      "php artisan $worksPace:up",
-      "php artisan test:seed",
-    ];
-
-    foreach ($commands as $command) {
-      $shellEcho  = customExec($command);
-      $this->info($shellEcho);
-      $this->info($command.' procesado ');
-    }
-
-  })->describe('Restart the proyect from 0');
-
-  Artisan::command("$worksPace:light-refresh {range?}", function ($range='') use($worksPace){
-
-    if(config('app.production.env')==='production'){
-      $this->info('Este comando no puede ser ejecutado en ambiente productivo');
-      return false;
-    }
-
-    $commands = [
-      "php artisan $worksPace:down",
-      "php artisan $worksPace:light-up $range",
-      "php artisan test:seed",
-    ];
-
-    foreach ($commands as $command) {
-      $shellEcho  = customExec($command);
-      $this->info($shellEcho);
-      $this->info($command.' procesado ');
-    }
-
-  })->describe('Restart the proyect from 0');
-
-  Artisan::command("scaff {resourceName?}", function ($resourceName=null){
-
-    if(config('app.production.env')==='production'){
-      $this->info('Este comando no puede ser ejecutado en ambiente productivo');
-      return false;
-    }
-    if(!$resourceName)
-      return $this->info('Nombre de recurso requerido');
-
-    $commands = [
-      "pscaff -a scaff -R $resourceName",
-    ];
-
-    foreach ($commands as $command) {
-      $shellEcho  = customExec($command);
-      $this->info($shellEcho);
-      $this->info($command.' procesado ');
-    }
-
-  })->describe('Alias for pscaff command');
-
   Artisan::command("migrate-group {lastSegment?}", function ($lastSegment='') {
     $paths = assetsMap(database_path("migrations/$lastSegment"),1);
     if(!is_array($paths))

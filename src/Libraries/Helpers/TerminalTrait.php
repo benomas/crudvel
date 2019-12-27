@@ -40,7 +40,7 @@ trait TerminalTrait
   public function blackTC($message){
     return $this->fixMessage($this->colorScape($this->blackColorCode()).$message);
   }
-  public function redCoTC($message){
+  public function redTC($message){
     return $this->fixMessage($this->colorScape($this->redColorCode()).$message);
   }
   public function greenTC($message){
