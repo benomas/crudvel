@@ -8,9 +8,18 @@ use Illuminate\Support\Str;
 class BaseConsole{
   use \Crudvel\Traits\CacheTrait;
   use \Crudvel\Traits\CvPatronTrait;
-  public $workspace;
+  private $workspace;
   public function __construct(){
-    $this->workspace = fixedSlug(config('app.name'));
+    $this->setWorkspace(fixedSlug(config('app.name')));
+  }
+
+  public function getWorkspace(){
+    return $this->workspace??null;
+  }
+
+  public function setWorkspace($workspace=null){
+    $this->workspace = $workspace??null;
+    return $this;
   }
 
   public function caller(...$commands){
@@ -25,17 +34,15 @@ class BaseConsole{
   }
 
   public function loadReTest($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance){
-      $instance->caller('my-test');
+    $callBack = $callBack ?? function (){
+      \Crudvel\Routes\BaseConsole::cvIam()->caller('my-test');
     };
     Artisan::command('retest',$callBack)->describe('retest command');
     return $this;
   }
 
   public function loadTest($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance){
+    $callBack = $callBack ?? function (){
       return cvConsoler(cvGreenTC('Test')."\n");
     };
     Artisan::command('my-test',$callBack)->describe('test command');
@@ -81,40 +88,23 @@ class BaseConsole{
   }
 
   public function loadWorskpaceUp($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance){
-      $instance->caller($this->workspace.':dev-refresh',$this->workspace.':light-up');
+    $callBack = $callBack ?? function (){
+      \Crudvel\Routes\BaseConsole::cvIam()->caller($this->getWorkspace().':dev-refresh',$this->getWorkspace().':light-up');
     };
-    Artisan::command($this->workspace.':up', $callBack)->describe('Inicialize proyect from zero');
+    Artisan::command($this->getWorkspace().':up', $callBack)->describe('Inicialize proyect from zero');
     return $this;
   }
 
   public function loadWorskpaceLightUp($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance){
+    $callBack = $callBack ?? function (){
       $commands = [
-        [
-          'command'=>'migrate'
-        ],
-        [
-          'command'=>'vendor:publish',
-          'params'=>['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider']
-        ],
-        [
-          'command'=>'install:crudvel'
-        ],
-        [
-          'command'=>'migrate'
-        ],
-        [
-          'command'=>'db:seed'
-        ],
-        [
-          'command'=>'passport:install'
-        ],
-        [
-          'command'=>'make:root-user'
-        ]
+        'migrate',
+        ['command'=>'vendor:publish','params'=>['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider']],
+        'install:crudvel',
+        'migrate',
+        'db:seed',
+        'passport:install',
+        'make:root-user',
       ];
 
       if(Schema::hasTable('oauth_clients')){
@@ -124,18 +114,17 @@ class BaseConsole{
         unset($commands[5]);
         unset($commands[6]);
       }
-      $instance->caller(...$commands);
+      \Crudvel\Routes\BaseConsole::cvIam()->caller(...$commands);
       if(config('app.env')!=='production')
         DB::table('oauth_clients')->WHERE('id',2)->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
     };
-    Artisan::command("$this->workspace:light-up {range?}", $callBack)->describe('Inicialize proyect from zero');
+    Artisan::command($this->getWorkspace().":light-up {range?}", $callBack)->describe('Inicialize proyect from zero');
     return $this;
   }
 
   public function loadWorskpaceDown($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function ($destroyMigrations=null) use($instance){
-      $instance->caller('drop:tables');
+    $callBack = $callBack ?? function ($destroyMigrations=null){
+      \Crudvel\Routes\BaseConsole::cvIam()->caller('drop:tables');
       if(!empty($destroyMigrations) && $destroyMigrations){
         foreach (glob(database_path().'/migrations/*alter_users_table*.php') as $filename) {
           unlink($filename);
@@ -160,29 +149,27 @@ class BaseConsole{
         }
       }
     };
-    Artisan::command("{$this->workspace}:down {destroyMigrations?}",$callBack)->describe('Back to empty proyect');
+    Artisan::command("{$this->getWorkspace()}:down {destroyMigrations?}",$callBack)->describe('Back to empty proyect');
     return $this;
   }
 
   public function loadTestSeed($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance){
-      $instance->caller(['command'=>'db:seed','params'=>['--class'=>'Database\Seeds\Test\DatabaseSeeder']]);
+    $callBack = $callBack ?? function (){
+      \Crudvel\Routes\BaseConsole::cvIam()->caller(['command'=>'db:seed','params'=>['--class'=>'Database\Seeds\Test\DatabaseSeeder']]);
     };
     Artisan::command('test:seed',$callBack)->describe('Run test seeders');
     return $this;
   }
 
   public function loadFixBackup($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance) {
+    $callBack = $callBack ?? function (){
       if(config('app.production.env')==='production')
         return cvConsoler(cvRedTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
 
       Schema::disableForeignKeyConstraints();
       try{
-        $backupFile      = database_path().'/backups/'.Str::slug($instance->workspace,'_').'.sql';
-        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug($instance->workspace,'_').'.sql';
+        $backupFile      = database_path().'/backups/'.Str::slug(\Crudvel\Routes\BaseConsole::cvIam()->getWorkspace(),'_').'.sql';
+        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug(\Crudvel\Routes\BaseConsole::cvIam()->getWorkspace(),'_').'.sql';
         if(!file_exists($backupFile))
           return cvConsoler(cvRedTC('No existe el respaldo')."\n");
 
@@ -210,13 +197,12 @@ class BaseConsole{
   }
 
   public function loadLoadBackup($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance) {
+    $callBack = $callBack ?? function (){
       if(config('app.production.env')==='production')
         return cvConsoler(cvRedTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
       Schema::disableForeignKeyConstraints();
       try{
-        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug($instance->workspace,'_').'.sql';
+        $fixedBackupFile = database_path().'/backups/fixed_'.Str::slug(\Crudvel\Routes\BaseConsole::cvIam()->getWorkspace(),'_').'.sql';
 
         if(!file_exists($fixedBackupFile))
           return cvConsoler(cvRedTC('No existe el respaldo')."\n");
@@ -246,11 +232,10 @@ class BaseConsole{
   }
 
   public function loadReloadBackup($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance) {
+    $callBack = $callBack ?? function (){
       if(config('app.production.env')==='production')
         return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
-      $instance->caller(
+      \Crudvel\Routes\BaseConsole::cvIam()->caller(
         'drop:tables',
         'fix:backup',
         'load:backup',
@@ -262,8 +247,7 @@ class BaseConsole{
   }
 
   public function loadWorkspaceDevRefresh($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance) {
+    $callBack = $callBack ?? function (){
       Artisan::call('config:cache');
       cvConsoler(cvBrownTC(customExec('composer update'))."\n");
       cvConsoler(cvBrownTC('composer update procesado ')."\n");
@@ -276,47 +260,44 @@ class BaseConsole{
       cvConsoler(cvBrownTC(customExec('composer dump-autoload'))."\n");
       cvConsoler(cvBrownTC('composer dump-autoload procesado ')."\n");
     };
-    Artisan::command("{$this->workspace}:dev-refresh",$callBack)->describe('Install dependencies');
+    Artisan::command("{$this->getWorkspace()}:dev-refresh",$callBack)->describe('Install dependencies');
     return $this;
   }
 
   public function loadWorkspaceRefresh($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function ($skipeDev=null, $range='') use($instance) {
+    $callBack = $callBack ?? function ($skipeDev=null, $range=''){
       if(config('app.production.env')==='production')
         return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
       if($skipeDev)
-        $instance->caller("{$instance->workspace}:light-refresh $range");
+        \Crudvel\Routes\BaseConsole::cvIam()->caller(\Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().":light-refresh $range");
       else
-        $instance->caller(
-          "{$instance->workspace}:down",
-          "{$instance->workspace}:up",
-          "test:seed",
+        \Crudvel\Routes\BaseConsole::cvIam()->caller(
+          \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().':down',
+          \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().':up',
+          'test:seed',
         );
     };
-    Artisan::command("{$this->workspace}:refresh {skipeDev?} {range?}",$callBack)->describe('Restart the proyect from 0');
+    Artisan::command("{$this->getWorkspace()}:refresh {skipeDev?} {range?}",$callBack)->describe('Restart the proyect from 0');
     return $this;
   }
 
   public function loadWorkspaceLightRefresh($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function ($range='') use($instance) {
+    $callBack = $callBack ?? function ($range=''){
       if(config('app.production.env')==='production')
         return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
 
-      $instance->caller(
-        "{$instance->workspace}:down",
-        "{$instance->workspace}:light-up $range",
+      \Crudvel\Routes\BaseConsole::cvIam()->caller(
+        \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().':down',
+        \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().":light-up $range",
         'test:seed',
       );
     };
-    Artisan::command("{$this->workspace}:light-refresh {range?}",$callBack)->describe('Restart the proyect from 0');
+    Artisan::command("{$this->getWorkspace()}:light-refresh {range?}",$callBack)->describe('Restart the proyect from 0');
     return $this;
   }
 
   public function loadScaff($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function ($resourceName=null,$template=null) use($instance) {
+    $callBack = $callBack ?? function ($resourceName=null,$template=null){
       if(config('app.production.env')==='production')
         return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
 
@@ -344,8 +325,7 @@ class BaseConsole{
   }
 
   public function loadUnScaff($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function ($resourceName=null,$template=null) use($instance) {
+    $callBack = $callBack ?? function ($resourceName=null,$template=null){
       if(config('app.production.env')==='production')
         return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
 
@@ -373,23 +353,21 @@ class BaseConsole{
   }
 
   public function loadMigrateGroup($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function ($lastSegment='') use($instance) {
+    $callBack = $callBack ?? function ($lastSegment=''){
       $paths = assetsMap(database_path("migrations/$lastSegment"),1);
       if(!is_array($paths))
         return ;
       sort($paths);
       foreach ($paths as $key=>$path)
         if(!is_dir(database_path("migrations/$lastSegment/$path")) && $path!=='BaseMigration.php' && !preg_match('/^Custom+/', $path, $matches, PREG_OFFSET_CAPTURE))
-          $instance->caller(['command'=>'migrate','params'=>['--path'=>"/database/migrations/$lastSegment/$path"]]);
+          \Crudvel\Routes\BaseConsole::cvIam()->caller(['command'=>'migrate','params'=>['--path'=>"/database/migrations/$lastSegment/$path"]]);
     };
     Artisan::command("migrate-group {lastSegment?}",$callBack)->describe('run migration group');
     return $this;
   }
 
   public function loadLogsClear($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance) {
+    $callBack = $callBack ?? function (){
       if(!count(assetsMap(storage_path('logs'))))
         return ;
       $shellEcho = customExec($command='rm ' . storage_path('logs/*'));
@@ -425,12 +403,11 @@ class BaseConsole{
   }
 
   public function loadCreateWebClient($callBack=null){
-    $instance=$this;
-    $callBack = $callBack ?? function () use($instance){
+    $callBack = $callBack ?? function (){
       if(DB::table('oauth_clients')->WHERE('oauth_clients.name','web-app')->count())
         return ;
 
-      $instance->caller(['command'=>'passport:client','params'=>['--name'=> 'web-app','--password'=>null]]);
+      \Crudvel\Routes\BaseConsole::cvIam()->caller(['command'=>'passport:client','params'=>['--name'=> 'web-app','--password'=>null]]);
 
       if(config('app.env')!=='production')
         DB::table('oauth_clients')->WHERE('name','web-app')->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
