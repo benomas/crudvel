@@ -125,19 +125,6 @@ class BaseConsole{
         unset($commands[6]);
       }
       $instance->caller(...$commands);
-      /*
-      $instance->caller(
-        'migrate',
-        [
-          'command'=>'vendor:publish',
-          'params'=>['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider'],
-        ],
-        'install:crudvel',
-        'migrate',
-        'db:seed',
-        'passport:install',
-        'make:root-user',
-      );*/
       if(config('app.env')!=='production')
         DB::table('oauth_clients')->WHERE('id',2)->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
     };
@@ -320,7 +307,7 @@ class BaseConsole{
       $instance->caller(
         "{$instance->workspace}:down",
         "{$instance->workspace}:light-up $range",
-        //"test:seed",
+        'test:seed',
       );
     };
     Artisan::command("{$this->workspace}:light-refresh {range?}",$callBack)->describe('Restart the proyect from 0');
