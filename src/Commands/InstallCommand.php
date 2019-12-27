@@ -20,7 +20,7 @@ class InstallCommand extends Command {
 
   public function handle()
   {
-    echo "Crudvel Installation Process Start";
+    cvConsoler("\n".cvBlueTC('Crudvel Installation Process Start')."\n");
     try{
       $this->migrationsPath = base_path("database/migrations");
       if(!file_exists($this->migrationsPath))
@@ -70,7 +70,7 @@ class InstallCommand extends Command {
         $this->publishMigration($baseName);
     }
     catch(\Exception $e){
-      echo "Exception, the proccess fail.";
+      cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
       return false;
     }
 
@@ -89,16 +89,12 @@ class InstallCommand extends Command {
       $saveFile=true;
     }
 
-    if(!in_array('vendor/benomas/crudvel/src/Helpers/consoleHelper.php',$myFile->autoload->files)){
-      $myFile->autoload->files[] = 'vendor/benomas/crudvel/src/Helpers/consoleHelper.php';
-      $saveFile=true;
-    }
     if($saveFile)
       file_put_contents(base_path('').'/composer.json', json_encode($myFile, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
 
-    shell_exec('php artisan vendor:publish --provider="Benomas\Crudvel\CrudvelServiceProvider"');
-    shell_exec('composer dump-autoload');
-    echo "Crudvel Installation Process Completed";
+    Artisan::call('vendor:publish',['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider']);
+    cvConsoler("\n".cvGreenTC(customExec('composer dump-autoload')));
+    cvConsoler("\n".cvGreenTC('Crudvel Installation Process Completed'));
   }
 
   protected function getArguments()
@@ -121,7 +117,7 @@ class InstallCommand extends Command {
 
     if(!file_exists(($fileName=$this->migrationsPath."/".($leftNow)."_".$baseName."_".$rightNow.".php")))
       file_put_contents($fileName, $migration);
-    shell_exec('composer dump-autoload');
+    cvConsoler("\n".cvGreenTC(customExec('composer dump-autoload')));
   }
 
   function cloneFileData($file,$source,$targetFolder){

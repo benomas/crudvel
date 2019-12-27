@@ -15,11 +15,31 @@ class BaseConsole{
 
   public function caller(...$commands){
     foreach ($commands as $command) {
-      $currentCommand = $command['command'] ?? $command['command'];
-      if($currentCommand==='db:seed')
-        cvConsoler(cvBlueTC('A continuacion se ejecutan seeders, este proceso puede tardar varios minutos'."\n"));
-      Artisan::call($currentCommand,$command['params']??[]);
+      $currentCommand = $command['command'] ?? $command;
+      $params = $command['params']??null;
+      if($params)
+        Artisan::call($currentCommand,$params);
+      else
+        Artisan::call($currentCommand);
     }
+  }
+
+  public function loadReTest($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance){
+      $instance->caller('my-test');
+    };
+    Artisan::command('retest',$callBack)->describe('retest command');
+    return $this;
+  }
+
+  public function loadTest($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance){
+      return cvConsoler(cvGreenTC('Test')."\n");
+    };
+    Artisan::command('my-test',$callBack)->describe('test command');
+    return $this;
   }
 
   public function loadDropTables($callBack=null){
@@ -78,7 +98,7 @@ class BaseConsole{
         ],
         [
           'command'=>'vendor:publish',
-          'params'=>['provider'=>'Benomas\Crudvel\CrudvelServiceProvider']
+          'params'=>['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider']
         ],
         [
           'command'=>'install:crudvel'
@@ -94,7 +114,7 @@ class BaseConsole{
         ],
         [
           'command'=>'make:root-user'
-        ],
+        ]
       ];
 
       if(Schema::hasTable('oauth_clients')){
@@ -104,11 +124,22 @@ class BaseConsole{
         unset($commands[5]);
         unset($commands[6]);
       }
-
       $instance->caller(...$commands);
+      /*
+      $instance->caller(
+        'migrate',
+        [
+          'command'=>'vendor:publish',
+          'params'=>['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider'],
+        ],
+        'install:crudvel',
+        'migrate',
+        'db:seed',
+        'passport:install',
+        'make:root-user',
+      );*/
       if(config('app.env')!=='production')
         DB::table('oauth_clients')->WHERE('id',2)->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
-
     };
     Artisan::command("$this->workspace:light-up {range?}", $callBack)->describe('Inicialize proyect from zero');
     return $this;
@@ -287,9 +318,9 @@ class BaseConsole{
         return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
 
       $instance->caller(
-        "{$this->workspace}:down",
-        "{$this->workspace}:light-up $range",
-        "test:seed",
+        "{$instance->workspace}:down",
+        "{$instance->workspace}:light-up $range",
+        //"test:seed",
       );
     };
     Artisan::command("{$this->workspace}:light-refresh {range?}",$callBack)->describe('Restart the proyect from 0');
@@ -408,18 +439,15 @@ class BaseConsole{
 
   public function loadCreateWebClient($callBack=null){
     $instance=$this;
-    $callBack = $callBack ?? function ($instance){
+    $callBack = $callBack ?? function () use($instance){
       if(DB::table('oauth_clients')->WHERE('oauth_clients.name','web-app')->count())
         return ;
 
-      $instance->caller(['command'=>'passport:client','params'=>[
-        '--password' => 'devdevdevdevdevdevdevdevdevdevdevdevdevd',
-        '--name'     => 'web-app'
-      ]]);
-      /*
+      $instance->caller(['command'=>'passport:client','params'=>['--name'=> 'web-app','--password'=>null]]);
+
       if(config('app.env')!=='production')
-        \DB::table('oauth_clients')->WHERE('name','web-app')->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
-      */
+        DB::table('oauth_clients')->WHERE('name','web-app')->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
+
     };
     Artisan::command("create:web-client",$callBack)->describe('Create password grant client for web app');
     return $this;

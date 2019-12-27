@@ -20,8 +20,8 @@ class MakeRootUser extends Command {
 
   public function handle()
   {
-    echo "Creating root user";
-    \Schema::disableForeignKeyConstraints();
+    cvConsoler("\n".cvBlueTC('Creating root user'));
+    Schema::disableForeignKeyConstraints();
     try{
       if(file_exists("app/Models/Role.php") && file_exists("app/Models/User.php") ){
 
@@ -35,20 +35,20 @@ class MakeRootUser extends Command {
             ])->save()
           )
           {
-            echo "Exception, the proccess fail.";
+            cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
             return false;
           }
         }
         if(!($user = \App\Models\User::withUserName("root")->first())){
           $defaultUser = config("packages.benomas.crudvel.crudvel.default_user");
           if(!$defaultUser){
-            echo "Exception, the proccess fail.";
+            cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
             return false;
           }
           $defaultUser["password"]=bcrypt($defaultUser["password"]);
           if(!($user = new \App\Models\User())->fill($defaultUser)->save())
           {
-            echo "Exception, the proccess fail.";
+            cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
             return false;
           }
 
@@ -58,12 +58,12 @@ class MakeRootUser extends Command {
 
     }
     catch(\Exception $e){
-      echo "Exception, the proccess fail.";
+      cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
       return false;
     }
 
-    \Schema::enableForeignKeyConstraints();
-    echo "Root user created";
+    Schema::enableForeignKeyConstraints();
+    cvConsoler("\n".cvGreenTC('Root user created')."\n");
   }
 
   protected function getArguments()
