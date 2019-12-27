@@ -389,29 +389,30 @@ class BaseModel extends Model implements CvCrudInterface
       foreach ($foreings as $key => $value) {
         if ($force)
           $defined['foreings'][$key] = $value;
-        else
+        else{
           if (empty($defined['foreings'][$key]))
             $defined['foreings'][$key] = $value;
+        }
       }
     } else
       $defined['foreings'] = $foreings;
     if ($declaredAndDefined) {
       $modelContent = preg_replace(
         $declaredAndDefinedPatern,
-        '$1'."\tprotected \$modelMetaData = ".varexport($defined, true).";\n".'$4',
+        '$1'."\$modelMetaData = ".varexport($defined, true).';$4',
         $modelContent
       );
     } else {
       if ($declared) {
         $modelContent = preg_replace(
           $declaredPatern,
-          '$1' . "\tprotected \$modelMetaData = " . varexport($defined, true) . ";\n".'$3',
+          '$1'."\$modelMetaData = ".varexport($defined, true).';$3',
           $modelContent
         );
       } else {
         $modelContent = preg_replace(
           $undeclaredPatern,
-          '$0' . "\tprotected \$modelMetaData = " . varexport($defined, true) . ";\n",
+          '$0'."\tprotected \$modelMetaData = ".varexport($defined, true).";\n",
           $modelContent
         );
       }
