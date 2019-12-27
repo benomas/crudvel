@@ -1125,3 +1125,6 @@ if(!function_exists("fixedSnake")){
 if(!function_exists("ptPermutations")){
   function ptPermutations(...$params){return CvHelper::ptPermutations(...$params);}
 }
+if(!function_exists("varexport")){
+  function varexport(...$params){return CvHelper::varexport(...$params);}
+}
