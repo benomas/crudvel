@@ -60,7 +60,7 @@ class BaseConsole{
     return $this;
   }
 
-  public function loadWoskpaceUp($callBack=null){
+  public function loadWorskpaceUp($callBack=null){
     $instance=$this;
     $callBack = $callBack ?? function () use($instance){
       $instance->caller($this->workspace.':dev-refresh',$this->workspace.':light-up');
@@ -69,7 +69,7 @@ class BaseConsole{
     return $this;
   }
 
-  public function loadWoskpaceLightUp($callBack=null){
+  public function loadWorskpaceLightUp($callBack=null){
     $instance=$this;
     $callBack = $callBack ?? function () use($instance){
       $commands = [
@@ -114,7 +114,7 @@ class BaseConsole{
     return $this;
   }
 
-  public function loadWoskpaceDown($callBack=null){
+  public function loadWorskpaceDown($callBack=null){
     $instance=$this;
     $callBack = $callBack ?? function ($destroyMigrations=null) use($instance){
       $instance->caller('drop:tables');
@@ -298,60 +298,130 @@ class BaseConsole{
 
   public function loadScaff($callBack=null){
     $instance=$this;
-    $callBack = $callBack ?? function ($resourceName=null) use($instance) {
+    $callBack = $callBack ?? function ($resourceName=null,$template=null) use($instance) {
       if(config('app.production.env')==='production')
         return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
 
       if(!$resourceName)
-      return cvConsoler(cvBlueTC('Nombre de recurso requerido')."\n");
+        return cvConsoler(cvBlueTC('Nombre de recurso requerido')."\n");
+
+      if($template)
+        $template = "-s $template";
+      else
+        $template = '';
+
+      $singularName = fixedSnake(Str::singular($resourceName));
+      $pluralName   = fixedSnake(Str::plural($resourceName));
 
       foreach ([
-        "pscaff -a scaff -R $resourceName",
+        "pscaff -a scaff -r $singularName -p $pluralName $template"
       ] as $command) {
         $shellEcho  = customExec($command);
-        cvConsoler(cvBrownTC($shellEcho)."\n");
-        cvConsoler(cvBrownTC($command.' procesado ')."\n");
+        cvConsoler(cvGreenTC($shellEcho)."\n");
+        cvConsoler(cvGreenTC($command.' procesado ')."\n");
       }
     };
-    Artisan::command('scaff {resourceName?}',$callBack)->describe('Alias for pscaff command');
+    Artisan::command('scaff {resourceName?} {template?',$callBack)->describe('Alias for pscaff scaff command');
     return $this;
   }
-/*
-  Artisan::command("migrate-group {lastSegment?}", function ($lastSegment='') {
-    $paths = assetsMap(database_path("migrations/$lastSegment"),1);
-    if(!is_array($paths))
-      return ;
-    sort($paths);
-    foreach ($paths as $key=>$path)
-      if(!is_dir(database_path("migrations/$lastSegment/$path")) && $path!=='BaseMigration.php' && !preg_match('/^Custom+/', $path, $matches, PREG_OFFSET_CAPTURE)){
-        $shellEcho = customExec($command="php artisan migrate --path=/database/migrations/$lastSegment/$path");
-        $this->info("$shellEcho\n");
-        $this->info($command.' procesado');
+
+  public function loadUnScaff($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function ($resourceName=null,$template=null) use($instance) {
+      if(config('app.production.env')==='production')
+        return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
+
+      if(!$resourceName)
+        return cvConsoler(cvBlueTC('Nombre de recurso requerido')."\n");
+
+      $singularName = fixedSnake(Str::singular($resourceName));
+      $pluralName   = fixedSnake(Str::plural($resourceName));
+
+      if($template)
+        $template = "-s $template";
+      else
+        $template = '';
+
+      foreach ([
+        "pscaff -a unscaff -r $singularName -p $pluralName $template"
+      ] as $command) {
+        $shellEcho  = customExec($command);
+        cvConsoler(cvGreenTC($shellEcho)."\n");
+        cvConsoler(cvGreenTC($command.' procesado ')."\n");
       }
-  })->describe('run migration group');
+    };
+    Artisan::command('unscaff {resourceName?} {template?}',$callBack)->describe('Alias for pscaff unscaff command');
+    return $this;
+  }
 
-  Artisan::command('logs:clear', function() {
-    if(!count(assetsMap(storage_path('logs'))))
-      return ;
-    $shellEcho = customExec($command='rm ' . storage_path('logs/*'));
-    $this->info("$shellEcho\n");
-    $this->info($command.' procesado ');
-  })->describe('Clear log files');
+  public function loadMigrateGroup($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function ($lastSegment='') use($instance) {
+      $paths = assetsMap(database_path("migrations/$lastSegment"),1);
+      if(!is_array($paths))
+        return ;
+      sort($paths);
+      foreach ($paths as $key=>$path)
+        if(!is_dir(database_path("migrations/$lastSegment/$path")) && $path!=='BaseMigration.php' && !preg_match('/^Custom+/', $path, $matches, PREG_OFFSET_CAPTURE))
+          $instance->caller(['command'=>'migrate','params'=>['--path'=>"/database/migrations/$lastSegment/$path"]]);
+    };
+    Artisan::command("migrate-group {lastSegment?}",$callBack)->describe('run migration group');
+    return $this;
+  }
 
-  Artisan::command('def-pass', function () {
-    if(config("app.production.env")==="production"){
-      $this->info("Este comando no puede ser ejecutado en ambiente productivo");
-      return false;
-    }
-    \App\Models\User::noFilters()->update(["password"=>bcrypt("test")]);
-  })->describe('Usuarios de prueba creados');
+  public function loadLogsClear($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function () use($instance) {
+      if(!count(assetsMap(storage_path('logs'))))
+        return ;
+      $shellEcho = customExec($command='rm ' . storage_path('logs/*'));
+      cvConsoler(cvBrownTC("$shellEcho\n"));
+      cvConsoler(cvBrownTC($command.' procesado ')."\n");
+    };
+    Artisan::command("logs:clear",$callBack)->describe('Clear log files');
+    return $this;
+  }
 
-  Artisan::command('set-max', function () {
-    \DB::unprepared('SET GLOBAL max_allowed_packet=524288000');
-    \DB::unprepared('SET GLOBAL net_read_timeout=600');
-    \DB::unprepared('SET GLOBAL aria_checkpoint_interval=600');
-    \DB::unprepared('SET GLOBAL innodb_flushing_avg_loops=600');
-    \DB::unprepared('SET GLOBAL innodb_sync_spin_loops=600');
-  })->describe('Recalcular ordenes');
-*/
+  public function loadDefPass($callBack=null){
+    $callBack = $callBack ?? function (){
+      if(config("app.production.env")==="production")
+        return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
+      \App\Models\User::noFilters()->update(["password"=>bcrypt("test")]);
+      cvConsoler(cvGreenTC('def-pass procesado ')."\n");
+    };
+    Artisan::command("def-pass",$callBack)->describe('set test passwords');
+    return $this;
+  }
+
+  public function loadSetMax($callBack=null){
+    $callBack = $callBack ?? function (){
+      DB::unprepared('SET GLOBAL max_allowed_packet=524288000');
+      DB::unprepared('SET GLOBAL net_read_timeout=600');
+      DB::unprepared('SET GLOBAL aria_checkpoint_interval=600');
+      DB::unprepared('SET GLOBAL innodb_flushing_avg_loops=600');
+      DB::unprepared('SET GLOBAL innodb_sync_spin_loops=600');
+      cvConsoler(cvGreenTC('set-max procesado ')."\n");
+    };
+    Artisan::command("set-max",$callBack)->describe('set mysql maxes');
+    return $this;
+  }
+
+  public function loadCreateWebClient($callBack=null){
+    $instance=$this;
+    $callBack = $callBack ?? function ($instance){
+      if(DB::table('oauth_clients')->WHERE('oauth_clients.name','web-app')->count())
+        return ;
+
+      $instance->caller(['command'=>'passport:client','params'=>[
+        '--password' => 'devdevdevdevdevdevdevdevdevdevdevdevdevd',
+        '--name'     => 'web-app'
+      ]]);
+      /*
+      if(config('app.env')!=='production')
+        \DB::table('oauth_clients')->WHERE('name','web-app')->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
+      */
+    };
+    Artisan::command("create:web-client",$callBack)->describe('Create password grant client for web app');
+    return $this;
+  }
 }
