@@ -70,8 +70,7 @@ class InstallCommand extends Command {
         $this->publishMigration($baseName);
     }
     catch(\Exception $e){
-      cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
-      return false;
+      return cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
     }
 
     $myFile = json_decode(file_get_contents(base_path('').'/composer.json'));

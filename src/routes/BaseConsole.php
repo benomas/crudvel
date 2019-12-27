@@ -419,4 +419,29 @@ class BaseConsole{
     Artisan::command("create:web-client",$callBack)->describe('Create password grant client for web app');
     return $this;
   }
+
+  public function loadFixModelMetaData($callBack=null){
+    $callBack = $callBack ?? function ($model=null,$force=false){
+      if(!$model)
+        return cvConsoler(cvRedTC('model required')."\n");
+      if(!class_exists($model))
+        return cvConsoler(cvRedTC("model $model doesnt exist")."\n");
+      $model::cvIam()->autoFixModelMetaData();
+      cvConsoler(cvGreenTC('model meta data fixed')."\n");
+    };
+    Artisan::command("fix-model-meta-data {model?} {force?}",$callBack)->describe('autogenerate def model meta data');
+    return $this;
+  }
+
+  public function loadFixModelsMetaData($callBack=null){
+    $callBack = $callBack ?? function ($force=false){
+      $modelFiles = assetsMap(app_path('Models'));
+      foreach($modelFiles AS $modelFile){
+        $model = 'App\Models\\'.pathinfo($modelFile, PATHINFO_FILENAME);
+        Artisan::call('fix-model-meta-data',['model'=>$model,'force'=>$force]);
+      }
+    };
+    Artisan::command("fix-models-meta-data {model?} {force?}",$callBack)->describe('autogenerate def model meta data');
+    return $this;
+  }
 }

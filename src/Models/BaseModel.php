@@ -15,6 +15,7 @@ class BaseModel extends Model implements CvCrudInterface{
   protected $hasPropertyActive = true;
   protected $hidden            = ['pivot'];
   protected $cacheBoots        = [];
+  protected $modelMetaData     = null;
 
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
@@ -296,5 +297,20 @@ class BaseModel extends Model implements CvCrudInterface{
     return $this->getConnection()->getDoctrineSchemaManager()->listTableNames();
   }
 
+  public function getModelMetaData(){
+    return $this->modelMetaData;
+  }
+
+  public function setModelMetaData($modelMetaData=null){
+    $this->modelMetaData = $modelMetaData??null;
+    return $this;
+  }
+
+  public function autoFixModelMetaData(){
+    $tables  = $this->getConnectionTables();
+    $columns = $this->getTableColumns();
+
+    pdd($tables,$columns,classFile($this));
+  }
 // [End Others]
 }

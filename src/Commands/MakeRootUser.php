@@ -35,21 +35,18 @@ class MakeRootUser extends Command {
             ])->save()
           )
           {
-            cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
-            return false;
+            return cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
           }
         }
         if(!($user = \App\Models\User::withUserName("root")->first())){
           $defaultUser = config("packages.benomas.crudvel.crudvel.default_user");
           if(!$defaultUser){
-            cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
-            return false;
+            return cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
           }
           $defaultUser["password"]=bcrypt($defaultUser["password"]);
           if(!($user = new \App\Models\User())->fill($defaultUser)->save())
           {
-            cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
-            return false;
+            return cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
           }
 
         }
@@ -58,8 +55,7 @@ class MakeRootUser extends Command {
 
     }
     catch(\Exception $e){
-      cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
-      return false;
+      return cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
     }
 
     Schema::enableForeignKeyConstraints();
