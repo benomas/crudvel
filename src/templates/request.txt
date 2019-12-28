@@ -1,27 +1,4 @@
-<?php namespace App\Http\Requests$ENTITYSEGMENTS$;
+<?php namespace  App\Http\Requests;
 
-use Crudvel\Customs\Requests\CrudRequest;
-
-class $ENTITY$Request extends CrudRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return parent::authorize();
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function defaultRules()
-    {
-        $this->rules=[
-        ];
-    }
+class <cv_singular_studly_resource_cv>Request extends \Crudvel\Customs\Requests\CrudRequest{
 }

@@ -70,7 +70,7 @@ abstract class CvBaseScaff
     return file_exists($this->getTemplateReceptorPath());
   }
 
-  private function fixCase($quantity='singular',$case='camel',$fixer=null){
+  protected function fixCase($quantity='singular',$case='camel',$fixer=null){
     $template = preg_replace_callback(
       '/(<cv_'.$quantity.'_'.$case.'_)(.+)(_cv>)/',
       function($matches) use($quantity,$case,$fixer){

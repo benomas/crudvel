@@ -1,10 +1,8 @@
-<?php namespace App\Http\Controllers$ENTITYSEGMENTS$$APIENTITYSEGMENTS$;
+<?php namespace App\Http\Controllers\Api;
 
-use Crudvel\Customs\Controllers\ApiController;
+class <cv_singular_studly_resource_cv>Controller extends \Crudvel\Customs\Controllers\ApiController{
 
-class $ENTITY$Controller extends ApiController {
-
-    public function __construct(){
-        parent::__construct();
-    }
+  public function __construct(){
+    parent::__construct();
+  }
 }

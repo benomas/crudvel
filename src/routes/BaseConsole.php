@@ -447,9 +447,11 @@ class BaseConsole{
 
   public function loadCvScaff(){
     $cvScaffers = [
-      'model'=>'Crudvel\Libraries\CvScaffSupport\CvModelScaff',
-      'es_lang'=>'Crudvel\Libraries\CvScaffSupport\CvEsLangScaff',
-      'en_lang'=>'Crudvel\Libraries\CvScaffSupport\CvEnLangScaff',
+      'es_lang'        => 'Crudvel\Libraries\CvScaffSupport\CvEsLangScaff',
+      'en_lang'        => 'Crudvel\Libraries\CvScaffSupport\CvEnLangScaff',
+      'model'          => 'Crudvel\Libraries\CvScaffSupport\CvModelScaff',
+      'request'        => 'Crudvel\Libraries\CvScaffSupport\CvRequestScaff',
+      'api_controller' => 'Crudvel\Libraries\CvScaffSupport\CvApiControllerScaff',
     ];
 
     $modeAliases = [
