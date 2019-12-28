@@ -471,6 +471,7 @@ class BaseConsole{
           if(!class_exists($cvScafferClass))
             cvConsoler(cvBrownTC("class $cvScafferClass doesnt exist")."\n");
           $cvScaffInstance = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder())
+            ->setConsoleInstance($this)
             ->setResource($resource)
             ->setMode($modeAliases[$mode]??null)
             ->setProcessorInstance(new $cvScafferClass())

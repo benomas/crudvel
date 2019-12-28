@@ -19,4 +19,15 @@ class CvApiControllerScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff
     $controllerName = Str::studly(Str::singular($this->getResource())).'Controller.php';
     return app_path('Http/Controllers/Api/'.$controllerName);
   }
+  //[LoadTemplate Modes]
+  //[End LoadTemplate Modes]
+
+  //[CalculateParams Modes]
+  //[End CalculateParams Modes]
+
+  //[FixTemplate Modes]
+  //[End FixTemplate Modes]
+
+  //[InyectFixedTemplate Modes]
+  //[End InyectFixedTemplate Modes]
 }

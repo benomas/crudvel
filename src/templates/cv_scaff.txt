@@ -19,4 +19,15 @@ class Cv<cv_singular_studly_prefix_cv><cv_singular_studly_resource_cv>Scaff exte
     $<cv_singular_camel_resource_cv>Name = Str::studly(Str::singular($this->getResource())).'<cv_singular_studly_resource_cv>.php';
     return app_path('Http/<cv_singular_studly_resource_cv>s/<cv_singular_studly_prefix_cv>'.$<cv_singular_camel_resource_cv>Name);
   }
+//[LoadTemplate Modes]
+//[End LoadTemplate Modes]
+
+//[CalculateParams Modes]
+//[End CalculateParams Modes]
+
+//[FixTemplate Modes]
+//[End FixTemplate Modes]
+
+//[InyectFixedTemplate Modes]
+//[End InyectFixedTemplate Modes]
 }

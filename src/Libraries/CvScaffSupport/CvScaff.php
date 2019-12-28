@@ -6,12 +6,17 @@ use \Crudvel\Interfaces\CvScaffInterface;
 
 class CvScaff
 {
+  private $consoleInstance;
   private $resource;
   private $mode;
   private $template;
   private $processorInstance;
 
   public function __construct(){
+  }
+
+  public function getConsoleInstance(){
+    return $this->consoleInstance;
   }
 
   public function getResource(){
@@ -34,6 +39,11 @@ class CvScaff
     return $this->processorClass;
   }
 
+  public function setConsoleInstance($consoleInstance=null){
+    $this->consoleInstance = $consoleInstance??null;
+    return $this;
+  }
+
   public function setResource($resource=null){
     $this->resource = $resource??null;
     return $this;
@@ -54,6 +64,11 @@ class CvScaff
     return $this;
   }
 
+  private function stablishConsoleInstace(){
+    $this->getProcessorInstance()->stablishConsoleInstace($this->getConsoleInstance());
+    return $this;
+  }
+
   private function stablishResource(){
     $this->getProcessorInstance()->stablishResource($this->getResource());
     return $this;
@@ -61,6 +76,11 @@ class CvScaff
 
   private function stablishMode(){
     $this->getProcessorInstance()->stablishMode($this->getMode());
+    return $this;
+  }
+
+  private function askAditionalParams(){
+    $this->getProcessorInstance()->askAditionalParams($this->getTemplate());
     return $this;
   }
 
@@ -84,9 +104,11 @@ class CvScaff
   }
 
   public function runScaff(){
-    $this->stablishResource()
+    $this->stablishConsoleInstace()
+      ->stablishResource()
       ->stablishMode()
       ->loadTemplate()
+      ->askAditionalParams()
       ->fixTemplate()
       ->inyectFixedTemplate();
   }

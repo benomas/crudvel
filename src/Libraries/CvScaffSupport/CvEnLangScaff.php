@@ -19,4 +19,15 @@ class CvEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implem
     $langName = fixedSlug(Str::plural($this->getResource())).'.php';
     return resource_path('lang/en/crudvel/'.$langName);
   }
+  //[LoadTemplate Modes]
+  //[End LoadTemplate Modes]
+
+  //[CalculateParams Modes]
+  //[End CalculateParams Modes]
+
+  //[FixTemplate Modes]
+  //[End FixTemplate Modes]
+
+  //[InyectFixedTemplate Modes]
+  //[End InyectFixedTemplate Modes]
 }

@@ -19,4 +19,15 @@ class CvRequestScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff imple
     $requestName = Str::studly(Str::singular($this->getResource())).'Request.php';
     return app_path('Http/Requests/'.$requestName);
   }
+  //[LoadTemplate Modes]
+  //[End LoadTemplate Modes]
+
+  //[CalculateParams Modes]
+  //[End CalculateParams Modes]
+
+  //[FixTemplate Modes]
+  //[End FixTemplate Modes]
+
+  //[InyectFixedTemplate Modes]
+  //[End InyectFixedTemplate Modes]
 }

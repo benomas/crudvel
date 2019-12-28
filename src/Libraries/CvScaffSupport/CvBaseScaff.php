@@ -14,11 +14,16 @@ abstract class CvBaseScaff
   ];
   protected $mode = 'create-template-receptor';
   private $templateCache;
+  private $extraParams;
 
   abstract protected function getTemplatePath();
   abstract protected function getTemplateReceptorPath();
 
   public function __construct(){
+  }
+
+  public function getConsoleInstance(){
+    return $this->consoleInstance;
   }
 
   public function getResource(){
@@ -29,12 +34,21 @@ abstract class CvBaseScaff
     return $this->mode??null;
   }
 
+  public function getExtraParams($extraParams=null){
+    return $this->extraParams??null;
+  }
+
   public function getModes(){
     return $this->modes??[];
   }
 
   protected function getTemplateCache(){
     return $this->templateCache??[];
+  }
+
+  public function setConsoleInstance($consoleInstance=null){
+    $this->consoleInstance = $consoleInstance??null;
+    return $this;
   }
 
   public function setResource($resource=null){
@@ -47,9 +61,18 @@ abstract class CvBaseScaff
     return $this;
   }
 
+  public function setExtraParams($extraParams=null){
+    $this->extraParams = $extraParams??null;
+    return $this;
+  }
+
   protected function setTemplateCache($templateCache=null){
     $this->templateCache = $templateCache??null;
     return $this;
+  }
+
+  public function stablishConsoleInstace($consoleInstace=null){
+    return $this->setConsoleInstance($consoleInstace);
   }
 
   public function stablishResource($resource=null){
@@ -71,23 +94,29 @@ abstract class CvBaseScaff
   }
 
   protected function fixCase($quantity='singular',$case='camel',$fixer=null){
-    $template = preg_replace_callback(
-      '/(<cv_'.$quantity.'_'.$case.'_)(.+)(_cv>)/',
-      function($matches) use($quantity,$case,$fixer){
-        $replacement = $matches[2]??null;
-        if(!$replacement)
-          return $matches[0]??'';
-        $tagResolver = Str::camel('get'.$replacement);
-        if(method_exists($this,$tagResolver)){
+    $extraParams = $this->getExtraParams();
+    $template = $this->getTemplateCache();
+    foreach($extraParams as $param=>$value){
+      if($fixer)
+        $resolvedTag=$fixer(Str::$quantity($value));
+      else
+        $resolvedTag= Str::$case(Str::$quantity($value));
+      $template = str_replace("<cv_{$quantity}_{$case}_{$param}_cv>",$resolvedTag,$template);
+      /*
+      $template = preg_replace_callback(
+        '/(<cv_'.$quantity.'_'.$case.'_)($param)(_cv>)/',
+        function($matches) use($quantity,$case,$fixer){
+          $replacement = $matches[2]??null;
+          if(!$replacement)
+            return $matches[0]??'';
+          $resolvedTag = $this->getExtraParams()[$replacement]??'';
           if($fixer)
-            return $fixer(Str::$quantity($this->$tagResolver()));
-          return Str::$case(Str::$quantity($this->$tagResolver()));
-        }
-
-        return $matches[0]??'';
-      },
-      $this->getTemplateCache()
-    );
+            return $fixer(Str::$quantity($resolvedTag));
+          return Str::$case(Str::$quantity($resolvedTag));
+        },
+        $this->getTemplateCache()
+      );*/
+    }
     $this->setTemplateCache($template);
     return $this;
   }
@@ -171,6 +200,42 @@ abstract class CvBaseScaff
     return null;
   }
 //[End LoadTemplate Modes]
+
+//[CalculateParams Modes]
+  protected function createTemplateReceptorCalculateParams($template=null){
+    $patern = '/<cv_singular_camel_(.+?)_cv>|<cv_plural_camel_(.+?)_cv>|<cv_singular_snake_(.+?)_cv>|<cv_plural_snake_(.+?)_cv>|<cv_singular_slug_(.+?)_cv>|<cv_plural_slug_(.+?)_cv>|<cv_singular_studly_(.+?)_cv>|<cv_plural_studly_(.+?)_cv>|<cv_singular_lower_(.+?)_cv>|<cv_plural_lower_(.+?)_cv>|<cv_singular_upper_(.+?)_cv>|<cv_plural_upper_(.+?)_cv>/';
+    preg_match_all($patern,$template,$matches);
+    if(isset($matches[0]))
+      unset($matches[0]);
+    $extraParams=[];
+    foreach($matches as $collection)
+      foreach($collection as $param)
+        if($param && $param !== '')
+          $extraParams[$param]=null;
+    $extraParams['resource'] = $this->getResource();
+    $this->setExtraParams($extraParams);
+    return $this;
+  }
+  protected function forceCreateTemplateReceptorCalculateParams($template=null){
+    return $this->createTemplateReceptorCalculateParams($template);
+  }
+  protected function updateTemplateReceptorCalculateParams($template=null){
+    $this->setExtraParams(['resource' => $this->getResource()]);
+    return $this;
+  }
+  protected function forceUpdateTemplateReceptorCalculateParams($template=null){
+    $this->setExtraParams(['resource' => $this->getResource()]);
+    return $this;
+  }
+  protected function deleteTemplateReceptorCalculateParams($template=null){
+    $this->setExtraParams(['resource' => $this->getResource()]);
+    return $this;
+  }
+  protected function forceDeleteTemplateReceptorCalculateParams($template=null){
+    $this->setExtraParams(['resource' => $this->getResource()]);
+    return $this;
+  }
+//[End CalculateParams Modes]
 
 //[FixTemplate Modes]
   protected function createTemplateReceptorFixTemplate($template=null){
@@ -264,6 +329,22 @@ abstract class CvBaseScaff
       return $this->$callBack();
     return null;
   }
+  private function calculateParams($template=null){
+    $callBack = $this->fixModeStep(__FUNCTION__);
+    if(method_exists($this,$callBack))
+      return $this->$callBack($template);
+    return null;
+  }
+  public function askAditionalParams($template=null){
+    $this->calculateParams($template);
+    $extraParams=$this->getExtraParams();
+    foreach($extraParams as $param=>$value){
+      if(!$value || $value==='')
+        $extraParams[$param] = $this->getConsoleInstance()->ask("What is the value for $param param")??'';
+    }
+    $this->setExtraParams($extraParams);
+    return $this;
+  }
   public function fixTemplate($template=null){
     $this->setTemplateCache($template);
     $callBack = $this->fixModeStep(__FUNCTION__);
@@ -274,7 +355,7 @@ abstract class CvBaseScaff
   public function inyectFixedTemplate($template=null){
     $callBack = $this->fixModeStep(__FUNCTION__);
     if(method_exists($this,$callBack))
-      return $this->$callBack();
+      return $this->$callBack($template);
     return $this;
   }
 }
