@@ -73,6 +73,7 @@ class CvScaff
 
   private function fixTemplate(){
     $pretemplate = $this->getProcessorInstance()->fixTemplate($this->getTemplate());
+    pdd($pretemplate);
     //add general logic before set template
     $this->setTemplate($pretemplate);
     return $this;
