@@ -17,6 +17,6 @@ class CvApiControllerScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff
 
   protected function getTemplateReceptorPath(){
     $controllerName = Str::studly(Str::singular($this->getResource())).'Controller.php';
-    return app_path('Http/Controllers/Api'.$controllerName);
+    return app_path('Http/Controllers/Api/'.$controllerName);
   }
 }

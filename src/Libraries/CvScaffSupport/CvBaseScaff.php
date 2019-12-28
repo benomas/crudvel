@@ -214,7 +214,7 @@ abstract class CvBaseScaff
     try{
       file_put_contents($this->getTemplateReceptorPath(), $template);
     }catch(\Exception $e){
-      throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created');
+      throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created with '.$template);
     }
     return $this;
   }

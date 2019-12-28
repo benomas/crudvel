@@ -447,6 +447,7 @@ class BaseConsole{
 
   public function loadCvScaff(){
     $cvScaffers = [
+      'cv_scaff'       => 'Crudvel\Libraries\CvScaffSupport\CvScaffRecursive',
       'es_lang'        => 'Crudvel\Libraries\CvScaffSupport\CvEsLangScaff',
       'en_lang'        => 'Crudvel\Libraries\CvScaffSupport\CvEnLangScaff',
       'model'          => 'Crudvel\Libraries\CvScaffSupport\CvModelScaff',

@@ -17,6 +17,6 @@ class CvRequestScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff imple
 
   protected function getTemplateReceptorPath(){
     $requestName = Str::studly(Str::singular($this->getResource())).'Request.php';
-    return app_path('Http/Requests'.$requestName);
+    return app_path('Http/Requests/'.$requestName);
   }
 }
