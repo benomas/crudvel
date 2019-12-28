@@ -1,21 +1,21 @@
 {
-    "name"       : "benomas/crudvel",
-    "description": "Laravel clases customization for cruds",
-    "type"       : "library",
-    "license"    : "MIT",
-    "authors"    : [
-        {
-            "name" : "Afdael Benigno Michel Velasco",
-            "email": "benomas@gmail.com",
-            "role" : "Developer"
-        }
-    ],
-    "require": {
-      "stichoza/google-translate-php": "^4.0"
-    },
-    "autoload": {
-        "classmap": [
-            "src"
-        ]
+  "name"       : "benomas/crudvel",
+  "description": "Laravel clases customization for cruds",
+  "type"       : "library",
+  "license"    : "MIT",
+  "authors"    : [
+    {
+      "name" : "Afdael Benigno Michel Velasco",
+      "email": "benomas@gmail.com",
+      "role" : "Developer"
     }
+  ],
+  "require": {
+    "stichoza/google-translate-php": "^4.0"
+  },
+  "autoload": {
+    "classmap": [
+      "src"
+    ]
+  }
 }
