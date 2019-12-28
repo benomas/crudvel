@@ -363,7 +363,7 @@ class BaseModel extends Model implements CvCrudInterface
     return $this;
   }
 
-  public function autoFixModelMetaData($force = false)
+  public function autoFixModelMetaData($mode = 0)
   {
     $tables                   = $this->getConnectionTables();
     $columns                  = $this->getTableColumns();

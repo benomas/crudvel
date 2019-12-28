@@ -421,27 +421,58 @@ class BaseConsole{
   }
 
   public function loadFixModelMetaData($callBack=null){
-    $callBack = $callBack ?? function ($model=null,$force=false){
+    $callBack = $callBack ?? function ($model=null,$mode=false){
       if(!$model)
         return cvConsoler(cvRedTC('model required')."\n");
       if(!class_exists($model))
         return cvConsoler(cvRedTC("model $model doesnt exist")."\n");
-      $model::cvIam()->autoFixModelMetaData($force);
+      $model::cvIam()->autoFixModelMetaData($mode);
       cvConsoler(cvGreenTC('model meta data fixed')."\n");
     };
-    Artisan::command("fix-model-meta-data {model?} {force?}",$callBack)->describe('autogenerate def model meta data');
+    Artisan::command("fix-model-meta-data {model?} {mode?}",$callBack)->describe('autogenerate def model meta data');
     return $this;
   }
 
   public function loadFixModelsMetaData($callBack=null){
-    $callBack = $callBack ?? function ($force=false){
+    $callBack = $callBack ?? function ($mode=false){
       $modelFiles = assetsMap(app_path('Models'));
       foreach($modelFiles AS $modelFile){
         $model = 'App\Models\\'.pathinfo($modelFile, PATHINFO_FILENAME);
-        Artisan::call('fix-model-meta-data',['model'=>$model,'force'=>$force]);
+        Artisan::call('fix-model-meta-data',['model'=>$model,'mode'=>$mode]);
       }
     };
-    Artisan::command("fix-models-meta-data {force?}",$callBack)->describe('autogenerate def model meta data');
+    Artisan::command("fix-models-meta-data {mode?}",$callBack)->describe('autogenerate def model meta data');
+    return $this;
+  }
+
+  public function loadCvScaff(){
+    $cvScaffers = [
+      'model'=>'Crudvel\Libraries\CvScaffSupport\CvModelScaff',
+    ];
+
+    $modeAliases = [
+      '1'=>'create-template-receptor',
+      '2'=>'force-create-template-receptor',
+      '3'=>'update-template-receptor',
+      '4'=>'force-update-template-receptor',
+      '5'=>'delete-template-receptor',
+      '6'=>'force-delete-template-receptor',
+    ];
+
+    foreach($cvScaffers AS $cvScafferType=>$cvScafferClass){
+      Artisan::command(
+        "cv-scaff-$cvScafferType {resource?} {mode?}",
+        function($resource=null,$mode=null) use($cvScafferClass,$modeAliases){
+          $cvScaffInstance = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder())
+            ->setResource($resource)
+            ->setMode($modeAliases[$mode]??null)
+            ->setProcessorInstance(new $cvScafferClass())
+            ->build();
+
+          $cvScaffInstance->runScaff();
+          pdd($cvScaffInstance);
+        })->describe('cv-scaff-commands');
+    }
     return $this;
   }
 }

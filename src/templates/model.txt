@@ -1,28 +1,16 @@
-<?php namespace App\Models$ENTITYSEGMENTS$;
+<?php namespace App\Models;
 
-use Crudvel\Customs\Models\BaseModel;
+class <cv_singular_studly_resource_cv> extends \Crudvel\Customs\Models\BaseModel{
 
-class $ENTITY$ extends BaseModel {
+// [Relationships]
+// [End Relationships]
 
-    protected $fillable = [
-    ];
+// [Transformers]
+// [End Transformers]
 
-//Relationships
+// [Scopes]
+// [End Scopes]
 
-
-
-//End Relationships
-
-//Scopes
-
-
-
-// End Scopes
-
-//Others
-
-
-
-//End Others
-
+// [Others]
+// [End Others]
 }
