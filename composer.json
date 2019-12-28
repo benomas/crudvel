@@ -10,7 +10,7 @@
             "role" : "Developer"
         }
     ],
-    "require-dev": {
+    "require": {
       "stichoza/google-translate-php": "^4.0"
     },
     "autoload": {
