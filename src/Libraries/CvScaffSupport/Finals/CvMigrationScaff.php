@@ -4,16 +4,17 @@ namespace Crudvel\Libraries\CvScaffSupport;
 
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class CvMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
-  protected $context='<cv_lower_define_context_back_or_front_cv>';
+  protected $context='back';
   public function __construct(){
     parent::__construct();
   }
 
   protected function getTemplatePath(){
-    $fileName = '';
+    $fileName = 'migration.txt';
     if($fileName==='')
       $fileName='migration.txt';
     $path = '';
@@ -23,13 +24,23 @@ class CvMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff imp
   }
 
   protected function getTemplateReceptorPath(){
-    $fileName = '';
-    if($fileName==='')
-      $fileName=Str::studly(Str::singular($this->getResource())).'Migration.php';
-    $destPath = 'database/migrations';
-    if($destPath==='')
-      $destPath = rtrim('app/Http/Migration/','/');
-    return base_path($destPath.'/'.$fileName);
+    $fileName = Carbon::now()->format('Y_m_d_u').'_create_'.fixedSlug(Str::plural($this->getResource())).'_table.php';
+    $destPath = 'database/migrations/';
+    if(in_array($this->getMode(),[
+      'delete-template-receptor',
+      'force-delete-template-receptor',
+      ]))
+    {
+      $migrations = assetsMap(base_path($destPath));
+      foreach((array)$migrations as $migration){
+        $pos=strpos($migration,'_create_'.fixedSlug(Str::plural($this->getResource())).'_table.php');
+        if($pos !== null && $pos !== false){
+          $fileName = $migration;
+          break;
+        }
+      }
+    }
+    return base_path($destPath.$fileName);
   }
 //[LoadTemplate Modes]
 //[End LoadTemplate Modes]
