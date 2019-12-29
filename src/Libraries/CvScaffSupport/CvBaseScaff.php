@@ -7,13 +7,13 @@ abstract class CvBaseScaff
   use \Crudvel\Traits\CvPatronTrait;
   protected $modes = [
     'creator',
-    'updator',
-    'deletor',
+    'updater',
+    'deleter',
   ];
   private $templateCache;
   private $extraParams;
   private   $force   = false;
-  protected $mode    = 'create';
+  protected $mode    = 'creator';
   protected $context = 'back';
 
   abstract protected function getTemplatePath();
@@ -209,10 +209,10 @@ abstract class CvBaseScaff
       throw new \Exception('Error, template file ['.$this->getTemplatePath().'] is empty, set it and run this command again');
     return $template;
   }
-  protected function updatorLoadTemplate(){
-    return null;
+  protected function updaterLoadTemplate(){
+    return $this->creatorLoadTemplate();
   }
-  protected function deletorLoadTemplate(){
+  protected function deleterLoadTemplate(){
     return null;
   }
 //[End LoadTemplate Modes]
@@ -232,11 +232,11 @@ abstract class CvBaseScaff
     $this->setExtraParams($extraParams);
     return $this;
   }
-  protected function updatorCalculateParams($template=null){
+  protected function updaterCalculateParams($template=null){
     $this->setExtraParams(['resource' => $this->getResource()]);
     return $this;
   }
-  protected function deletorCalculateParams($template=null){
+  protected function deleterCalculateParams($template=null){
     $this->setExtraParams(['resource' => $this->getResource()]);
     return $this;
   }
@@ -261,10 +261,10 @@ abstract class CvBaseScaff
     ->fixPluraUpperTag()
     ->getTemplateCache();
   }
-  protected function updatorFixTemplate($template=null){
+  protected function updaterFixTemplate($template=null){
     return null;
   }
-  protected function deletorFixTemplate($template=null){
+  protected function deleterFixTemplate($template=null){
     return null;
   }
 //[End FixTemplate Modes]
@@ -289,10 +289,10 @@ abstract class CvBaseScaff
     }
     return $this;
   }
-  protected function updatorInyectFixedTemplate($template=null){
+  protected function updaterInyectFixedTemplate($template=null){
     return $this;
   }
-  protected function deletorInyectFixedTemplate($template=null){
+  protected function deleterInyectFixedTemplate($template=null){
     if(!$this->templateReceptorExists()){
       cvConsoler(cvBrownTC($this->getTemplateReceptorPath().' file doest exist')."\n");
       return $this;

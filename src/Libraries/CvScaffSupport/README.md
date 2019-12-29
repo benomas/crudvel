@@ -26,6 +26,7 @@
 	-Create(optional)	database/seeds/<resource+table_seeder(singular,StydlyCase)>
 	-Edit       		routes/api
 
+you can create new templates self running cv-scaff-cv-scaff (new templete) -c
 
 fix bitbucket origin
   git remote add origin  https://a-michel@bitbucket.org/prosubastasteam/pro-subastas-api.git
