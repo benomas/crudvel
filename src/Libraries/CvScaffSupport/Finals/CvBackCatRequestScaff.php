@@ -5,7 +5,7 @@ namespace Crudvel\Libraries\CvScaffSupport\Finals;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvBackRequestScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+class CvBackCatRequestScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   public function __construct(){
     parent::__construct();

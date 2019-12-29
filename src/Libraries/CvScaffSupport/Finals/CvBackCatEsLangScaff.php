@@ -6,7 +6,7 @@ use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
-class CvBackEsLangScaff  extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+class CvBackCatEsLangScaff  extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   protected $trans;
   public function __construct(){

@@ -5,7 +5,7 @@ namespace Crudvel\Libraries\CvScaffSupport;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvBackCatSeederScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+class CvBackTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   protected $context='back';
   public function __construct(){

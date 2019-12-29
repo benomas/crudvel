@@ -1,0 +1,13 @@
+<?php namespace App\Http\Controllers\Api;
+
+class <cv_singular_studly_resource_cv>Controller extends \Crudvel\Customs\Controllers\ApiCatalog1Controller{
+  public function __construct(){
+    parent::__construct();
+  }
+
+// [Actions]
+// [End Actions]
+
+// [Methods]
+// [End Methods]
+}

@@ -6,7 +6,7 @@ use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-class CvBackMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+class CvBackCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   protected $context='back';
   public function __construct(){
