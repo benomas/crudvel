@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Crudvel\Libraries\CvScaffSupport\CvScaffHelper;
 
 class BaseConsole{
   use \Crudvel\Traits\CacheTrait;
@@ -446,24 +447,8 @@ class BaseConsole{
   }
 
   public function loadCvScaff(){
-    $cvScaffers = [
-      'cv_scaff'       => 'Crudvel\Libraries\CvScaffSupport\CvScaffRecursive',
-      'es_lang'        => 'Crudvel\Libraries\CvScaffSupport\CvEsLangScaff',
-      'en_lang'        => 'Crudvel\Libraries\CvScaffSupport\CvEnLangScaff',
-      'model'          => 'Crudvel\Libraries\CvScaffSupport\CvModelScaff',
-      'request'        => 'Crudvel\Libraries\CvScaffSupport\CvRequestScaff',
-      'api_controller' => 'Crudvel\Libraries\CvScaffSupport\CvApiControllerScaff',
-    ];
-
-    $modeAliases = [
-      '1'=>'create-template-receptor',
-      '2'=>'force-create-template-receptor',
-      '3'=>'update-template-receptor',
-      '4'=>'force-update-template-receptor',
-      '5'=>'delete-template-receptor',
-      '6'=>'force-delete-template-receptor',
-    ];
-
+    $cvScaffers  = CvScaffHelper::cvIam()->getBackFinalScaffers();
+    $modeAliases = CvScaffHelper::cvIam()->getModeAliases();
     foreach($cvScaffers AS $cvScafferType=>$cvScafferClass){
       Artisan::command(
         'cv-scaff-'.fixedSlug($cvScafferType).' {resource?} {mode?}',

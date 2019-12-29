@@ -5,7 +5,7 @@ namespace Crudvel\Libraries\CvScaffSupport;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class Cv<cv_singular_studly_prefix_cv><cv_singular_studly_resource_cv>Scaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+class CvMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   protected $context='<cv_lower_define_context_back_or_front_cv>';
   public function __construct(){
@@ -13,22 +13,22 @@ class Cv<cv_singular_studly_prefix_cv><cv_singular_studly_resource_cv>Scaff exte
   }
 
   protected function getTemplatePath(){
-    $fileName = '<cv_singular_snake_template_file_name_with_extension_set_empty_for_default_cv>';
+    $fileName = '';
     if($fileName==='')
-      $fileName='<cv_singular_snake_resource_cv>.txt';
-    $path = '<cv_final_template_path_set_emty_for_default_cv>';
+      $fileName='migration.txt';
+    $path = '';
     if($path==='')
       $path='vendor/benomas/crudvel/src/templates/';
     return base_path("$path$fileName");
   }
 
   protected function getTemplateReceptorPath(){
-    $fileName = '<cv_final_destination_template_file_name_with_extension_set_empty_for_default_cv>';
+    $fileName = '';
     if($fileName==='')
-      $fileName=Str::studly(Str::singular($this->getResource())).'<cv_singular_studly_resource_cv>.php';
-    $destPath = '<cv_final_destination_path_set_emty_for_default_cv>';
+      $fileName=Str::studly(Str::singular($this->getResource())).'Migration.php';
+    $destPath = 'database/migrations';
     if($destPath==='')
-      $destPath = rtrim('app/Http/<cv_singular_studly_resource_cv>/<cv_singular_studly_prefix_cv>','/');
+      $destPath = rtrim('app/Http/Migration/','/');
     return base_path($destPath.'/'.$fileName);
   }
 //[LoadTemplate Modes]

@@ -1128,3 +1128,9 @@ if(!function_exists("ptPermutations")){
 if(!function_exists("varexport")){
   function varexport(...$params){return CvHelper::varexport(...$params);}
 }
+if(!function_exists("fileBaseName")){
+  function fileBaseName(...$params){return CvHelper::fileBaseName(...$params);}
+}
+if(!function_exists("getClassFromFile")){
+  function getClassFromFile(...$params){return CvHelper::getClassFromFile(...$params);}
+}

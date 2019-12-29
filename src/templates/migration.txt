@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-class Create<cv_plural_studly_cv>Table extends \Crudvel\Database\Migrations\BaseMigration{
+class Create<cv_plural_studly_resource_cv>Table extends \Crudvel\Database\Migrations\BaseMigration{
   /**
    * Run the migrations.
    */

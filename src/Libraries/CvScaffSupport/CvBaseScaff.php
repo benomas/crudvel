@@ -4,6 +4,7 @@ namespace Crudvel\Libraries\CvScaffSupport;
 use Illuminate\Support\Str;
 abstract class CvBaseScaff
 {
+  use \Crudvel\Traits\CvPatronTrait;
   protected $modes = [
     'create-template-receptor',
     'force-create-template-receptor',
@@ -15,6 +16,7 @@ abstract class CvBaseScaff
   protected $mode = 'create-template-receptor';
   private $templateCache;
   private $extraParams;
+  protected $context='back';
 
   abstract protected function getTemplatePath();
   abstract protected function getTemplateReceptorPath();
@@ -44,6 +46,14 @@ abstract class CvBaseScaff
 
   protected function getTemplateCache(){
     return $this->templateCache??[];
+  }
+
+  public function getContext(){
+    return $this->context??null;
+  }
+
+  public function getTemplateFileName(){
+    return fileBaseName(pathinfo($this->getTemplatePath(), PATHINFO_FILENAME));
   }
 
   public function setConsoleInstance($consoleInstance=null){
@@ -98,13 +108,23 @@ abstract class CvBaseScaff
     $template = $this->getTemplateCache();
     foreach($extraParams as $param=>$value){
       if($fixer)
-        $resolvedTag=$fixer(Str::$quantity($value));
+        $resolvedTag=$fixer($value);
       else
         $resolvedTag= Str::$case(Str::$quantity($value));
-      $template = str_replace("<cv_{$quantity}_{$case}_{$param}_cv>",$resolvedTag,$template);
+      $quantityTag=$quantity!==''?
+        "_$quantity":
+        '';
+      $caseTag=$case!==''?
+        "_$case":
+        '';
+      $template = str_replace("<cv{$quantityTag}{$caseTag}_{$param}_cv>",$resolvedTag,$template);
     }
     $this->setTemplateCache($template);
     return $this;
+  }
+
+  protected function fixFinalTag(){
+    return $this->fixCase('','final',function($val){return $val;});
   }
 
   protected function fixSingularCamelTag(){
@@ -116,19 +136,19 @@ abstract class CvBaseScaff
   }
 
   protected function fixSingularSnakeTag(){
-    return $this->fixCase('singular','snake',function($val){return fixedSnake($val);});
+    return $this->fixCase('singular','snake',function($val){return Str::singular(fixedSnake($val));});
   }
 
   protected function fixPluraSnakeTag(){
-    return $this->fixCase('plural','snake',function($val){return fixedSnake($val);});
+    return $this->fixCase('plural','snake',function($val){return Str::plural(fixedSnake($val));});
   }
 
   protected function fixSingularSlugTag(){
-    return $this->fixCase('singular','slug',function($val){return fixedSlug($val);});
+    return $this->fixCase('singular','slug',function($val){return Str::singular(fixedSlug($val));});
   }
 
   protected function fixPluraSlugTag(){
-    return $this->fixCase('plural','slug',function($val){return fixedSlug($val);});
+    return $this->fixCase('plural','slug',function($val){return Str::plural(fixedSlug($val));});
   }
 
   protected function fixSingularStudlyTag(){
@@ -148,24 +168,30 @@ abstract class CvBaseScaff
   }
 
   protected function fixSingularLowerTag(){
-    return $this->fixCase('singular','lower',function($val){return strtolower($val);});
+    return $this->fixCase('singular','lower',function($val){return Str::singular(strtolower($val));});
   }
 
   protected function fixPluraLowerTag(){
-    return $this->fixCase('plural','lower',function($val){return strtolower($val);});
+    return $this->fixCase('plural','lower',function($val){return Str::plural(strtolower($val));});
   }
 
   protected function fixSingularUpperTag(){
-    return $this->fixCase('singular','upper',function($val){return strtoupper($val);});
+    return $this->fixCase('singular','upper',function($val){return Str::singular(strtoupper($val));});
   }
 
   protected function fixPluraUpperTag(){
-    return $this->fixCase('plural','upper',function($val){return strtoupper($val);});
+    return $this->fixCase('plural','upper',function($val){return Str::plural(strtoupper($val));});
   }
 //[LoadTemplate Modes]
   protected function createTemplateReceptorLoadTemplate(){
-    if(!$this->templateExist())
-      throw new \Exception('Template doesnt exist');
+    if(!$this->templateExist()){
+      $createTemplateFile = $this->getConsoleInstance()->ask('template file doesnt exist, do you want to create it? y/n')??'n';
+      if(in_array(strtolower($createTemplateFile),['y','yes','s','si'])){
+        $this->createTemplateFile();
+      }
+      else
+        throw new \Exception('Template doesnt exist');
+    }
     return file_get_contents($this->getTemplatePath());
   }
   protected function forceCreateTemplateReceptorLoadTemplate(){
@@ -189,7 +215,7 @@ abstract class CvBaseScaff
 
 //[CalculateParams Modes]
   protected function createTemplateReceptorCalculateParams($template=null){
-    $patern = '/<cv_singular_camel_(.+?)_cv>|<cv_plural_camel_(.+?)_cv>|<cv_singular_snake_(.+?)_cv>|<cv_plural_snake_(.+?)_cv>|<cv_singular_slug_(.+?)_cv>|<cv_plural_slug_(.+?)_cv>|<cv_singular_studly_(.+?)_cv>|<cv_plural_studly_(.+?)_cv>|<cv_singular_lower_(.+?)_cv>|<cv_plural_lower_(.+?)_cv>|<cv_singular_upper_(.+?)_cv>|<cv_plural_upper_(.+?)_cv>/';
+    $patern = '/<cv_singular_camel_(.+?)_cv>|<cv_plural_camel_(.+?)_cv>|<cv_singular_snake_(.+?)_cv>|<cv_plural_snake_(.+?)_cv>|<cv_singular_slug_(.+?)_cv>|<cv_plural_slug_(.+?)_cv>|<cv_singular_studly_(.+?)_cv>|<cv_plural_studly_(.+?)_cv>|<cv_singular_lower_(.+?)_cv>|<cv_plural_lower_(.+?)_cv>|<cv_singular_upper_(.+?)_cv>|<cv_plural_upper_(.+?)_cv>|<cv_final_(.+?)_cv>/';
     preg_match_all($patern,$template,$matches);
     if(isset($matches[0]))
       unset($matches[0]);
@@ -225,7 +251,8 @@ abstract class CvBaseScaff
 
 //[FixTemplate Modes]
   protected function createTemplateReceptorFixTemplate($template=null){
-    return $this->fixSingularCamelTag()
+    return $this->fixFinalTag()
+    ->fixSingularCamelTag()
     ->fixPluraCamelTag()
     ->fixSingularSnakeTag()
     ->fixPluraSnakeTag()
@@ -306,6 +333,15 @@ abstract class CvBaseScaff
     return $this->deleteTemplateReceptorInyectFixedTemplate($template);
   }
 //[End InyectFixedTemplate Modes]
+  private function createTemplateFile(){
+    try{
+      file_put_contents($this->getTemplatePath(),'');
+    }catch(\Exception $e){
+      throw new \Exception('Error '.$this->getTemplatePath().' cant be created');
+    }
+    return $this;
+  }
+
   private function fixModeStep($step='loadTemplate'){
     return Str::camel($this->getMode().'_'.$step);
   }
