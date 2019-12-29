@@ -53,6 +53,7 @@ abstract class CvBaseScaff
   public function getContext(){
     return $this->context??null;
   }
+
   public function getTemplateFileName(){
     return fileBaseName(pathinfo($this->getTemplatePath(), PATHINFO_FILENAME));
   }
@@ -200,7 +201,7 @@ abstract class CvBaseScaff
   protected function creatorLoadTemplate(){
     if(!$this->templateExist()){
       if($this->confirm('template file doesnt exist, do you want to create it?'))
-        $this->creatorTemplateFile();
+        $this->createTemplateFile();
       else
         throw new \Exception('Template doesnt exist');
     }
@@ -213,7 +214,7 @@ abstract class CvBaseScaff
     return $this->creatorLoadTemplate();
   }
   protected function deleterLoadTemplate(){
-    return null;
+    return $this->creatorLoadTemplate();
   }
 //[End LoadTemplate Modes]
 
@@ -243,28 +244,28 @@ abstract class CvBaseScaff
 //[End CalculateParams Modes]
 
 //[FixTemplate Modes]
-  protected function creatorFixTemplate($template=null){
+  protected function creatorFixTemplate(){
     return $this->fixFinalTag()
-    ->fixSingularCamelTag()
-    ->fixPluraCamelTag()
-    ->fixSingularSnakeTag()
-    ->fixPluraSnakeTag()
-    ->fixSingularSlugTag()
-    ->fixPluraSlugTag()
-    ->fixSingularStudlyTag()
-    ->fixPluraStudlyTag()
-    ->fixSingularTitleTag()
-    ->fixPluraTitleTag()
-    ->fixSingularLowerTag()
-    ->fixPluraLowerTag()
-    ->fixSingularUpperTag()
-    ->fixPluraUpperTag()
-    ->getTemplateCache();
+      ->fixSingularCamelTag()
+      ->fixPluraCamelTag()
+      ->fixSingularSnakeTag()
+      ->fixPluraSnakeTag()
+      ->fixSingularSlugTag()
+      ->fixPluraSlugTag()
+      ->fixSingularStudlyTag()
+      ->fixPluraStudlyTag()
+      ->fixSingularTitleTag()
+      ->fixPluraTitleTag()
+      ->fixSingularLowerTag()
+      ->fixPluraLowerTag()
+      ->fixSingularUpperTag()
+      ->fixPluraUpperTag()
+      ->getTemplateCache();
   }
-  protected function updaterFixTemplate($template=null){
+  protected function updaterFixTemplate(){
     return null;
   }
-  protected function deleterFixTemplate($template=null){
+  protected function deleterFixTemplate(){
     return null;
   }
 //[End FixTemplate Modes]
@@ -305,7 +306,7 @@ abstract class CvBaseScaff
     return $this;
   }
 //[End InyectFixedTemplate Modes]
-  private function creatorTemplateFile(){
+  private function createTemplateFile(){
     try{
       file_put_contents($this->getTemplatePath(),'');
       cvConsoler(cvBrownTC('Template file was created, ')."\n");
