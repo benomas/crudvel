@@ -451,18 +451,19 @@ class BaseConsole{
     $modeAliases = CvScaffHelper::cvIam()->getModeAliases();
     foreach($cvScaffers AS $cvScafferType=>$cvScafferClass){
       Artisan::command(
-        'cv-scaff-'.fixedSlug($cvScafferType).' {resource?} {mode?}',
-        function($resource=null,$mode=1) use($cvScafferClass,$modeAliases){
+        'cv-scaff-'.fixedSlug($cvScafferType).' {resource?} {mode?} {force?}',
+        function($resource=null,$mode='c',$force=1) use($cvScafferClass,$modeAliases){
           if(!class_exists($cvScafferClass))
             cvConsoler(cvBrownTC("class $cvScafferClass doesnt exist")."\n");
-          $cvScaffInstance = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder())
+          $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder())
             ->setConsoleInstance($this)
             ->setResource($resource)
             ->setMode($modeAliases[$mode]??null)
-            ->setProcessorInstance(new $cvScafferClass())
-            ->build();
+            ->setProcessorInstance(new $cvScafferClass());
+          if($force)
+            $cvScaffBuilder->force();
 
-          $cvScaffInstance->runScaff();
+          $cvScaffBuilder->build()->runScaff();
         })->describe('cv-scaff-commands');
     }
     return $this;

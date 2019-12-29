@@ -6,17 +6,15 @@ abstract class CvBaseScaff
 {
   use \Crudvel\Traits\CvPatronTrait;
   protected $modes = [
-    'create-template-receptor',
-    'force-create-template-receptor',
-    'update-template-receptor',
-    'force-update-template-receptor',
-    'delete-template-receptor',
-    'force-delete-template-receptor',
+    'creator',
+    'updator',
+    'deletor',
   ];
-  protected $mode = 'create-template-receptor';
   private $templateCache;
   private $extraParams;
-  protected $context='back';
+  private   $force   = false;
+  protected $mode    = 'create';
+  protected $context = 'back';
 
   abstract protected function getTemplatePath();
   abstract protected function getTemplateReceptorPath();
@@ -32,11 +30,15 @@ abstract class CvBaseScaff
     return $this->resource??'';
   }
 
+  public function getForce(){
+    return $this->force??null;
+  }
+
   public function getMode(){
     return $this->mode??null;
   }
 
-  public function getExtraParams($extraParams=null){
+  public function getExtraParams(){
     return $this->extraParams??null;
   }
 
@@ -51,13 +53,17 @@ abstract class CvBaseScaff
   public function getContext(){
     return $this->context??null;
   }
-
   public function getTemplateFileName(){
     return fileBaseName(pathinfo($this->getTemplatePath(), PATHINFO_FILENAME));
   }
 
   public function setConsoleInstance($consoleInstance=null){
     $this->consoleInstance = $consoleInstance??null;
+    return $this;
+  }
+
+  public function setForce($force=null){
+    $this->force = $force??null;
     return $this;
   }
 
@@ -81,6 +87,14 @@ abstract class CvBaseScaff
     return $this;
   }
 
+  public function force($force=null){
+    return $this->setForce($force);
+  }
+
+  public function isForced(){
+    $this->getForce();
+  }
+
   public function stablishConsoleInstace($consoleInstace=null){
     return $this->setConsoleInstance($consoleInstace);
   }
@@ -89,7 +103,7 @@ abstract class CvBaseScaff
     return $this->setResource($resource);
   }
   public function stablishMode($mode=null){
-    $mode=$mode??$this->getMode()??'create-template-receptor';
+    $mode=$mode??$this->getMode()??'create';
     if(!in_array($mode,$this->getModes()))
       throw new \Exception('Invalid mode');
     return $this->setMode($mode);
@@ -100,7 +114,7 @@ abstract class CvBaseScaff
   }
 
   protected function templateReceptorExists(){
-    return file_exists($this->getTemplateReceptorPath());
+    return file_exists($this->getPath());
   }
 
   protected function fixCase($quantity='singular',$case='camel',$fixer=null){
@@ -183,38 +197,25 @@ abstract class CvBaseScaff
     return $this->fixCase('plural','upper',function($val){return Str::plural(strtoupper($val));});
   }
 //[LoadTemplate Modes]
-  protected function createTemplateReceptorLoadTemplate(){
+  protected function creatorLoadTemplate(){
     if(!$this->templateExist()){
-      $createTemplateFile = $this->getConsoleInstance()->ask('template file doesnt exist, do you want to create it? y/n')??'n';
-      if(in_array(strtolower($createTemplateFile),['y','yes','s','si'])){
-        $this->createTemplateFile();
-      }
+      if($this->confirm('template file doesnt exist, do you want to create it?'))
+        $this->creatorTemplateFile();
       else
         throw new \Exception('Template doesnt exist');
     }
     return file_get_contents($this->getTemplatePath());
   }
-  protected function forceCreateTemplateReceptorLoadTemplate(){
-    if(!$this->templateExist())
-      throw new \Exception('Template doesnt exist');
-    return file_get_contents($this->getTemplatePath());
-  }
-  protected function updateTemplateReceptorLoadTemplate(){
+  protected function updatorLoadTemplate(){
     return null;
   }
-  protected function forceUpdateTemplateReceptorLoadTemplate(){
-    return null;
-  }
-  protected function deleteTemplateReceptorLoadTemplate(){
-    return null;
-  }
-  protected function forceDeleteTemplateReceptorLoadTemplate(){
+  protected function deletorLoadTemplate(){
     return null;
   }
 //[End LoadTemplate Modes]
 
 //[CalculateParams Modes]
-  protected function createTemplateReceptorCalculateParams($template=null){
+  protected function creatorCalculateParams($template=null){
     $patern = '/<cv_singular_camel_(.+?)_cv>|<cv_plural_camel_(.+?)_cv>|<cv_singular_snake_(.+?)_cv>|<cv_plural_snake_(.+?)_cv>|<cv_singular_slug_(.+?)_cv>|<cv_plural_slug_(.+?)_cv>|<cv_singular_studly_(.+?)_cv>|<cv_plural_studly_(.+?)_cv>|<cv_singular_lower_(.+?)_cv>|<cv_plural_lower_(.+?)_cv>|<cv_singular_upper_(.+?)_cv>|<cv_plural_upper_(.+?)_cv>|<cv_final_(.+?)_cv>/';
     preg_match_all($patern,$template,$matches);
     if(isset($matches[0]))
@@ -228,29 +229,18 @@ abstract class CvBaseScaff
     $this->setExtraParams($extraParams);
     return $this;
   }
-  protected function forceCreateTemplateReceptorCalculateParams($template=null){
-    return $this->createTemplateReceptorCalculateParams($template);
-  }
-  protected function updateTemplateReceptorCalculateParams($template=null){
+  protected function updatorCalculateParams($template=null){
     $this->setExtraParams(['resource' => $this->getResource()]);
     return $this;
   }
-  protected function forceUpdateTemplateReceptorCalculateParams($template=null){
-    $this->setExtraParams(['resource' => $this->getResource()]);
-    return $this;
-  }
-  protected function deleteTemplateReceptorCalculateParams($template=null){
-    $this->setExtraParams(['resource' => $this->getResource()]);
-    return $this;
-  }
-  protected function forceDeleteTemplateReceptorCalculateParams($template=null){
+  protected function deletorCalculateParams($template=null){
     $this->setExtraParams(['resource' => $this->getResource()]);
     return $this;
   }
 //[End CalculateParams Modes]
 
 //[FixTemplate Modes]
-  protected function createTemplateReceptorFixTemplate($template=null){
+  protected function creatorFixTemplate($template=null){
     return $this->fixFinalTag()
     ->fixSingularCamelTag()
     ->fixPluraCamelTag()
@@ -268,72 +258,51 @@ abstract class CvBaseScaff
     ->fixPluraUpperTag()
     ->getTemplateCache();
   }
-  protected function forceCreateTemplateReceptorFixTemplate($template=null){
-    return $this->createTemplateReceptorFixTemplate($template);
-  }
-  protected function updateTemplateReceptorFixTemplate($template=null){
+  protected function updatorFixTemplate($template=null){
     return null;
   }
-  protected function forceUpdateTemplateReceptorFixTemplate($template=null){
-    return null;
-  }
-  protected function deleteTemplateReceptorFixTemplate($template=null){
-    return null;
-  }
-  protected function forceDeleteTemplateReceptorFixTemplate($template=null){
+  protected function deletorFixTemplate($template=null){
     return null;
   }
 //[End FixTemplate Modes]
 
 //[InyectFixedTemplate Modes]
-  protected function createTemplateReceptorInyectFixedTemplate($template=null){
-    if($this->templateReceptorExists())
-      throw new \Exception('Warging Template already defined');
-    try{
-      file_put_contents($this->getTemplateReceptorPath(), $template);
-    }catch(\Exception $e){
-      throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created with '.$template);
-    }
-    return $this;
-  }
-  protected function forceCreateTemplateReceptorInyectFixedTemplate($template=null){
+  protected function creatorInyectFixedTemplate($template=null){
     if($this->templateReceptorExists()){
+      if(!$this->isForced() && !$this->confirm('file already defined rewrite it?'))
+        throw new \Exception('Error '.$this->getPath().' cant be created');
       try{
-        unlink($this->getTemplateReceptorPath());
+        unlink($this->getPath());
+        cvConsoler(cvGreenTC('Old file was deleted')."\n");
       }catch(\Exception $e){
-        throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be deleted');
+        throw new \Exception('Error '.$this->getPath().' cant be deleted');
       }
     }
     try{
-      file_put_contents($this->getTemplateReceptorPath(), $template);
+      file_put_contents($this->getPath(), $template);
+      cvConsoler(cvGreenTC('New file was created')."\n");
     }catch(\Exception $e){
-      throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created');
+      throw new \Exception('Error '.$this->getPath().' cant be created');
     }
     return $this;
   }
-  protected function updateTemplateReceptorInyectFixedTemplate($template=null){
+  protected function updatorInyectFixedTemplate($template=null){
     return $this;
   }
-  protected function forceUpdateTemplateReceptorInyectFixedTemplate($template=null){
-    return $this;
-  }
-  protected function deleteTemplateReceptorInyectFixedTemplate($template=null){
+  protected function deletorInyectFixedTemplate($template=null){
     if(!$this->templateReceptorExists()){
-      cvConsoler(cvBrownTC($this->getTemplateReceptorPath().' file doest exist')."\n");
+      cvConsoler(cvBrownTC($this->getPath().' file doest exist')."\n");
       return $this;
     }
     try{
-      unlink($this->getTemplateReceptorPath());
+      unlink($this->getPath());
     }catch(\Exception $e){
-      throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be deleted');
+      throw new \Exception('Error '.$this->getPath().' cant be deleted');
     }
     return $this;
   }
-  protected function forceDeleteTemplateReceptorInyectFixedTemplate($template=null){
-    return $this->deleteTemplateReceptorInyectFixedTemplate($template);
-  }
 //[End InyectFixedTemplate Modes]
-  private function createTemplateFile(){
+  private function creatorTemplateFile(){
     try{
       file_put_contents($this->getTemplatePath(),'');
     }catch(\Exception $e){
@@ -379,5 +348,8 @@ abstract class CvBaseScaff
     if(method_exists($this,$callBack))
       return $this->$callBack($template);
     return $this;
+  }
+  public function confirm($message='',$options=['yes','no'],$default='no'){
+    return $this->getConsoleInstance()->choice($message,$options,$default)==='yes';
   }
 }

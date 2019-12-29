@@ -64,6 +64,15 @@ class CvScaff
     return $this;
   }
 
+  public function isForced(){
+    $this->getProcessorInstance()->getForce();
+  }
+
+  public function force(){
+    $this->getProcessorInstance()->force();
+    return $this;
+  }
+
   private function stablishConsoleInstace(){
     $this->getProcessorInstance()->stablishConsoleInstace($this->getConsoleInstance());
     return $this;

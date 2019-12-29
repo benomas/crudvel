@@ -71,11 +71,6 @@ class CrudvelServiceProvider extends ServiceProvider
     });
     $this->commands('install:crudvel');
 
-    $this->app->singleton('make:scaffold', function () {
-      return new \Crudvel\Commands\ScaffoldingCommand();
-    });
-    $this->commands('make:scaffold');
-
     $this->app->singleton('make:root-user', function () {
       return new \Crudvel\Commands\MakeRootUser();
     });

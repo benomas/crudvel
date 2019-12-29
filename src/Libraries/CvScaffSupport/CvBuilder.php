@@ -10,6 +10,11 @@ class CvBuilder extends \Crudvel\Libraries\CvBuilder
     parent::__construct($cvBuildClass);
   }
 
+  public function force(){
+    $this->getCvBuildedInstance()->force();
+    return $this;
+  }
+
   public function setProcessor($processor=null){
     $this->getCvBuildedInstance()->setProcessor($processor??null);
     return $this;

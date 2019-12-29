@@ -1,0 +1,19 @@
+<?php
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+class Create<cv_plural_studly_resource_cv>Table extends \Crudvel\Database\Migrations\BaseMigration{
+  /**
+   * Run the migrations.
+   */
+  public function up(){
+    if(!Schema::hasTable($this->mainTable)){
+      Schema::create($this->mainTable, function (Blueprint $table) {
+        Schema::disableForeignKeyConstraints();
+        $table->increments('id');
+        $this->defaultColumns($table);
+        $table->engine = 'InnoDB';
+        Schema::enableForeignKeyConstraints();
+      });
+    }
+  }
+}

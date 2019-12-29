@@ -46,12 +46,9 @@ class CvScaffHelper
 
   public function getModeAliases(){
     return [
-      '1'=>'create-template-receptor',
-      '2'=>'force-create-template-receptor',
-      '3'=>'update-template-receptor',
-      '4'=>'force-update-template-receptor',
-      '5'=>'delete-template-receptor',
-      '6'=>'force-delete-template-receptor',
+      'c'=>'create',
+      'u'=>'update',
+      'd'=>'delete',
     ];
   }
 

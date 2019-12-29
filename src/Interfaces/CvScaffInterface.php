@@ -4,6 +4,8 @@ namespace Crudvel\Interfaces;
 
 interface CvScaffInterface
 {
+  public function force();
+  public function getForce();
   public function stablishConsoleInstace($consoleInstance=null);
   public function stablishResource($resource=null);
   public function stablishMode($mode=null);
