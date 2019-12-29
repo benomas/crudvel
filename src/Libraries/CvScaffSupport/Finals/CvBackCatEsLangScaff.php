@@ -37,7 +37,7 @@ class CvBackCatEsLangScaff  extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaf
   }
 
   protected function getTemplatePath(){
-    return base_path("vendor/benomas/crudvel/src/templates/cv_back_es_lang.txt");
+    return base_path("vendor/benomas/crudvel/src/templates/cv_back_cat_es_lang.txt");
   }
 
   protected function getTemplateReceptorPath(){

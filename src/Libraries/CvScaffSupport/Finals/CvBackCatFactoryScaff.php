@@ -13,14 +13,14 @@ class CvBackCatFactoryScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaf
   }
 
   protected function getTemplatePath(){
-    $fileName = 'cv_back_seeder.txt';
+    $fileName = 'cv_back_factory.txt';
     $path='vendor/benomas/crudvel/src/templates/';
     return base_path("$path$fileName");
   }
 
   protected function getTemplateReceptorPath(){
-    $fileName = Str::studly(Str::singular($this->getResource())).'TableSeeder.php';
-    $destPath = 'database/seeds/';
+    $fileName = Str::studly(Str::singular($this->getResource())).'Factory.php';
+    $destPath = 'database/factories/';
     return base_path("$destPath$fileName");
   }
 //[LoadTemplate Modes]

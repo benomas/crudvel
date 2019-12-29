@@ -12,7 +12,7 @@ class CvBackCatApiControllerScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
   }
 
   protected function getTemplatePath(){
-    return base_path("vendor/benomas/crudvel/src/templates/cv_back_api_controller.txt");
+    return base_path("vendor/benomas/crudvel/src/templates/cv_back_cat_api_controller.txt");
   }
 
   protected function getTemplateReceptorPath(){

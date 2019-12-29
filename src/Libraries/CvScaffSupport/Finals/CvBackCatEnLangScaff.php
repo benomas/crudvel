@@ -12,7 +12,7 @@ class CvBackCatEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff
   }
 
   protected function getTemplatePath(){
-    return base_path("vendor/benomas/crudvel/src/templates/cv_back_en_lang.txt");
+    return base_path("vendor/benomas/crudvel/src/templates/cv_back_cat_en_lang.txt");
   }
 
   protected function getTemplateReceptorPath(){

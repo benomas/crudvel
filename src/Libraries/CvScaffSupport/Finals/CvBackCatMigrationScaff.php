@@ -14,7 +14,7 @@ class CvBackCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseSc
   }
 
   protected function getTemplatePath(){
-    $fileName = 'cv_back_migration.txt';
+    $fileName = 'cv_back_cat_migration.txt';
     $path='vendor/benomas/crudvel/src/templates/';
     return base_path("$path$fileName");
   }

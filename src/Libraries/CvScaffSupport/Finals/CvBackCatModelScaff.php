@@ -12,7 +12,7 @@ class CvBackCatModelScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff 
   }
 
   protected function getTemplatePath(){
-    return base_path("vendor/benomas/crudvel/src/templates/cv_back_model.txt");
+    return base_path("vendor/benomas/crudvel/src/templates/cv_back_cat_model.txt");
   }
 
   protected function getTemplateReceptorPath(){

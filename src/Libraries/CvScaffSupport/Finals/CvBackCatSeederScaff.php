@@ -13,7 +13,7 @@ class CvBackCatSeederScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff
   }
 
   protected function getTemplatePath(){
-    $fileName = 'cv_back_seeder.txt';
+    $fileName = 'cv_back_cat_seeder.txt';
     $path='vendor/benomas/crudvel/src/templates/';
     return base_path("$path$fileName");
   }
