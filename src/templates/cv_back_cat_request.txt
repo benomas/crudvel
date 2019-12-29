@@ -1,0 +1,10 @@
+<?php namespace  App\Http\Requests;
+
+class <cv_singular_studly_resource_cv>Request extends \Crudvel\Customs\Requests\CrudRequest{
+
+// [Authorization]
+// [End Authorization]
+
+// [Rules]
+// [End Rules]
+}

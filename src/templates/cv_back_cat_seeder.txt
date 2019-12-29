@@ -1,0 +1,13 @@
+<?php namespace Database\Seeds;
+
+class <cv_singular_studly_resource_cv>TableSeeder extends \Crudvel\Customs\Database\Seeds\BaseSeeder{
+	/* Example
+	protected $data =[
+		[
+			"name"        => "Rango 1",
+			"description" => "Rango 1, Desde cotización hasta anexos",
+			"active"      => 1,
+		]
+	];
+	*/
+}
