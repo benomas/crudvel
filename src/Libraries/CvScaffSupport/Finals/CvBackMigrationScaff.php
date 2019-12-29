@@ -32,7 +32,7 @@ class CvBackMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff
         }
       }
     }
-    return base_path($destPath.$fileName);
+    return base_path("$destPath$fileName");
   }
 //[LoadTemplate Modes]
 //[End LoadTemplate Modes]

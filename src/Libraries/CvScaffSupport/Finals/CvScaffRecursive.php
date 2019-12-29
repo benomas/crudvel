@@ -16,7 +16,10 @@ class CvScaffRecursive extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff imp
   }
 
   protected function getTemplateReceptorPath(){
-    $scaffName = 'Cv'.Str::studly(Str::singular($this->getExtraParams()['prefix']??'')).Str::studly(Str::singular($this->getResource())).'Scaff.php';
+    $baseName = $this->getExtraParams()['context (define as back or front)']??'';
+    $baseName .= '_'.($this->getExtraParams()['prefix']??'');
+    $baseName .= '_'.($this->getExtraParams()['resource']??'');
+    $scaffName = 'Cv'.Str::studly(Str::singular($baseName)).'Scaff.php';
     return base_path('vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Finals/'.$scaffName);
   }
   //[LoadTemplate Modes]

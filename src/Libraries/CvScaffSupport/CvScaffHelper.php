@@ -46,9 +46,9 @@ class CvScaffHelper
 
   public function getModeAliases(){
     return [
-      'c'=>'create',
-      'u'=>'update',
-      'd'=>'delete',
+      'c'=>'creator',
+      'u'=>'updator',
+      'd'=>'deletor',
     ];
   }
 

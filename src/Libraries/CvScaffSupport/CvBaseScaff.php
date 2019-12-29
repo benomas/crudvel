@@ -105,7 +105,7 @@ abstract class CvBaseScaff
   public function stablishMode($mode=null){
     $mode=$mode??$this->getMode()??'create';
     if(!in_array($mode,$this->getModes()))
-      throw new \Exception('Invalid mode');
+      throw new \Exception('Invalid mode, valid modes are (c)reate (u)pdate  (d)elete');
     return $this->setMode($mode);
   }
 
@@ -114,7 +114,7 @@ abstract class CvBaseScaff
   }
 
   protected function templateReceptorExists(){
-    return file_exists($this->getPath());
+    return file_exists($this->getTemplateReceptorPath());
   }
 
   protected function fixCase($quantity='singular',$case='camel',$fixer=null){
@@ -204,7 +204,10 @@ abstract class CvBaseScaff
       else
         throw new \Exception('Template doesnt exist');
     }
-    return file_get_contents($this->getTemplatePath());
+    $template = file_get_contents($this->getTemplatePath());
+    if(!strlen($template))
+      throw new \Exception('Error, template file ['.$this->getTemplatePath().'] is empty, set it and run this command again');
+    return $template;
   }
   protected function updatorLoadTemplate(){
     return null;
@@ -270,19 +273,19 @@ abstract class CvBaseScaff
   protected function creatorInyectFixedTemplate($template=null){
     if($this->templateReceptorExists()){
       if(!$this->isForced() && !$this->confirm('file already defined rewrite it?'))
-        throw new \Exception('Error '.$this->getPath().' cant be created');
+        throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created');
       try{
-        unlink($this->getPath());
+        unlink($this->getTemplateReceptorPath());
         cvConsoler(cvGreenTC('Old file was deleted')."\n");
       }catch(\Exception $e){
-        throw new \Exception('Error '.$this->getPath().' cant be deleted');
+        throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be deleted');
       }
     }
     try{
-      file_put_contents($this->getPath(), $template);
+      file_put_contents($this->getTemplateReceptorPath(), $template);
       cvConsoler(cvGreenTC('New file was created')."\n");
     }catch(\Exception $e){
-      throw new \Exception('Error '.$this->getPath().' cant be created');
+      throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created');
     }
     return $this;
   }
@@ -291,13 +294,13 @@ abstract class CvBaseScaff
   }
   protected function deletorInyectFixedTemplate($template=null){
     if(!$this->templateReceptorExists()){
-      cvConsoler(cvBrownTC($this->getPath().' file doest exist')."\n");
+      cvConsoler(cvBrownTC($this->getTemplateReceptorPath().' file doest exist')."\n");
       return $this;
     }
     try{
-      unlink($this->getPath());
+      unlink($this->getTemplateReceptorPath());
     }catch(\Exception $e){
-      throw new \Exception('Error '.$this->getPath().' cant be deleted');
+      throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be deleted');
     }
     return $this;
   }
@@ -305,10 +308,11 @@ abstract class CvBaseScaff
   private function creatorTemplateFile(){
     try{
       file_put_contents($this->getTemplatePath(),'');
+      cvConsoler(cvBrownTC('Template file was created, ')."\n");
     }catch(\Exception $e){
       throw new \Exception('Error '.$this->getTemplatePath().' cant be created');
     }
-    return $this;
+    throw new \Exception('Warning you need to fill template file ['.$this->getTemplatePath().'] and run this command again');
   }
 
   private function fixModeStep($step='loadTemplate'){
