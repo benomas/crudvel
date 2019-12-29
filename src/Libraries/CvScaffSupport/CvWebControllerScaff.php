@@ -5,20 +5,20 @@ namespace Crudvel\Libraries\CvScaffSupport;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class Cv<cv_singular_studly_prefix_cv><cv_singular_studly_resource_cv>Scaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+class CvWebControllerScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   public function __construct(){
     parent::__construct();
   }
 
   protected function getTemplatePath(){
-    $fileName = ltrim('<cv_singular_snake_prefix_cv>_<cv_singular_snake_resource_cv>.txt','_');
+    $fileName = ltrim('web_controller.txt','_');
     return base_path("vendor/benomas/crudvel/src/templates/$fileName");
   }
 
   protected function getTemplateReceptorPath(){
-    $<cv_singular_camel_resource_cv>Name = Str::studly(Str::singular($this->getResource())).'<cv_singular_studly_resource_cv>.php';
-    return app_path('Http/<cv_singular_studly_resource_cv>/<cv_singular_studly_prefix_cv>/'.$<cv_singular_camel_resource_cv>Name);
+    $controllerName = Str::studly(Str::singular($this->getResource())).'Controller.php';
+    return app_path('Http/Controller/Web/'.$controllerName);
   }
 //[LoadTemplate Modes]
 //[End LoadTemplate Modes]

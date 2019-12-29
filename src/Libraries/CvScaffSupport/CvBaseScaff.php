@@ -102,20 +102,6 @@ abstract class CvBaseScaff
       else
         $resolvedTag= Str::$case(Str::$quantity($value));
       $template = str_replace("<cv_{$quantity}_{$case}_{$param}_cv>",$resolvedTag,$template);
-      /*
-      $template = preg_replace_callback(
-        '/(<cv_'.$quantity.'_'.$case.'_)($param)(_cv>)/',
-        function($matches) use($quantity,$case,$fixer){
-          $replacement = $matches[2]??null;
-          if(!$replacement)
-            return $matches[0]??'';
-          $resolvedTag = $this->getExtraParams()[$replacement]??'';
-          if($fixer)
-            return $fixer(Str::$quantity($resolvedTag));
-          return Str::$case(Str::$quantity($resolvedTag));
-        },
-        $this->getTemplateCache()
-      );*/
     }
     $this->setTemplateCache($template);
     return $this;
