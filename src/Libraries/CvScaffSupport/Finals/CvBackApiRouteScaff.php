@@ -33,8 +33,7 @@ class CvBackApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff 
       $this->setExtraParams(['resource' => $this->getResource()]);
     }
     protected function updaterCalculateParams($template=null){
-      $this->setExtraParams(['resource' => $this->getResource()]);
-      return $this;
+      throw new \Exception('Error, api routes template is disabled for update porpuses');
     }
     protected function deleterCalculateParams($template=null){
       $this->setExtraParams(['resource' => $this->getResource()]);
@@ -59,7 +58,7 @@ class CvBackApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff 
       return str_replace($apiCrudvelResources,"$apiCrudvelResources  ,[\"$slugResource\"]{$matches[4]}",$template);
     }
     protected function updaterFixTemplate(){
-      return null;
+      throw new \Exception('Error, api routes template is disabled for update porpuses');
     }
     protected function deleterFixTemplate(){
       $extraParams = $this->getExtraParams();
@@ -70,9 +69,13 @@ class CvBackApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff 
       if(!$apiCrudvelResources)
         throw new \Exception('Error, api crudvel resources section is not defined');
       $slugResource = fixedSlug(Str::plural($this->getResource()));
-      preg_match('/(\])((?>\s|,)*)(\[\W*'.$slugResource.'\W*\])((?>\s|,)*)/',$apiCrudvelResources,$matches2);
-      $toRemove = $matches2[2]??'';
+      preg_match('/(\])?((?>\s|,)*)(\[\W*'.$slugResource.'\W*\])((?>\s|,)*)/',$apiCrudvelResources,$matches2);
+      $toRemove='';
+      if(strlen($matches2[1]))
+        $toRemove = $matches2[2]??'';
       $toRemove .= $matches2[3]??'';
+      if(!strlen($matches2[1]))
+        $toRemove .= $matches2[4]??'';
 
       if($toRemove===''){
         cvConsoler(cvBlueTC('no changes required')."\n");
@@ -94,13 +97,7 @@ class CvBackApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff 
     return $this;
   }
   protected function updaterInyectFixedTemplate($template=null){
-    try{
-      file_put_contents($this->getTemplateReceptorPath(), $template);
-      cvConsoler(cvGreenTC('file was updated')."\n");
-    }catch(\Exception $e){
-      throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created');
-    }
-    return $this;
+    throw new \Exception('Error, api routes template is disabled for update porpuses');
   }
   protected function deleterInyectFixedTemplate($template=null){
     try{
