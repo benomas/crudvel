@@ -9,7 +9,7 @@ use Stichoza\GoogleTranslate\GoogleTranslate;
 class CvCreatorEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
   protected $relatedTargetPath   = 'resources/lang/es/crudvel/';
-  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_es_lang.txt';
+  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_es_lang.txt';
   protected $trans;
   public function __construct(){
     parent::__construct();

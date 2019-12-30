@@ -7,8 +7,8 @@ use Illuminate\Support\Str;
 
 class CvCreatorEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
-  protected $relatedTargetPath   = 'app/resources/lang/en/crudvel/';
-  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_en_lang.txt';
+  protected $relatedTargetPath   = 'resources/lang/en/crudvel/';
+  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_en_lang.txt';
   public function __construct(){
     parent::__construct();
   }
