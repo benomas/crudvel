@@ -4,7 +4,7 @@ namespace Crudvel\Libraries\CvScaffSupport;
 use Illuminate\Support\Str;
 use \Crudvel\Interfaces\CvScaffInterface;
 
-class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   protected $relatedTargetPath;
   protected $relatedTemplatePath;
@@ -41,6 +41,10 @@ class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff i
   public function getExtraParams(){
     return $this->extraParams??null;
   }
+
+  protected function getTargetFileName(){
+    return $this->getAbsolutTargetPath().Str::studly(Str::singular($this->getResource()));
+  }
 //[End Getters]
 
 //[Setters]
@@ -76,20 +80,6 @@ class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff i
 //[End Setters]
 
 //[Stablishers]
-  protected function stablishRelatedTargetPath(){
-    $relatedTargetPath = $this->getScaffParams()['related-target-path']??null;
-    if(!$relatedTargetPath || $relatedTargetPath==='')
-      throw new \Exception("Error, related-target-path is not defined in scaff tree");
-    return $this->setRelatedTargetPath($relatedTargetPath??null);
-  }
-
-  protected function stablishRelatedTemplatePath(){
-    $relatedTemplatePath = $this->getScaffParams()['related-template-path']??null;
-    if(!$relatedTemplatePath || $relatedTemplatePath==='')
-      throw new \Exception("Error, related-template-path is not defined in scaff tree");
-    return $this->setRelatedTemplatePath($relatedTemplatePath??null);
-  }
-
   protected function stablishAbsolutTargetPath(){
     return $this->setAbsolutTargetPath(base_path($this->getRelatedTargetPath()));
   }
@@ -124,11 +114,12 @@ class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff i
     return $this->setTemplate($template);
   }
 
+  protected function targetFileAlreadyExist(){
+    return file_exists($this->getTargetFileName());
+  }
+
   private function processPaths(){
-    return $this->stablishRelatedTargetPath()
-      ->stablishRelatedTemplatePath()
-      ->stablishAbsolutTargetPath()
-      ->stablishAbsolutTemplatePath();
+    return $this->stablishAbsolutTargetPath()->stablishAbsolutTemplatePath();
   }
 
   protected function calculateParams(){
@@ -159,7 +150,7 @@ class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff i
 
   protected function fixCase($quantity='singular',$case='camel',$fixer=null){
     $extraParams = $this->getExtraParams();
-    $template = $this->getTemplate();
+    $template    = $this->getTemplate();
     foreach($extraParams as $param=>$value){
       if($fixer)
         $resolvedTag=$fixer($value);
@@ -248,12 +239,32 @@ class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff i
         ->fixSingularLowerTag()
         ->fixPluraLowerTag()
         ->fixSingularUpperTag()
-        ->fixPluraUpperTag()
-        ->getTemplate();
+        ->fixPluraUpperTag();
+  }
+
+  protected function inyectFixedTemplate(){
+    if($this->targetFileAlreadyExist()){
+      if(!$this->isForced() && !$this->confirm('file already defined rewrite it?'))
+        throw new \Exception("Error {$this->getTargetFileName()} cant be created");
+      try{
+        unlink($this->getTargetFileName());
+        cvConsoler(cvGreenTC('Old file was deleted')."\n");
+      }catch(\Exception $e){
+        throw new \Exception("Error {$this->getTargetFileName()} cant be deleted");
+      }
+    }
+    try{
+      file_put_contents($this->getTargetFileName(), $this->getTemplate());
+      cvConsoler(cvGreenTC('New file was created')."\n");
+    }catch(\Exception $e){
+      throw new \Exception("Error {$this->getTargetFileName()} cant be created");
+    }
+    return $this;
   }
 
   public function scaff() {
     return $this->processPaths()
+      ->loadTemplate()
       ->calculateParams()
       ->askAditionalParams()
       ->fixTemplate()

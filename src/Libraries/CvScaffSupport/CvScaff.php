@@ -255,6 +255,5 @@ class CvScaff
       ->setResource($this->getResource())
       ->setScaffParams($this->getTargetSubTree())
       ->scaff();
-    pdd('asd');
   }
 }
