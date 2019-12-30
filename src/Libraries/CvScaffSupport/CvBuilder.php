@@ -10,13 +10,18 @@ class CvBuilder extends \Crudvel\Libraries\CvBuilder
     parent::__construct($cvBuildClass);
   }
 
-  public function force(){
-    $this->getCvBuildedInstance()->force();
+  public function setContext($context=null){
+    $this->getCvBuildedInstance()->setContext($context??null);
     return $this;
   }
 
-  public function setProcessor($processor=null){
-    $this->getCvBuildedInstance()->setProcessor($processor??null);
+  public function setTarget($target=null){
+    $this->getCvBuildedInstance()->setTarget($target??null);
+    return $this;
+  }
+
+  public function setMode($mode=null){
+    $this->getCvBuildedInstance()->setMode($mode??null);
     return $this;
   }
 
@@ -29,9 +34,8 @@ class CvBuilder extends \Crudvel\Libraries\CvBuilder
     $this->getCvBuildedInstance()->setResource($resource??null);
     return $this;
   }
-
-  public function setMode($mode=null){
-    $this->getCvBuildedInstance()->setMode($mode??null);
+  public function force(){
+    $this->getCvBuildedInstance()->force();
     return $this;
   }
 
@@ -39,15 +43,4 @@ class CvBuilder extends \Crudvel\Libraries\CvBuilder
     $this->getCvBuildedInstance()->setProcessorInstance($processorInstace??null);
     return $this;
   }
-  //[LoadTemplate Modes]
-  //[End LoadTemplate Modes]
-
-  //[CalculateParams Modes]
-  //[End CalculateParams Modes]
-
-  //[FixTemplate Modes]
-  //[End FixTemplate Modes]
-
-  //[InyectFixedTemplate Modes]
-  //[End InyectFixedTemplate Modes]
 }

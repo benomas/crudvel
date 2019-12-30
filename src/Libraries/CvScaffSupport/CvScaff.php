@@ -6,61 +6,56 @@ use \Crudvel\Interfaces\CvScaffInterface;
 
 class CvScaff
 {
-  private $consoleInstance;
-  private $resource;
-  private $mode;
-  private $template;
+  private $target;
+  private $context;
   private $processorInstance;
 
   public function __construct(){
   }
 
-  public function getConsoleInstance(){
-    return $this->consoleInstance;
+  public function getContext(){
+    return $this->context??null;
   }
 
-  public function getResource(){
-    return $this->resource;
-  }
-
-  public function getMode(){
-    return $this->mode;
-  }
-
-  public function getTemplate(){
-    return $this->template;
+  public function getTarget(){
+    return $this->target??null;
   }
 
   public function getProcessorInstance(){
-    return $this->processorInstance;
+    return $this->processorInstance??null;
   }
 
   public function getProcessorClass(){
-    return $this->processorClass;
+    return get_class($this->getProcessorInstance());
+  }
+
+  public function setContext($context=null){
+    $this->context = $context;
+    return $this;
+  }
+
+  public function setTarget($target=null){
+    $this->target = $target;
+    return $this;
   }
 
   public function setConsoleInstance($consoleInstance=null){
-    $this->consoleInstance = $consoleInstance??null;
+    $this->getProcessorInstance()->setConsoleInstance($consoleInstance);
     return $this;
   }
 
   public function setResource($resource=null){
-    $this->resource = $resource??null;
+    $this->getProcessorInstance()->setResource($resource);
     return $this;
   }
 
   public function setMode($mode=null){
-    $this->mode = $mode??null;
+    $this->getProcessorInstance()->setMode($mode);
     return $this;
   }
 
   public function setProcessorInstance(CvScaffInterface $processorInstance=null){
     $this->processorInstance = $processorInstance??null;
-    return $this;
-  }
-
-  private function setTemplate($template=null){
-    $this->template = $template??null;
     return $this;
   }
 
@@ -73,52 +68,27 @@ class CvScaff
     return $this;
   }
 
-  private function stablishConsoleInstace(){
-    $this->getProcessorInstance()->stablishConsoleInstace($this->getConsoleInstance());
-    return $this;
-  }
-
-  private function stablishResource(){
-    $this->getProcessorInstance()->stablishResource($this->getResource());
-    return $this;
-  }
-
-  private function stablishMode(){
-    $this->getProcessorInstance()->stablishMode($this->getMode());
-    return $this;
-  }
-
   private function askAditionalParams(){
-    $this->getProcessorInstance()->askAditionalParams($this->getTemplate());
+    $this->getProcessorInstance()->askAditionalParams();
     return $this;
   }
 
   private function loadTemplate(){
-    $pretemplate = $this->getProcessorInstance()->loadTemplate();
-    //add general logic before set template
-    $this->setTemplate($pretemplate);
+    $this->getProcessorInstance()->loadTemplate();
     return $this;
   }
 
   private function fixTemplate(){
-    $pretemplate = $this->getProcessorInstance()->fixTemplate($this->getTemplate());
-    //add general logic before set template
-    $this->setTemplate($pretemplate);
+    $this->getProcessorInstance()->fixTemplate();
     return $this;
   }
 
   private function inyectFixedTemplate(){
-    $this->getProcessorInstance()->inyectFixedTemplate($this->getTemplate());
+    $this->getProcessorInstance()->inyectFixedTemplate();
     return $this;
   }
 
   public function runScaff(){
-    $this->stablishConsoleInstace()
-      ->stablishResource()
-      ->stablishMode()
-      ->loadTemplate()
-      ->askAditionalParams()
-      ->fixTemplate()
-      ->inyectFixedTemplate();
+    $this->loadTemplate()->askAditionalParams()->fixTemplate()->inyectFixedTemplate();
   }
 }

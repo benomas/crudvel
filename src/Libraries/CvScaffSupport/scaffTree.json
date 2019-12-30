@@ -1,0 +1,13 @@
+{
+  "back":{
+    "creator":{
+      "api-controller":{
+        "class"         : "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff",
+        "template-path" : ""
+      }
+    }
+  },
+  "front":{
+
+  }
+}

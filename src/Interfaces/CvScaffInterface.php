@@ -6,9 +6,9 @@ interface CvScaffInterface
 {
   public function force();
   public function getForce();
-  public function stablishConsoleInstace($consoleInstance=null);
-  public function stablishResource($resource=null);
-  public function stablishMode($mode=null);
+  public function setConsoleInstance($consoleInstance=null);
+  public function setResource($resource=null);
+  public function setMode($mode=null);
   public function askAditionalParams();
   public function loadTemplate();
   public function fixTemplate();

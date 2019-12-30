@@ -447,6 +447,21 @@ class BaseConsole{
   }
 
   public function loadCvScaff(){
+    Artisan::command(
+    'cv-scaff {context} {mode} {target} {resource} {force?}',
+    function($context=null,$mode='creator',$target=null,$resource=null,$force=0){
+      $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder())
+        ->setContext($target)
+        ->setTarget($target)
+        ->setConsoleInstance($this)
+        ->setResource($resource)
+        ->setMode($mode);
+      if($force)
+        $cvScaffBuilder->force();
+
+      $cvScaffBuilder->build()->runScaff();
+    })->describe('cv-scaff-commands');
+    /*
     $cvScaffers  = CvScaffHelper::cvIam()->getBackFinalScaffers();
     $modeAliases = CvScaffHelper::cvIam()->getModeAliases();
     foreach($cvScaffers AS $cvScafferType=>$cvScafferClass){
@@ -465,7 +480,7 @@ class BaseConsole{
 
           $cvScaffBuilder->build()->runScaff();
         })->describe('cv-scaff-commands');
-    }
+    }*/
     return $this;
   }
 }

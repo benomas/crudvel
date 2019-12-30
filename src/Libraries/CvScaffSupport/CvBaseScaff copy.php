@@ -2,14 +2,19 @@
 
 namespace Crudvel\Libraries\CvScaffSupport;
 use Illuminate\Support\Str;
-abstract class CvBaseScaff
+abstract class CvBaseScaffC
 {
   use \Crudvel\Traits\CvPatronTrait;
+  protected $modes = [
+    'creator',
+    'updater',
+    'deleter',
+  ];
   private $templateCache;
   private $extraParams;
   private   $force   = false;
-  protected $mode;
-  protected $context;
+  protected $mode    = 'creator';
+  protected $context = 'back';
 
   abstract protected function getTemplatePath();
   abstract protected function getTemplateReceptorPath();

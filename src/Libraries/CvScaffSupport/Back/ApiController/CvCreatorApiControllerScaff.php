@@ -1,0 +1,33 @@
+<?php
+
+namespace Crudvel\Libraries\CvScaffSupport\Back\ApiController;
+
+use \Crudvel\Interfaces\CvScaffInterface;
+use Illuminate\Support\Str;
+
+class CvCreatorApiControllerScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
+{
+  public function __construct(){
+    parent::__construct();
+  }
+
+  protected function getTemplatePath(){
+    return base_path("vendor/benomas/crudvel/src/templates/cv_back_api_controller.txt");
+  }
+
+  protected function getTemplateReceptorPath(){
+    $controllerName = Str::studly(Str::singular($this->getResource())).'Controller.php';
+    return app_path('Http/Controllers/Api/'.$controllerName);
+  }
+  //[LoadTemplate Modes]
+  //[End LoadTemplate Modes]
+
+  //[CalculateParams Modes]
+  //[End CalculateParams Modes]
+
+  //[FixTemplate Modes]
+  //[End FixTemplate Modes]
+
+  //[InyectFixedTemplate Modes]
+  //[End InyectFixedTemplate Modes]
+}
