@@ -55,6 +55,13 @@ class CrudvelServiceProvider extends ServiceProvider
         base_path('crudvel/customs/Requests/FileRequest.php'),
       __DIR__.'/customs/Validations/CustomValidator.txt' =>
         base_path('crudvel/customs/Validations/CustomValidator.php'),
+      __DIR__.'/customs/Scaff/scaff_tree.json' =>
+        base_path('crudvel/customs/Scaff/scaff_tree.json'),
+      __DIR__.'/customs/Scaff/Classes/README.md' =>
+        base_path('crudvel/customs/Scaff/Classes/README.md'),
+        __DIR__.'/customs/Scaff/templates/README.md' =>
+          base_path('crudvel/customs/Scaff/templates/README.md'),
+
       __DIR__.'/config' =>
         base_path('config/packages/benomas/crudvel'),
     ]);

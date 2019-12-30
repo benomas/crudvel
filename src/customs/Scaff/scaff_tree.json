@@ -1,9 +1,10 @@
+/* example of scaff-tree
 {
   "back":{
     "creator":{
       "api-controller":{
-        "class"         : "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff",
-        "template-path" : ""
+        "class"                 : "Crudvel\\Custom\\Pscaff\\Classes\\CvCreatorApiControllerScaff",
+        "related-template-path" : "crudvel/custom/Pscaff/templates/<something>.<extension>"
       }
     }
   },
@@ -11,3 +12,4 @@
 
   }
 }
+*/

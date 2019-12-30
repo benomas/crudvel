@@ -93,7 +93,7 @@ class InstallCommand extends Command {
 
     Artisan::call('vendor:publish',['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider']);
     cvConsoler("\n".cvGreenTC(customExec('composer dump-autoload')));
-    cvConsoler("\n".cvGreenTC('Crudvel Installation Process Completed'));
+    cvConsoler("\n".cvGreenTC('Crudvel Installation Process Completed')."\n");
   }
 
   protected function getArguments()
