@@ -6,8 +6,16 @@ use \Crudvel\Interfaces\CvScaffInterface;
 
 class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaff implements CvScaffInterface
 {
-  protected $context='back';
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
   }
+
+  //[Getters]
+  //[End Getters]
+
+  //[Setters]
+  //[End Setters]
+
+  //[Stablishers]
+  //[End Stablishers]
 }

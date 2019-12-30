@@ -10,4 +10,14 @@ class CvBaseAdderScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff imp
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
   }
+
+  //[Getters]
+  //[End Getters]
+
+  //[Setters]
+  //[End Setters]
+
+  //[Stablishers]
+  //[End Stablishers]
+
 }

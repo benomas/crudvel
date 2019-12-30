@@ -2,41 +2,52 @@
 
 namespace Crudvel\Libraries\CvScaffSupport;
 
-abstract class CvBaseScaff
+class CvBaseScaff
 {
   use \Crudvel\Traits\CvPatronTrait;
   use \Crudvel\Traits\CvClosureCommandTrait;
   private $consoleInstance;
+  private $resource;
+  private $scaffParams;
+  private $force;
 
   public function __construct(){
   }
 
+//[Getters]
   public function getResource(){
     return $this->resource??'';
+  }
+
+  public function getScaffParams(){
+    return $this->scaffParams??[];
   }
 
   public function getForce(){
     return $this->force??null;
   }
+  //[End Getters]
 
-  public function getExtraParams(){
-    return $this->extraParams??null;
-  }
-
-  public function setForce($force=null){
-    $this->force = $force??null;
-    return $this;
-  }
+  //[Setters]
 
   public function setResource($resource=null){
     $this->resource = $resource??null;
     return $this;
   }
 
-  public function setExtraParams($extraParams=null){
-    $this->extraParams = $extraParams??null;
+  public function setScaffParams($scaffParams=null){
+    $this->scaffParams = $scaffParams??[];
     return $this;
   }
+
+  public function setForce($force=null){
+    $this->force = $force??null;
+    return $this;
+  }
+  //[End Setters]
+
+  //[Stablishers]
+  //[End Stablishers]
 
   public function force($force=null){
     return $this->setForce($force);

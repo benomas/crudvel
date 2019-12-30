@@ -3,6 +3,7 @@
     "creator":{
       "api-controller":{
         "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff",
+        "related-target-path":"app/Http/Controllers/Api/",
         "related-template-path":"vendor/benomas/crudvel/src/templates/back/cv_scaff_api_controller_controller.txt"
       }
     }

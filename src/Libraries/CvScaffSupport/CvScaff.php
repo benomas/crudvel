@@ -19,6 +19,7 @@ class CvScaff
   private $mode;
   private $target;
   private $resource;
+  private $processorClass;
   private $processorInstance;
 
   public function __construct(ClosureCommand $consoleInstance){
@@ -64,7 +65,11 @@ class CvScaff
   }
 
   public function getProcessorClass(){
-    return get_class($this->getProcessorInstance());
+    return $this->processorClass??get_class($this->getProcessorInstance())??null;
+  }
+
+  public function getResource(){
+    return $this->resource??null;
   }
 
   private function getContextSubTree(){
@@ -132,7 +137,7 @@ class CvScaff
     return $this;
   }
 
-  public function setProcessorClass(CvScaffInterface $processorClass=null){
+  public function setProcessorClass($processorClass=null){
     $this->processorClass = $processorClass??null;
     return $this;
   }
@@ -221,13 +226,18 @@ class CvScaff
   public function stablishProcessorInstance(CvScaffInterface $processorInstance=null){
     if($this->getProcessorInstance())
       return $this;
-    $targetClass  = $this->setProcessorClass($this->getTargetClass())->setProcessorClass();
+    $targetClass  = $this->setProcessorClass($this->getTargetClass())->getProcessorClass();
     if(!$targetClass || !class_exists($targetClass))
       throw new \Exception("Error, tarjet class $targetClass is not correctly defined in scaff tree at {$this->getTreePath()}");
     return $this->setProcessorInstance(new $targetClass());
   }
 
 //[End Stablishers]
+
+  public function inyectConsoleInstance(){
+    $this->getProcessorInstance()->setConsoleInstance($this->getConsoleInstance());
+    return $this;
+  }
 
   public function isForced(){
     $this->getProcessorInstance()->getForce();
@@ -238,29 +248,13 @@ class CvScaff
     return $this;
   }
 
-  private function askAditionalParams(){
-    $this->getProcessorInstance()->askAditionalParams();
-    return $this;
-  }
-
-  private function loadTemplate(){
-    $this->getProcessorInstance()->loadTemplate();
-    return $this;
-  }
-
-  private function fixTemplate(){
-    $this->getProcessorInstance()->fixTemplate();
-    return $this;
-  }
-
-  private function inyectFixedTemplate(){
-    $this->getProcessorInstance()->inyectFixedTemplate();
-    return $this;
-  }
-
   public function runScaff(){
-    $this->stablishProcessorInstance();
+    $this->stablishProcessorInstance()
+      ->inyectConsoleInstance()
+      ->getProcessorInstance()
+      ->setResource($this->getResource())
+      ->setScaffParams($this->getTargetSubTree())
+      ->scaff();
     pdd('asd');
-    $this->loadTemplate()->askAditionalParams()->fixTemplate()->inyectFixedTemplate();
   }
 }
