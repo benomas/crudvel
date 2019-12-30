@@ -1,6 +1,6 @@
 <?php
 
-namespace Crudvel\Libraries\CvScaffSupport;
+namespace Crudvel\Libraries\CvScaffSupport\Back\ApiRoute;
 
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;

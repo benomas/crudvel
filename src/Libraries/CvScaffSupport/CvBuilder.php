@@ -2,45 +2,55 @@
 
 namespace Crudvel\Libraries\CvScaffSupport;
 use \Crudvel\Interfaces\CvScaffInterface;
+use Illuminate\Foundation\Console\ClosureCommand;
 
 class CvBuilder extends \Crudvel\Libraries\CvBuilder
 {
-  public function __construct($cvBuildClass=null){
+  public function __construct(ClosureCommand $consoleInstance=null,$cvBuildClass=null){
+    parent::__construct();
     $cvBuildClass = $cvBuildClass ?? 'Crudvel\Libraries\CvScaffSupport\CvScaff';
-    parent::__construct($cvBuildClass);
+    if(!class_exists($cvBuildClass))
+      throw new \Exception("Error, class $cvBuildClass doesnt exist");
+    $this->setCvBuildClass($cvBuildClass)
+      ->setCvBuildedInstance(new $cvBuildClass($consoleInstance))
+      ->stablishFinalScaffTree();
   }
 
-  public function setContext($context=null){
-    $this->getCvBuildedInstance()->setContext($context??null);
-    return $this;
-  }
-
-  public function setTarget($target=null){
-    $this->getCvBuildedInstance()->setTarget($target??null);
-    return $this;
-  }
-
-  public function setMode($mode=null){
-    $this->getCvBuildedInstance()->setMode($mode??null);
-    return $this;
-  }
-
-  public function setConsoleInstance($consoleInstance=null){
-    $this->getCvBuildedInstance()->setConsoleInstance($consoleInstance??null);
-    return $this;
-  }
-
+//[Setters]
   public function setResource($resource=null){
     $this->getCvBuildedInstance()->setResource($resource??null);
-    return $this;
-  }
-  public function force(){
-    $this->getCvBuildedInstance()->force();
     return $this;
   }
 
   public function setProcessorInstance(CvScaffInterface $processorInstace=null){
     $this->getCvBuildedInstance()->setProcessorInstance($processorInstace??null);
+    return $this;
+  }
+//[End Setters]
+//[Stablishers]
+
+  private function stablishFinalScaffTree(){
+    $this->getCvBuildedInstance()->stablishFinalScaffTree();
+    return $this;
+  }
+
+  public function stablishContext($context=null){
+    $this->getCvBuildedInstance()->stablishContext($context??null);
+    return $this;
+  }
+
+  public function stablishTarget($target=null){
+    $this->getCvBuildedInstance()->stablishTarget($target??null);
+    return $this;
+  }
+
+  public function stablishMode($mode=null){
+    $this->getCvBuildedInstance()->stablishMode($mode??null);
+    return $this;
+  }
+//[End Stablishers]
+  public function force(){
+    $this->getCvBuildedInstance()->force();
     return $this;
   }
 }

@@ -448,14 +448,13 @@ class BaseConsole{
 
   public function loadCvScaff(){
     Artisan::command(
-    'cv-scaff {context} {mode} {target} {resource} {force?}',
-    function($context=null,$mode='creator',$target=null,$resource=null,$force=0){
-      $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder())
-        ->setContext($target)
-        ->setTarget($target)
-        ->setConsoleInstance($this)
-        ->setResource($resource)
-        ->setMode($mode);
+    'cv-scaff {context?} {mode?} {target?} {resource?} {force?}',
+    function($context=null,$mode=null,$target=null,$resource=null,$force=0){
+      $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder($this))
+        ->stablishContext($context)
+        ->stablishMode($mode)
+        ->stablishTarget($target)
+        ->setResource($resource);
       if($force)
         $cvScaffBuilder->force();
 

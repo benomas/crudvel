@@ -7,10 +7,8 @@ class CvBuilder
   private $cvBuildedInstance;
   private $cvBuildClass;
   public function __construct($cvBuildClass=null){
-    if($cvBuildClass)
+    if($cvBuildClass && class_exists($cvBuildClass)){
       $this->setCvBuildClass($cvBuildClass);
-    if($this->getCvBuildClass()){
-      $cvBuildClass = $this->getCvBuildClass();
       $this->setCvBuildedInstance(new $cvBuildClass());
     }
   }
