@@ -9,6 +9,9 @@
       },
       "es-lang":{
         "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorEsLangScaff"
+      },
+      "migration":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorMigrationScaff"
       }
     }
   },
