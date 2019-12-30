@@ -2,8 +2,8 @@
   "back":{
     "creator":{
       "api-controller":{
-        "class"         : "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff",
-        "template-path" : ""
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff",
+        "related-template-path":"vendor/benomas/crudvel/src/templates/back/cv_scaff_api_controller_controller.txt"
       }
     }
   },
