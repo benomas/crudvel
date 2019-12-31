@@ -10,4 +10,12 @@ class Cv<cv_singular_studly_target_mode_cv><cv_singular_studly_resource_cv>Scaff
   public function __construct(){
     parent::__construct();
   }
+  //[Getters]
+  //[End Getters]
+
+  //[Setters]
+  //[End Setters]
+
+  //[Stablishers]
+  //[End Stablishers]
 }

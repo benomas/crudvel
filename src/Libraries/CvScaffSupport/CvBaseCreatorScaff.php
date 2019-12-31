@@ -4,7 +4,7 @@ namespace Crudvel\Libraries\CvScaffSupport;
 use Illuminate\Support\Str;
 use \Crudvel\Interfaces\CvScaffInterface;
 
-abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   protected $relatedTargetPath;
   protected $relatedTemplatePath;
@@ -122,7 +122,7 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
     return file_exists($this->getTargetFileName());
   }
 
-  private function processPaths(){
+  protected function processPaths(){
     return $this->stablishAbsolutTargetPath()->stablishAbsolutTemplatePath();
   }
 

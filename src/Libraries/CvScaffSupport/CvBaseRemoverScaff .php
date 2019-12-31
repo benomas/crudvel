@@ -4,16 +4,18 @@ namespace Crudvel\Libraries\CvScaffSupport;
 use Illuminate\Support\Str;
 use \Crudvel\Interfaces\CvScaffInterface;
 
-class CvBaseRemoverScaff  extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+abstract class CvBaseRemoverScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseAdderScaff implements CvScaffInterface
 {
+  public function __construct(...$propertyRewriter){
+    parent::__construct(...$propertyRewriter);
+  }
+//[Getters]
+//[End Getters]
 
-  //[Getters]
-  //[End Getters]
+//[Setters]
+//[End Setters]
 
-  //[Setters]
-  //[End Setters]
-
-  //[Stablishers]
-  //[End Stablishers]
+//[Stablishers]
+//[End Stablishers]
 
 }

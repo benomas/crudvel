@@ -460,26 +460,62 @@ class BaseConsole{
 
       $cvScaffBuilder->build()->runScaff();
     })->describe('cv-scaff-commands');
-    /*
-    $cvScaffers  = CvScaffHelper::cvIam()->getBackFinalScaffers();
-    $modeAliases = CvScaffHelper::cvIam()->getModeAliases();
-    foreach($cvScaffers AS $cvScafferType=>$cvScafferClass){
-      Artisan::command(
-        'cv-scaff-'.fixedSlug($cvScafferType).' {resource?} {mode?} {force?}',
-        function($resource=null,$mode='c',$force=1) use($cvScafferClass,$modeAliases){
-          if(!class_exists($cvScafferClass))
-            cvConsoler(cvBrownTC("class $cvScafferClass doesnt exist")."\n");
-          $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder())
-            ->setConsoleInstance($this)
-            ->setResource($resource)
-            ->setMode($modeAliases[$mode]??null)
-            ->setProcessorInstance(new $cvScafferClass());
-          if($force)
-            $cvScaffBuilder->force();
+    return $this;
+  }
 
-          $cvScaffBuilder->build()->runScaff();
-        })->describe('cv-scaff-commands');
-    }*/
+  public function loadCvScaffBackResource(){
+    Artisan::command(
+    'cv-scaff-back-resource {resource}',
+    function($resource=null){
+      Artisan::call('cv-scaff',[
+        'context'  => 'back',
+        'mode'     => 'creator',
+        'target'   => 'en-lang',
+        'resource' => $resource,
+      ]);
+      Artisan::call('cv-scaff',[
+        'context'  => 'back',
+        'mode'     => 'creator',
+        'target'   => 'es-lang',
+        'resource' => $resource,
+      ]);
+      Artisan::call('cv-scaff',[
+        'context'  => 'back',
+        'mode'     => 'creator',
+        'target'   => 'model',
+        'resource' => $resource,
+      ]);
+      Artisan::call('cv-scaff',[
+        'context'  => 'back',
+        'mode'     => 'creator',
+        'target'   => 'request',
+        'resource' => $resource,
+      ]);
+      Artisan::call('cv-scaff',[
+        'context'  => 'back',
+        'mode'     => 'creator',
+        'target'   => 'api-controller',
+        'resource' => $resource,
+      ]);
+      Artisan::call('cv-scaff',[
+        'context'  => 'back',
+        'mode'     => 'creator',
+        'target'   => 'migration',
+        'resource' => $resource,
+      ]);
+      Artisan::call('cv-scaff',[
+        'context'  => 'back',
+        'mode'     => 'creator',
+        'target'   => 'seeder',
+        'resource' => $resource,
+      ]);
+      Artisan::call('cv-scaff',[
+        'context'  => 'back',
+        'mode'     => 'adder',
+        'target'   => 'api-route',
+        'resource' => $resource,
+      ]);
+    })->describe('cv-scaff-commands');
     return $this;
   }
 }
