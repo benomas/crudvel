@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Api;
+<?php namespace App\Http\Controllers\Web;
 
 class <cv_singular_studly_resource_cv>Controller extends \Crudvel\Customs\Controllers\WebController{
 

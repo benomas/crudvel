@@ -1,11 +1,10 @@
 <?php namespace Database\Seeds\Test;
 
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 use App\Models\{<cv_singular_studly_resource_cv>};
 use DB;
 
-class <cv_singular_studly_resource_cv>TableSeeder extends Seeder{
+class <cv_singular_studly_resource_cv>TableSeeder extends \Illuminate\Database\Seeder{
 	public function run(){
     Schema::disableForeignKeyConstraints();
     DB::transaction(function() {

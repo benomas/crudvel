@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers\Api;
 
-class <cv_singular_studly_resource_cv>Controller extends \Crudvel\Customs\Controllers\ApiController{
+class <cv_singular_studly_resource_cv>Controller extends \Crudvel\Customs\Controllers\ApiCatalog1Controller{
 
   protected $selectables = [
   ];
