@@ -454,7 +454,7 @@ class BaseConsole{
         ->stablishContext($context)
         ->stablishMode($mode)
         ->stablishTarget($target)
-        ->setResource($resource);
+        ->stablishResource($resource);
       if($force)
         $cvScaffBuilder->force();
 

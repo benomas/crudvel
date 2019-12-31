@@ -39,11 +39,15 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
   }
 
   public function getExtraParams(){
-    return $this->extraParams??null;
+    return $this->extraParams??[];
   }
 
   protected function getTargetFileName(){
-    return $this->getAbsolutTargetPath().Str::studly(Str::singular($this->getResource()));
+    return $this->getAbsolutTargetPath().Str::studly(Str::singular($this->getParam('resource')));
+  }
+
+  protected function getParam($param=null){
+    return $this->getExtraParams()[$param]??null;
   }
 //[End Getters]
 

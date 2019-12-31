@@ -20,4 +20,8 @@ trait CvClosureCommandTrait
   public function confirm($message='',$options=['yes','no'],$default='no'){
     return $this->getConsoleInstance()->choice($message,$options,$default)==='yes';
   }
+
+  public function ask($message=''){
+    return $this->getConsoleInstance()->ask($message);
+  }
 }

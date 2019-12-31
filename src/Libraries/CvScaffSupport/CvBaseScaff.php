@@ -26,6 +26,11 @@ class CvBaseScaff
   public function getForce(){
     return $this->force??null;
   }
+
+  public function proyectRelatedRootPath(){
+    return '""';
+  }
+
   //[End Getters]
 
   //[Setters]

@@ -154,6 +154,12 @@ class CvScaff
 //[End Setters]
 //[Stablishers]
 
+  public function stablishResource($resource=null){
+    while(!$resource || $resource === '')
+      $resource = $this->ask('Resource needs to be defined. what is your resource?');
+    return $this->setResource($resource);
+  }
+
   private function stablishCrudvelScaffTree(){
     try{
       $crudvelScaffTree = (array) json_decode(file_get_contents($this->getCrudvelScaffTreeAbsolutePath()),true);
@@ -253,11 +259,16 @@ class CvScaff
   }
 
   public function runScaff(){
-    $this->stablishProcessorInstance()
+    $scaffer = $this->stablishProcessorInstance()
       ->inyectConsoleInstance()
       ->getProcessorInstance()
       ->setResource($this->getResource())
       ->setScaffParams($this->getTargetSubTree())
       ->scaff();
+
+    cvConsoler(cvGreenTC('scaff script completed, now composer dump-autoload will be launched...')."\n");
+    customExec('composer dump-autoload');
+    cvConsoler(cvGreenTC('composer dump-autoload completed')."\n");
+    return $scaffer;
   }
 }

@@ -1,0 +1,13 @@
+<?php
+
+namespace <cv_singular_studly_target_namespace_cv>;
+
+use \Crudvel\Interfaces\CvScaffInterface;
+use Illuminate\Support\Str;
+
+class Cv<cv_singular_studly_target_mode_cv><cv_singular_studly_resource_cv>Scaff extends \Crudvel\Libraries\CvScaffSupport\<cv_singular_studly_target_context_cv>\CvBase<cv_singular_studly_target_mode_cv>Scaff implements CvScaffInterface
+{
+  public function __construct(){
+    parent::__construct();
+  }
+}

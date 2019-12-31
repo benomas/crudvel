@@ -17,8 +17,8 @@ class CvBuilder extends \Crudvel\Libraries\CvBuilder
   }
 
 //[Setters]
-  public function setResource($resource=null){
-    $this->getCvBuildedInstance()->setResource($resource??null);
+  public function stablishResource($resource=null){
+    $this->getCvBuildedInstance()->stablishResource($resource??null);
     return $this;
   }
 

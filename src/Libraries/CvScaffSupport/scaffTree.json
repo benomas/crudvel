@@ -1,57 +1,62 @@
 {
-  "back":{
-    "creator":{
-      "api-controller":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff"
+  "back": {
+    "creator": {
+      "api-controller": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff"
       },
-      "cat-api-controller":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorCatApiControllerScaff"
+      "cat-api-controller": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorCatApiControllerScaff"
       },
-      "en-lang":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorEnLangScaff"
+      "en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorEnLangScaff"
       },
-      "cat-en-lang":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorCatEnLangScaff"
+      "cat-en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorCatEnLangScaff"
       },
-      "es-lang":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorEsLangScaff"
+      "es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorEsLangScaff"
       },
-      "cat-es-lang":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorCatEsLangScaff"
+      "cat-es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorCatEsLangScaff"
       },
-      "migration":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorMigrationScaff"
+      "migration": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorMigrationScaff"
       },
-      "cat-migration":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorCatMigrationScaff"
+      "cat-migration": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorCatMigrationScaff"
       },
-      "model":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorModelScaff"
+      "model": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorModelScaff"
       },
-      "cat-model":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorCatModelScaff"
+      "cat-model": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorCatModelScaff"
       },
-      "request":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorRequestScaff"
+      "request": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorRequestScaff"
       },
-      "cat-request":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorCatRequestScaff"
+      "cat-request": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorCatRequestScaff"
       },
-      "seeder":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorSeederScaff"
+      "seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorSeederScaff"
       },
-      "cat-seeder":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatSeederScaff"
+      "cat-seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatSeederScaff"
       },
-      "test-seeder":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorTestSeederScaff"
+      "test-seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorTestSeederScaff"
       },
-      "cat-test-seeder":{
-        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatTestSeederScaff"
+      "cat-test-seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatTestSeederScaff"
       }
     }
   },
-  "front":{
-
+  "front": [],
+  "scaff": {
+    "creator": {
+      "target": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\CvCreatorScaff"
+      }
+    }
   }
 }

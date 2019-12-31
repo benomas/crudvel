@@ -17,7 +17,7 @@ class CvCreatorEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
   }
   //[Getters]
   protected function getTargetFileName(){
-    return $this->getAbsolutTargetPath().fixedSlug(Str::plural($this->getResource())).'.php';
+    return $this->getAbsolutTargetPath().fixedSlug(Str::plural($this->getParam('resource'))).'.php';
   }
   //[End Getters]
 
