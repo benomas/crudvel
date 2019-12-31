@@ -223,7 +223,7 @@ class CvScaff
     return $this->setTarget($target);
   }
 
-  public function stablishProcessorInstance(CvScaffInterface $processorInstance=null){
+  public function stablishProcessorInstance(){
     if($this->getProcessorInstance())
       return $this;
     $targetClass  = $this->setProcessorClass($this->getTargetClass())->getProcessorClass();
@@ -240,10 +240,14 @@ class CvScaff
   }
 
   public function isForced(){
-    $this->getProcessorInstance()->getForce();
+    if(!$this->getProcessorInstance())
+      $this->stablishProcessorInstance();
+    return $this->getProcessorInstance()->getForce();
   }
 
   public function force(){
+    if(!$this->getProcessorInstance())
+      $this->stablishProcessorInstance();
     $this->getProcessorInstance()->force();
     return $this;
   }

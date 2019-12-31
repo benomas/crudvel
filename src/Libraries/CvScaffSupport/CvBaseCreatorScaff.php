@@ -138,7 +138,6 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
     return $this;
   }
   public function askAditionalParams(){
-    $template = $this->getTemplate();
     $extraParams=$this->getExtraParams();
     foreach($extraParams as $param=>$value){
       if(!$value || $value==='')
@@ -226,20 +225,20 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
 
   protected function fixTemplate(){
     return $this->fixFinalTag()
-        ->fixSingularCamelTag()
-        ->fixPluraCamelTag()
-        ->fixSingularSnakeTag()
-        ->fixPluraSnakeTag()
-        ->fixSingularSlugTag()
-        ->fixPluraSlugTag()
-        ->fixSingularStudlyTag()
-        ->fixPluraStudlyTag()
-        ->fixSingularTitleTag()
-        ->fixPluraTitleTag()
-        ->fixSingularLowerTag()
-        ->fixPluraLowerTag()
-        ->fixSingularUpperTag()
-        ->fixPluraUpperTag();
+      ->fixSingularCamelTag()
+      ->fixPluraCamelTag()
+      ->fixSingularSnakeTag()
+      ->fixPluraSnakeTag()
+      ->fixSingularSlugTag()
+      ->fixPluraSlugTag()
+      ->fixSingularStudlyTag()
+      ->fixPluraStudlyTag()
+      ->fixSingularTitleTag()
+      ->fixPluraTitleTag()
+      ->fixSingularLowerTag()
+      ->fixPluraLowerTag()
+      ->fixSingularUpperTag()
+      ->fixPluraUpperTag();
   }
 
   protected function inyectFixedTemplate(){

@@ -12,6 +12,9 @@
       },
       "migration":{
         "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorMigrationScaff"
+      },
+      "model":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorModelScaff"
       }
     }
   },

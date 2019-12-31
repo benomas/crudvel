@@ -1,0 +1,16 @@
+<?php namespace App\Models;
+
+class <cv_singular_studly_resource_cv> extends \Crudvel\Customs\Models\BaseModel{
+  protected $fillable = [];
+// [Relationships]
+// [End Relationships]
+
+// [Transformers]
+// [End Transformers]
+
+// [Scopes]
+// [End Scopes]
+
+// [Others]
+// [End Others]
+}

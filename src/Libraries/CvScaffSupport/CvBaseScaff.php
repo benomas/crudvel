@@ -49,11 +49,11 @@ class CvBaseScaff
   //[Stablishers]
   //[End Stablishers]
 
-  public function force($force=null){
-    return $this->setForce($force);
+  public function force(){
+    return $this->setForce(true);
   }
 
   public function isForced(){
-    $this->getForce();
+    return $this->getForce();
   }
 }
