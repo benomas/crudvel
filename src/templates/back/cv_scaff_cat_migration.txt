@@ -1,5 +1,5 @@
 <?php
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-class Create<cv_plural_studly_resource_cv>Table extends \Crudvel\Database\Migrations\Catalog1Migration{
+class Create<cv_plural_studly_resource_cv>Table extends \Crudvel\Customs\Database\Migrations\Catalog1Migration{
 }

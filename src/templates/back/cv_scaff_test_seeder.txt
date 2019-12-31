@@ -7,10 +7,10 @@ use DB;
 
 class <cv_singular_studly_resource_cv>TableSeeder extends Seeder{
 	public function run(){
-    DB::statement("SET FOREIGN_KEY_CHECKS=0;");
+    Schema::disableForeignKeyConstraints();
     DB::transaction(function() {
-        factory(<cv_singular_studly_resource_cv>::class, 100)->create();
+      factory(<cv_singular_studly_resource_cv>::class, 100)->create();
     });
-    DB::statement("SET FOREIGN_KEY_CHECKS=1;");
+    Schema::enableForeignKeyConstraints();
 	}
 }

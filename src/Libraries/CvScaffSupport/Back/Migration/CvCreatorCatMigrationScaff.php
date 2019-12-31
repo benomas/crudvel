@@ -1,0 +1,27 @@
+<?php
+
+namespace Crudvel\Libraries\CvScaffSupport\Back\Migration;
+
+use \Crudvel\Interfaces\CvScaffInterface;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+class CvCreatorCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
+{
+  protected $relatedTargetPath   = 'database/migrations/';
+  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_migration.txt';
+  public function __construct(){
+    parent::__construct();
+  }
+  //[Getters]
+  protected function getTargetFileName(){
+    return $this->getAbsolutTargetPath().Carbon::now()->format('Y_m_d_u').'_create_'.fixedSlug(Str::plural($this->getResource())).'_table.php';
+  }
+  //[End Getters]
+
+  //[Setters]
+  //[End Setters]
+
+  //[Stablishers]
+  //[End Stablishers]
+}

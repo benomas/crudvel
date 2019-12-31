@@ -4,17 +4,50 @@
       "api-controller":{
         "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff"
       },
+      "cat-api-controller":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorCatApiControllerScaff"
+      },
       "en-lang":{
         "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorEnLangScaff"
+      },
+      "cat-en-lang":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorCatEnLangScaff"
       },
       "es-lang":{
         "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorEsLangScaff"
       },
+      "cat-es-lang":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Langs\\CvCreatorCatEsLangScaff"
+      },
       "migration":{
         "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorMigrationScaff"
       },
+      "cat-migration":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorCatMigrationScaff"
+      },
       "model":{
         "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorModelScaff"
+      },
+      "cat-model":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorCatModelScaff"
+      },
+      "request":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorRequestScaff"
+      },
+      "cat-request":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorCatRequestScaff"
+      },
+      "seeder":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorSeederScaff"
+      },
+      "cat-seeder":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatSeederScaff"
+      },
+      "test-seeder":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorTestSeederScaff"
+      },
+      "cat-test-seeder":{
+        "class":"Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatTestSeederScaff"
       }
     }
   },
