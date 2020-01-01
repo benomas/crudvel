@@ -463,6 +463,19 @@ class BaseConsole{
     return $this;
   }
 
+  public function loadCvScaffList(){
+    Artisan::command(
+      'cv-scaff-list',
+      function(){
+        $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder(
+          $this,
+          'Crudvel\Libraries\CvScaffSupport\CvScaffHelper'
+          )
+        )->build()->cvScaffList();
+    })->describe('cv-scaff-commands');
+    return $this;
+  }
+
   public function loadCvScaffBackResource(){
     Artisan::command(
     'cv-scaff-back-resource {resource}',

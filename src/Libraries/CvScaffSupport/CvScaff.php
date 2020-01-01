@@ -92,7 +92,7 @@ class CvScaff
     $context = $this->getContext()??'';
     $mode    = $this->getMode()??'';
     $target  = $this->getTarget()??'';
-    return "context: $context, mode: $mode, tarjet:$target";
+    return "context: $context, mode: $mode, target:$target";
   }
 //[End Getters]
 
@@ -234,7 +234,7 @@ class CvScaff
       return $this;
     $targetClass  = $this->setProcessorClass($this->getTargetClass())->getProcessorClass();
     if(!$targetClass || !class_exists($targetClass))
-      throw new \Exception("Error, tarjet class $targetClass is not correctly defined in scaff tree at {$this->getTreePath()}");
+      throw new \Exception("Error, target class $targetClass is not correctly defined in scaff tree at {$this->getTreePath()}");
     return $this->setProcessorInstance(new $targetClass());
   }
 

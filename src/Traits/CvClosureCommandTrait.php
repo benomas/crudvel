@@ -24,4 +24,8 @@ trait CvClosureCommandTrait
   public function ask($message=''){
     return $this->getConsoleInstance()->ask($message);
   }
+
+  public function call($command,$params=null){
+    return $this->getConsoleInstance()->call($command,$params);
+  }
 }
