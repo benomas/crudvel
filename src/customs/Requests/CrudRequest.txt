@@ -1,12 +1,6 @@
 <?php namespace Customs\Crudvel\Requests;
 /**
- *
- *
- * @author Benomas benomas@gmail.com
- * @date   2017-05-08
  * modificable CrudRequest
  */
-
-class CrudRequest extends \Crudvel\Requests\CrudRequest
-{
+class CrudRequest extends \Crudvel\Requests\CrudRequest{
 }

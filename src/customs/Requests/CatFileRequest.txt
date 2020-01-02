@@ -1,11 +1,6 @@
 <?php namespace Customs\Crudvel\Requests;
 /**
- *
- *
- * @author Benomas benomas@gmail.com
- * @date   2017-05-08
- * modificable file
+ * modificable CatFileRequest
  */
-
 class CatFileRequest extends \Crudvel\Requests\CatFileRequest {
 }

@@ -1,14 +1,7 @@
 <?php namespace Customs\Crudvel\Database\Seeds;
 /**
- *
- *
- * @author Benomas benomas@gmail.com
- * @date   2017-05-08
  * modificable BaseMigration
  */
-use Crudvel\Database\Seeds\BaseSeeder AS defaultSeeder;
-
-class BaseSeeder extends defaultSeeder
-{
+class BaseSeeder extends \Crudvel\Database\Seeds\BaseSeeder{
 
 }

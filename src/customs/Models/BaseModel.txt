@@ -1,12 +1,18 @@
 <?php namespace Customs\Crudvel\Models;
 /**
- *
- *
- * @author Benomas benomas@gmail.com
- * @date   2017-05-08
  * modificable BaseModel
  */
-use Crudvel\Models\BaseModel AS defaultModel;
+class BaseModel extends \Crudvel\Models\BaseModel {
 
-class BaseModel extends defaultModel {
+// [Relationships]
+// [End Relationships]
+
+// [Transformers]
+// [End Transformers]
+
+// [Scopes]
+// [End Scopes]
+
+// [Others]
+// [End Others]
 }

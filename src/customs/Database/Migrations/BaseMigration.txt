@@ -1,14 +1,7 @@
 <?php namespace Customs\Crudvel\Database\Migrations;
 /**
- *
- *
- * @author Benomas benomas@gmail.com
- * @date   2017-05-08
  * modificable BaseMigration
  */
-use Crudvel\Database\Migrations\BaseMigration AS defaultMigration;
-
-class BaseMigration extends defaultMigration
-{
+class BaseMigration extends \Crudvel\Database\Migrations\BaseMigration{
 
 }

@@ -1,14 +1,18 @@
 <?php namespace Customs\Crudvel\Models;
+/**
+ * modificable CatPermissionType
+ */
+class CatPermissionType extends \Crudvel\Models\CatPermissionType{
 
-class CatPermissionType extends Crudvel\Models\CatPermissionType{
+// [Relationships]
+// [End Relationships]
 
-//Relationships
+// [Transformers]
+// [End Transformers]
 
+// [Scopes]
+// [End Scopes]
 
-//End Relationships
-
-// Scopes
-
-
-// End Scopes
+// [Others]
+// [End Others]
 }

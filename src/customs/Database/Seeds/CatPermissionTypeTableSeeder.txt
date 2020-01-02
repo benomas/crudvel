@@ -1,14 +1,7 @@
 <?php namespace Customs\Crudvel\Database\Seeds;
 /**
- *
- *
- * @author Benomas benomas@gmail.com
- * @date   2017-05-08
  * modificable BaseMigration
  */
-use Crudvel\Database\Seeds\CatPermissionTypeTableSeeder AS DefaultCatPermissionTypeTableSeeder;
-
-class CatPermissionTypeTableSeeder extends DefaultCatPermissionTypeTableSeeder
-{
+class CatPermissionTypeTableSeeder extends \Crudvel\Database\Seeds\CatPermissionTypeTableSeeder{
 
 }

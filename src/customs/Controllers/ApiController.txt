@@ -1,14 +1,7 @@
 <?php namespace Customs\Crudvel\Controllers;
 /**
- *
- *
- * @author Benomas benomas@gmail.com
- * @date   2017-05-08
  * modificable ApiController
  */
-use Crudvel\Controllers\ApiController AS defaultApiController;
-
-class ApiController extends defaultApiController
-{
+class ApiController extends \Crudvel\Controllers\ApiController{
 
 }

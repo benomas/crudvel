@@ -1,12 +1,7 @@
 <?php namespace Customs\Crudvel\Controllers;
 /**
- *
- *
- * @author Benomas benomas@gmail.com
- * @date   2017-05-08
  * modificable ApiController
  */
-class CatFileController extends \Crudvel\Controllers\CatFileController
-{
+class CatFileController extends \Crudvel\Controllers\CatFileController{
 
 }

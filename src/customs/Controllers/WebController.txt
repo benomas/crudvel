@@ -1,14 +1,7 @@
 <?php namespace Customs\Crudvel\Controllers;
 /**
- *
- *
- * @author Benomas benomas@gmail.com
- * @date   2017-05-08
  * modificable WebController
  */
-use Crudvel\Controllers\WebController AS defaultWebController;
-
-class WebController extends defaultWebController
-{
+class WebController extends \Crudvel\Controllers\WebController{
 
 }
