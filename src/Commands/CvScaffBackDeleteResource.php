@@ -82,6 +82,12 @@ class CvScaffBackDeleteResource extends \Crudvel\Commands\BaseCommand
       'target'   => 'api-route',
       'resource' => $resource,
     ]);
+    $this->call('cv-scaff',[
+      'context'  => 'back',
+      'mode'     => 'remover',
+      'target'   => 'seeder',
+      'resource' => $resource,
+    ]);
     composerDump();
   }
 }

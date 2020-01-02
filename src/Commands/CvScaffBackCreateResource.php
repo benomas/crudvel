@@ -82,6 +82,12 @@ class CvScaffBackCreateResource extends \Crudvel\Commands\BaseCommand
       'target'   => 'api-route',
       'resource' => $resource,
     ]);
+    $this->call('cv-scaff',[
+      'context'  => 'back',
+      'mode'     => 'adder',
+      'target'   => 'seeder',
+      'resource' => $resource,
+    ]);
     composerDump();
   }
 }

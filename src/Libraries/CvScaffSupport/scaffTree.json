@@ -53,11 +53,17 @@
         "adder": {
             "api-route": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvAdderApiRouteScaff"
+            },
+            "seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvAdderSeederScaff"
             }
         },
         "remover": {
             "api-route": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvRemoverApiRouteScaff"
+            },
+            "seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverSeederScaff"
             }
         },
         "deleter": {
