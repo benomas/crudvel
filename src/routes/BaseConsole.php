@@ -104,6 +104,7 @@ class BaseConsole{
         'migrate',
         ['command'=>'vendor:publish','params'=>['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider']],
         'install:crudvel',
+        'fix-cv-ext',
         'migrate',
         'db:seed',
         'passport:install',
