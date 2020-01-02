@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class CvDeleterCatSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseDeleterScaff implements CvScaffInterface
 {
+  protected $relatedFilePath   = 'database/seeds/';
   public function __construct(){
     parent::__construct();
   }

@@ -33,6 +33,6 @@ class CvDeleterCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\
   }
   //[End Stablishers]
   protected function selfRepresentation(){
-    return fixedSlug(Str::plural($this->getResource()));
+    return fixedSnake(Str::plural($this->getResource()));
   }
 }
