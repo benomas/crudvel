@@ -1,0 +1,6 @@
+<?php namespace Customs\Crudvel\Commands;
+/**
+ * modificable CvScaffBackCreateResource
+ */
+class CvScaffBackCreateResource extends \Crudvel\Commands\CvScaffBackCreateResource{
+}

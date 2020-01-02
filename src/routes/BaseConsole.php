@@ -448,7 +448,7 @@ class BaseConsole{
 
   public function loadCvScaff(){
     Artisan::command(
-    'cv-scaff {context?} {mode?} {target?} {resource?} {force?}',
+    'old-cv-scaff {context?} {mode?} {target?} {resource?} {force?}',
     function($context=null,$mode=null,$target=null,$resource=null,$force=0){
       $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder($this))
         ->stablishContext($context)
@@ -478,7 +478,7 @@ class BaseConsole{
 
   public function loadCvScaffCreateBackResource(){
     Artisan::command(
-    'create-back-resource {resource}',
+    'old-create-back-resource {resource?}',
     function($resource=null){
       Artisan::call('cv-scaff',[
         'context'  => 'back',
@@ -535,7 +535,7 @@ class BaseConsole{
 
   public function loadCvScaffDeleteBackResource(){
     Artisan::command(
-    'delete-back-resource {resource}',
+    'old-delete-back-resource {resource}',
     function($resource=null){
       Artisan::call('cv-scaff',[
         'context'  => 'back',

@@ -1,7 +1,7 @@
 <?php
 
 namespace Crudvel\Libraries\CvScaffSupport;
-use Illuminate\Foundation\Console\ClosureCommand;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
 class CvScaffHelper
@@ -9,13 +9,13 @@ class CvScaffHelper
   use \Crudvel\Traits\CacheTrait;
   use \Crudvel\Traits\CvClosureCommandTrait;
   private $crudvelScaffTreeAbsolutePath;
-  private $proyectScaffTreeRelPath='crudvel/customs/Scaff/scaffTree.json';
+  private $proyectScaffTreeRelPath='customs/crudvel/Scaff/scaffTree.json';
   private $consoleInstance;
   private $crudvelScaffTree;
   private $proyectScaffTree;
   private $finalScaffTree;
 
-  public function __construct(ClosureCommand $consoleInstance){
+  public function __construct(Command $consoleInstance){
     $this->setCrudvelScaffTreeAbsolutePath(__DIR__.'/scaffTree.json');
     $this->setConsoleInstance($consoleInstance);
   }
@@ -140,7 +140,7 @@ class CvScaffHelper
       );
       $failMessage = "\n";
     }while(!($artisans[$selection]??null));
-    
+
     cvConsoler(cvBlueTC("\n".$artisans[$selection]()." was called\n"));
     return $this;
   }

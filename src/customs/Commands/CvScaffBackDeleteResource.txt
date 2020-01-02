@@ -1,0 +1,6 @@
+<?php namespace Customs\Crudvel\Commands;
+/**
+ * modificable CvScaffBackDeleteResource
+ */
+class CvScaffBackDeleteResource extends \Crudvel\Commands\CvScaffBackDeleteResource{
+}

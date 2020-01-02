@@ -29,6 +29,11 @@ trait CvClosureCommandTrait
     return $this->getConsoleInstance()->call($command,$params);
   }
 
+  public function propertyDefiner($property,$value){
+    if(method_exists($this->getConsoleInstance(),'propertyDefiner'))
+      $this->getConsoleInstance()->propertyDefiner($property,$value);
+  }
+
   public function composerDump(){
     composerDump();
   }

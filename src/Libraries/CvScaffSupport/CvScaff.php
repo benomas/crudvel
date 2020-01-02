@@ -1,7 +1,7 @@
 <?php
 
 namespace Crudvel\Libraries\CvScaffSupport;
-use Illuminate\Foundation\Console\ClosureCommand;
+use Illuminate\Console\Command;
 
 use \Crudvel\Interfaces\CvScaffInterface;
 
@@ -10,7 +10,7 @@ class CvScaff
   use \Crudvel\Traits\CacheTrait;
   use \Crudvel\Traits\CvClosureCommandTrait;
   private $crudvelScaffTreeAbsolutePath;
-  private $proyectScaffTreeRelPath='crudvel/customs/Scaff/scaffTree.json';
+  private $proyectScaffTreeRelPath='customs/crudvel/Scaff/scaffTree.json';
   private $consoleInstance;
   private $crudvelScaffTree;
   private $proyectScaffTree;
@@ -22,7 +22,7 @@ class CvScaff
   private $processorClass;
   private $processorInstance;
 
-  public function __construct(ClosureCommand $consoleInstance){
+  public function __construct(Command $consoleInstance){
     $this->setCrudvelScaffTreeAbsolutePath(__DIR__.'/scaffTree.json');
     $this->setConsoleInstance($consoleInstance);
   }
@@ -157,6 +157,7 @@ class CvScaff
   public function stablishResource($resource=null){
     while(!$resource || $resource === '')
       $resource = $this->ask('Resource needs to be defined. what is your resource?');
+    $this->propertyDefiner('resource',$resource);
     return $this->setResource($resource);
   }
 
@@ -198,6 +199,7 @@ class CvScaff
     while(($finalScaffTree[$context]??null)===null)
       $context = $this->select('context is not correctly defined, set it again',$contexts,$contexts[0]);
 
+    $this->propertyDefiner('context',$context);
     return $this->setContext($context);
   }
 
@@ -212,6 +214,8 @@ class CvScaff
 
     while(($contextSubTree[$mode]??null)===null)
       $mode = $this->select('mode is not correctly defined, set it again',$modes,$modes[0]);
+
+    $this->propertyDefiner('mode',$mode);
     return $this->setMode($mode);
   }
 
@@ -226,6 +230,8 @@ class CvScaff
 
     while(($modeSubTree[$target]??null)===null)
       $target = $this->select('target is not correctly defined, set it again',$targets,$targets[0]);
+
+    $this->propertyDefiner('target',$target);
     return $this->setTarget($target);
   }
 

@@ -75,8 +75,8 @@ class InstallCommand extends Command {
 
     $myFile = json_decode(file_get_contents(base_path('').'/composer.json'));
     $saveFile=false;
-    if(!in_array('crudvel/customs',$myFile->autoload->classmap)){
-      $myFile->autoload->classmap[]= 'crudvel/customs';
+    if(!in_array('customs/crudvel',$myFile->autoload->classmap)){
+      $myFile->autoload->classmap[]= 'customs/crudvel';
       $saveFile=true;
     }
 

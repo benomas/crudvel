@@ -51,7 +51,7 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
 
   protected $sources= [
     'crudvel' => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/scaffTree.json',
-    'custom'  => 'crudvel/customs/Scaff/scaffTree.json',
+    'custom'  => 'customs/crudvel/Scaff/scaffTree.json',
   ];
 
   protected $source;

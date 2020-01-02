@@ -1,12 +1,12 @@
 <?php
 
 namespace Crudvel\Libraries\CvScaffSupport;
-use \Crudvel\Interfaces\CvScaffInterface;
-use Illuminate\Foundation\Console\ClosureCommand;
+use Crudvel\Interfaces\CvScaffInterface;
+use Illuminate\Console\Command;
 
 class CvBuilder extends \Crudvel\Libraries\CvBuilder
 {
-  public function __construct(ClosureCommand $consoleInstance=null,$cvBuildClass=null){
+  public function __construct(Command $consoleInstance=null,$cvBuildClass=null){
     parent::__construct();
     $cvBuildClass = $cvBuildClass ?? 'Crudvel\Libraries\CvScaffSupport\CvScaff';
     if(!class_exists($cvBuildClass))
