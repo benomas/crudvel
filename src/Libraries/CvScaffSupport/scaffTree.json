@@ -96,6 +96,12 @@
             },
             "seeder": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterSeederScaff"
+            },
+            "cat-migration": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvDeleterCatMigrationScaff"
+            },
+            "cat-seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterCatSeederScaff"
             }
         }
     },
