@@ -65,6 +65,7 @@ class CvBaseScaff
   //[End Stablishers]
 
   public function force(){
+    $this->propertyDefiner('force',true);
     return $this->setForce(true);
   }
 

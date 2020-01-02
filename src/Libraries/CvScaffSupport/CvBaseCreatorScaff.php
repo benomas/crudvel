@@ -248,9 +248,10 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
 
   protected function inyectFixedTemplate(){
     if($this->targetFileAlreadyExist()){
-      pdd($this->confirm('file already defined rewrite it?'));
-      if(!$this->isForced() && !$this->confirm('file already defined rewrite it?')){
-        throw new \Exception("Error {$this->calculateTargetFileName()} cant be created");
+      if(!$this->isForced()){
+        if(!$this->confirm('file already defined rewrite it?'))
+          throw new \Exception("Error {$this->calculateTargetFileName()} cant be created");
+        $this->force();
       }
       try{
         unlink($this->calculateTargetFileName());

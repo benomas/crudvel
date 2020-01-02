@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use Crudvel\Libraries\CvScaffSupport\CvScaffHelper;
 
 class BaseConsole{
   use \Crudvel\Traits\CacheTrait;
@@ -446,146 +445,15 @@ class BaseConsole{
     return $this;
   }
 
-  public function loadCvScaff(){
-    Artisan::command(
-    'old-cv-scaff {context?} {mode?} {target?} {resource?} {force?}',
-    function($context=null,$mode=null,$target=null,$resource=null,$force=0){
-      $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder($this))
-        ->stablishContext($context)
-        ->stablishMode($mode)
-        ->stablishTarget($target)
-        ->stablishResource($resource);
-      if($force)
-        $cvScaffBuilder->force();
-
-      $cvScaffBuilder->build()->runScaff();
-    })->describe('cv-scaff-commands');
-    return $this;
-  }
-
   public function loadCvScaffList(){
     Artisan::command(
-      'cv-scaff-list',
+      'old-cv-scaff-list',
       function(){
         $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder(
           $this,
           'Crudvel\Libraries\CvScaffSupport\CvScaffHelper'
           )
         )->build()->cvScaffList()->composerDump();
-    })->describe('cv-scaff-commands');
-    return $this;
-  }
-
-  public function loadCvScaffCreateBackResource(){
-    Artisan::command(
-    'old-create-back-resource {resource?}',
-    function($resource=null){
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'creator',
-        'target'   => 'en-lang',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'creator',
-        'target'   => 'es-lang',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'creator',
-        'target'   => 'model',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'creator',
-        'target'   => 'request',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'creator',
-        'target'   => 'api-controller',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'creator',
-        'target'   => 'migration',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'creator',
-        'target'   => 'seeder',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'adder',
-        'target'   => 'api-route',
-        'resource' => $resource,
-      ]);
-      composerDump();
-    })->describe('cv-scaff-commands');
-    return $this;
-  }
-
-  public function loadCvScaffDeleteBackResource(){
-    Artisan::command(
-    'old-delete-back-resource {resource}',
-    function($resource=null){
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'deleter',
-        'target'   => 'en-lang',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'deleter',
-        'target'   => 'es-lang',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'deleter',
-        'target'   => 'model',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'deleter',
-        'target'   => 'request',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'deleter',
-        'target'   => 'api-controller',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'deleter',
-        'target'   => 'migration',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'deleter',
-        'target'   => 'seeder',
-        'resource' => $resource,
-      ]);
-      Artisan::call('cv-scaff',[
-        'context'  => 'back',
-        'mode'     => 'remover',
-        'target'   => 'api-route',
-        'resource' => $resource,
-      ]);
-      composerDump();
     })->describe('cv-scaff-commands');
     return $this;
   }
