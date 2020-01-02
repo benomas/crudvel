@@ -19,4 +19,7 @@ class CvDeleterApiControllerScaff extends \Crudvel\Libraries\CvScaffSupport\Back
 
   //[Stablishers]
   //[End Stablishers]
+  protected function selfRepresentation(){
+    return Str::studly(Str::singular($this->getResource())).'Controller';
+  }
 }

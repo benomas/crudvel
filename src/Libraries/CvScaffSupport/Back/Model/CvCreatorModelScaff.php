@@ -13,9 +13,6 @@ class CvCreatorModelScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseC
     parent::__construct();
   }
   //[Getters]
-  protected function getTargetFileName(){
-    return parent::getTargetFileName().'.php';
-  }
   //[End Getters]
 
   //[Setters]
@@ -23,4 +20,7 @@ class CvCreatorModelScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseC
 
   //[Stablishers]
   //[End Stablishers]
+  protected function selfRepresentation(){
+    return Str::studly(Str::singular($this->getResource()));
+  }
 }

@@ -1,4 +1,4 @@
-<?php namespace Crudvel\Customs\Database\Seeds;
+<?php namespace Customs\Crudvel\Database\Seeds;
 /**
  *
  *
@@ -10,5 +10,5 @@ use Crudvel\Database\Seeds\CatPermissionTypeTableSeeder AS DefaultCatPermissionT
 
 class CatPermissionTypeTableSeeder extends DefaultCatPermissionTypeTableSeeder
 {
-    
+
 }

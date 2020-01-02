@@ -6,6 +6,8 @@ use \Crudvel\Interfaces\CvScaffInterface;
 
 abstract class CvBaseRemoverScaff  extends \Crudvel\Libraries\CvScaffSupport\CvBaseRemoverScaff implements CvScaffInterface
 {
+  use \Crudvel\Traits\CvScaffBaseTrait;
+  protected $fileExtension='.php';
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
   }

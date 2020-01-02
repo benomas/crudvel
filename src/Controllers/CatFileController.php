@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Controllers;
 
-class CatFileController extends \Crudvel\Customs\Controllers\ApiController{
+class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
 
   protected $selectables = [
     'active',

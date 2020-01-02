@@ -1,4 +1,4 @@
-<?php namespace Crudvel\Customs\Models;
+<?php namespace Customs\Crudvel\Models;
 
 class CatPermissionType extends Crudvel\Models\CatPermissionType{
 

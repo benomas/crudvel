@@ -4,8 +4,9 @@ namespace Crudvel\Libraries\CvScaffSupport;
 use Illuminate\Support\Str;
 use \Crudvel\Interfaces\CvScaffInterface;
 
-class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
+  use \Crudvel\Traits\CvScaffBaseTrait;
   protected $relatedTargetPath;
   protected $relatedTemplatePath;
   protected $absolutTargetPath;
@@ -40,10 +41,6 @@ class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff i
 
   public function getExtraParams(){
     return $this->extraParams??[];
-  }
-
-  protected function getTargetFileName(){
-    return $this->getAbsolutTargetPath().Str::studly(Str::singular($this->getParam('resource')));
   }
 
   protected function getParam($param=null){
@@ -118,8 +115,12 @@ class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff i
     return $this->setTemplate($template);
   }
 
+  protected function calculateTargetFileName(){
+    return $this->getAbsolutTargetPath().$this->selfRepresentation().$this->getFileExtension();
+  }
+
   protected function targetFileAlreadyExist(){
-    return file_exists($this->getTargetFileName());
+    return file_exists($this->calculateTargetFileName());
   }
 
   protected function processPaths(){
@@ -247,20 +248,34 @@ class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff i
 
   protected function inyectFixedTemplate(){
     if($this->targetFileAlreadyExist()){
-      if(!$this->isForced() && !$this->confirm('file already defined rewrite it?'))
-        throw new \Exception("Error {$this->getTargetFileName()} cant be created");
+      pdd($this->confirm('file already defined rewrite it?'));
+      if(!$this->isForced() && !$this->confirm('file already defined rewrite it?')){
+        throw new \Exception("Error {$this->calculateTargetFileName()} cant be created");
+      }
       try{
-        unlink($this->getTargetFileName());
-        cvConsoler(cvGreenTC('Old file was deleted')."\n");
+        unlink($this->calculateTargetFileName());
+        cvConsoler(
+          cvGreenTC('Old file ').
+          cvBlueTC($this->calculateTargetFileName()).
+          cvGreenTC('  was deleted by ').
+          cvBlueTC(get_class($this)).
+          "\n"
+        );
       }catch(\Exception $e){
-        throw new \Exception("Error {$this->getTargetFileName()} cant be deleted");
+        throw new \Exception("Error {$this->calculateTargetFileName()} cant be deleted");
       }
     }
     try{
-      file_put_contents($this->getTargetFileName(), $this->getTemplate());
-      cvConsoler(cvGreenTC('New file was created')."\n");
+      file_put_contents($this->calculateTargetFileName(), $this->getTemplate());
+      cvConsoler(
+        cvGreenTC('New file ').
+        cvBlueTC($this->calculateTargetFileName()).
+        cvGreenTC('  was created by ').
+        cvBlueTC(get_class($this)).
+        "\n"
+      );
     }catch(\Exception $e){
-      throw new \Exception("Error {$this->getTargetFileName()} cant be created");
+      throw new \Exception("Error {$this->calculateTargetFileName()} cant be created");
     }
     return $this;
   }

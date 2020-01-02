@@ -1,9 +1,9 @@
 <?php namespace  Crudvel\Requests;
 
-use Crudvel\Customs\Requests\CrudRequest;
+use Customs\Crudvel\Requests\CrudRequest;
 use App\Models\CatFile;
 
-class FileRequest extends \Crudvel\Customs\Requests\CrudRequest{
+class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
 
   /**
    * Determine if the user is authorized to make this request.

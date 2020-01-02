@@ -10,6 +10,7 @@ class CvBaseScaff
   private $resource;
   private $scaffParams;
   private $force;
+  protected $fileExtension;
 
   public function __construct(){
   }
@@ -31,6 +32,10 @@ class CvBaseScaff
     return '""';
   }
 
+  public function getFileExtension(){
+    return $this->fileExtension??null;
+  }
+
   //[End Getters]
 
   //[Setters]
@@ -47,6 +52,11 @@ class CvBaseScaff
 
   public function setForce($force=null){
     $this->force = $force??null;
+    return $this;
+  }
+
+  public function setFileExtension($fileExtension=null){
+    $this->fileExtension = $fileExtension??null;
     return $this;
   }
   //[End Setters]

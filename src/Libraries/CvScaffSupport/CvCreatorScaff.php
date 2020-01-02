@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaff implements CvScaffInterface
 {
+  protected $fileExtension='.php';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/cv_scaff.txt';
   protected $suggestedTargetRelatedPaths = [
     'l-api'            => 'app/Http/Controllers/Api/',
@@ -60,14 +61,6 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
     parent::__construct();
   }
   //[Getters]
-  protected function getTargetFileName(){
-    return $this->getAbsolutTargetPath().
-      'Cv'.
-      Str::studly(Str::singular($this->getParam('target_mode'))).
-      Str::studly(Str::singular($this->getParam('resource')).
-      'Scaff.php'
-    );
-  }
 
   public function getSuggestedTargetRelatedPaths(){
     return $this->suggestedTargetRelatedPaths??[];
@@ -138,6 +131,16 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
   }
   //[End Stablishers]
 
+  protected function calculateTargetFileName(){
+    return $this->getAbsolutTargetPath().
+      'Cv'.
+      Str::studly(Str::singular($this->getParam('target_mode'))).
+      Str::studly(Str::singular($this->getParam('resource')).
+      'Scaff'.
+      $this->getFileExtension()
+    );
+  }
+
   protected function nameSpaceCalculator(){
     $fix1 = str_replace(['vendor/benomas/','src/','/'],['','','\\'],$this->getRelatedTargetPath());
     $fix2 = rtrim($fix1,'\\');
@@ -182,6 +185,10 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
       cvConsoler(cvBlueTC('fail to synchronize scaffTree')."\n");
     }
     return $this;
+  }
+
+  protected function selfRepresentation(){
+    return '';
   }
 
   public function scaff() {

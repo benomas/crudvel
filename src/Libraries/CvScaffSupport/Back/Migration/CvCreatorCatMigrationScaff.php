@@ -14,9 +14,6 @@ class CvCreatorCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\
     parent::__construct();
   }
   //[Getters]
-  protected function getTargetFileName(){
-    return $this->getAbsolutTargetPath().Carbon::now()->format('Y_m_d_u').'_create_'.fixedSlug(Str::plural($this->getResource())).'_table.php';
-  }
   //[End Getters]
 
   //[Setters]
@@ -24,4 +21,7 @@ class CvCreatorCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\
 
   //[Stablishers]
   //[End Stablishers]
+  protected function selfRepresentation(){
+    return Carbon::now()->format('Y_m_d_u').'_create_'.fixedSlug(Str::plural($this->getResource())).'_table';
+  }
 }

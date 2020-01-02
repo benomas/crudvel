@@ -108,19 +108,20 @@ class CvScaffHelper
         foreach($modeSubScaffTree as  $target=>$targetSubScaffTree){
           $callBack = function() use($context,$mode,$target){
             $this->call('cv-scaff',['context'=>$context,'mode'=>$mode,'target'=>$target]);
+            return "php artisan cv-scaff $context $mode $target";
           };
-          $autoCompleter["$target $mode $context"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$target $mode $context"] = $callBack;
-          $autoCompleter["$target $context $mode"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$target $context $mode"] = $callBack;
-          $autoCompleter["$mode $target $context"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$mode $target $context"] = $callBack;
-          $autoCompleter["$mode $context $target"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$mode $context $target"] = $callBack;
-          $autoCompleter["$context $mode $target"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$context $mode $target"] = $callBack;
-          $autoCompleter["$context $target $mode"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$context $target $mode"] = $callBack;
+          $autoCompleter["$target-$mode-$context"] = "cv-scaff $context $mode $target -{resource}";
+          $artisans     ["$target-$mode-$context"] = $callBack;
+          $autoCompleter["$target-$context-$mode"] = "cv-scaff $context $mode $target -{resource}";
+          $artisans     ["$target-$context-$mode"] = $callBack;
+          $autoCompleter["$mode-$target-$context"] = "cv-scaff $context $mode $target -{resource}";
+          $artisans     ["$mode-$target-$context"] = $callBack;
+          $autoCompleter["$mode-$context-$target"] = "cv-scaff $context $mode $target -{resource}";
+          $artisans     ["$mode-$context-$target"] = $callBack;
+          $autoCompleter["$context-$mode-$target"] = "cv-scaff $context $mode $target -{resource}";
+          $artisans     ["$context-$mode-$target"] = $callBack;
+          $autoCompleter["$context-$target-$mode"] = "cv-scaff $context $mode $target -{resource}";
+          $artisans     ["$context-$target-$mode"] = $callBack;
         }
       }
     }
@@ -139,7 +140,8 @@ class CvScaffHelper
       );
       $failMessage = "\n";
     }while(!($artisans[$selection]??null));
-    $artisans[$selection]();
+    
+    cvConsoler(cvBlueTC("\n".$artisans[$selection]()." was called\n"));
     return $this;
   }
 }

@@ -1,4 +1,4 @@
-<?php namespace Crudvel\Customs\Requests;
+<?php namespace Customs\Crudvel\Requests;
 /**
  *
  *

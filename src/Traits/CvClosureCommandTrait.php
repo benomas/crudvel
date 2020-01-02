@@ -28,4 +28,8 @@ trait CvClosureCommandTrait
   public function call($command,$params=null){
     return $this->getConsoleInstance()->call($command,$params);
   }
+
+  public function composerDump(){
+    composerDump();
+  }
 }

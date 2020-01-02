@@ -4,9 +4,10 @@ namespace Crudvel\Libraries\CvScaffSupport\Front;
 use Illuminate\Support\Str;
 use \Crudvel\Interfaces\CvScaffInterface;
 
-class CvBaseRemoverScaff  extends \Crudvel\Libraries\CvScaffSupport\CvBaseRemoverScaff implements CvScaffInterface
+abstract class CvBaseRemoverScaff  extends \Crudvel\Libraries\CvScaffSupport\CvBaseRemoverScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvPatronTrait;
+  use \Crudvel\Traits\CvScaffBaseTrait;
   protected $modes = [
     'creator',
     'updater',

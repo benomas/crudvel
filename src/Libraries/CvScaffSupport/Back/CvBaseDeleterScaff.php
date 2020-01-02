@@ -4,8 +4,10 @@ namespace Crudvel\Libraries\CvScaffSupport\Back;
 use Illuminate\Support\Str;
 use \Crudvel\Interfaces\CvScaffInterface;
 
-class CvBaseDeleterScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseDeleterScaff implements CvScaffInterface
+abstract class CvBaseDeleterScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseDeleterScaff implements CvScaffInterface
 {
+  use \Crudvel\Traits\CvScaffBaseTrait;
+  protected $fileExtension='.php';
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
   }

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Storage;
 use App\Models\{File,CatFile};
 
-class FileController extends \Crudvel\Customs\Controllers\ApiController{
+class FileController extends \Customs\Crudvel\Controllers\ApiController{
   protected $slugField   = 'slug';
   protected $selectables = [
     'absolute_path',

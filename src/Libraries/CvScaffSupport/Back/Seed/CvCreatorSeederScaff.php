@@ -13,9 +13,6 @@ class CvCreatorSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
     parent::__construct();
   }
   //[Getters]
-  protected function getTargetFileName(){
-    return parent::getTargetFileName().'TableSeeder.php';
-  }
   //[End Getters]
 
   //[Setters]
@@ -23,4 +20,7 @@ class CvCreatorSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
 
   //[Stablishers]
   //[End Stablishers]
+  protected function selfRepresentation(){
+    return Str::studly(Str::singular($this->getResource())).'TableSeeder';
+  }
 }

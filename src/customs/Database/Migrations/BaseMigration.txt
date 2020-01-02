@@ -1,4 +1,4 @@
-<?php namespace Crudvel\Customs\Database\Migrations;
+<?php namespace Customs\Crudvel\Database\Migrations;
 /**
  *
  *
@@ -10,5 +10,5 @@ use Crudvel\Database\Migrations\BaseMigration AS defaultMigration;
 
 class BaseMigration extends defaultMigration
 {
-    
+
 }

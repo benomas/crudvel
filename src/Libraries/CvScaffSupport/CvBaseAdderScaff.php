@@ -7,6 +7,7 @@ use \Crudvel\Interfaces\CvScaffInterface;
 abstract class CvBaseAdderScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCommonTrait;
+  use \Crudvel\Traits\CvScaffBaseTrait;
   protected $relatedFilePath;
   protected $absolutFilePath;
   protected $file;
@@ -40,9 +41,15 @@ abstract class CvBaseAdderScaff extends \Crudvel\Libraries\CvScaffSupport\CvBase
   protected function inyectFixedFile(){
     try{
       file_put_contents($this->getAbsolutFilePath(), $this->getFile());
-      cvConsoler(cvGreenTC('file was updated')."\n");
+      cvConsoler(
+        cvGreenTC('File ').
+        cvBlueTC($this->getAbsolutFilePath()).
+        cvGreenTC('  was updated by ').
+        cvBlueTC(get_class($this)).
+        "\n"
+      );
     }catch(\Exception $e){
-      throw new \Exception('Error '.$this->getAbsolutFilePath().' cant be created');
+      throw new \Exception('Error '.$this->getAbsolutFilePath().' cant be updated');
     }
     return $this;
   }

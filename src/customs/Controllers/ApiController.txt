@@ -1,4 +1,4 @@
-<?php namespace Crudvel\Customs\Controllers;
+<?php namespace Customs\Crudvel\Controllers;
 /**
  *
  *
@@ -10,5 +10,5 @@ use Crudvel\Controllers\ApiController AS defaultApiController;
 
 class ApiController extends defaultApiController
 {
-    
+
 }

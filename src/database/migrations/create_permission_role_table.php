@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Crudvel\Customs\Database\Migrations\BaseMigration;
+use Customs\Crudvel\Database\Migrations\BaseMigration;
 
 class CreatePermissionRoleTable extends BaseMigration
 {

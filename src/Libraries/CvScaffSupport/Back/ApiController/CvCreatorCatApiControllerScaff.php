@@ -13,9 +13,6 @@ class CvCreatorCatApiControllerScaff extends \Crudvel\Libraries\CvScaffSupport\B
     parent::__construct();
   }
   //[Getters]
-  protected function getTargetFileName(){
-    return parent::getTargetFileName().'Controller.php';
-  }
   //[End Getters]
 
   //[Setters]
@@ -23,4 +20,7 @@ class CvCreatorCatApiControllerScaff extends \Crudvel\Libraries\CvScaffSupport\B
 
   //[Stablishers]
   //[End Stablishers]
+  protected function selfRepresentation(){
+    return Str::studly(Str::singular($this->getResource())).'Controller';
+  }
 }

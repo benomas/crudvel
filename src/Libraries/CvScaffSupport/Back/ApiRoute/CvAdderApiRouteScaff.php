@@ -34,4 +34,7 @@ class CvAdderApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
     }
     return $this->setFile(str_replace($apiCrudvelResources,"$apiCrudvelResources  ,[\"$slugResource\"]{$matches[4]}",$fileContent));
   }
+  protected function selfRepresentation(){
+    return 'api';
+  }
 }

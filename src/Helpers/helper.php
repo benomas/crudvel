@@ -1134,3 +1134,6 @@ if(!function_exists("fileBaseName")){
 if(!function_exists("getClassFromFile")){
   function getClassFromFile(...$params){return CvHelper::getClassFromFile(...$params);}
 }
+if(!function_exists("composerDump")){
+  function composerDump(...$params){return CvHelper::composerDump(...$params);}
+}

@@ -1,6 +1,6 @@
 <?php namespace Database\Seeds;
 
-class <cv_singular_studly_resource_cv>TableSeeder extends \Crudvel\Customs\Database\Seeds\BaseSeeder{
+class <cv_singular_studly_resource_cv>TableSeeder extends \Customs\Crudvel\Database\Seeds\BaseSeeder{
 	protected $data =[/*
 		[
 			"name"        => "Rango 1",

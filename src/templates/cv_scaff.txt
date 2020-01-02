@@ -18,4 +18,7 @@ class Cv<cv_singular_studly_target_mode_cv><cv_singular_studly_resource_cv>Scaff
 
   //[Stablishers]
   //[End Stablishers]
+  protected function selfRepresentation(){
+    return Str::studly(Str::singular($this->getResource()));
+  }
 }

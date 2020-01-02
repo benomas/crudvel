@@ -1,8 +1,8 @@
 <?php namespace Crudvel\Models;
 
-use Crudvel\Customs\Models\BaseModel;
+use Customs\Crudvel\Models\BaseModel;
 
-class File extends \Crudvel\Customs\Models\BaseModel{
+class File extends \Customs\Crudvel\Models\BaseModel{
   use \Crudvel\Traits\Related;
 
   protected $fillable = [

@@ -1,6 +1,6 @@
 <?php namespace  Crudvel\Requests;
 
-class CatFileRequest extends \Crudvel\Customs\Requests\CrudRequest{
+class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
 
   /**
    * Get the validation rules that apply to the request.
