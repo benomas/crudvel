@@ -38,7 +38,7 @@ class BaseCommand extends Command
   {
   }
 
-  protected function properyReload($property=null){
+  protected function propertyReload($property=null){
     if(!($propertyValue = $this->argument($property)??null))
       return $this->cvCacheGetProperty($property);
     $this->cvCacheSetProperty($property,$propertyValue);

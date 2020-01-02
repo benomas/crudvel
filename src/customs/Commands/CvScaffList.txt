@@ -1,6 +1,6 @@
 <?php namespace Customs\Crudvel\Commands;
 /**
- * modificable CvScaff
+ * modificable CvScaffList
  */
 class CvScaffList extends \Crudvel\Commands\CvScaffList{
 }

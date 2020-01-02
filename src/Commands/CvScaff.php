@@ -35,14 +35,14 @@ class CvScaff extends \Crudvel\Commands\BaseCommand
   public function handle()
   {
     $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder($this))
-      ->stablishContext($this->properyReload('context'))
-      ->stablishMode($this->properyReload('mode'))
-      ->stablishTarget($this->properyReload('target'))
-      ->stablishResource($this->properyReload('resource'));
+      ->stablishContext($this->propertyReload('context'))
+      ->stablishMode($this->propertyReload('mode'))
+      ->stablishTarget($this->propertyReload('target'))
+      ->stablishResource($this->propertyReload('resource'));
 
-    if(($this->properyReload('force'))===null)
+    if(($this->propertyReload('force'))===null)
       $this->cvCacheSetProperty('force',false);
-    if($this->properyReload('force'))
+    if($this->propertyReload('force'))
       $cvScaffBuilder->force();
 
     $cvScaffBuilder->build()->runScaff();

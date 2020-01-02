@@ -444,17 +444,4 @@ class BaseConsole{
     Artisan::command("fix-models-meta-data {mode?}",$callBack)->describe('autogenerate def model meta data');
     return $this;
   }
-
-  public function loadCvScaffList(){
-    Artisan::command(
-      'old-cv-scaff-list',
-      function(){
-        $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder(
-          $this,
-          'Crudvel\Libraries\CvScaffSupport\CvScaffHelper'
-          )
-        )->build()->cvScaffList()->composerDump();
-    })->describe('cv-scaff-commands');
-    return $this;
-  }
 }

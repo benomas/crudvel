@@ -33,7 +33,7 @@ class CvScaffBackDeleteResource extends \Crudvel\Commands\BaseCommand
    */
   public function handle()
   {
-    $resource = $this->properyReload('resource');
+    $resource = $this->propertyReload('resource');
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'deleter',
