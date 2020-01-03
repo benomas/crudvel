@@ -39,11 +39,15 @@ class MakeRootUser extends Command {
           }
         }
         if(!($user = \App\Models\User::withUserName("root")->first())){
-          $defaultUser = config("packages.benomas.crudvel.crudvel.default_user");
-          if(!$defaultUser){
+          $configRootUser = config("packages.benomas.crudvel.crudvel.default_user");
+          if(!$configRootUser){
             return cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
           }
-          $defaultUser["password"]=bcrypt($defaultUser["password"]);
+          $defaultUser['username']   = $configRootUser['crudvel_default_user_username'];
+          $defaultUser['first_name'] = $configRootUser['crudvel_default_user_first_name'];
+          $defaultUser['last_name']  = $configRootUser['crudvel_default_user_last_name'];
+          $defaultUser['email']      = $configRootUser['crudvel_default_user_email'];
+          $defaultUser['password']   = bcrypt($configRootUser['crudvel_default_user_passsword']);
           if(!($user = new \App\Models\User())->fill($defaultUser)->save())
           {
             return cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
