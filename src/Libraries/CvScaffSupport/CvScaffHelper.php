@@ -110,18 +110,8 @@ class CvScaffHelper
             $this->call('cv-scaff',['context'=>$context,'mode'=>$mode,'target'=>$target]);
             return "php artisan cv-scaff $context $mode $target";
           };
-          $autoCompleter["$target-$mode-$context"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$target-$mode-$context"] = $callBack;
-          $autoCompleter["$target-$context-$mode"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$target-$context-$mode"] = $callBack;
-          $autoCompleter["$mode-$target-$context"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$mode-$target-$context"] = $callBack;
-          $autoCompleter["$mode-$context-$target"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$mode-$context-$target"] = $callBack;
           $autoCompleter["$context-$mode-$target"] = "cv-scaff $context $mode $target -{resource}";
           $artisans     ["$context-$mode-$target"] = $callBack;
-          $autoCompleter["$context-$target-$mode"] = "cv-scaff $context $mode $target -{resource}";
-          $artisans     ["$context-$target-$mode"] = $callBack;
         }
       }
     }
@@ -142,6 +132,16 @@ class CvScaffHelper
     }while(!($artisans[$selection]??null));
 
     cvConsoler(cvBlueTC("\n".$artisans[$selection]()." was called\n"));
+    return $this;
+  }
+
+  public function cvScaffSplit(){
+    list($autoCompleter,$artisans) = $this->dinamicArtisans();
+    foreach($autoCompleter as $combination=>$call){
+      \Illuminate\Support\Facades\Artisan::command("autoscaff-$combination",function() use($combination,$artisans){
+        cvConsoler(cvBlueTC("\n".$artisans[$combination]()." was called\n"));
+      })->describe("lauch cv-scaff with [$combination] params");
+    }
     return $this;
   }
 }
