@@ -62,6 +62,11 @@ class CvBaseScaff
   //[End Setters]
 
   //[Stablishers]
+
+  public function stablishResource($resource=null){
+    return $this->setResource($resource??null);
+  }
+
   //[End Stablishers]
 
   public function force(){

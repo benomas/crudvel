@@ -268,7 +268,7 @@ class CvScaff
     $scaffer = $this->stablishProcessorInstance()
       ->inyectConsoleInstance()
       ->getProcessorInstance()
-      ->setResource($this->getResource())
+      ->stablishResource($this->getResource())
       ->setScaffParams($this->getTargetSubTree())
       ->scaff();
 

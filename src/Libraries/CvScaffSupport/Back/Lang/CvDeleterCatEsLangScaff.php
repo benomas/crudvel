@@ -18,8 +18,11 @@ class CvDeleterCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
 //[End Setters]
 
 //[Stablishers]
+  public function stablishResource($resource=null){
+    return $this->setResource($resource?ltrim(fixedSlug($resource),'cat-'):$resource);
+  }
 //[End Stablishers]
   protected function selfRepresentation(){
-    return fixedSlug(Str::plural($this->getResource()));
+    return 'cat-'.fixedSlug(Str::plural($this->getResource()));
   }
 }

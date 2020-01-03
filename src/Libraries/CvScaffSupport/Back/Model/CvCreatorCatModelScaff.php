@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class CvCreatorCatModelScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
+  use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedTargetPath   = 'app/Models/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_model.txt';
   public function __construct(){

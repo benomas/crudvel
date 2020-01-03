@@ -1,0 +1,70 @@
+export default {
+  rowsLabel : '<cv_plural_title_resource_cv>',
+  rowLabel  : '<cv_singular_title_resource_cv>',
+  fields    : {
+    active      : 'Activo',
+    created_at  : 'Creado en',
+    created_by  : 'Creado por',
+    description : 'Descripción',
+    id          : 'ID',
+    name        : 'Nombre',
+    updated_at  : 'Actualizado en',
+    updated_by  : 'Actualizado por'
+  },
+  actions: {
+    index: {
+      label: '<cv_plural_title_resource_cv>'
+    },
+    create: {
+      label : 'Crea <cv_singular_lower_resource_cv>',
+      set   : {
+        success : '<cv_singular_title_resource_cv> creado',
+        error   : 'Error al intentar crea <cv_singular_lower_resource_cv>',
+        cancel  : 'Se ha cancelado la creación d <cv_singular_lower_resource_cv>'
+      }
+    },
+    show: {
+      label     : '<cv_singular_title_resource_cv>',
+      backLabel : 'Regresar',
+      nextLabel : null,
+      set       : {
+        success : null,
+        error   : 'Error al intentar acceder:<cv_singular_lower_resource_cv>',
+        cancel  : null
+      }
+    },
+    edit: {
+      label : 'Edita <cv_singular_lower_resource_cv>',
+      set   : {
+        success : 'Se ha editado correctament <cv_singular_lower_resource_cv>',
+        error   : 'Error al intentar edita <cv_singular_lower_resource_cv>',
+        cancel  : 'Se ha cancelado la edición d <cv_singular_lower_resource_cv>'
+      }
+    },
+    delete: {
+      label     : 'Elimina <cv_singular_lower_resource_cv>',
+      nextLabel : 'Continuar',
+      set       : {
+        success : '<cv_singular_title_resource_cv> eliminado',
+        error   : 'Error al intentar elimina <cv_singular_lower_resource_cv>',
+        cancel  : 'Se ha cancelado la eliminación d <cv_singular_lower_resource_cv>'
+      }
+    },
+    activate: {
+      label : 'Activa <cv_singular_lower_resource_cv>',
+      set   : {
+        success : 'Se ha activado correctament <cv_singular_lower_resource_cv>',
+        error   : 'Error al intentar activa <cv_singular_lower_resource_cv>',
+        cancel  : 'Se ha cancelado la activación d <cv_singular_lower_resource_cv>'
+      }
+    },
+    deactivate: {
+      label : 'Desactiva <cv_singular_lower_resource_cv>',
+      set   : {
+        success : 'Se ha desactivado correctament <cv_singular_lower_resource_cv>',
+        error   : 'Error al intentar activa <cv_singular_lower_resource_cv>',
+        cancel  : 'Se ha cancelado la desactivación d <cv_singular_lower_resource_cv>'
+      }
+    }
+  }
+}

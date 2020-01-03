@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class CvDeleterCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseDeleterScaff implements CvScaffInterface
 {
+  use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedFilePath   = 'database/migrations/';
   public function __construct(){
     parent::__construct();

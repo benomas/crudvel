@@ -10,29 +10,46 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
   protected $fileExtension='.php';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/cv_scaff.txt';
   protected $suggestedTargetRelatedPaths = [
-    'laravel-api'            => 'app/Http/Controllers/Api/',
-    'laravel-en'             => 'resources/lang/en/',
-    'laravel-encrudvel'      => 'resources/lang/en/crudvel/',
-    'laravel-es'             => 'resources/lang/es/',
-    'laravel-escrudvel'      => 'resources/lang/es/crudvel/',
-    'laravel-migrations'     => 'database/migrations/',
-    'laravel-models'         => 'app/Models/',
-    'laravel-requests'       => 'app/Http/Requests/',
-    'laravel-seeds'          => 'database/seeds/',
-    'laravel-test'           => 'database/seeds/test/',
-    'laravel-factories'      => 'database/seeds/factories/',
-    'cv-templates'     => 'vendor/benomas/crudvel/src/templates/',
-    'cv-scaff'         => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/',
-    'cv-back'          => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/',
-    'cv-apicontroller' => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/ApiController/',
-    'cv-apiroute'      => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/ApiRoute/',
-    'cv-langs'         => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Langs/',
-    'cv-migration'     => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Migration/',
-    'cv-model'         => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Model/',
-    'cv-request'       => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Request/',
-    'cv-seed'          => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Seed/',
-    'cv-apiroute'      => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/ApiRoute/',
-    'cv-fron'          => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Front',
+    'laravel-templates'          => 'customs/crudvel/Scaff/Classes/templates/',
+    'laravel-back-scaff'         => 'customs/crudvel/Scaff/Classes/',
+    'laravel-back-back'          => 'customs/crudvel/Scaff/Classes/Back/',
+    'laravel-back-apicontroller' => 'customs/crudvel/Scaff/Classes/Back/ApiController/',
+    'laravel-back-apiroute'      => 'customs/crudvel/Scaff/Classes/Back/ApiRoute/',
+    'laravel-back-langs'         => 'customs/crudvel/Scaff/Classes/Back/Langs/',
+    'laravel-back-migration'     => 'customs/crudvel/Scaff/Classes/Back/Migration/',
+    'laravel-back-model'         => 'customs/crudvel/Scaff/Classes/Back/Model/',
+    'laravel-back-request'       => 'customs/crudvel/Scaff/Classes/Back/Request/',
+    'laravel-back-seed'          => 'customs/crudvel/Scaff/Classes/Back/Seed/',
+    'laravel-back-factory'       => 'customs/crudvel/Scaff/Classes/Back/Factory/',
+    'laravel-back-apiroute'      => 'customs/crudvel/Scaff/Classes/Back/ApiRoute/',
+    'laravel-front'              => 'customs/crudvel/Scaff/Classes/Front/',
+    'laravel-front-lang'         => 'customs/crudvel/Scaff/Classes/Front/Lang/',
+    'laravel-front-crud'         => 'customs/crudvel/Scaff/Classes/Front/Crud/',
+    'laravel-front-service'      => 'customs/crudvel/Scaff/Classes/Front/Service/',
+    'laravel-front-definition'   => 'customs/crudvel/Scaff/Classes/Front/Definition/',
+    'laravel-front-boot'         => 'customs/crudvel/Scaff/Classes/Front/Boot/',
+    'laravel-front-router'       => 'customs/crudvel/Scaff/Classes/Front/Router/',
+    'laravel-front-dashboard'    => 'customs/crudvel/Scaff/Classes/Front/Dashboard/',
+    'crudvel-templates'          => 'vendor/benomas/crudvel/src/templates/',
+    'crudvel-back-scaff'         => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/',
+    'crudvel-back-back'          => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/',
+    'crudvel-back-apicontroller' => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/ApiController/',
+    'crudvel-back-apiroute'      => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/ApiRoute/',
+    'crudvel-back-langs'         => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Langs/',
+    'crudvel-back-migration'     => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Migration/',
+    'crudvel-back-model'         => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Model/',
+    'crudvel-back-request'       => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Request/',
+    'crudvel-back-seed'          => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Seed/',
+    'crudvel-back-factory'       => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/Factory/',
+    'crudvel-back-apiroute'      => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Back/ApiRoute/',
+    'crudvel-front'              => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Front/',
+    'crudvel-front-lang'         => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Front/Lang/',
+    'crudvel-front-crud'         => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Front/Crud/',
+    'crudvel-front-service'      => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Front/Service/',
+    'crudvel-front-definition'   => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Front/Definition/',
+    'crudvel-front-boot'         => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Front/Boot/',
+    'crudvel-front-router'       => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Front/Router/',
+    'crudvel-front-dashboard'    => 'vendor/benomas/crudvel/src/Libraries/CvScaffSupport/Front/Dashboard/',
     'empty'            => '',
   ];
 
@@ -105,11 +122,12 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
     $fail=false;
     $partialRelatedTargetPath='';
     $aditionalRelatedTargetPathSegmet='';
+    $absolutePath = null;
     do{
-      if($fail){
+      if($absolutePath!==null){
         cvConsoler(
           cvRedTC('invalid path '.
-          base_path($partialRelatedTargetPath.$aditionalRelatedTargetPathSegmet).
+          $absolutePath.
           " set it again \n")
         );
       }
@@ -120,8 +138,21 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
       )??''];
 
       $aditionalRelatedTargetPathSegmet = $this->ask('will you require adicional segment? set empty for no aditional segments');
-      $fail=true;
-    }while(!file_exists(base_path($partialRelatedTargetPath.$aditionalRelatedTargetPathSegmet)));
+      $absolutePath = base_path($partialRelatedTargetPath.$aditionalRelatedTargetPathSegmet);
+      if(!file_exists($absolutePath)){
+        if($this->confirm('Path ['.$absolutePath.'] doest exist, do you want to create it?')){
+          try{
+            mkdir($absolutePath);
+          }catch(\Exception $e){
+            cvConsoler(
+              cvRedTC('Error, path  '.
+              $absolutePath.
+              " set it again \n")
+            );
+          }
+        }
+      }
+    }while(!file_exists($absolutePath));
 
     $this->setRelatedTargetPath($partialRelatedTargetPath.$aditionalRelatedTargetPathSegmet);
   }

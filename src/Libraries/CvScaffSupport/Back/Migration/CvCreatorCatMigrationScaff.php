@@ -8,6 +8,7 @@ use Carbon\Carbon;
 
 class CvCreatorCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
+  use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedTargetPath   = 'database/migrations/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_migration.txt';
   public function __construct(){

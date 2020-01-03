@@ -111,7 +111,22 @@
             }
         }
     },
-    "front": [],
+    "front": {
+        "creator": {
+            "en-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorEnLangScaff"
+            },
+            "cat-es-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorCatEsLangScaff"
+            },
+            "cat-en-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorCatEnLangScaff"
+            },
+            "es-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorEsLangScaff"
+            }
+        }
+    },
     "scaff": {
         "creator": {
             "target": {

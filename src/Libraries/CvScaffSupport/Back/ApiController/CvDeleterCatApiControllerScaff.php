@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class CvDeleterCatApiControllerScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseDeleterScaff implements CvScaffInterface
 {
+  use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedFilePath   = 'app/Http/Controllers/Api/';
   public function __construct(){
     parent::__construct();

@@ -1,0 +1,70 @@
+export default {
+  rowsLabel : '<cv_plural_title_resource_cv>',
+  rowLabel  : '<cv_singular_title_resource_cv>',
+  fields    : {
+    active      : 'Active',
+    created_at  : 'Created at',
+    created_by  : 'Created by',
+    description : 'Description',
+    id          : 'Id',
+    name        : 'Name',
+    updated_at  : 'Updated at',
+    updated_by  : 'Updated by'
+  },
+  actions: {
+    index: {
+      label: '<cv_plural_title_resource_cv>'
+    },
+    create: {
+      label : 'Create <cv_singular_lower_resource_cv>',
+      set   : {
+        success : '<cv_singular_title_resource_cv> created',
+        error   : 'Error creating <cv_singular_lower_resource_cv>',
+        cancel  : 'Creation of <cv_singular_lower_resource_cv> canceled'
+      }
+    },
+    show: {
+      label     : '<cv_singular_title_resource_cv>',
+      backLabel : 'Go back',
+      nextLabel : null,
+      set       : {
+        success : null,
+        error   : 'Error trying to access:<cv_singular_lower_resource_cv>',
+        cancel  : null
+      }
+    },
+    edit: {
+      label : 'Edi <cv_singular_lower_resource_cv>',
+      set   : {
+        success : '<cv_singular_title_resource_cv> Edited Ok',
+        error   : 'Error traying to edi <cv_singular_lower_resource_cv>',
+        cancel  : 'Edition o <cv_singular_lower_resource_cv> canceled'
+      }
+    },
+    delete: {
+      label     : 'Delet <cv_singular_lower_resource_cv>',
+      nextLabel : 'Continue',
+      set       : {
+        success : '<cv_singular_title_resource_cv> deleted',
+        error   : 'Error trying to delet <cv_singular_lower_resource_cv>',
+        cancel  : 'deletion o <cv_singular_lower_resource_cv> canceled'
+      }
+    },
+    activate: {
+      label : 'Activ <cv_singular_lower_resource_cv>',
+      set   : {
+        success : '<cv_singular_title_resource_cv> Activated ok',
+        error   : 'Error traying to activat <cv_singular_lower_resource_cv>',
+        cancel  : 'Activation o <cv_singular_lower_resource_cv> canceled'
+      }
+    },
+    deactivate: {
+      label : 'Desactivat <cv_singular_lower_resource_cv>',
+      set   : {
+        success : '<cv_singular_title_resource_cv> Desactivated',
+        error   : 'Error traying to desactivate th <cv_singular_lower_resource_cv>',
+        cancel  : 'Deactivation o <cv_singular_lower_resource_cv> canceled'
+      }
+    }
+  }
+}
