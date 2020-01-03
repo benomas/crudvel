@@ -7,7 +7,7 @@ class CvScaffBackDeleteResource extends \Crudvel\Commands\BaseCommand
    *
    * @var string
    */
-  protected $signature = 'cv-unscaff-back-resource {resource?}';
+  protected $signature = 'unscaff-back-resource {resource?}';
 
   /**
    * The console command description.

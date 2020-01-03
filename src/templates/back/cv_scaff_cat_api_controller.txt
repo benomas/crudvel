@@ -2,9 +2,6 @@
 
 class <cv_singular_studly_resource_cv>Controller extends \Customs\Crudvel\Controllers\ApiCatalog1Controller{
 
-  protected $selectables = [
-  ];
-
   public function __construct(){
     parent::__construct();
   }

@@ -5,7 +5,7 @@ namespace Crudvel\Libraries\CvScaffSupport\Back\ApiRoute;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvAdderCatApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseAdderScaff implements CvScaffInterface
+class CvRemoverCatApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseRemoverScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedFilePath   = 'routes/api.php';
@@ -19,7 +19,6 @@ class CvAdderCatApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
   //[End Setters]
 
   //[Stablishers]
-  //[End Stablishers]
   protected function fixFile(){
     $fileContent    = $this->getFile();
     $pattern = '/((?>\s|\S)*apiCrudvelResources\(\[)((?>\s|\S)*\[(.+)\](\s*))(\]\);(?>\s|\S)*)/';
@@ -28,13 +27,22 @@ class CvAdderCatApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
     if(!$apiCrudvelResources)
       throw new \Exception('Error, api crudvel resources section is not defined');
     $slugResource = fixedSlug(Str::plural($this->getResource()));
-    preg_match('/\[\W*'.$slugResource.'\W*\]/',$apiCrudvelResources,$matches2);
-    if(count($matches2)){
+    preg_match('/(\])?((?>\s|,)*)(\[\W*'.$slugResource.'\W*\])((?>\s|,)*)/',$apiCrudvelResources,$matches2);
+    $toRemove='';
+    if(strlen($matches2[1]??''))
+      $toRemove = $matches2[2]??'';
+    $toRemove .= $matches2[3]??'';
+    if(!strlen($matches2[1]??''))
+      $toRemove .= $matches2[4]??'';
+
+    if($toRemove===''){
       cvConsoler(cvBlueTC('no changes required')."\n");
       return $this;
     }
-    return $this->setFile(str_replace($apiCrudvelResources,"$apiCrudvelResources  ,[\"$slugResource\"]{$matches[4]}",$fileContent));
+    $toRemove = str_replace($toRemove,"",$apiCrudvelResources);
+    return $this->setFile(str_replace($apiCrudvelResources,$toRemove,$fileContent));
   }
+  //[End Stablishers]
   protected function selfRepresentation(){
     return 'api';
   }

@@ -59,6 +59,9 @@
             },
             "cat-api-route": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvAdderCatApiRouteScaff"
+            },
+            "cat-seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvAdderCatSeederScaff"
             }
         },
         "remover": {
@@ -67,6 +70,12 @@
             },
             "seeder": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverSeederScaff"
+            },
+            "cat-api-route": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvRemoverCatApiRouteScaff"
+            },
+            "cat-seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverCatSeederScaff"
             }
         },
         "deleter": {

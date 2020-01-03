@@ -300,62 +300,6 @@ class BaseConsole{
     return $this;
   }
 
-  public function loadScaff($callBack=null){
-    $callBack = $callBack ?? function ($resourceName=null,$template=null){
-      if(config('app.production.env')==='production')
-        return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
-
-      if(!$resourceName)
-        return cvConsoler(cvBlueTC('Nombre de recurso requerido')."\n");
-
-      if($template)
-        $template = "-s $template";
-      else
-        $template = '';
-
-      $singularName = fixedSnake(Str::singular($resourceName));
-      $pluralName   = fixedSnake(Str::plural($resourceName));
-
-      foreach ([
-        "pscaff -a scaff -r $singularName -p $pluralName $template"
-      ] as $command) {
-        $shellEcho  = customExec($command);
-        cvConsoler(cvGreenTC($shellEcho)."\n");
-        cvConsoler(cvGreenTC($command.' procesado ')."\n");
-      }
-    };
-    Artisan::command('scaff {resourceName?} {template?',$callBack)->describe('Alias for pscaff scaff command');
-    return $this;
-  }
-
-  public function loadUnScaff($callBack=null){
-    $callBack = $callBack ?? function ($resourceName=null,$template=null){
-      if(config('app.production.env')==='production')
-        return cvConsoler(cvBrownTC('Este comando no puede ser ejecutado en ambiente productivo')."\n");
-
-      if(!$resourceName)
-        return cvConsoler(cvBlueTC('Nombre de recurso requerido')."\n");
-
-      $singularName = fixedSnake(Str::singular($resourceName));
-      $pluralName   = fixedSnake(Str::plural($resourceName));
-
-      if($template)
-        $template = "-s $template";
-      else
-        $template = '';
-
-      foreach ([
-        "pscaff -a unscaff -r $singularName -p $pluralName $template"
-      ] as $command) {
-        $shellEcho  = customExec($command);
-        cvConsoler(cvGreenTC($shellEcho)."\n");
-        cvConsoler(cvGreenTC($command.' procesado ')."\n");
-      }
-    };
-    Artisan::command('unscaff {resourceName?} {template?}',$callBack)->describe('Alias for pscaff unscaff command');
-    return $this;
-  }
-
   public function loadMigrateGroup($callBack=null){
     $callBack = $callBack ?? function ($lastSegment=''){
       $paths = assetsMap(database_path("migrations/$lastSegment"),1);

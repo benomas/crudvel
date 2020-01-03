@@ -7,7 +7,7 @@ class CvScaffBackCreateResource extends \Crudvel\Commands\BaseCommand
    *
    * @var string
    */
-  protected $signature = 'cv-scaff-back-resource {resource?}';
+  protected $signature = 'scaff-back-resource {resource?}';
 
   /**
    * The console command description.

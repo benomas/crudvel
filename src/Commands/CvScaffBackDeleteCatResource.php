@@ -7,7 +7,7 @@ class CvScaffBackDeleteCatResource extends \Crudvel\Commands\BaseCommand
    *
    * @var string
    */
-  protected $signature = 'cv-unscaff-back-cat-resource {resource?}';
+  protected $signature = 'unscaff-back-cat-resource {resource?}';
 
   /**
    * The console command description.
@@ -79,13 +79,13 @@ class CvScaffBackDeleteCatResource extends \Crudvel\Commands\BaseCommand
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'remover',
-      'target'   => 'api-route',
+      'target'   => 'cat-api-route',
       'resource' => $resource,
     ]);
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'remover',
-      'target'   => 'seeder',
+      'target'   => 'cat-seeder',
       'resource' => $resource,
     ]);
     composerDump();
