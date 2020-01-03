@@ -137,6 +137,11 @@
             "es-lang": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorEsLangScaff"
             }
+        },
+        "adder": {
+            "crudvel": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvelScaff"
+            }
         }
     },
     "scaff": {
