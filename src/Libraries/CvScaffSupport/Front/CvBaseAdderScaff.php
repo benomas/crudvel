@@ -19,5 +19,16 @@ abstract class CvBaseAdderScaff extends \Crudvel\Libraries\CvScaffSupport\CvBase
 //[End Setters]
 
 //[Stablishers]
+  protected function stablishAbsolutFilePath(){
+    $crudvelFrontPath = config("packages.benomas.crudvel.crudvel.crudvel_front_path");
+    return $this->setAbsolutFilePath(base_path().'/../'.$crudvelFrontPath.$this->getRelatedFilePath());
+  }
 //[End Stablishers]
+
+  public function scaff() {
+    return $this->processPaths()
+      ->loadFile()
+      ->fixFile()
+      ->inyectFixedFile();
+  }
 }
