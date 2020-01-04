@@ -8,7 +8,8 @@ use Illuminate\Support\Str;
 class CvAdderCatApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseAdderScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCatTrait;
-  protected $relatedFilePath   = 'routes/api.php';
+  protected $relatedFilePath            = 'routes/api.php';
+  protected $leftRegexGlobalRequiriment = 'apiCrudvelResources\(\[';
   public function __construct(){
     parent::__construct();
   }
@@ -21,19 +22,13 @@ class CvAdderCatApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
   //[Stablishers]
   //[End Stablishers]
   protected function fixFile(){
-    $fileContent    = $this->getFile();
-    $pattern = '/((?>\s|\S)*apiCrudvelResources\(\[)((?>\s|\S)*\[(.+)\](\s*))(\]\);(?>\s|\S)*)/';
-    preg_match($pattern,$fileContent,$matches);
-    $apiCrudvelResources = $matches[2] ?? null;
-    if(!$apiCrudvelResources)
-      throw new \Exception('Error, api crudvel resources section is not defined');
-    $slugResource = fixedSlug(Str::plural($this->getResource()));
-    preg_match('/\[\W*'.$slugResource.'\W*\]/',$apiCrudvelResources,$matches2);
-    if(count($matches2)){
-      cvConsoler(cvBlueTC('no changes required')."\n");
-      return $this;
-    }
-    return $this->setFile(str_replace($apiCrudvelResources,"$apiCrudvelResources  ,[\"$slugResource\"]{$matches[4]}",$fileContent));
+    $basePatern       = '/\[["\']<slot>["\']\]/';
+    $slugResource     = fixedSlug(Str::plural($this->getResource()));
+    return $this->globalFileRegexAdder(
+      $this->regexMaker($basePatern,'[^\s,]+'),
+      $this->scapedRegexMaker($basePatern,$slugResource),
+      '[\''.$slugResource.'\']'
+    );
   }
   protected function selfRepresentation(){
     return 'api';

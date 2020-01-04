@@ -11,6 +11,8 @@ class CvBaseScaff
   private $scaffParams;
   private $force;
   protected $fileExtension;
+  protected $leftRegexGlobalRequiriment;
+  protected $rightRegexGlobalRequiriment;
 
   public function __construct(){
   }
@@ -35,7 +37,6 @@ class CvBaseScaff
   public function getFileExtension(){
     return $this->fileExtension??null;
   }
-
   //[End Getters]
 
   //[Setters]
@@ -76,15 +77,5 @@ class CvBaseScaff
 
   public function isForced(){
     return $this->getForce();
-  }
-
-  protected function getLastRegexMatch($sourceText,$regex){
-    preg_match_all($regex,$sourceText,$matches);
-    $matches = $matches??null;
-    if(!$matches){
-      cvConsoler(cvRedTC('no matches for regex'.$regex)."\n");
-      return '';
-    }
-    return end($matches[0]);
   }
 }

@@ -7,6 +7,7 @@ use \Crudvel\Interfaces\CvScaffInterface;
 abstract class CvBaseFixerScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffBaseTrait;
+  use \Crudvel\Traits\CvScaffRegexTrait;
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
   }

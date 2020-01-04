@@ -8,6 +8,7 @@ abstract class CvBaseAdderScaff extends \Crudvel\Libraries\CvScaffSupport\CvBase
 {
   use \Crudvel\Traits\CvScaffCommonTrait;
   use \Crudvel\Traits\CvScaffBaseTrait;
+  use \Crudvel\Traits\CvScaffRegexTrait;
   protected $relatedFilePath;
   protected $absolutFilePath;
   protected $file;
