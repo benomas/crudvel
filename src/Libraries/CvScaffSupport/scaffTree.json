@@ -1,183 +1,168 @@
 {
-    "back": {
-        "creator": {
-            "api-controller": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff"
-            },
-            "cat-api-controller": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorCatApiControllerScaff"
-            },
-            "en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorEnLangScaff"
-            },
-            "cat-en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorCatEnLangScaff"
-            },
-            "es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorEsLangScaff"
-            },
-            "cat-es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorCatEsLangScaff"
-            },
-            "migration": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorMigrationScaff"
-            },
-            "cat-migration": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorCatMigrationScaff"
-            },
-            "model": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorModelScaff"
-            },
-            "cat-model": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorCatModelScaff"
-            },
-            "request": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorRequestScaff"
-            },
-            "cat-request": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorCatRequestScaff"
-            },
-            "seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorSeederScaff"
-            },
-            "cat-seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatSeederScaff"
-            },
-            "test-seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorTestSeederScaff"
-            },
-            "cat-test-seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatTestSeederScaff"
-            }
-        },
-        "adder": {
-            "api-route": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvAdderApiRouteScaff"
-            },
-            "seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvAdderSeederScaff"
-            },
-            "cat-api-route": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvAdderCatApiRouteScaff"
-            },
-            "cat-seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvAdderCatSeederScaff"
-            }
-        },
-        "remover": {
-            "api-route": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvRemoverApiRouteScaff"
-            },
-            "seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverSeederScaff"
-            },
-            "cat-api-route": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvRemoverCatApiRouteScaff"
-            },
-            "cat-seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverCatSeederScaff"
-            }
-        },
-        "deleter": {
-            "api-controller": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvDeleterApiControllerScaff"
-            },
-            "cat-api-controller": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvDeleterCatApiControllerScaff"
-            },
-            "en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterEnLangScaff"
-            },
-            "cat-en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterCatEnLangScaff"
-            },
-            "es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterEsLangScaff"
-            },
-            "cat-es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterCatEsLangScaff"
-            },
-            "model": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvDeleterModelScaff"
-            },
-            "cat-model": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvDeleterCatModelScaff"
-            },
-            "request": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvDeleterRequestScaff"
-            },
-            "cat-request": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvDeleterCatRequestScaff"
-            },
-            "migration": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvDeleterMigrationScaff"
-            },
-            "seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterSeederScaff"
-            },
-            "cat-migration": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvDeleterCatMigrationScaff"
-            },
-            "cat-seeder": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterCatSeederScaff"
-            }
-        }
+  "back": {
+    "creator": {
+      "api-controller": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorApiControllerScaff"
+      },
+      "cat-api-controller": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvCreatorCatApiControllerScaff"
+      },
+      "en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorEnLangScaff"
+      },
+      "cat-en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorCatEnLangScaff"
+      },
+      "es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorEsLangScaff"
+      },
+      "cat-es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorCatEsLangScaff"
+      },
+      "migration": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorMigrationScaff"
+      },
+      "cat-migration": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvCreatorCatMigrationScaff"
+      },
+      "model": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorModelScaff"
+      },
+      "cat-model": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvCreatorCatModelScaff"
+      },
+      "request": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorRequestScaff"
+      },
+      "cat-request": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvCreatorCatRequestScaff"
+      },
+      "seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorSeederScaff"
+      },
+      "cat-seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatSeederScaff"
+      },
+      "test-seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorTestSeederScaff"
+      },
+      "cat-test-seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvCreatorCatTestSeederScaff"
+      }
     },
-    "front": {
-        "creator": {
-            "en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorEnLangScaff"
-            },
-            "cat-es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorCatEsLangScaff"
-            },
-            "cat-en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorCatEnLangScaff"
-            },
-            "es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorEsLangScaff"
-            }
-        },
-        "adder": {
-            "crudvuel-en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelEnLangScaff"
-            },
-            "crudvuel-es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelEsLangScaff"
-            },
-            "crudvuel-cat-es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelCatEsLangScaff"
-            },
-            "crudvuel-cat-en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelCatEnLangScaff"
-            }
-        },
-        "remover": {
-            "cat-en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCatEnLangScaff"
-            },
-            "cat-es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCatEsLangScaff"
-            },
-            "crudvel-cat-en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvelCatEnLangScaff"
-            },
-            "crudvel-cat-es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvelCatEsLangScaff"
-            },
-            "crudvel-en-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvelEnLangScaff"
-            },
-            "crudvuel-es-lang": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvuelEsLangScaff"
-            }
-        }
+    "adder": {
+      "api-route": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvAdderApiRouteScaff"
+      },
+      "seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvAdderSeederScaff"
+      },
+      "cat-api-route": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvAdderCatApiRouteScaff"
+      },
+      "cat-seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvAdderCatSeederScaff"
+      }
     },
-    "scaff": {
-        "creator": {
-            "target": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\CvCreatorScaff"
-            }
-        }
+    "remover": {
+      "api-route": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvRemoverApiRouteScaff"
+      },
+      "seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverSeederScaff"
+      },
+      "cat-api-route": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiRoute\\CvRemoverCatApiRouteScaff"
+      },
+      "cat-seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverCatSeederScaff"
+      }
+    },
+    "deleter": {
+      "api-controller": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvDeleterApiControllerScaff"
+      },
+      "cat-api-controller": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\ApiController\\CvDeleterCatApiControllerScaff"
+      },
+      "en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterEnLangScaff"
+      },
+      "cat-en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterCatEnLangScaff"
+      },
+      "es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterEsLangScaff"
+      },
+      "cat-es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterCatEsLangScaff"
+      },
+      "model": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvDeleterModelScaff"
+      },
+      "cat-model": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Model\\CvDeleterCatModelScaff"
+      },
+      "request": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvDeleterRequestScaff"
+      },
+      "cat-request": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Request\\CvDeleterCatRequestScaff"
+      },
+      "migration": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvDeleterMigrationScaff"
+      },
+      "seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterSeederScaff"
+      },
+      "cat-migration": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Migration\\CvDeleterCatMigrationScaff"
+      },
+      "cat-seeder": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterCatSeederScaff"
+      }
     }
+  },
+  "front": {
+    "creator": {
+      "en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorEnLangScaff"
+      },
+      "cat-es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorCatEsLangScaff"
+      },
+      "cat-en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorCatEnLangScaff"
+      },
+      "es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorEsLangScaff"
+      }
+    },
+    "adder": {
+      "crudvuel-en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelEnLangScaff"
+      },
+      "crudvuel-es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelEsLangScaff"
+      },
+      "crudvuel-cat-es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelCatEsLangScaff"
+      },
+      "crudvuel-cat-en-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelCatEnLangScaff"
+      }
+    },
+    "remover": {
+      "crudvuel-es-lang": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvuelEsLangScaff"
+      }
+    }
+  },
+  "scaff": {
+    "creator": {
+      "target": {
+        "class": "Crudvel\\Libraries\\CvScaffSupport\\CvCreatorScaff"
+      }
+    }
+  }
 }

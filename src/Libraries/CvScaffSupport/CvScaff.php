@@ -263,12 +263,12 @@ class CvScaff
     $proyectScaffTree = $this->getProyectScaffTree();
     foreach((array)$crudvelScaffTree as $context=>$contextScaffSubTree)
       foreach((array)$contextScaffSubTree as $mode=>$modeScaffSubTree)
-        foreach((array)$modeScaffSubTree as $target=>$value){}
+        foreach((array)$modeScaffSubTree as $target=>$value)
           if(!class_exists($crudvelScaffTree[$context][$mode][$target]['class']))
             unset($crudvelScaffTree[$context][$mode][$target]);
     foreach((array)$proyectScaffTree as $context=>$contextScaffSubTree)
       foreach((array)$contextScaffSubTree as $mode=>$modeScaffSubTree)
-        foreach((array)$modeScaffSubTree as $target=>$value){}
+        foreach((array)$modeScaffSubTree as $target=>$value)
           if(!class_exists($crudvelScaffTree[$context][$mode][$target]['class']))
             unset($crudvelScaffTree[$context][$mode][$target]);
     try{
