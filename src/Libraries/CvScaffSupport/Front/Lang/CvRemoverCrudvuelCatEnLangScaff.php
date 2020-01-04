@@ -7,22 +7,22 @@ use Illuminate\Support\Str;
 
 class CvRemoverCrudvuelCatEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseRemoverScaff implements CvScaffInterface
 {
+  use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedFilePath   = 'src/i18n/en/crudvuel.js';
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
+//[Stablishers]
   protected function fixFile(){
-    $this->fixImportSection()->fixCrudvuelLangsSection();
     return $this->fixImportSection()->fixCrudvuelLangsSection();
   }
-  //[End Stablishers]
+//[End Stablishers]
   protected function selfRepresentation(){
     return 'crudvuel';
   }

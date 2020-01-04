@@ -12,13 +12,13 @@ class CvDeleterCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
+//[Stablishers]
   protected function stablishAbsolutFilePath(){
     $fileName=null;
     foreach((array) assetsMap(base_path($this->getRelatedFilePath())) as $migration){
@@ -32,7 +32,7 @@ class CvDeleterCatMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\
       return $this->setAbsolutFilePath(null);
     return $this->setAbsolutFilePath(base_path($this->getRelatedFilePath()).$fileName);
   }
-  //[End Stablishers]
+//[End Stablishers]
   protected function selfRepresentation(){
     return fixedSnake(Str::plural($this->getResource()));
   }

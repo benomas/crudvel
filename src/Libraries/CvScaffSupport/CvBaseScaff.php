@@ -37,9 +37,9 @@ class CvBaseScaff
   public function getFileExtension(){
     return $this->fileExtension??null;
   }
-  //[End Getters]
+//[End Getters]
 
-  //[Setters]
+//[Setters]
 
   public function setResource($resource=null){
     $this->resource = $resource??null;
@@ -60,15 +60,15 @@ class CvBaseScaff
     $this->fileExtension = $fileExtension??null;
     return $this;
   }
-  //[End Setters]
+//[End Setters]
 
-  //[Stablishers]
+//[Stablishers]
 
   public function stablishResource($resource=null){
     return $this->setResource($resource??null);
   }
 
-  //[End Stablishers]
+//[End Stablishers]
 
   public function force(){
     $this->propertyDefiner('force',true);

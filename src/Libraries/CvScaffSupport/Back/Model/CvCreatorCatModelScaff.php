@@ -13,14 +13,14 @@ class CvCreatorCatModelScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBa
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
-  //[End Stablishers]
+//[Stablishers]
+//[End Stablishers]
   protected function selfRepresentation(){
     return Str::studly(Str::singular($this->getResource()));
   }

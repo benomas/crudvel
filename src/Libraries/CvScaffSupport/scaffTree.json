@@ -165,6 +165,20 @@
             "crudvuel-cat-es-lang": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvuelCatEsLangScaff"
             }
+        },
+        "deleter": {
+            "cat-en-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvDeleterCatEnLangScaff"
+            },
+            "cat-es-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvDeleterCatEsLangScaff"
+            },
+            "es-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvDeleterEsLangScaff"
+            },
+            "en-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvDeleterEnLangScaff"
+            }
         }
     },
     "scaff": {

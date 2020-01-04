@@ -11,14 +11,14 @@ class CvRemoverSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
-  //[End Stablishers]
+//[Stablishers]
+//[End Stablishers]
   protected function fixFile(){
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
@@ -26,14 +26,6 @@ class CvRemoverSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
         'Database\Seeds\\'.Str::studly(Str::singular($this->getResource()))
       )
     );
-  }
-  protected function fixFileaaa(){
-    $fileContent  = $this->getFile();
-    $slugResource = 'Database\\\\Seeds\\\\'.Str::studly(Str::singular($this->getResource())).'TableSeeder::class';
-    $patern = '/(call\(\[)((?>\s|\S)*?)(\W*?)(,'.$slugResource.')(\W*?)((?>\s|\S)*)/';
-    $fix1   = preg_replace($patern, '$1$2$5$6', $fileContent);
-    $patern = '/(call\(\[)((?>\s|\S)*?)(\s*?)('.$slugResource.')(\s*?,)((?>\s|\S)*)/';
-    return $this->setFile(preg_replace($patern, '$1$2$3$6', $fix1));
   }
   protected function selfRepresentation(){
     return 'DatabaseSeeder';

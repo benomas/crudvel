@@ -12,14 +12,14 @@ class CvAdderApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
-  //[End Stablishers]
+//[Stablishers]
+//[End Stablishers]
   protected function fixFile(){
     $basePatern       = '\[["\']<slot>["\']\]';
     $slugResource     = fixedSlug(Str::plural($this->getResource()));

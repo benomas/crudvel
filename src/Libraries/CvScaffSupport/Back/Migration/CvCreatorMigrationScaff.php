@@ -13,14 +13,14 @@ class CvCreatorMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
-  //[End Stablishers]
+//[Stablishers]
+//[End Stablishers]
   protected function selfRepresentation(){
     return Carbon::now()->format('Y_m_d_u').'_create_'.fixedSnake(Str::plural($this->getResource())).'_table';
   }

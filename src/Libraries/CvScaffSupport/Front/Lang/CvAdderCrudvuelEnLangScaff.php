@@ -11,14 +11,14 @@ class CvAdderCrudvuelEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
-  //[End Stablishers]
+//[Stablishers]
+//[End Stablishers]
   protected function fixFile(){
     return $this->fixImportSection()->fixCrudvuelLangsSection();
   }

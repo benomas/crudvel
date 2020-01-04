@@ -8,6 +8,7 @@ use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class CvCreatorCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
+  //! dont use CvScaffCatTrait in cat-lang files;
   protected $relatedTargetPath   = 'resources/lang/es/crudvel/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_es_lang.txt';
   protected $trans;

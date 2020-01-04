@@ -12,18 +12,17 @@ class CvRemoverCrudvuelCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
+//[Stablishers]
   protected function fixFile(){
-    $this->fixImportSection()->fixCrudvuelLangsSection();
     return $this->fixImportSection()->fixCrudvuelLangsSection();
   }
-  //[End Stablishers]
+//[End Stablishers]
   protected function selfRepresentation(){
     return 'crudvuel';
   }

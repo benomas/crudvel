@@ -5,11 +5,9 @@ namespace Crudvel\Libraries\CvScaffSupport\Front\Lang;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvCreatorEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseCreatorScaff implements CvScaffInterface
+class CvDeleterEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseDeleterScaff implements CvScaffInterface
 {
-  use \Crudvel\Traits\CvScaffCatTrait;
-  protected $relatedTargetPath   = 'src/i18n/es/crudvuel/';
-  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/front/cv_scaff_es_lang.txt';
+  protected $relatedFilePath = 'resources/lang/es/crudvel/';
   public function __construct(){
     parent::__construct();
   }

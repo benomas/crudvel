@@ -13,14 +13,14 @@ class CvAdderCatSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBas
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
-  //[End Stablishers]
+//[Stablishers]
+//[End Stablishers]
   protected function fixFile(){
     $basePatern = '<slot>TableSeeder::class';
     $resource   = 'Database\Seeds\\'.Str::studly(Str::singular($this->getResource()));
