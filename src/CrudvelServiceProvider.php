@@ -24,6 +24,7 @@ class CrudvelServiceProvider extends ServiceProvider
         'Customs\Crudvel\Commands\InstallCommand',
         'Customs\Crudvel\Commands\MakeRootUser',
         'Customs\Crudvel\Commands\CvScaff',
+        'Customs\Crudvel\Commands\CvScaffFixTrees',
         'Customs\Crudvel\Commands\CvScaffBackCreateResource',
         'Customs\Crudvel\Commands\CvScaffBackDeleteResource',
         'Customs\Crudvel\Commands\CvScaffBackCreateCatResource',

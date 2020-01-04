@@ -277,14 +277,14 @@ abstract class CvBaseScaffC
         throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created');
       try{
         unlink($this->getTemplateReceptorPath());
-        cvConsoler(cvcvPositive('Old file was deleted')."\n");
+        cvConsoler(cvPositive('Old file was deleted')."\n");
       }catch(\Exception $e){
         throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be deleted');
       }
     }
     try{
       file_put_contents($this->getTemplateReceptorPath(), $template);
-      cvConsoler(cvcvPositive('New file was created')."\n");
+      cvConsoler(cvPositive('New file was created')."\n");
     }catch(\Exception $e){
       throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created');
     }

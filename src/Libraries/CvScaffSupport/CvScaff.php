@@ -10,6 +10,7 @@ class CvScaff
   use \Crudvel\Traits\CacheTrait;
   use \Crudvel\Traits\CvClosureCommandTrait;
   private $crudvelScaffTreeAbsolutePath;
+  private $proyectScaffTreeAbsolutePath;
   private $proyectScaffTreeRelPath='customs/crudvel/Scaff/scaffTree.json';
   private $consoleInstance;
   private $crudvelScaffTree;
@@ -24,12 +25,17 @@ class CvScaff
 
   public function __construct(Command $consoleInstance){
     $this->setCrudvelScaffTreeAbsolutePath(__DIR__.'/scaffTree.json');
+    $this->setProyectScaffTreeAbsolutePath(base_path($this->getProyectScaffTreeRelPath()));
     $this->setConsoleInstance($consoleInstance);
   }
 
 //[Getters]
   public function getCrudvelScaffTreeAbsolutePath(){
     return $this->crudvelScaffTreeAbsolutePath??null;
+  }
+
+  public function getProyectScaffTreeAbsolutePath(){
+    return $this->proyectScaffTreeAbsolutePath??null;
   }
 
   public function getProyectScaffTreeRelPath(){
@@ -99,6 +105,11 @@ class CvScaff
 //[Setters]
   public function setCrudvelScaffTreeAbsolutePath($crudvelScaffTreeAbsolutePath){
     $this->crudvelScaffTreeAbsolutePath=$crudvelScaffTreeAbsolutePath??null;
+    return $this;
+  }
+
+  public function setProyectScaffTreeAbsolutePath($proyectScaffTreeAbsolutePath){
+    $this->proyectScaffTreeAbsolutePath=$proyectScaffTreeAbsolutePath??null;
     return $this;
   }
 
@@ -172,7 +183,7 @@ class CvScaff
 
   private function stablishProyectScaffTree(){
     try{
-      $proyectScaffTree = (array) json_decode(file_get_contents(base_path($this->getProyectScaffTreeRelPath())),true);
+      $proyectScaffTree = (array) json_decode(file_get_contents($this->getProyectScaffTreeAbsolutePath()),true);
     }catch(\Exception $e){
       cvConsoler(cvWarning('Warning, Unable to load crudvel scaff tree')."\n");
     }
@@ -245,6 +256,32 @@ class CvScaff
   }
 
 //[End Stablishers]
+
+  public function fixScaffTrees(){
+    $this->composerDump();
+    $crudvelScaffTree = $this->getCrudvelScaffTree();
+    $proyectScaffTree = $this->getProyectScaffTree();
+    foreach((array)$crudvelScaffTree as $context=>$contextScaffSubTree)
+      foreach((array)$contextScaffSubTree as $mode=>$modeScaffSubTree)
+        foreach((array)$modeScaffSubTree as $target=>$value){}
+          if(!class_exists($crudvelScaffTree[$context][$mode][$target]['class']))
+            unset($crudvelScaffTree[$context][$mode][$target]);
+    foreach((array)$proyectScaffTree as $context=>$contextScaffSubTree)
+      foreach((array)$contextScaffSubTree as $mode=>$modeScaffSubTree)
+        foreach((array)$modeScaffSubTree as $target=>$value){}
+          if(!class_exists($crudvelScaffTree[$context][$mode][$target]['class']))
+            unset($crudvelScaffTree[$context][$mode][$target]);
+    try{
+      file_put_contents($this->getCrudvelScaffTreeAbsolutePath(),json_encode($crudvelScaffTree,JSON_PRETTY_PRINT));
+      file_put_contents($this->getProyectScaffTreeAbsolutePath(),json_encode($proyectScaffTree,JSON_PRETTY_PRINT));
+      cvConsoler(cvInfo('scaffTrees was synced')."\n");
+    }catch(\Exception $e){
+      cvConsoler(cvInfo('fail to synchronize scaffTrees')."\n");
+    }
+    $this->composerDump();
+    return $this;
+  }
+
 
   public function inyectConsoleInstance(){
     $this->getProcessorInstance()->setConsoleInstance($this->getConsoleInstance());

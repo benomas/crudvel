@@ -1118,16 +1118,16 @@ if(!function_exists('cvPositive')){
   function cvPositive($message){return CvHelper::greenTC($message);}
 }
 if(!function_exists('cvInfo')){
-  function cvInfo($message){return CvHelper::cvBlueTC($message);}
+  function cvInfo($message){return CvHelper::blueTC($message);}
 }
 if(!function_exists('cvWarning')){
-  function cvWarning($message){return CvHelper::cvBrownTC($message);}
+  function cvWarning($message){return CvHelper::brownTC($message);}
 }
 if(!function_exists('cvPrimary')){
   function cvPrimary($message){return CvHelper::whiteTC($message);}
 }
 if(!function_exists('cvSecondary')){
-  function cvSecondary($message){return CvHelper::cvCyanTC($message);}
+  function cvSecondary($message){return CvHelper::cyanTC($message);}
 }
 
 if(!function_exists("fixedSlug")){

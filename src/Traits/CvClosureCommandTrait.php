@@ -19,10 +19,8 @@ trait CvClosureCommandTrait
     else
       $options[]='cancel-artisan';
     $selection  = $this->getConsoleInstance()->choice($message,$options,$default);
-    if($selection==='cancel-artisan'){
-      cvConsoler("\n".cvInfo('artisan command was canceled...'));
-      die();
-    }
+    if($selection==='cancel-artisan')
+      throw new \Exception('artisan command was canceled...');
     return $selection;
   }
 

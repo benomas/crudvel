@@ -43,9 +43,9 @@ abstract class CvBaseAdderScaff extends \Crudvel\Libraries\CvScaffSupport\CvBase
     try{
       file_put_contents($this->getAbsolutFilePath(), $this->getFile());
       cvConsoler(
-        cvcvPositive('File ').
+        cvPositive('File ').
         cvInfo($this->getAbsolutFilePath()).
-        cvcvPositive('  was updated by ').
+        cvPositive('  was updated by ').
         cvInfo(get_class($this)).
         "\n"
       );

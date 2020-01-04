@@ -151,6 +151,26 @@
             "crudvuel-cat-en-lang": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelCatEnLangScaff"
             }
+        },
+        "remover": {
+            "cat-en-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCatEnLangScaff"
+            },
+            "cat-es-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCatEsLangScaff"
+            },
+            "crudvel-cat-en-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvelCatEnLangScaff"
+            },
+            "crudvel-cat-es-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvelCatEsLangScaff"
+            },
+            "crudvel-en-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvelEnLangScaff"
+            },
+            "crudvuel-es-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvuelEsLangScaff"
+            }
         }
     },
     "scaff": {

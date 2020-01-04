@@ -256,9 +256,9 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
       try{
         unlink($this->calculateTargetFileName());
         cvConsoler(
-          cvcvPositive('Old file ').
+          cvPositive('Old file ').
           cvInfo($this->calculateTargetFileName()).
-          cvcvPositive('  was deleted by ').
+          cvPositive('  was deleted by ').
           cvInfo(get_class($this)).
           "\n"
         );
@@ -269,9 +269,9 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
     try{
       file_put_contents($this->calculateTargetFileName(), $this->getTemplate());
       cvConsoler(
-        cvcvPositive('New file ').
+        cvPositive('New file ').
         cvInfo($this->calculateTargetFileName()).
-        cvcvPositive('  was created by ').
+        cvPositive('  was created by ').
         cvInfo(get_class($this)).
         "\n"
       );

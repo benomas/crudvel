@@ -46,9 +46,9 @@ abstract class CvBaseDeleterScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
       throw new \Exception('Error '.$this->getAbsolutFilePath().' cant be deleted');
     }
     cvConsoler(
-      cvcvPositive('File ').
+      cvPositive('File ').
       cvInfo($this->getAbsolutFilePath()).
-      cvcvPositive('  was deleted by ').
+      cvPositive('  was deleted by ').
       cvInfo(get_class($this)).
       "\n"
     );
