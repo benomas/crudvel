@@ -28,7 +28,7 @@ trait CvScaffRegexTrait
 
 //[Regex]
   protected function getLastRegexMatch($sourceText,$regex){
-    preg_match_all($regex,$sourceText,$matches);
+    preg_match_all("/$regex/",$sourceText,$matches);
     $matches = $matches??null;
     if(!$matches){
       cvConsoler(cvNegative('no matches for regex'.$regex)."\n");
@@ -58,6 +58,22 @@ trait CvScaffRegexTrait
     return preg_replace($pattern,'$1$2$3$4$5$2$3$4'.$replace.'$6$7$8',$sourceText);
   }
 
+  protected function regexElementRemover($sourceText,$newElementPatern){
+    $pattern='/((?>\s|\S)*?'.$this->getLeftRegexGlobalRequiriment().'(?>\s|\S)*?)(\s+)(,?)(\s*)'.
+      '('.$newElementPatern.')'.
+      '(\s*)(,?)((?>\s|\S)*'.$this->getRightRegexGlobalRequiriment().'(?>\s|\S)*)/';
+
+    return preg_replace_callback(
+      $pattern,
+      function($matches){
+        if(($matches[7]??null))
+          return ($matches[1]??'').($matches[2]??'').($matches[3]??'').($matches[4]??'').($matches[8]??'');
+        return ($matches[1]??'').($matches[6]??'').($matches[7]??'').($matches[8]??'');
+      },
+      $sourceText
+    );
+  }
+
   protected function globalFileRegexAdder($elementPatern,$newElementPatern,$replace){
     $fileContent    = $this->getFile();
     $lastReference = $this->getLastRegexMatch($fileContent,$elementPatern);
@@ -75,6 +91,15 @@ trait CvScaffRegexTrait
         $replace
       )
     );
+  }
+
+  protected function globalFileRegexRemover($newElementPatern){
+    $fileContent    = $this->getFile();
+    if(!$this->getLastRegexMatch($fileContent,$newElementPatern)){
+      cvConsoler(cvInfo('no changes required')."\n");
+      return $this;
+    }
+    return $this->setFile($this->regexElementRemover($fileContent,$newElementPatern));
   }
 //[End Regex]
 }
