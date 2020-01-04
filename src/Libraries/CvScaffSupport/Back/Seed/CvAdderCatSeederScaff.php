@@ -22,7 +22,7 @@ class CvAdderCatSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBas
   //[Stablishers]
   //[End Stablishers]
   protected function fixFile(){
-    $basePatern = '/<slot>TableSeeder::class/';
+    $basePatern = '<slot>TableSeeder::class';
     $resource   = 'Database\Seeds\\'.Str::studly(Str::singular($this->getResource())).'TableSeeder::class';
     return $this->globalFileRegexAdder(
       $this->regexMaker($basePatern,'[^\s,]+'),

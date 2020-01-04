@@ -21,7 +21,7 @@ class CvAdderSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseAd
   //[Stablishers]
   //[End Stablishers]
   protected function fixFile(){
-    $basePatern = '/<slot>TableSeeder::class/';
+    $basePatern = '<slot>TableSeeder::class';
     $resource   = 'Database\Seeds\\'.Str::studly(Str::singular($this->getResource()));
     return $this->globalFileRegexAdder(
       $this->regexMaker($basePatern,'[^\s,]+'),

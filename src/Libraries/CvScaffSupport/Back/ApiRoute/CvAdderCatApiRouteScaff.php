@@ -22,7 +22,7 @@ class CvAdderCatApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
   //[Stablishers]
   //[End Stablishers]
   protected function fixFile(){
-    $basePatern       = '/\[["\']<slot>["\']\]/';
+    $basePatern       = '\[["\']<slot>["\']\]';
     $slugResource     = fixedSlug(Str::plural($this->getResource()));
     return $this->globalFileRegexAdder(
       $this->regexMaker($basePatern,'[^\s,]+'),
