@@ -31,7 +31,7 @@ trait CvScaffRegexTrait
     preg_match_all($regex,$sourceText,$matches);
     $matches = $matches??null;
     if(!$matches){
-      cvConsoler(cvRedTC('no matches for regex'.$regex)."\n");
+      cvConsoler(cvNegative('no matches for regex'.$regex)."\n");
       return '';
     }
     return end($matches[0]);
@@ -65,7 +65,7 @@ trait CvScaffRegexTrait
       throw new \Exception("Error element patern selector fail [$elementPatern]");
 
     if($this->getLastRegexMatch($fileContent,$newElementPatern)){
-      cvConsoler(cvBlueTC('no changes required')."\n");
+      cvConsoler(cvInfo('no changes required')."\n");
       return $this;
     }
     return $this->setFile(

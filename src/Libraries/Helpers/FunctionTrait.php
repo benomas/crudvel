@@ -142,4 +142,8 @@ trait FunctionTrait
     $export = join(PHP_EOL, array_filter(["["] + $array));
     if ((bool)$return) return $export; else echo $export;
   }
+
+  public function isAssociativeArray($arrayTest){
+    return count(array_filter(array_keys($arrayTest), 'is_string')) > 0;
+  }
 }

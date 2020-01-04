@@ -1104,11 +1104,30 @@ if(!function_exists('cvCyanTC')){
 if(!function_exists('cvWhiteTC')){
   function cvWhiteTC($message){return CvHelper::whiteTC($message);}
 }
-if(!function_exists('cvDefauTC')){
-  function cvDefauTC($message){return CvHelper::defauTC($message);}
+if(!function_exists("getCheckPoint")){
+  function getCheckPoint(){return CvHelper::getCheckPoint();}
 }
 if(!function_exists("getCheckPoint")){
   function getCheckPoint(){return CvHelper::getCheckPoint();}
+}
+//color strategy
+if(!function_exists('cvNegative')){
+  function cvNegative($message){return CvHelper::redTC($message);}
+}
+if(!function_exists('cvPositive')){
+  function cvPositive($message){return CvHelper::greenTC($message);}
+}
+if(!function_exists('cvInfo')){
+  function cvInfo($message){return CvHelper::cvBlueTC($message);}
+}
+if(!function_exists('cvWarning')){
+  function cvWarning($message){return CvHelper::cvBrownTC($message);}
+}
+if(!function_exists('cvPrimary')){
+  function cvPrimary($message){return CvHelper::whiteTC($message);}
+}
+if(!function_exists('cvSecondary')){
+  function cvSecondary($message){return CvHelper::cvCyanTC($message);}
 }
 
 if(!function_exists("fixedSlug")){
@@ -1136,4 +1155,7 @@ if(!function_exists("getClassFromFile")){
 }
 if(!function_exists("composerDump")){
   function composerDump(...$params){return CvHelper::composerDump(...$params);}
+}
+if(!function_exists("isAssociativeArray")){
+  function isAssociativeArray(...$params){return CvHelper::isAssociativeArray(...$params);}
 }

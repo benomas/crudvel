@@ -14,7 +14,16 @@ trait CvClosureCommandTrait
   }
 
   public function select($message,$options,$default){
-    return $this->getConsoleInstance()->choice($message,$options,$default);
+    if(isAssociativeArray($options))
+      $options['cancel-artisan']='cancel-artisan';
+    else
+      $options[]='cancel-artisan';
+    $selection  = $this->getConsoleInstance()->choice($message,$options,$default);
+    if($selection==='cancel-artisan'){
+      cvConsoler("\n".cvInfo('artisan command was canceled...'));
+      die();
+    }
+    return $selection;
   }
 
   public function confirm($message='',$options=['yes','no'],$default='no'){

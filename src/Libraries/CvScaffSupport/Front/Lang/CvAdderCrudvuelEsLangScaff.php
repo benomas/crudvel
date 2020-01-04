@@ -41,7 +41,7 @@ class CvAdderCrudvuelEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front
     $camelResource    = Str::camel(Str::plural($this->getResource()));
     return $this->globalFileRegexAdder(
       $this->regexMaker($basePatern,'[^\s,]+','[^\s,]+'),
-      $this->scapedRegexMaker($basePatern,$camelResource,$slugResource),
+      $this->scapedRegexMaker($basePatern,$slugResource,$camelResource),
       '\''.$slugResource.'\' : resourceMixer('.$camelResource.')'
     );
   }

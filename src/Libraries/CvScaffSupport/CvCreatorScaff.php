@@ -126,7 +126,7 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
     do{
       if($absolutePath!==null){
         cvConsoler(
-          cvRedTC('invalid path '.
+          cvNegative('invalid path '.
           $absolutePath.
           " set it again \n")
         );
@@ -145,7 +145,7 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
             mkdir($absolutePath);
           }catch(\Exception $e){
             cvConsoler(
-              cvRedTC('Error, path  '.
+              cvNegative('Error, path  '.
               $absolutePath.
               " set it again \n")
             );
@@ -200,7 +200,7 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
   }
 
   private function fixScaffTree(){
-    cvConsoler(cvBlueTC('scaffTree will be synchronized')."\n");
+    cvConsoler(cvInfo('scaffTree will be synchronized')."\n");
     $scaffTree = json_decode(file_get_contents($this->getSource()),true);
     $scaffTree[$this->getParam('target_context')]
       [$this->getParam('target_mode')]
@@ -211,9 +211,9 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
         'Scaff';
     try{
       file_put_contents($this->getSource(),json_encode($scaffTree,JSON_PRETTY_PRINT));
-      cvConsoler(cvBlueTC('scaffTree was synced')."\n");
+      cvConsoler(cvInfo('scaffTree was synced')."\n");
     }catch(\Exception $e){
-      cvConsoler(cvBlueTC('fail to synchronize scaffTree')."\n");
+      cvConsoler(cvInfo('fail to synchronize scaffTree')."\n");
     }
     return $this;
   }

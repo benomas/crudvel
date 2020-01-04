@@ -277,14 +277,14 @@ abstract class CvBaseScaffC
         throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created');
       try{
         unlink($this->getTemplateReceptorPath());
-        cvConsoler(cvGreenTC('Old file was deleted')."\n");
+        cvConsoler(cvcvPositive('Old file was deleted')."\n");
       }catch(\Exception $e){
         throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be deleted');
       }
     }
     try{
       file_put_contents($this->getTemplateReceptorPath(), $template);
-      cvConsoler(cvGreenTC('New file was created')."\n");
+      cvConsoler(cvcvPositive('New file was created')."\n");
     }catch(\Exception $e){
       throw new \Exception('Error '.$this->getTemplateReceptorPath().' cant be created');
     }
@@ -295,7 +295,7 @@ abstract class CvBaseScaffC
   }
   protected function deleterInyectFixedTemplate($template=null){
     if(!$this->templateReceptorExists()){
-      cvConsoler(cvBrownTC($this->getTemplateReceptorPath().' file doest exist')."\n");
+      cvConsoler(cvWarning($this->getTemplateReceptorPath().' file doest exist')."\n");
       return $this;
     }
     try{
@@ -309,7 +309,7 @@ abstract class CvBaseScaffC
   private function createTemplateFile(){
     try{
       file_put_contents($this->getTemplatePath(),'');
-      cvConsoler(cvBrownTC('Template file was created, ')."\n");
+      cvConsoler(cvWarning('Template file was created, ')."\n");
     }catch(\Exception $e){
       throw new \Exception('Error '.$this->getTemplatePath().' cant be created');
     }

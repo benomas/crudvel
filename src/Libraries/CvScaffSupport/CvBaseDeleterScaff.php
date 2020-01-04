@@ -32,10 +32,10 @@ abstract class CvBaseDeleterScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
   protected function deleteFile(){
     if(!file_exists($this->getAbsolutFilePath())){
       cvConsoler(
-        cvBrownTC('File ').
-        cvRedTC($this->getAbsolutFilePath()).
-        cvBrownTC('  doest exist at ').
-        cvRedTC(get_class($this)).
+        cvWarning('File ').
+        cvNegative($this->getAbsolutFilePath()).
+        cvWarning('  doest exist at ').
+        cvNegative(get_class($this)).
         "\n"
       );
       return $this;
@@ -46,10 +46,10 @@ abstract class CvBaseDeleterScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
       throw new \Exception('Error '.$this->getAbsolutFilePath().' cant be deleted');
     }
     cvConsoler(
-      cvGreenTC('File ').
-      cvBlueTC($this->getAbsolutFilePath()).
-      cvGreenTC('  was deleted by ').
-      cvBlueTC(get_class($this)).
+      cvcvPositive('File ').
+      cvInfo($this->getAbsolutFilePath()).
+      cvcvPositive('  was deleted by ').
+      cvInfo(get_class($this)).
       "\n"
     );
     return $this;

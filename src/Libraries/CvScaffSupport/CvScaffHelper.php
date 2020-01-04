@@ -83,7 +83,7 @@ class CvScaffHelper
     try{
       $proyectScaffTree = (array) json_decode(file_get_contents(base_path($this->getProyectScaffTreeRelPath())),true);
     }catch(\Exception $e){
-      cvConsoler(cvBrownTC('Warning, Unable to load crudvel scaff tree')."\n");
+      cvConsoler(cvWarning('Warning, Unable to load crudvel scaff tree')."\n");
     }
     return $this->setProyectScaffTree($proyectScaffTree??null);
   }
@@ -131,7 +131,7 @@ class CvScaffHelper
       $failMessage = "\n";
     }while(!($artisans[$selection]??null));
 
-    cvConsoler(cvBlueTC("\n".$artisans[$selection]()." was called\n"));
+    cvConsoler(cvInfo("\n".$artisans[$selection]()." was called\n"));
     return $this;
   }
 
@@ -139,7 +139,7 @@ class CvScaffHelper
     list($autoCompleter,$artisans) = $this->dinamicArtisans();
     foreach($autoCompleter as $combination=>$call){
       \Illuminate\Support\Facades\Artisan::command("autoscaff-$combination",function() use($combination,$artisans){
-        cvConsoler(cvBlueTC("\n".$artisans[$combination]()." was called\n"));
+        cvConsoler(cvInfo("\n".$artisans[$combination]()." was called\n"));
       })->describe("lauch cv-scaff with [$combination] params");
     }
     return $this;

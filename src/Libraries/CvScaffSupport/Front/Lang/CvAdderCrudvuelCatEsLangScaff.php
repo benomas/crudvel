@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class CvAdderCrudvuelCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseAdderScaff implements CvScaffInterface
 {
+  use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedFilePath   = 'src/i18n/es/crudvuel.js';
   public function __construct(){
     parent::__construct();
@@ -41,7 +42,7 @@ class CvAdderCrudvuelCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Fr
     $camelResource    = Str::camel(Str::plural($this->getResource()));
     return $this->globalFileRegexAdder(
       $this->regexMaker($basePatern,'[^\s,]+','[^\s,]+'),
-      $this->scapedRegexMaker($basePatern,$camelResource,$slugResource),
+      $this->scapedRegexMaker($basePatern,$slugResource,$camelResource),
       '\''.$slugResource.'\' : resourceMixer('.$camelResource.')'
     );
   }

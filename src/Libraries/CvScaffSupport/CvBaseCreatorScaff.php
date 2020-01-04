@@ -92,7 +92,7 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
   private function createTemplateFile(){
     try{
       file_put_contents($this->getAbsolutTemplatePath(),'');
-      cvConsoler(cvBrownTC('Template file was created, ')."\n");
+      cvConsoler(cvWarning('Template file was created, ')."\n");
     }catch(\Exception $e){
       throw new \Exception('Error '.$this->getAbsolutTemplatePath().' cant be created');
     }
@@ -256,10 +256,10 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
       try{
         unlink($this->calculateTargetFileName());
         cvConsoler(
-          cvGreenTC('Old file ').
-          cvBlueTC($this->calculateTargetFileName()).
-          cvGreenTC('  was deleted by ').
-          cvBlueTC(get_class($this)).
+          cvcvPositive('Old file ').
+          cvInfo($this->calculateTargetFileName()).
+          cvcvPositive('  was deleted by ').
+          cvInfo(get_class($this)).
           "\n"
         );
       }catch(\Exception $e){
@@ -269,10 +269,10 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
     try{
       file_put_contents($this->calculateTargetFileName(), $this->getTemplate());
       cvConsoler(
-        cvGreenTC('New file ').
-        cvBlueTC($this->calculateTargetFileName()).
-        cvGreenTC('  was created by ').
-        cvBlueTC(get_class($this)).
+        cvcvPositive('New file ').
+        cvInfo($this->calculateTargetFileName()).
+        cvcvPositive('  was created by ').
+        cvInfo(get_class($this)).
         "\n"
       );
     }catch(\Exception $e){

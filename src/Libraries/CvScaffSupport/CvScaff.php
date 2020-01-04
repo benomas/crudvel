@@ -174,7 +174,7 @@ class CvScaff
     try{
       $proyectScaffTree = (array) json_decode(file_get_contents(base_path($this->getProyectScaffTreeRelPath())),true);
     }catch(\Exception $e){
-      cvConsoler(cvBrownTC('Warning, Unable to load crudvel scaff tree')."\n");
+      cvConsoler(cvWarning('Warning, Unable to load crudvel scaff tree')."\n");
     }
     return $this->setProyectScaffTree($proyectScaffTree??null);
   }

@@ -36,7 +36,7 @@ class CvRemoverCatApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\C
       $toRemove .= $matches2[4]??'';
 
     if($toRemove===''){
-      cvConsoler(cvBlueTC('no changes required')."\n");
+      cvConsoler(cvInfo('no changes required')."\n");
       return $this;
     }
     $toRemove = str_replace($toRemove,"",$apiCrudvelResources);
