@@ -1,0 +1,66 @@
+<template>
+  <cv-adaptive-grid-index v-if="resource && action" v-bind="defActionProps()" >
+    <!-- cv-grid-customization-->
+    <template v-if="1" slot="headers-slot" slot-scope="props">
+        <!-- cv-grid-customization-->
+        <th cv-key="id" class="cv-orderable cv-filterable cv-selectable t-left t-middle  w-15" >
+          {{ fLang('id') }}
+          <cv-order-icons :cv-data="props.gridData" cv-key="id"></cv-order-icons>
+        </th>
+    </template>
+    <!-- cv-grid-extra-headers-->
+    <template v-if="1" slot="extra-actions-header-slot" slot-scope="props">
+    </template>
+    <!-- cv-grid-sub-headers-->
+    <template v-if="1" slot="sub-headers-slot" slot-scope="props">
+      <tr >
+        <td >
+          <cv-simple-filters
+            class="w-100"
+            :cv-search-label="''"
+            cv-search-icon=""
+            @cv-event-filter-go-to-find="((search)=>{
+              superFilter('id',search)
+            })"
+          >
+          </cv-simple-filters>
+        </td>
+        <td class="t-center">
+        </td>
+      </tr>
+    </template>
+    <!-- cv-grid-data-cells-->
+    <template v-if="1" slot="table-properties-slot" slot-scope="props">
+      <td >
+        {{props.slotRow.id}}
+      </td>
+    </template>
+    <!-- cv-grid-extra-actions-->
+    <template v-if="1" slot="table-extra-actions-slot" slot-scope="props">
+    </template>
+    <!-- cv-grid-flexi-data-cells-->
+    <template v-if="1" slot="flexi-properties-slot" slot-scope="props">
+      <q-item>
+        <q-item-section>
+          <q-item-section label>{{ fLang('id') }}</q-item-section>
+        </q-item-section>
+        <q-item-label>
+          <q-item-section sublabel class="limit-label">{{props.slotRow.id}}</q-item-section>
+        </q-item-label>
+      </q-item>
+    </template>
+    <!-- cv-grid-flexi-extra-actions-->
+    <template v-if="1" slot="flexi-extra-actions-slot" slot-scope="props">
+    </template>
+  </cv-adaptive-grid-index>
+</template>
+<script>
+import CvIndex             from 'src/crudvuel/customs/themes/quasar/components/resource/CvIndex.vue'
+import CvAdaptiveGridIndex from 'src/crudvuel/customs/themes/quasar/components/others/CvAdaptiveGridIndex.vue'
+import CvSimpleFilters from 'src/crudvuel/customs/themes/quasar/components/grid-components/CvSimpleFilters.vue'
+import {QIcon}             from 'quasar'
+export default {
+  extends    : CvIndex,
+  components : {CvAdaptiveGridIndex,QIcon,CvSimpleFilters}
+}
+</script>

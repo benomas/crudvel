@@ -1,0 +1,6 @@
+<script>
+import CvRowAction from 'src/components/resources/catalogs/catalog1/CvCreate'
+export default {
+  extends: CvRowAction
+}
+</script>

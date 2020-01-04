@@ -267,6 +267,9 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
       }
     }
     try{
+      $pathInfo = pathinfo($this->calculateTargetFileName());
+      if(!file_exists($pathInfo['dirname']))
+        mkdir($pathInfo['dirname']);
       file_put_contents($this->calculateTargetFileName(), $this->getTemplate());
       cvConsoler(
         cvPositive('New file ').

@@ -1,0 +1,34 @@
+<template>
+  <cv-action-container v-if="resource && action" v-bind="defActionProps()">
+    <div slot="cv-content-slot" class="row w-100">
+      <!--Example
+      <div class="col-xs-12 col-sm-3 col-md-2 q-pa-md">
+        <q-field borderless v-bind="defErrorInputProps('active')">
+          <cv-toggle v-bind="defInputProps('active')" v-model="row.active" :left-label="true" :true-value="1" :false-value="0" color="positive"/>
+        </q-field>
+      </div>
+      -->
+      <div class="col-xs-12 q-pa-md">
+      <!-- Code -->
+      </div>
+      <div class="col-xs-12 h-50px">
+      <!-- Code -->
+      </div>
+      <div class="col-xs-12">
+        <cv-buttons :cv-ready="ready" @cv-back="cancelAction()" @cv-next="setService()" :cv-action="action">
+        </cv-buttons>
+      </div>
+    </div>
+  </cv-action-container>
+</template>
+<script>
+import CvBaseCrud from 'src/crudvuel/customs/themes/quasar/components/resource/CvBaseCrud.vue'
+export default {
+  extends : CvBaseCrud,
+  methods : {
+    validator: function () {
+      return true
+    }
+  }
+}
+</script>

@@ -136,6 +136,30 @@
             },
             "es-lang": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorEsLangScaff"
+            },
+            "create": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCreateScaff"
+            },
+            "edit": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorEditScaff"
+            },
+            "index": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorIndexScaff"
+            },
+            "show": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorShowScaff"
+            },
+            "cat-create": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCatCreateScaff"
+            },
+            "cat-edit": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCatEditScaff"
+            },
+            "cat-index": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCatIndexScaff"
+            },
+            "cat-show": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCatShowScaff"
             }
         },
         "adder": {
@@ -178,6 +202,30 @@
             },
             "en-lang": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvDeleterEnLangScaff"
+            },
+            "create": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCreateScaff"
+            },
+            "edit": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterEditScaff"
+            },
+            "index": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterIndexScaff"
+            },
+            "show": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterShowScaff"
+            },
+            "cat-create": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatCreateScaff"
+            },
+            "cat-edit": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatEditScaff"
+            },
+            "cat-index": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatIndexScaff"
+            },
+            "cat-show": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatShowScaff"
             }
         }
     },
