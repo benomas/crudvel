@@ -77,4 +77,14 @@ class CvBaseScaff
   public function isForced(){
     return $this->getForce();
   }
+
+  protected function getLastRegexMatch($sourceText,$regex){
+    preg_match_all($regex,$sourceText,$matches);
+    $matches = $matches??null;
+    if(!$matches){
+      cvConsoler(cvRedTC('no matches for regex'.$regex)."\n");
+      return '';
+    }
+    return end($matches[0]);
+  }
 }
