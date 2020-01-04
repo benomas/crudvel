@@ -20,6 +20,14 @@ class CvRemoverSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
   //[Stablishers]
   //[End Stablishers]
   protected function fixFile(){
+    return $this->globalFileRegexRemover(
+      $this->scapedRegexMaker(
+        '<slot>TableSeeder::class',
+        'Database\Seeds\\'.Str::studly(Str::singular($this->getResource()))
+      )
+    );
+  }
+  protected function fixFileaaa(){
     $fileContent  = $this->getFile();
     $slugResource = 'Database\\\\Seeds\\\\'.Str::studly(Str::singular($this->getResource())).'TableSeeder::class';
     $patern = '/(call\(\[)((?>\s|\S)*?)(\W*?)(,'.$slugResource.')(\W*?)((?>\s|\S)*)/';

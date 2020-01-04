@@ -62,7 +62,6 @@ trait CvScaffRegexTrait
     $pattern='/((?>\s|\S)*?'.$this->getLeftRegexGlobalRequiriment().'(?>\s|\S)*?)(\s+)(,?)(\s*)'.
       '('.$newElementPatern.')'.
       '(\s*)(,?)((?>\s|\S)*'.$this->getRightRegexGlobalRequiriment().'(?>\s|\S)*)/';
-
     return preg_replace_callback(
       $pattern,
       function($matches){
