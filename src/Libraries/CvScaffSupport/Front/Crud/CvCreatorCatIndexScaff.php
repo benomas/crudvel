@@ -10,7 +10,7 @@ class CvCreatorCatIndexScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvB
   use \Crudvel\Traits\CvScaffCatTrait;
   protected $fileExtension       = '.vue';
   protected $relatedTargetPath   = 'src/components/resources/';
-  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/front/cv_scaff_cat_create.txt';
+  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/front/cv_scaff_cat_index.txt';
   public function __construct(){
     parent::__construct();
   }

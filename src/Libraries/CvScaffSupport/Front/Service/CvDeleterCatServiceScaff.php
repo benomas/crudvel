@@ -21,6 +21,6 @@ class CvDeleterCatServiceScaff extends \Crudvel\Libraries\CvScaffSupport\Front\C
 //[Stablishers]
 //[End Stablishers]
   protected function selfRepresentation(){
-    return Str::studly(Str::plural($this->getResource()));
+    return Str::studly(Str::singular($this->getResource()));
   }
 }

@@ -18,6 +18,6 @@ return [
     'updated_by' => '<##[singular|title](resource)##> updated by',
   ],
 	'row_label'  => '<##[singular|title](resource)##>',
-	'rows_label' => '<##[plural|ltitle](resource)##>',
+	'rows_label' => '<##[plural|title](resource)##>',
 	'actions'    => [],
 ];

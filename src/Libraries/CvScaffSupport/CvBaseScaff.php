@@ -87,9 +87,9 @@ class CvBaseScaff
       'plural'   => function($value){return Str::plural($value);},
       'camel'    => function($value){return Str::camel($value);},
       'snake'    => function($value){return fixedSnake($value);},
-      'slug'     => function($value){return fixedSnake($value);},
+      'slug'     => function($value){return fixedSlug($value);},
       'studly'   => function($value){return Str::studly($value);},
-      'title'    => function($value){return Str::singular($value);},
+      'title'    => function($value){return Str::title($value);},
       'lower'    => function($value){return strtolower($value);},
       'upper'    => function($value){return strtoupper($value);},
     ];

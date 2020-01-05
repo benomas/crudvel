@@ -1,5 +1,5 @@
 export default {
-  rowsLabel : '<##[plural|ltitle](resource)##>',
+  rowsLabel : '<##[plural|title](resource)##>',
   rowLabel  : '<##[singular|title](resource)##>',
   fields    : {
     active      : 'Active',
@@ -13,7 +13,7 @@ export default {
   },
   actions: {
     index: {
-      label: '<##[plural|ltitle](resource)##>'
+      label: '<##[plural|title](resource)##>'
     },
     create: {
       label : 'Create <##[singular|lower](resource)##>',

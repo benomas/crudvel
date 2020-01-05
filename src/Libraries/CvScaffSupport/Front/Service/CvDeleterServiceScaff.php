@@ -20,6 +20,6 @@ class CvDeleterServiceScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBa
 //[Stablishers]
 //[End Stablishers]
   protected function selfRepresentation(){
-    return Str::studly(Str::plural($this->getResource()));
+    return Str::studly(Str::singular($this->getResource()));
   }
 }

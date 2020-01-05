@@ -9,7 +9,6 @@ class CvDeleterShowScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseD
 {
   protected $fileExtension       = '.vue';
   protected $relatedFilePath     = 'src/components/resources/';
-  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/front/cv_scaff_cat_create.txt';
   public function __construct(){
     parent::__construct();
   }

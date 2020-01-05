@@ -10,7 +10,6 @@ class CvDeleterCatIndexScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvB
   use \Crudvel\Traits\CvScaffCatTrait;
   protected $fileExtension       = '.vue';
   protected $relatedFilePath     = 'src/components/resources/';
-  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/front/cv_scaff_cat_create.txt';
   public function __construct(){
     parent::__construct();
   }
