@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class CvDeleterCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseDeleterScaff implements CvScaffInterface
 {
   //! dont use CvScaffCatTrait in cat-lang files;
-  protected $relatedFilePath = 'resources/lang/es/crudvel/';
+  protected $relatedFilePath   = 'src/i18n/es/crudvuel/';
   public function __construct(){
     parent::__construct();
   }
