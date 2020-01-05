@@ -27,7 +27,7 @@ class CvAdderCrudvuelCatEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Fr
     return 'crudvuel';
   }
   private function fixImportSection(){
-    $basePatern       = '/import\s+<slot>\s+from\s+\'\.\/crudvuel\/<slot>\'/';
+    $basePatern       = 'import\s+<slot>\s+from\s+\'\.\/crudvuel\/<slot>\'';
     $slugResource     = fixedSlug(Str::plural($this->getResource()));
     $camelResource    = Str::camel(Str::plural($this->getResource()));
     return $this->globalFileRegexAdder(
@@ -37,7 +37,7 @@ class CvAdderCrudvuelCatEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Fr
     );
   }
   private function fixCrudvuelLangsSection(){
-    $basePatern    = '/\'<slot>\'\s*:\s*resourceMixer\(<slot>\)/';
+    $basePatern    = '\'<slot>\'\s*:\s*resourceMixer\(<slot>\)';
     $slugResource     = fixedSlug(Str::plural($this->getResource()));
     $camelResource    = Str::camel(Str::plural($this->getResource()));
     return $this->globalFileRegexAdder(

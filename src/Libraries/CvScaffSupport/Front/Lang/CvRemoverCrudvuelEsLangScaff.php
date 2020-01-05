@@ -30,8 +30,8 @@ class CvRemoverCrudvuelEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Fro
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
         'import\s+<slot>\s+from\s+\'\.\/crudvuel\/<slot>\'',
-        fixedSlug(Str::plural($this->getResource())),
-        Str::camel(Str::plural($this->getResource()))
+        Str::camel(Str::plural($this->getResource())),
+        fixedSlug(Str::plural($this->getResource()))
       )
     );
   }

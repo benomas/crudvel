@@ -34,8 +34,8 @@ class CvScaffDeleteCatResource extends \Crudvel\Commands\BaseCommand
   public function handle()
   {
     $resource = $this->propertyReload('resource');
-    $this->call('unscaff-cat-back-resource',['resource' => $resource]);
-    $this->call('unscaff-cat-front-resource',['resource' => $resource]);
+    $this->call('unscaff-back-cat-resource',['resource' => $resource]);
+    $this->call('unscaff-front-cat-resource',['resource' => $resource]);
     composerDump();
   }
 }
