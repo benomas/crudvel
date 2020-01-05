@@ -1,0 +1,89 @@
+import CvResourceMap from 'src/crudvuel/customs/resource/CvResourceMap'
+//TODO
+//Convert to slug
+import CvCreate      from 'src/components/resources/<cv_plural_slug_resource_cv>/CvCreate.vue'
+import CvEdit        from 'src/components/resources/<cv_plural_slug_resource_cv>/CvEdit.vue'
+import CvIndex       from 'src/components/resources/<cv_plural_slug_resource_cv>/CvIndex.vue'
+import CvShow        from 'src/components/resources/<cv_plural_slug_resource_cv>/CvShow.vue'
+import OwnService    from 'src/services/<r_singular_studly_c>'
+
+let resourceName = '<cv_plural_slug_resource_cv>'
+//TODO: check for default icon
+export default function (globals) {
+  let resource = new CvResourceMap({
+    name         : resourceName,
+    icon         : 'fas fa-',
+    path         : resourceName,
+    crudServices : new OwnService(globals['cvComunicator'],resourceName)
+  })
+  resource.setActions([
+    {
+      name       : 'index',
+      icon       : '',
+      getService : resource.crudServices.index,
+      resource   : resource,
+      path       : resource.path + '',
+      component  : CvIndex,
+      type       : 'rows'
+    },
+    {
+      name       : 'create',
+      icon       : '',
+      setService : resource.crudServices.store,
+      resource   : resource,
+      path       : resource.path + '/create',
+      component  : CvCreate
+    },
+    {
+      name          : 'show',
+      icon          : '',
+      getService    : resource.crudServices.show,
+      resource      : resource,
+      path          : resource.path + '/:id',
+      urlParams     : ['id'],
+      component     : CvShow,
+      disableFields : true,
+      isParentRoute : true
+    },
+    {
+      name       : 'edit',
+      icon       : '',
+      getService : resource.crudServices.show,
+      setService : resource.crudServices.update,
+      resource   : resource,
+      path       : resource.path + '/:id/edit',
+      urlParams  : ['id'],
+      component  : CvEdit
+    },
+    {
+      name       : 'delete',
+      icon       : '',
+      getService : resource.crudServices.show,
+      setService : resource.crudServices.destroy,
+      resource   : resource,
+      path       : resource.path + '/:id/delete',
+      urlParams  : ['id'],
+      component  : null
+    },
+    {
+      name       : 'activate',
+      icon       : '',
+      setService : resource.crudServices.activate,
+      resource   : resource,
+      path       : resource.path + '/:id/activate',
+      urlParams  : ['id'],
+      component  : null
+    },
+    {
+      name       : 'deactivate',
+      icon       : '',
+      setService : resource.crudServices.deactivate,
+      resource   : resource,
+      path       : resource.path + '/:id/deactivate',
+      urlParams  : ['id'],
+      component  : null
+    }
+  ])
+  resource.resourcelangLoader()
+  return resource
+}

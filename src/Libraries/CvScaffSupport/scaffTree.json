@@ -169,6 +169,12 @@
             },
             "router": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Router\\CvCreatorRouterScaff"
+            },
+            "definition": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Definition\\CvCreatorDefinitionScaff"
+            },
+            "cat-definition": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Definition\\CvCreatorCatDefinitionScaff"
             }
         },
         "adder": {
@@ -195,6 +201,12 @@
             },
             "router": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Router\\CvAdderRouterScaff"
+            },
+            "layout": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Dashboard\\CvAdderLayoutScaff"
+            },
+            "cat-layout": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Dashboard\\CvAdderCatLayoutScaff"
             }
         },
         "remover": {
@@ -221,6 +233,12 @@
             },
             "cat-router": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Router\\CvRemoverCatRouterScaff"
+            },
+            "layout": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Dashboard\\CvRemoverLayoutScaff"
+            },
+            "cat-layout": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Dashboard\\CvRemoverCatLayoutScaff"
             }
         },
         "deleter": {
@@ -265,6 +283,12 @@
             },
             "cat-service": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Service\\CvDeleterCatServiceScaff"
+            },
+            "definition": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Definition\\CvDeleterDefinitionScaff"
+            },
+            "cat-definition": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Definition\\CvDeleterCatDefinitionScaff"
             }
         }
     },
