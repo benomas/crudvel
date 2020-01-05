@@ -29,6 +29,14 @@ class CrudvelServiceProvider extends ServiceProvider
         'Customs\Crudvel\Commands\CvScaffBackDeleteResource',
         'Customs\Crudvel\Commands\CvScaffBackCreateCatResource',
         'Customs\Crudvel\Commands\CvScaffBackDeleteCatResource',
+        'Customs\Crudvel\Commands\CvScaffFrontCreateResource',
+        'Customs\Crudvel\Commands\CvScaffFrontDeleteResource',
+        'Customs\Crudvel\Commands\CvScaffFrontCreateCatResource',
+        'Customs\Crudvel\Commands\CvScaffFrontDeleteCatResource',
+        'Customs\Crudvel\Commands\CvScaffCreateResource',
+        'Customs\Crudvel\Commands\CvScaffDeleteResource',
+        'Customs\Crudvel\Commands\CvScaffCreateCatResource',
+        'Customs\Crudvel\Commands\CvScaffDeleteCatResource',
         'Customs\Crudvel\Commands\CvScaffList',
       ];
       foreach($commandClasses as $key=>$commandClass)
