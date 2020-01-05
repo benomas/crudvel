@@ -166,6 +166,9 @@
             },
             "cat-service": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Service\\CvCreatorCatServiceScaff"
+            },
+            "router": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Router\\CvCreatorRouterScaff"
             }
         },
         "adder": {
@@ -180,6 +183,18 @@
             },
             "crudvuel-cat-en-lang": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelCatEnLangScaff"
+            },
+            "boot": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Boot\\CvAdderBootScaff"
+            },
+            "cat-boot": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Boot\\CvAdderCatBootScaff"
+            },
+            "cat-router": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Router\\CvAdderCatRouterScaff"
+            },
+            "router": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Router\\CvAdderRouterScaff"
             }
         },
         "remover": {
@@ -194,6 +209,18 @@
             },
             "crudvuel-cat-es-lang": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvuelCatEsLangScaff"
+            },
+            "router": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Router\\CvRemoverRouterScaff"
+            },
+            "boot": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Boot\\CvRemoverBootScaff"
+            },
+            "cat-boot": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Boot\\CvRemoverCatBootScaff"
+            },
+            "cat-router": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Router\\CvRemoverCatRouterScaff"
             }
         },
         "deleter": {
