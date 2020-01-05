@@ -19,5 +19,13 @@ abstract class CvBaseDeleterScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
 //[End Setters]
 
 //[Stablishers]
+  protected function stablishAbsolutFilePath(){
+    return $this->setAbsolutFilePath(
+      base_path().'/../'.config("packages.benomas.crudvel.crudvel.crudvel_front_path").
+      $this->getRelatedFilePath().
+      $this->selfRepresentation().
+      $this->getFileExtension()
+    );
+  }
 //[End Stablishers]
 }

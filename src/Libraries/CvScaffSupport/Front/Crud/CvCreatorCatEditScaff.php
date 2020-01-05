@@ -14,14 +14,14 @@ class CvCreatorCatEditScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBa
   public function __construct(){
     parent::__construct();
   }
-  //[Getters]
-  //[End Getters]
+//[Getters]
+//[End Getters]
 
-  //[Setters]
-  //[End Setters]
+//[Setters]
+//[End Setters]
 
-  //[Stablishers]
-  //[End Stablishers]
+//[Stablishers]
+//[End Stablishers]
   protected function selfRepresentation(){
     return fixedSlug(Str::plural($this->getResource())).'/CvEdit';
   }
