@@ -160,6 +160,12 @@
             },
             "cat-show": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCatShowScaff"
+            },
+            "service": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Service\\CvCreatorServiceScaff"
+            },
+            "cat-service": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Service\\CvCreatorCatServiceScaff"
             }
         },
         "adder": {
@@ -226,6 +232,12 @@
             },
             "cat-show": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatShowScaff"
+            },
+            "service": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Service\\CvDeleterServiceScaff"
+            },
+            "cat-service": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Service\\CvDeleterCatServiceScaff"
             }
         }
     },
