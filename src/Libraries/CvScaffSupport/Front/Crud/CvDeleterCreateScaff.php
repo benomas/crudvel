@@ -7,6 +7,9 @@ use Illuminate\Support\Str;
 
 class CvDeleterCreateScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseDeleterScaff implements CvScaffInterface
 {
+  protected $fileExtension       = '.vue';
+  protected $relatedFilePath     = 'src/components/resources/';
+  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/front/cv_scaff_cat_create.txt';
   public function __construct(){
     parent::__construct();
   }
@@ -19,6 +22,6 @@ class CvDeleterCreateScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBas
 //[Stablishers]
 //[End Stablishers]
   protected function selfRepresentation(){
-    return Str::studly(Str::singular($this->getResource()));
+    return fixedSlug(Str::plural($this->getResource())).'/CvCreate';
   }
 }

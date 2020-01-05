@@ -34,7 +34,7 @@ abstract class CvBaseDeleterScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
       cvConsoler(
         cvWarning('File ').
         cvNegative($this->getAbsolutFilePath()).
-        cvWarning('  doest exist at ').
+        cvWarning(' doest exist at ').
         cvNegative(get_class($this)).
         "\n"
       );
@@ -42,6 +42,9 @@ abstract class CvBaseDeleterScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
     }
     try{
       unlink($this->getAbsolutFilePath());
+      $pathInfo = pathinfo($this->getAbsolutFilePath());
+      if(!count((array)assetsMap($pathInfo['dirname'])))
+        rmdir($pathInfo['dirname']);
     }catch(\Exception $e){
       throw new \Exception('Error '.$this->getAbsolutFilePath().' cant be deleted');
     }
