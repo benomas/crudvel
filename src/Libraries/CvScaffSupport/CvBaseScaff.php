@@ -1,6 +1,7 @@
 <?php
 
 namespace Crudvel\Libraries\CvScaffSupport;
+use Illuminate\Support\Str;
 
 class CvBaseScaff
 {
@@ -77,5 +78,26 @@ class CvBaseScaff
 
   public function isForced(){
     return $this->getForce();
+  }
+
+  public function caseFixer($case=null,$value=null){
+    $caseCallBacks = [
+      'final'    => function($value){return $value;},
+      'singular' => function($value){return Str::singular($value);},
+      'plural'   => function($value){return Str::plural($value);},
+      'camel'    => function($value){return Str::camel($value);},
+      'snake'    => function($value){return fixedSnake($value);},
+      'slug'     => function($value){return fixedSnake($value);},
+      'studly'   => function($value){return Str::studly($value);},
+      'title'    => function($value){return Str::singular($value);},
+      'lower'    => function($value){return strtolower($value);},
+      'upper'    => function($value){return strtoupper($value);},
+    ];
+    $currentCase = $caseCallBacks[$case]??null;
+    if(!$currentCase){
+      cvConsoler(cvWarning("case $case has no function to fix value $value")."\n");
+      return $value;
+    }
+    return $currentCase($value);
   }
 }

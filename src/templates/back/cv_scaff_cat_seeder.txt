@@ -1,20 +1,20 @@
 <?php namespace Database\Seeds;
 
-class <cv_singular_studly_resource_cv>TableSeeder extends \Customs\Crudvel\Database\Seeds\BaseSeeder{
+class <##[singular|studly](resource)##>TableSeeder extends \Customs\Crudvel\Database\Seeds\BaseSeeder{
 	protected $data =[
 		[
-			"name"        => "<cv_singular_title_resource_cv>1",
-			"description" => "<cv_singular_title_resource_cv>1, this is a default example",
+			"name"        => "<##[singular|title](resource)##>1",
+			"description" => "<##[singular|title](resource)##>1, this is a default example",
 			"active"      => 1,
 		],
 		[
-			"name"        => "<cv_singular_title_resource_cv>2",
-			"description" => "<cv_singular_title_resource_cv>2, this is a default example",
+			"name"        => "<##[singular|title](resource)##>2",
+			"description" => "<##[singular|title](resource)##>2, this is a default example",
 			"active"      => 1,
 		],
 		[
-			"name"        => "<cv_singular_title_resource_cv>3",
-			"description" => "<cv_singular_title_resource_cv>3, this is a default example",
+			"name"        => "<##[singular|title](resource)##>3",
+			"description" => "<##[singular|title](resource)##>3, this is a default example",
 			"active"      => 1,
 		],
 	];

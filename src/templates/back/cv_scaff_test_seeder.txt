@@ -1,14 +1,14 @@
 <?php namespace Database\Seeds\Test;
 
 use Illuminate\Support\Facades\Schema;
-use App\Models\{<cv_singular_studly_resource_cv>};
+use App\Models\{<##[singular|studly](resource)##>};
 use DB;
 
-class <cv_singular_studly_resource_cv>TableSeeder extends \Illuminate\Database\Seeder{
+class <##[singular|studly](resource)##>TableSeeder extends \Illuminate\Database\Seeder{
 	public function run(){
     Schema::disableForeignKeyConstraints();
     DB::transaction(function() {
-      factory(<cv_singular_studly_resource_cv>::class, 100)->create();
+      factory(<##[singular|studly](resource)##>::class, 100)->create();
     });
     Schema::enableForeignKeyConstraints();
 	}

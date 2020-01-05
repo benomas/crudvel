@@ -128,122 +128,46 @@ abstract class CvBaseCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBa
   }
 
   protected function calculateParams(){
-    $template = $this->getTemplate();
-    $patern = '/<cv_singular_camel_(.+?)_cv>|<cv_plural_camel_(.+?)_cv>|<cv_singular_snake_(.+?)_cv>|<cv_plural_snake_(.+?)_cv>|<cv_singular_slug_(.+?)_cv>|<cv_plural_slug_(.+?)_cv>|<cv_singular_studly_(.+?)_cv>|<cv_plural_studly_(.+?)_cv>|<cv_singular_lower_(.+?)_cv>|<cv_plural_lower_(.+?)_cv>|<cv_singular_upper_(.+?)_cv>|<cv_plural_upper_(.+?)_cv>|<cv_final_(.+?)_cv>/';
-    preg_match_all($patern,$template,$matches);
-    if(isset($matches[0]))
-      unset($matches[0]);
-    $extraParams=[];
-    foreach($matches as $collection)
-      foreach($collection as $param)
-        if($param && $param !== '')
-          $extraParams[$param]=null;
-    $extraParams['resource'] = $this->getResource();
+    $extraParams = [];
+    $patern      = '/<##\[(.+?)\]\((.+?)\)##>/';
+    preg_match_all($patern,$this->getTemplate(),$matches);
+    $paramMatches=$matches[2]??[];
+    foreach($paramMatches as $param)
+      $extraParams[$param]=null;
+    $extraParams['resource']=$this->getResource();
     $this->setExtraParams($extraParams);
     return $this;
   }
+
   public function askAditionalParams(){
     $extraParams=$this->getExtraParams();
-    foreach($extraParams as $param=>$value){
+    foreach($extraParams as $param=>$value)
       if(!$value || $value==='')
         $extraParams[$param] = $this->getConsoleInstance()->ask("What is the value for $param param")??'';
-    }
+
     $this->setExtraParams($extraParams);
     return $this;
-  }
-
-  protected function fixCase($quantity='singular',$case='camel',$fixer=null){
-    $extraParams = $this->getExtraParams();
-    $template    = $this->getTemplate();
-    foreach($extraParams as $param=>$value){
-      if($fixer)
-        $resolvedTag=$fixer($value);
-      else
-        $resolvedTag= Str::$case(Str::$quantity($value));
-      $quantityTag=$quantity!==''?"_$quantity":'';
-      $caseTag=$case!==''?"_$case":'';
-      $template = str_replace("<cv{$quantityTag}{$caseTag}_{$param}_cv>",$resolvedTag,$template);
-    }
-    $this->setTemplate($template);
-    return $this;
-  }
-
-  protected function fixFinalTag(){
-    return $this->fixCase('','final',function($val){return $val;});
-  }
-
-  protected function fixSingularCamelTag(){
-    return $this->fixCase('singular','camel');
-  }
-
-  protected function fixPluraCamelTag(){
-    return $this->fixCase('plural','camel');
-  }
-
-  protected function fixSingularSnakeTag(){
-    return $this->fixCase('singular','snake',function($val){return Str::singular(fixedSnake($val));});
-  }
-
-  protected function fixPluraSnakeTag(){
-    return $this->fixCase('plural','snake',function($val){return Str::plural(fixedSnake($val));});
-  }
-
-  protected function fixSingularSlugTag(){
-    return $this->fixCase('singular','slug',function($val){return Str::singular(fixedSlug($val));});
-  }
-
-  protected function fixPluraSlugTag(){
-    return $this->fixCase('plural','slug',function($val){return Str::plural(fixedSlug($val));});
-  }
-
-  protected function fixSingularStudlyTag(){
-    return $this->fixCase('singular','studly');
-  }
-
-  protected function fixPluraStudlyTag(){
-    return $this->fixCase('plural','studly');
-  }
-
-  protected function fixSingularTitleTag(){
-    return $this->fixCase('singular','title');
-  }
-
-  protected function fixPluraTitleTag(){
-    return $this->fixCase('plural','title');
-  }
-
-  protected function fixSingularLowerTag(){
-    return $this->fixCase('singular','lower',function($val){return Str::singular(strtolower($val));});
-  }
-
-  protected function fixPluraLowerTag(){
-    return $this->fixCase('plural','lower',function($val){return Str::plural(strtolower($val));});
-  }
-
-  protected function fixSingularUpperTag(){
-    return $this->fixCase('singular','upper',function($val){return Str::singular(strtoupper($val));});
-  }
-
-  protected function fixPluraUpperTag(){
-    return $this->fixCase('plural','upper',function($val){return Str::plural(strtoupper($val));});
   }
 
   protected function fixTemplate(){
-    return $this->fixFinalTag()
-      ->fixSingularCamelTag()
-      ->fixPluraCamelTag()
-      ->fixSingularSnakeTag()
-      ->fixPluraSnakeTag()
-      ->fixSingularSlugTag()
-      ->fixPluraSlugTag()
-      ->fixSingularStudlyTag()
-      ->fixPluraStudlyTag()
-      ->fixSingularTitleTag()
-      ->fixPluraTitleTag()
-      ->fixSingularLowerTag()
-      ->fixPluraLowerTag()
-      ->fixSingularUpperTag()
-      ->fixPluraUpperTag();
+    $template = $this->getTemplate();
+    preg_match_all('/<##\[(.+?)\]\((.+?)\)##>/',$template,$matches);
+    $caseCollections=$matches[1]??[];
+    if(!count($caseCollections))
+      return $this;
+    $params=$matches[2]??[];
+    if(!count($params))
+      return $this;
+    $extraParams = $this->getExtraParams();
+    foreach($caseCollections as $position=>$caseCollection){
+      $cases        = array_reverse(explode('|',$caseCollection));
+      $currentParam = $params[$position]??'';
+      $fixedValue   = $extraParams[$currentParam]??'';
+      foreach($cases as $case)
+        $fixedValue = $this->caseFixer($case,$fixedValue);
+      $template = str_replace("<##[$caseCollection]($currentParam)##>",$fixedValue,$template);
+    }
+    return $this->setTemplate($template);
   }
 
   protected function inyectFixedTemplate(){

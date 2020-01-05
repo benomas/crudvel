@@ -20,6 +20,14 @@ class CvCreatorCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\Cv
 //[End Setters]
 
 //[Stablishers]
+  public function caseFixer($case=null,$value=null){
+    try{
+      $value = $this->trans->translate($value);
+    }catch(\Exception $e){
+
+    }
+    return parent::caseFixer($case,$value);
+  }
   public function stablishResource($resource=null){
     return $this->setResource($resource?ltrim(fixedSlug($resource),'cat-'):$resource);
   }

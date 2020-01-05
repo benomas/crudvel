@@ -5,7 +5,7 @@ namespace Crudvel\Libraries\CvScaffSupport;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class Cv<cv_singular_studly_context (define as back or front)_cv><cv_singular_studly_prefix_cv><cv_singular_studly_resource_cv>Scaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
+class Cv<cv_singular_studly_context (define as back or front)_cv><cv_singular_studly_prefix_cv><##[singular|studly](resource)##>Scaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseScaff implements CvScaffInterface
 {
   protected $context='<cv_singular_lower_context (define as back or front)_cv>';
   public function __construct(){
@@ -25,10 +25,10 @@ class Cv<cv_singular_studly_context (define as back or front)_cv><cv_singular_st
   protected function getTemplateReceptorPath(){
     $fileName = '<cv_final_destination_file_name (with extension, set empty for default)_cv>';
     if($fileName==='')
-      $fileName=Str::studly(Str::singular($this->getResource())).'<cv_singular_studly_resource_cv>.php';
+      $fileName=Str::studly(Str::singular($this->getResource())).'<##[singular|studly](resource)##>.php';
     $destPath = '<cv_final_destination_path (set emty for default)_cv>';
     if($destPath==='')
-      $destPath = rtrim('app/Http/<cv_singular_studly_resource_cv>/<cv_singular_studly_prefix_cv>','/');
+      $destPath = rtrim('app/Http/<##[singular|studly](resource)##>/<cv_singular_studly_prefix_cv>','/');
     return base_path($destPath.'/'.$fileName);
   }
 //[LoadTemplate Modes]

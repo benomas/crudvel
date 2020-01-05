@@ -1,13 +1,13 @@
 import CvResourceMap from 'src/crudvuel/customs/resource/CvResourceMap'
 //TODO
 //Convert to slug
-import CvCreate      from 'src/components/resources/<cv_plural_slug_resource_cv>/CvCreate.vue'
-import CvEdit        from 'src/components/resources/<cv_plural_slug_resource_cv>/CvEdit.vue'
-import CvIndex       from 'src/components/resources/<cv_plural_slug_resource_cv>/CvIndex.vue'
-import CvShow        from 'src/components/resources/<cv_plural_slug_resource_cv>/CvShow.vue'
-import OwnService    from 'src/services/<r_singular_studly_c>'
+import CvCreate      from 'src/components/resources/<##[plural|slug](resource)##>/CvCreate.vue'
+import CvEdit        from 'src/components/resources/<##[plural|slug](resource)##>/CvEdit.vue'
+import CvIndex       from 'src/components/resources/<##[plural|slug](resource)##>/CvIndex.vue'
+import CvShow        from 'src/components/resources/<##[plural|slug](resource)##>/CvShow.vue'
+import OwnService    from 'src/services/<##[singular|studly](resource)##>'
 
-let resourceName = '<cv_plural_slug_resource_cv>'
+let resourceName = '<##[plural|slug](resource)##>'
 //TODO: check for default icon
 export default function (globals) {
   let resource = new CvResourceMap({

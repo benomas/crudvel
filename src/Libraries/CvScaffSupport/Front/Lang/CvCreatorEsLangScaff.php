@@ -20,6 +20,14 @@ class CvCreatorEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBas
 
 //[Stablishers]
 //[End Stablishers]
+  public function caseFixer($case=null,$value=null){
+    try{
+      $value = $this->trans->translate($value);
+    }catch(\Exception $e){
+
+    }
+    return parent::caseFixer($case,$value);
+  }
   protected function selfRepresentation(){
     return fixedSlug(Str::plural($this->getResource()));
   }

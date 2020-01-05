@@ -28,25 +28,13 @@ class CvCreatorCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
   }
 //[End Stablishers]
 
-  protected function fixCase($quantity='singular',$case='camel',$fixer=null){
-    $extraParams = $this->getExtraParams();
-    $template    = $this->getTemplate();
-    foreach($extraParams as $param=>$value){
-      try{
-        $value = $this->trans->translate($value);
-      }catch(\Exception $e){
+  public function caseFixer($case=null,$value=null){
+    try{
+      $value = $this->trans->translate($value);
+    }catch(\Exception $e){
 
-      }
-      if($fixer)
-        $resolvedTag=$fixer($value);
-      else
-        $resolvedTag= Str::$case(Str::$quantity($value));
-      $quantityTag=$quantity!==''?"_$quantity":'';
-      $caseTag=$case!==''?"_$case":'';
-      $template = str_replace("<cv{$quantityTag}{$caseTag}_{$param}_cv>",$resolvedTag,$template);
     }
-    $this->setTemplate($template);
-    return $this;
+    return parent::caseFixer($case,$value);
   }
 
   protected function selfRepresentation(){

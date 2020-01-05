@@ -1,6 +1,6 @@
 <?php namespace App\Models;
 
-class <cv_singular_studly_resource_cv> extends \Customs\Crudvel\Models\Catalog1{
+class <##[singular|studly](resource)##> extends \Customs\Crudvel\Models\Catalog1{
 
 // [Relationships]
 // [End Relationships]
