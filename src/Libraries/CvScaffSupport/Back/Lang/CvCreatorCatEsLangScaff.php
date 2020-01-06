@@ -8,7 +8,7 @@ use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class CvCreatorCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
-  //! dont use CvScaffCatTrait in cat-lang files;
+  use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedTargetPath   = 'resources/lang/es/crudvel/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_es_lang.txt';
   protected $trans;
@@ -24,7 +24,7 @@ class CvCreatorCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
 
 //[Stablishers]
   public function stablishResource($resource=null){
-    return $this->setResource($resource?ltrim(fixedSlug($resource),'cat-'):$resource);
+    return $this->setResource($this->unCat($resource));
   }
 //[End Stablishers]
 
@@ -38,6 +38,6 @@ class CvCreatorCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
   }
 
   protected function selfRepresentation(){
-    return 'cat-'.fixedSlug(Str::plural($this->getResource()));
+    return fixedSlug(Str::plural($this->reCat($this->getResource())));
   }
 }

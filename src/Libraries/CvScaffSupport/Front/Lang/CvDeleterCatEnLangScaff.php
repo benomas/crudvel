@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class CvDeleterCatEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseDeleterScaff implements CvScaffInterface
 {
-  //! dont use CvScaffCatTrait in cat-lang files;
+  use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedFilePath   = 'src/i18n/en/crudvuel/';
   public function __construct(){
     parent::__construct();
@@ -21,10 +21,10 @@ class CvDeleterCatEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\Cv
 //[Stablishers]
 //[Stablishers]
   public function stablishResource($resource=null){
-    return $this->setResource($resource?ltrim(fixedSlug($resource),'cat-'):$resource);
+    return $this->setResource($this->unCat($resource));
   }
 //[End Stablishers]
   protected function selfRepresentation(){
-    return 'cat-'.fixedSlug(Str::plural($this->getResource()));
+    return fixedSlug(Str::plural($this->reCat($this->getResource())));
   }
 }

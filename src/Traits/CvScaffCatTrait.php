@@ -12,9 +12,15 @@ trait CvScaffCatTrait
 
 //[Stablishers]
   public function stablishResource($resource=null){
-    if($resource)
-      $resource = 'cat-'.ltrim(fixedSlug($resource),'cat-');
-    return $this->setResource($resource??null);
+    return $this->setResource($this->reCat($resource));
   }
 //[End Stablishers]
+  public function unCat($resource=null){
+    if($resource)
+      $resource = preg_replace('/(^cat-)(.+)/','$2',fixedSlug($resource));
+    return $resource;
+  }
+  public function reCat($resource=null){
+    return 'cat-'.$this->unCat($resource);
+  }
 }
