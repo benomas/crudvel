@@ -112,6 +112,8 @@ class CvScaffFrontDeleteCatResource extends \Crudvel\Commands\BaseCommand
       'target'   => 'cat-layout',
       'resource' => $resource,
     ]);
-    composerDump();
+    $crudvelFrontPath = config('packages.benomas.crudvel.crudvel.crudvel_front_path');
+    customExec("cd /var/www/$crudvelFrontPath && npm run fixlint");
+    cvConsoler("\n".cvPositive("fixlint completed")."\n");
   }
 }
