@@ -89,7 +89,7 @@ trait CvResourceTrait
     return $this->currentActionKey??null;
   }
   public function getFields(){
-    return $this->fields??null;
+    return $this->fields??[];
   }
   public function getPaginateFields(){
     return $this->fields['paginate']??null;
