@@ -197,9 +197,6 @@
             "cat-service": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Service\\CvCreatorCatServiceScaff"
             },
-            "router": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Router\\CvCreatorRouterScaff"
-            },
             "definition": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Definition\\CvCreatorDefinitionScaff"
             },
