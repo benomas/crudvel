@@ -229,35 +229,40 @@ class BaseModel extends Model implements CvCrudInterface
     $query->name($this->name);
   }
 
-  public function scopeInvokePosfix($query, $related, $posfix)
+  public function scopeInvoker($query, $related)
   {
     $foreintColumn = \Str::snake(\Str::singular(($table = $this->getTable()))) . '_id';
-    $query->select("$table.$posfix as $table" . '_' . $posfix)
-      ->whereColumn($related::cvIam()->getTable() . ".$foreintColumn", "$table.id")
+    $query->whereColumn($related::cvIam()->getTable() . ".$foreintColumn", "$table.id")
       ->limit(1);
+  }
+
+  public function scopeInvokePosfix($query, $related, $posfix)
+  {
+    $table = $this->getTable();
+    $query->invoker($related)->select("$table.$posfix as $table" . '_' . $posfix);
   }
 
   public function scopeInvokeSearch($query, $related)
   {
-    $foreintColumn = \Str::snake(\Str::singular(($table = $this->getTable()))) . '_id';
-    $query->select("$table.name as cv_search")
-      ->whereColumn($related::cvIam()->getTable() . ".$foreintColumn", "$table.id")
-      ->limit(1);
+    $query->invoker($related)->select("{$this->getTable()}.name as cv_search");
   }
 
-  /**
-   * this function is defined to work only with mysql
-   */
-  public static function defCvSearch(...$columns)
+  public function scopeExternalCvSearch($query, $related, $alias=null)
   {
-    $columns = (array) $columns;
-    if (empty($columns))
-      $columns = ['name'];
-    $model = self::cvIam();
-    pdd($model);
-    foreach ($columns as $column) {
-    }
+    $foreintColumn = \Str::snake(\Str::singular(($table = $this->getTable()))) . '_id';
+    $alias = $alias ?? $table.microtime();
+    return $query
+      ->from("{$this->getTable()} as $alias")
+      ->whereColumn($related::cvIam()->getTable() . ".$foreintColumn", "$alias.id")
+      ->limit(1)->selectCvSearch($alias);
   }
+
+  public function scopeSelectCvSearch($query,$alias=null){
+    $alias = $alias ?? $this->getTable().microtime();
+    return $query->selectRaw(
+      "CONCAT('scopeSelectCvSearch needs to be customized at ".get_class($this)." scopeSelectCvSearch ',$alias.id)");
+  }
+
   // [End Scopes]
 
   // [Others]
