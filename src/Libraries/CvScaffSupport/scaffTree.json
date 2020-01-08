@@ -68,6 +68,12 @@
             },
             "cat-seeder": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvAdderCatSeederScaff"
+            },
+            "test-seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvAdderTestSeederScaff"
+            },
+            "cat-test-seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvAdderCatTestSeederScaff"
             }
         },
         "remover": {
@@ -82,6 +88,12 @@
             },
             "cat-seeder": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverCatSeederScaff"
+            },
+            "test-seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverTestSeederScaff"
+            },
+            "cat-test-seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvRemoverCatTestSeederScaff"
             }
         },
         "deleter": {
@@ -132,6 +144,12 @@
             },
             "cat-factory": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Factory\\CvDeleterCatFactoryScaff"
+            },
+            "test-seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterTestSeederScaff"
+            },
+            "cat-test-seeder": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterCatTestSeedScaff"
             }
         }
     },
