@@ -282,7 +282,6 @@ class CvScaff
     return $this;
   }
 
-
   public function inyectConsoleInstance(){
     $this->getProcessorInstance()->setConsoleInstance($this->getConsoleInstance());
     return $this;
@@ -302,13 +301,11 @@ class CvScaff
   }
 
   public function runScaff(){
-    $scaffer = $this->stablishProcessorInstance()
+    return $this->stablishProcessorInstance()
       ->inyectConsoleInstance()
       ->getProcessorInstance()
       ->stablishResource($this->getResource())
       ->setScaffParams($this->getTargetSubTree())
       ->scaff();
-
-    return $scaffer;
   }
 }

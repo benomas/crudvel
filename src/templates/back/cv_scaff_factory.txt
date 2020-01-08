@@ -9,7 +9,7 @@ class Create<##[plural|studly](resource)##>Table extends \Customs\Crudvel\Databa
     if(!Schema::hasTable($this->mainTable)){
       Schema::create($this->mainTable, function (Blueprint $table) {
         Schema::disableForeignKeyConstraints();
-        $table->increments('id');
+        $table->bigIncrements('id');
         $this->defaultColumns($table);
         $table->engine = 'InnoDB';
         Schema::enableForeignKeyConstraints();

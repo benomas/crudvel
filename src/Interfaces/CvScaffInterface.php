@@ -8,6 +8,7 @@ interface CvScaffInterface
   public function getConsoleInstance();
   public function setResource($resource=null);
   public function setScaffParams($scaffParams=null);
+  public function stablishResource($resource=null);
   public function force();
   public function getForce();
   public function scaff();
