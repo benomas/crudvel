@@ -1,6 +1,6 @@
 <?php
 
-namespace <cv_singular_studly_target_namespace_cv>;
+namespace <##[singular|studly](target_namespace)##>;
 
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;

@@ -51,6 +51,9 @@
             },
             "factory": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Factory\\CvCreatorFactoryScaff"
+            },
+            "cat-factory": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Factory\\CvCreatorCatFactoryScaff"
             }
         },
         "adder": {
@@ -123,6 +126,12 @@
             },
             "cat-seeder": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterCatSeederScaff"
+            },
+            "factory": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Factory\\CvDeleterFactoryScaff"
+            },
+            "cat-factory": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Factory\\CvDeleterCatFactoryScaff"
             }
         }
     },
