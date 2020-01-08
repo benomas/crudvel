@@ -250,7 +250,7 @@ class BaseModel extends Model implements CvCrudInterface
   public function scopeExternalCvSearch($query, $related, $alias=null)
   {
     $foreintColumn = \Str::snake(\Str::singular(($table = $this->getTable()))) . '_id';
-    $alias = $alias ?? $table.microtime();
+    $alias = $alias ?? \Illuminate\Support\Str::random(10);
     return $query
       ->from("{$this->getTable()} as $alias")
       ->whereColumn($related::cvIam()->getTable() . ".$foreintColumn", "$alias.id")
@@ -258,7 +258,7 @@ class BaseModel extends Model implements CvCrudInterface
   }
 
   public function scopeSelectCvSearch($query,$alias=null){
-    $alias = $alias ?? $this->getTable().microtime();
+    $alias = $alias ?? \Illuminate\Support\Str::random(10);
     return $query->selectRaw(
       "CONCAT('scopeSelectCvSearch needs to be customized at ".get_class($this)." scopeSelectCvSearch ',$alias.id)");
   }
