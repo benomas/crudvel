@@ -16,11 +16,11 @@ export default {
       label: '<##[plural|title](resource)##>'
     },
     create: {
-      label : 'Crea <##[singular|lower](resource)##>',
+      label : 'Crear <##[singular|lower](resource)##>',
       set   : {
         success : '<##[singular|title](resource)##> creado',
-        error   : 'Error al intentar crea <##[singular|lower](resource)##>',
-        cancel  : 'Se ha cancelado la creación d <##[singular|lower](resource)##>'
+        error   : 'Error al intentar crear <##[singular|lower](resource)##>',
+        cancel  : 'Se ha cancelado la creación de <##[singular|lower](resource)##>'
       }
     },
     show: {
@@ -34,36 +34,36 @@ export default {
       }
     },
     edit: {
-      label : 'Edita <##[singular|lower](resource)##>',
+      label : 'Editar <##[singular|lower](resource)##>',
       set   : {
         success : 'Se ha editado correctament <##[singular|lower](resource)##>',
-        error   : 'Error al intentar edita <##[singular|lower](resource)##>',
-        cancel  : 'Se ha cancelado la edición d <##[singular|lower](resource)##>'
+        error   : 'Error al intentar editar <##[singular|lower](resource)##>',
+        cancel  : 'Se ha cancelado la edición de <##[singular|lower](resource)##>'
       }
     },
     delete: {
-      label     : 'Elimina <##[singular|lower](resource)##>',
+      label     : 'Eliminar <##[singular|lower](resource)##>',
       nextLabel : 'Continuar',
       set       : {
         success : '<##[singular|title](resource)##> eliminado',
-        error   : 'Error al intentar elimina <##[singular|lower](resource)##>',
-        cancel  : 'Se ha cancelado la eliminación d <##[singular|lower](resource)##>'
+        error   : 'Error al intentar eliminar <##[singular|lower](resource)##>',
+        cancel  : 'Se ha cancelado la eliminación de <##[singular|lower](resource)##>'
       }
     },
     activate: {
-      label : 'Activa <##[singular|lower](resource)##>',
+      label : 'Activar <##[singular|lower](resource)##>',
       set   : {
-        success : 'Se ha activado correctament <##[singular|lower](resource)##>',
-        error   : 'Error al intentar activa <##[singular|lower](resource)##>',
-        cancel  : 'Se ha cancelado la activación d <##[singular|lower](resource)##>'
+        success : 'Se ha activado correctamente <##[singular|lower](resource)##>',
+        error   : 'Error al intentar activar <##[singular|lower](resource)##>',
+        cancel  : 'Se ha cancelado la activación de <##[singular|lower](resource)##>'
       }
     },
     deactivate: {
-      label : 'Desactiva <##[singular|lower](resource)##>',
+      label : 'Desactivar <##[singular|lower](resource)##>',
       set   : {
-        success : 'Se ha desactivado correctament <##[singular|lower](resource)##>',
-        error   : 'Error al intentar activa <##[singular|lower](resource)##>',
-        cancel  : 'Se ha cancelado la desactivación d <##[singular|lower](resource)##>'
+        success : 'Se ha desactivado correctamente <##[singular|lower](resource)##>',
+        error   : 'Error al intentar activar <##[singular|lower](resource)##>',
+        cancel  : 'Se ha cancelado la desactivación de <##[singular|lower](resource)##>'
       }
     }
   }

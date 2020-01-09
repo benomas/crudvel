@@ -34,36 +34,36 @@ export default {
       }
     },
     edit: {
-      label : 'Edi <##[singular|lower](resource)##>',
+      label : 'Edit <##[singular|lower](resource)##>',
       set   : {
         success : '<##[singular|title](resource)##> Edited Ok',
-        error   : 'Error traying to edi <##[singular|lower](resource)##>',
-        cancel  : 'Edition o <##[singular|lower](resource)##> canceled'
+        error   : 'Error traying to edit <##[singular|lower](resource)##>',
+        cancel  : 'Edition of <##[singular|lower](resource)##> canceled'
       }
     },
     delete: {
-      label     : 'Delet <##[singular|lower](resource)##>',
+      label     : 'Delete <##[singular|lower](resource)##>',
       nextLabel : 'Continue',
       set       : {
         success : '<##[singular|title](resource)##> deleted',
-        error   : 'Error trying to delet <##[singular|lower](resource)##>',
-        cancel  : 'deletion o <##[singular|lower](resource)##> canceled'
+        error   : 'Error trying to delete <##[singular|lower](resource)##>',
+        cancel  : 'deletion of <##[singular|lower](resource)##> canceled'
       }
     },
     activate: {
-      label : 'Activ <##[singular|lower](resource)##>',
+      label : 'Activate <##[singular|lower](resource)##>',
       set   : {
         success : '<##[singular|title](resource)##> Activated ok',
-        error   : 'Error traying to activat <##[singular|lower](resource)##>',
-        cancel  : 'Activation o <##[singular|lower](resource)##> canceled'
+        error   : 'Error traying to activate <##[singular|lower](resource)##>',
+        cancel  : 'Activation of <##[singular|lower](resource)##> canceled'
       }
     },
     deactivate: {
-      label : 'Desactivat <##[singular|lower](resource)##>',
+      label : 'Desactivate <##[singular|lower](resource)##>',
       set   : {
         success : '<##[singular|title](resource)##> Desactivated',
         error   : 'Error traying to desactivate th <##[singular|lower](resource)##>',
-        cancel  : 'Deactivation o <##[singular|lower](resource)##> canceled'
+        cancel  : 'Deactivation of <##[singular|lower](resource)##> canceled'
       }
     }
   }

@@ -64,7 +64,7 @@ class BaseSeeder extends Seeder
         $modelClass::insert($subData->toArray());
       }catch(\Exception $e){
         customLog('Seeder transaction fail with',$subData,json_encode($e));
-        cvConsoler(cvRedCoTC("\n".'Exception when running seeder '.json_encode($e)));
+        cvConsoler(cvNegative("\n".'Exception when running seeder '.json_encode($e)));
       }
     }
   }
