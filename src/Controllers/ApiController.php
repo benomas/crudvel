@@ -6,6 +6,7 @@
  * @date   2017-05-08
  */
 
+use Illuminate\Support\Str;
 //Se extiende transactionController, para manejo de transacciones
 
 class ApiController extends CustomController{
@@ -126,7 +127,7 @@ class ApiController extends CustomController{
   public function permissions(){
     $actionPermittions=[];
     foreach($this->actions AS $action){
-      if(resourceAccess($this->currentUser,str_plural(Str::slug($this->crudObjectName)).".".Str::slug($action)))
+      if(actionAccess($this->currentUser,Str::plural(Str::slug($this->crudObjectName)).".".Str::slug($action)))
         $actionPermittions[$action]=true;
       else
         $actionPermittions[$action]=false;

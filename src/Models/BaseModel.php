@@ -20,6 +20,7 @@ class BaseModel extends Model implements CvCrudInterface
   protected $hidden            = ['pivot'];
   protected $cacheBoots        = [];
   protected $modelMetaData     = null;
+  protected $cvSearches        = [];
 
   public function __construct($attributes = array())
   {
@@ -250,7 +251,7 @@ class BaseModel extends Model implements CvCrudInterface
   public function scopeExternalCvSearch($query, $related, $alias=null)
   {
     $foreintColumn = \Str::snake(\Str::singular(($table = $this->getTable()))) . '_id';
-    $alias = $alias ?? \Illuminate\Support\Str::random(10);
+    $alias         = $this->alias($alias);
     return $query
       ->from("{$this->getTable()} as $alias")
       ->whereColumn($related::cvIam()->getTable() . ".$foreintColumn", "$alias.id")
@@ -258,9 +259,26 @@ class BaseModel extends Model implements CvCrudInterface
   }
 
   public function scopeSelectCvSearch($query,$alias=null){
-    $alias = $alias ?? \Illuminate\Support\Str::random(10);
+    $alias = $this->alias($alias);
     return $query->selectRaw(
       "CONCAT('scopeSelectCvSearch needs to be customized at ".get_class($this)." scopeSelectCvSearch ',$alias.id)");
+  }
+
+  public function scopeSolveSearches($query){
+    $modelClass = get_class($this->cvIam());
+    foreach($this->getCvSearches() as $searchColumn=>$relatedModel)
+      $query->addSelect([$searchColumn => $relatedModel::externalCvSearch($modelClass)]);
+    $query->cvSearch();
+  }
+
+  public function scopeCvSearch($query,$alias=null){
+    $alias      = $this->alias($alias);
+    $table      = $this->cvIam()->getTable();
+    $modelClass = get_class($this->cvIam());
+    $query->addSelect(['cv_search' => $modelClass::from("$table as $alias")
+      ->selectCvSearch($alias)
+      ->whereColumn("$alias.id", "$table.id")
+      ->limit(1)]);
   }
 
   // [End Scopes]
@@ -451,4 +469,17 @@ class BaseModel extends Model implements CvCrudInterface
   {
   }
   // [End Others]
+
+  public function getCvSearches(){
+    return $this->cvSearches??[];
+  }
+
+  public function setCvSearches($cvSearches=null){
+    $this->cvSearches = $cvSearches??null;
+    return $this;
+  }
+
+  public function alias($alias){
+    return $alias ?? \Illuminate\Support\Str::random(10);
+  }
 }
