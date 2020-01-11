@@ -11,6 +11,8 @@ class Create<##[plural|studly](resource)##>Table extends \Customs\Crudvel\Databa
         Schema::disableForeignKeyConstraints();
         $table->bigIncrements('id');
         $this->defaultColumns($table);
+        $table->string('name');
+        $table->text('description')->nullable();
         $table->engine = 'InnoDB';
         Schema::enableForeignKeyConstraints();
       });
