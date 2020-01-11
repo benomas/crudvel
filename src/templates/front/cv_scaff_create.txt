@@ -22,7 +22,7 @@
   </cv-action-container>
 </template>
 <script>
-import CvBaseCrud from 'src/crudvuel/customs/themes/quasar/components/resource/CvBaseCrud.vue'
+import CvBaseCrud from 'src/customs/crudvuel/themes/quasar/components/resource/CvBaseCrud.vue'
 export default {
   extends : CvBaseCrud,
   methods : {
