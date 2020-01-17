@@ -116,7 +116,7 @@ class ColumnCompatibility
   }
 
   public function lCount($q){
-    return $q->distinctCount($this->leftColumn);
+    //return $q->distinctCount($this->leftColumn);
     try{
       return $q->distinctCount($this->leftColumn);
     }
