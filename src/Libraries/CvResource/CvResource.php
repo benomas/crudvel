@@ -339,6 +339,11 @@ class CvResource
     return $this;
   }
 
+  public function clearFields(){
+    $this->fields = [];
+    return $this;
+  }
+
   public function removeAction($action=null){
     if (($key = array_search($action, $this->actions)) !== false)
       unset($this->actions[$key]);
