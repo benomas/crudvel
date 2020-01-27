@@ -377,6 +377,13 @@ trait CrudTrait {
   public function removeRowsAction($rowsAction=null){
     return $this->setCvResourceInstanceMethod('removeRowsAction',$rowsAction);
   }
+
+  public function clearFields(){
+    if($this->getCvResourceInstance() && $this->getCvResourceInstance()->getRequestInstance())
+      $this->getCvResourceInstance()->clearFields();
+    return $this;
+  }
+
   public function apiAlreadyExist($data=null){
     return response()->json(
       $data?
