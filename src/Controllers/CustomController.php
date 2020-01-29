@@ -404,14 +404,17 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function addAction(...$moreActions){
     $this->actions=array_merge($this->actions,$moreActions);
+    return $this;
   }
 
   public function addRowActions(...$moreActions){
     $this->rowActions=array_merge($this->rowActions,$moreActions);
+    return $this;
   }
 
   public function addViewActions(...$moreActions){
     $this->viewActions=array_merge($this->viewActions,$moreActions);
+    return $this;
   }
 
   public function setSlugField(){
