@@ -12,7 +12,7 @@ class MySqlEngine extends BaseDbEngine implements EngineInterface
       return $this;
     $this->filterQueryString = 'CONCAT(';
     foreach($filterQuery AS $filter=>$value)
-      $this->filterQueryString.=$filter.',';
+      $this->filterQueryString.="COALESCE($filter,''),";
 
     $this->filterQueryString = rtrim($this->filterQueryString, ',').')';
     return $this;
