@@ -302,14 +302,19 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $this->isTransactionCompleted();
   }
 
-  public function activate($id){
-    $this->addField('status',1);
-    return $this->update($id);
+  public function activate($id)
+  {
+    $this->clearFields()->addField('id',$id)->addField('active',1)->setStamps()->removeField('created_by');
+    if($this->persist())
+      return $this->actionResponse();
+    return $this->apiFailResponse();
   }
 
   public function deactivate($id){
-    $this->addField('status',0);
-    return $this->update($id);
+    $this->clearFields()->addField('id',$id)->addField('active',0)->setStamps()->removeField('created_by');
+    if($this->persist())
+      return $this->actionResponse();
+    return $this->apiFailResponse();
   }
 
   public function export(){
