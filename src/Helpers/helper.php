@@ -1159,3 +1159,6 @@ if(!function_exists("composerDump")){
 if(!function_exists("isAssociativeArray")){
   function isAssociativeArray(...$params){return CvHelper::isAssociativeArray(...$params);}
 }
+if(!function_exists("getSomeKeys")){
+  function getSomeKeys(...$params){return CvHelper::getSomeKeys(...$params);}
+}

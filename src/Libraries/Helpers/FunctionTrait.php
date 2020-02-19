@@ -146,4 +146,17 @@ trait FunctionTrait
   public function isAssociativeArray($arrayTest){
     return count(array_filter(array_keys($arrayTest), 'is_string')) > 0;
   }
+
+  public function getSomeKeys ($array,...$keys){
+    $someKeysArray = [];
+    foreach ($array as $item){
+      $newItem = [];
+      foreach ($keys as $key){
+        if (isset($item[$key]))
+          $newItem[$key]=$item[$key];
+      }
+      $someKeysArray[]=$newItem;
+    }
+    return $someKeysArray;
+  }
 }
