@@ -147,7 +147,7 @@ trait FunctionTrait
     return count(array_filter(array_keys($arrayTest), 'is_string')) > 0;
   }
 
-  public function getSomeKeys ($array,...$keys){
+  public function getSomeKeys ($array,$byKey=null,...$keys){
     $someKeysArray = [];
     foreach ($array as $item){
       $newItem = [];
@@ -155,7 +155,10 @@ trait FunctionTrait
         if (isset($item[$key]))
           $newItem[$key]=$item[$key];
       }
-      $someKeysArray[]=$newItem;
+      if ($byKey && !empty($item[$byKey]))
+        $someKeysArray[$item[$byKey]]=$newItem;
+      else
+        $someKeysArray[]=$newItem;
     }
     return $someKeysArray;
   }
