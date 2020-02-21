@@ -44,6 +44,8 @@ class ApiController extends CustomController{
    */
   public function relatedIndex($resource=null,$key=null) {
     try{
+      if ($key === null || $key === 'null')
+        return $this->apiSuccessResponse([]);
       $this->getModelBuilderInstance()->{'relatedTo'.Str::studly(Str::singular($resource))}($key);
       return $this->actionResponse();
     }catch(\Exception $e) {

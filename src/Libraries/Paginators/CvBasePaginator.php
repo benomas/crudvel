@@ -228,7 +228,7 @@ class CvBasePaginator implements CvCrudInterface
 
   public function paginateResponder(){
     $this->getModelBuilderInstance()->select($this->getSelectQuery());
-    if(!$this->getModelBuilderInstance())
+    if(!$this->getModelBuilderInstance() || !$this->getModelBuilderInstance()->count())
       return $this->getRootInstance()->apiSuccessResponse([
         "data"   =>[],
         "count"  =>0,
