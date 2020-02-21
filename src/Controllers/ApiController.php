@@ -37,6 +37,19 @@ class ApiController extends CustomController{
     return $this->actionResponse();
   }
 
+  /**
+   * Display a listing of the resource related to another resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function relatedIndex($resource=null,$key=null) {
+    try{
+      $this->getModelBuilderInstance()->{'relatedTo'.Str::studly(Str::singular($resource))}($key);
+      return $this->actionResponse();
+    }catch(\Exception $e) {
+    }
+    return $this->apiFailResponse();
+  }
   //web routes
   /**
    * Display a listing of the resource.

@@ -552,6 +552,7 @@ if(!function_exists("apiCrudvelResource")){
       else{
         $prefixRoute = $resource;
       }
+      Route::get($prefixRoute."/related-to/{resource}/{key}", $controller."@relatedIndex")->name($resource.".related-index");
       Route::get($prefixRoute."/sluged", $controller."@sluged")->name($resource.".sluged");
       Route::get($prefixRoute."/import", $controller."@import")->name($resource.".import");
       Route::get($prefixRoute."/exports", $controller."@exports")->name($resource.".exports");
@@ -571,6 +572,8 @@ if(!function_exists("apiCrudvelResource")){
       Route::delete($prefixRoute."/{".$rowName."}", $controller."@destroy")->name($resource.".destroy");
     }
     else{
+      if(in_array("relatedIndex",$conditionals))
+        Route::get($prefixRoute."/related-to/{resource}/{key}", $controller."@relatedIndex")->name($resource.".related-index");
       if(in_array("sluged",$conditionals))
         Route::get($resource."/sluged", $controller."@sluged")->name($resource.".sluged");
       if(in_array("import",$conditionals))

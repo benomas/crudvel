@@ -56,47 +56,49 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   protected $callActionMethod = null;
   protected $callActionParameters = null;
   protected $actions         = [
-    "index",
-    "sluged",
-    "show",
-    "create",
-    "store",
-    "edit",
-    "update",
-    "delete",
-    "destroy",
-    "activate",
-    "deactivate",
-    "import",
-    "importing",
-    "export",
-    "exporting",
-    "exportings",
+    'index',
+    'relatedIndex',
+    'sluged',
+    'show',
+    'create',
+    'store',
+    'edit',
+    'update',
+    'delete',
+    'destroy',
+    'activate',
+    'deactivate',
+    'import',
+    'importing',
+    'export',
+    'exporting',
+    'exportings',
   ];
   protected $rowActions = [
-    "show",
-    "edit",
-    "delete",
-    "update",
-    "destroy",
-    "activate",
-    "deactivate",
-    "exporting",
+    'show',
+    'edit',
+    'delete',
+    'update',
+    'destroy',
+    'activate',
+    'deactivate',
+    'exporting',
   ];
   protected $viewActions = [
-    "index",
-    "show",
-    "create",
-    "edit",
-    "import",
+    'index',
+    'relatedIndex',
+    'show',
+    'create',
+    'edit',
+    'import',
   ];
   protected $rowsActions = [
-    "index",
-    "sluged",
-    "import",
-    "importing",
-    "export",
-    "exportings",
+    'index',
+    'sluged',
+    'import',
+    'importing',
+    'export',
+    'exportings',
   ];
 
   use \Crudvel\Traits\CrudTrait;
@@ -304,14 +306,14 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function activate($id)
   {
-    $this->clearFields()->addField('id',$id)->addField('active',1)->setStamps()->removeField('created_by');
+    $this->clearFields()->addField('id',$id)->addField('active',1)->setStamps()->removeField('created_by')->removeField('created_at');
     if($this->persist())
       return $this->actionResponse();
     return $this->apiFailResponse();
   }
 
   public function deactivate($id){
-    $this->clearFields()->addField('id',$id)->addField('active',0)->setStamps()->removeField('created_by');
+    $this->clearFields()->addField('id',$id)->addField('active',0)->setStamps()->removeField('created_by')->removeField('created_at');
     if($this->persist())
       return $this->actionResponse();
     return $this->apiFailResponse();
@@ -414,6 +416,11 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function addRowActions(...$moreActions){
     $this->rowActions=array_merge($this->rowActions,$moreActions);
+    return $this;
+  }
+
+  public function addRowsActions(...$moreActions){
+    $this->rowsActions=array_merge($this->rowsActions,$moreActions);
     return $this;
   }
 
