@@ -124,6 +124,8 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   * @return response
   */
   public function callActionJump($method,$parameters=[]){
+    if(method_exists($this,$this->getCurrentAction().'BeforePaginate'))
+      $this->{$this->getCurrentAction().'BeforePaginate'}($parameters);
     if(
       $this->getRootInstance() &&
       $this->getRootInstance()->getPaginable() &&

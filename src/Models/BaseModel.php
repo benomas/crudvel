@@ -480,7 +480,12 @@ class BaseModel extends Model implements CvCrudInterface
     return $this;
   }
 
-  public function alias($alias){
-    return $alias ?? \Illuminate\Support\Str::random(10);
+  public function alias($alias = null){
+    if ($alias)
+      return $alias;
+    $randomWord = function ($length=10){
+      return substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"),0,$length);
+    };
+    return $randomWord();
   }
 }
