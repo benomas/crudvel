@@ -50,7 +50,11 @@ class ApiController extends CustomController{
       return $this->actionResponse();
     }catch(\Exception $e) {
     }
-    return $this->apiFailResponse();
+    return $this->apiSuccessResponse([
+      "data"    => [],
+      "count"   => 0,
+      "message" => trans("crudvel.api.success")
+    ]);
   }
   //web routes
   /**
