@@ -74,6 +74,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     'exporting',
     'exportings',
   ];
+
   protected $rowActions = [
     'show',
     'edit',
@@ -84,6 +85,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     'deactivate',
     'exporting',
   ];
+
   protected $viewActions = [
     'index',
     'relatedIndex',
@@ -92,6 +94,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     'edit',
     'import',
   ];
+
   protected $rowsActions = [
     'index',
     'sluged',
@@ -340,10 +343,12 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     //Todo, implement a general logic for these methods
     return false;
   }
+
   public function exporting($id){
     //Todo, implement a general logic for these methods
     return false;
   }
+
   //Todo, re-implement
   public function importing(){
     $fail=true;
@@ -444,36 +449,47 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   public function getTransStatus(){
     return $this->transStatus??null;
   }
+
   public function getCommitter(){
     return $this->committer??null;
   }
+
   public function getMainTableName(){
     return $this->mainTableName??null;
   }
+
   public function getSlugField(){
     return $this->slugField??null;
   }
+
   public function getSlugedResponse(){
     return $this->slugedResponse??null;
   }
+
   public function getDefaultFields(){
     return $this->defaultFields??null;
   }
+
   public function getDirtyPropertys(){
     return $this->dirtyPropertys??null;
   }
+
   public function getDebugg(){
     return $this->debugg??null;
   }
+
   public function getActions(){
     return $this->actions??null;
   }
+
   public function getRowActions(){
     return $this->rowActions??null;
   }
+
   public function getViewActions(){
     return $this->viewActions??null;
   }
+
   public function getRowsActions(){
     return $this->rowsActions??null;
   }
@@ -481,54 +497,71 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   public function getModelClassName(){
     return $this->modelClassName??null;
   }
+
   public function getRequestClassName(){
     return $this->requestClassName??null;
   }
+
   public function getPaginators(){
     return $this->paginators??null;
   }
+
   public function getPaginator($paginator=null){
     return $this->paginators[$paginator]??$this->paginators[$this->defaultPaginator]??null;
   }
+
   public function getForceSingleItemPagination(){
     return $this->forceSingleItemPagination??null;
   }
+
   public function getFilterables(){
     return $this->filterables??null;
   }
+
   public function getOrderables(){
     return $this->orderables??null;
   }
+
   public function getPaginable(){
     return $this->paginable??null;
   }
+
   public function getPaginated(){
     return $this->paginated??null;
   }
+
   public function getFlexPaginable(){
     return $this->flexPaginable??null;
   }
+
   public function getBadPaginablePetition(){
     return $this->badPaginablePetition??null;
   }
+
   public function getSelectables(){
     return $this->selectables??null;
   }
+
   public function getJoinables(){
     return $this->joinables??null;
   }
+
   public function getPaginateData(){
     return $this->paginateData??null;
   }
+
   public function getSkipModelValidation(){
     return $this->skipModelValidation??null;
   }
+
   public function getCallActionMethod(){
     return $this->callActionMethod??null;
   }
+
   public function getCallActionParameters(){
     return $this->callActionParameters??null;
   }
+
   public function getCvResourceClass(){
     return $this->cvResourceClass;
   }
@@ -537,6 +570,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     $this->badPaginablePetition = $badPaginablePetition??null;
     return $this;
   }
+
   public function setSkipModelValidation($skipModelValidation=null){
     $this->skipModelValidation = $skipModelValidation??null;
     return $this;
@@ -546,6 +580,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     $this->callActionMethod = $callActionMethod??null;
     return $this;
   }
+
   public function setCallActionParameters($callActionParameters=null){
     $this->callActionParameters = $callActionParameters??null;
     return $this;
@@ -556,6 +591,39 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $this;
   }
 
+  public function setFilterables($filterables = []){
+    $this->filterables = $filterables;
+    return $this;
+  }
+
+  public function setOrderables($orderables = []){
+    $this->orderables = $orderables;
+    return $this;
+  }
+
+  public function setSelectables($selectables = []){
+    $this->selectables = $selectables;
+    return $this;
+  }
+
+  public function addFilterables(...$filterables){
+    foreach($filterables as $filterable)
+      $this->filterables[]=$filterable;
+    return $this;
+  }
+
+  public function addOrderables(...$orderables){
+    foreach($orderables as $orderable)
+      $this->orderables[]=$orderable;
+    return $this;
+  }
+
+  public function addSelectables(...$selectables){
+    foreach($selectables as $selectable)
+      $this->selectables[]=$selectable;
+    return $this;
+  }
+
   protected function setStamps(){
     //$rightNow = Carbon::now()->toDateTimeString();
     $this->addField('created_by',$this->getRequestInstance()->user()->key??null);
@@ -563,5 +631,4 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     //$this->addFields('created_at',$rightNow??null);
     //$this->addFields('updated_at',$rightNow??null);
   }
-
 }
