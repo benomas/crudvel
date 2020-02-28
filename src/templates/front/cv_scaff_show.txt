@@ -1,6 +1,10 @@
 <script>
-import CvRowAction from './CvEdit.vue'
+import CvEdit  from 'components/resources/warehouses/CvEdit.vue'
+import CvShow  from 'cq-crudvuel/resource/CvShow'
 export default {
-  extends: CvRowAction
+  mixins: [
+    CvEdit,
+    CvShow
+  ]
 }
 </script>

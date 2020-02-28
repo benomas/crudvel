@@ -1,6 +1,60 @@
+<template>
+  <div class="q-pa-md cv-create">
+    <cv-action-container
+      v-if="cpStaGenAction"
+      v-bind="mCustomBindins('cv-action-container')"
+      v-on="mCustomOns('cv-action-container')">
+      <div slot="cv-title-slot" class="row action-label">
+        <div class="col-xs-10 col-sm-9 col-md-8  q-pb-md">
+          <label>
+            <span class="q-headline txt-secondary f-bold">
+              {{cpStaGenAction.label}}
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div slot="cv-content-slot">
+        <div class="row w-100">
+          <cv-cat-<##[plural|slug](resource)##>-skeleton
+            v-bind="mCustomBindins('cv-cat-<##[plural|slug](resource)##>-skeleton')"
+            v-on="mCustomOns('cv-cat-<##[plural|slug](resource)##>-skeleton')"
+            :cv-sta-ins-resource="'cat<##[plural|slug](resource)##>'"
+            :cv-segment="''"
+            >
+          </cv-cat-<##[plural|slug](resource)##>-skeleton>
+        </div>
+      </div>
+
+      <div slot="cv-buttons-slot">
+        <div class="col-xs-12 ">
+          <cv-action-buttons
+            v-bind="mCustomBindins('cv-action-buttons')"
+            v-on="mCustomOns('cv-action-buttons')"
+            :cv-sta-ins-action="cpStaGenAction"
+            >
+          </cv-action-buttons>
+        </div>
+      </div>
+    </cv-action-container>
+  </div>
+</template>
 <script>
-import CvRowAction from 'src/components/resources/catalogs/catalog1/CvCreate'
+import CvCreate                 from 'cq-crudvuel/resource/CvCreate'
+import CvCat<##[plural|slug](resource)##>Skeleton from 'components/resources/cat-<##[plural|slug](resource)##>/CvCat<##[plural|slug](resource)##>Skeleton'
+import CvSkeletonController     from 'cq-crudvuel/resource/CvSkeletonController'
+import VueMirroring             from 'crudvuel/mirroring/VueMirroring'
+let vueMirroring = new VueMirroring('Create').enableRoot()
 export default {
-  extends: CvRowAction
+  mixins: [
+    CvCreate,
+    vueMirroring.restoreBindins(CvCreate).assimilate(
+      {CvCat<##[plural|camel](resource)##>Skeleton}
+    ),
+    CvSkeletonController
+  ],
+  components: {
+    CvCat<##[plural|slug](resource)##>Skeleton
+  }
 }
 </script>

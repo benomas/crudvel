@@ -14,13 +14,17 @@ export default function (globals) {
     name         : resourceName,
     icon         : 'fas fa-',
     path         : resourceName,
-    crudServices : new OwnService(globals['cvComunicator'],resourceName)
+    keyName      : 'id',
+    pluralName   : '<##[plural|slug](resource)##>',
+    singularName : '<##[singular|slug](resource)##>',
+    crudServices : new OwnService(globals['cvComunicator'],resourceName),
+    filler
   })
   resource.setActions([
     {
       name       : 'index',
       icon       : '',
-      getService : resource.crudServices.index,
+      getService : resource.loadService('index'),
       resource   : resource,
       path       : resource.path + '',
       component  : CvIndex,
@@ -29,7 +33,7 @@ export default function (globals) {
     {
       name       : 'create',
       icon       : '',
-      setService : resource.crudServices.store,
+      setService : resource.loadService('store'),
       resource   : resource,
       path       : resource.path + '/create',
       component  : CvCreate
@@ -37,7 +41,7 @@ export default function (globals) {
     {
       name          : 'show',
       icon          : '',
-      getService    : resource.crudServices.show,
+      getService    : resource.loadService('show'),
       resource      : resource,
       path          : resource.path + '/:id',
       urlParams     : ['id'],
@@ -48,8 +52,8 @@ export default function (globals) {
     {
       name       : 'edit',
       icon       : '',
-      getService : resource.crudServices.show,
-      setService : resource.crudServices.update,
+      getService : resource.loadService('show'),
+      setService : resource.loadService('update'),
       resource   : resource,
       path       : resource.path + '/:id/edit',
       urlParams  : ['id'],
@@ -58,8 +62,8 @@ export default function (globals) {
     {
       name       : 'delete',
       icon       : '',
-      getService : resource.crudServices.show,
-      setService : resource.crudServices.destroy,
+      getService : resource.loadService('show'),
+      setService : resource.loadService('destroy'),
       resource   : resource,
       path       : resource.path + '/:id/delete',
       urlParams  : ['id'],
@@ -68,7 +72,7 @@ export default function (globals) {
     {
       name       : 'activate',
       icon       : '',
-      setService : resource.crudServices.activate,
+      setService : resource.loadService('activate'),
       resource   : resource,
       path       : resource.path + '/:id/activate',
       urlParams  : ['id'],
@@ -77,7 +81,7 @@ export default function (globals) {
     {
       name       : 'deactivate',
       icon       : '',
-      setService : resource.crudServices.deactivate,
+      setService : resource.loadService('deactivate'),
       resource   : resource,
       path       : resource.path + '/:id/deactivate',
       urlParams  : ['id'],
