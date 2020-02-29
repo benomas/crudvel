@@ -202,6 +202,18 @@
             },
             "cat-definition": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Definition\\CvCreatorCatDefinitionScaff"
+            },
+            "skeleton": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorSkeletonScaff"
+            },
+            "cat-skeleton": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCatSkeletonScaff"
+            },
+            "filler": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Filler\\CvCreatorFillerScaff"
+            },
+            "cat-filler": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Filler\\CvCreatorCatFillerScaff"
             }
         },
         "adder": {
@@ -316,6 +328,18 @@
             },
             "cat-definition": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Definition\\CvDeleterCatDefinitionScaff"
+            },
+            "cat-skeleton": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatSkeletonScaff"
+            },
+            "skeleton": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterSkeletonScaff"
+            },
+            "filler": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Filler\\CvDeleterFillerScaff"
+            },
+            "cat-filler": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Filler\\CvDeleterCatFillerScaff"
             }
         }
     },
