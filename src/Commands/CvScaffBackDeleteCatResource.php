@@ -100,6 +100,6 @@ class CvScaffBackDeleteCatResource extends \Crudvel\Commands\BaseCommand
       'target'   => 'cat-seeder',
       'resource' => $resource,
     ]);
-    composerDump();
+    $this->prepareApiEnv();
   }
 }

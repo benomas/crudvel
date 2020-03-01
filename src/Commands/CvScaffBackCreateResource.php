@@ -100,6 +100,6 @@ class CvScaffBackCreateResource extends \Crudvel\Commands\BaseCommand
       'target'   => 'seeder',
       'resource' => $resource,
     ]);
-    composerDump();
+    $this->prepareApiEnv();
   }
 }

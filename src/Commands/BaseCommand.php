@@ -48,4 +48,19 @@ class BaseCommand extends Command
   public function propertyDefiner($property,$value){
     $this->cvCacheSetProperty($property,$value);
   }
+
+  public function prepareApiEnv (){
+    if (composerDump()){
+      $limit = $tries = 10;
+      while ($tries--){
+        try{
+          customExec('php artisan custom-light-refresh');
+        break;
+        }catch(\Exception $e) {
+          cvConsoler(cvRedTC('custom-light-refresh cant be launched jet trigin agan')."$tries '/' $limit \n");
+        }
+        sleep(10);
+      }
+    }
+  }
 }

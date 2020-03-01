@@ -74,8 +74,9 @@ trait TerminalTrait
 
   public function composerDump(){
     cvConsoler(cvGreenTC('scaff script completed, now composer dump-autoload will be launched...')."\n");
-    customExec('composer dump-autoload');
+    $scriptResponse = customExec('composer dump-autoload');
     cvConsoler(cvGreenTC('composer dump-autoload completed')."\n");
+    return $scriptResponse;
   }
 
 }

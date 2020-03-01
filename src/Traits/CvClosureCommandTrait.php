@@ -42,6 +42,6 @@ trait CvClosureCommandTrait
   }
 
   public function composerDump(){
-    composerDump();
+    return composerDump();
   }
 }

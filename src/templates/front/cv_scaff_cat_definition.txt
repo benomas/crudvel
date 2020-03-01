@@ -19,6 +19,7 @@ export default function (globals) {
     pluralName   : '<##[plural|slug](resource)##>',
     singularName : '<##[singular|slug](resource)##>',
     crudServices : new OwnService(globals['cvComunicator'],resourceName),
+    mainSection  : 'catalogs',
     filler
   })
   resource.setActions([
