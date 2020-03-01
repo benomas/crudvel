@@ -1,11 +1,12 @@
 import CvResourceMap from 'src/customs/crudvuel/resource/CvResourceMap'
 //TODO
 //Convert to slug
-import CvCreate      from 'src/components/resources/<##[plural|slug](resource)##>/CvCreate.vue'
-import CvEdit        from 'src/components/resources/<##[plural|slug](resource)##>/CvEdit.vue'
-import CvIndex       from 'src/components/resources/<##[plural|slug](resource)##>/CvIndex.vue'
-import CvShow        from 'src/components/resources/<##[plural|slug](resource)##>/CvShow.vue'
-import OwnService    from 'src/services/<##[singular|studly](resource)##>'
+import CvCreate    from 'src/components/resources/<##[plural|slug](resource)##>/CvCreate.vue'
+import CvEdit      from 'src/components/resources/<##[plural|slug](resource)##>/CvEdit.vue'
+import CvIndex     from 'src/components/resources/<##[plural|slug](resource)##>/CvIndex.vue'
+import CvShow      from 'src/components/resources/<##[plural|slug](resource)##>/CvShow.vue'
+import OwnService  from 'src/services/<##[singular|studly](resource)##>'
+import filler      from 'src/fillers/<##[singular|camel](resource)##>.js'
 
 let resourceName = '<##[plural|slug](resource)##>'
 //TODO: check for default icon

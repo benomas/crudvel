@@ -16,13 +16,12 @@
 
       <div slot="cv-content-slot">
         <div class="row w-100">
-          <cv-cat-<##[plural|slug](resource)##>-skeleton
-            v-bind="mCustomBindins('cv-cat-<##[plural|slug](resource)##>-skeleton')"
-            v-on="mCustomOns('cv-cat-<##[plural|slug](resource)##>-skeleton')"
-            :cv-sta-ins-resource="'cat<##[plural|slug](resource)##>'"
+          <cv-<##[plural|slug](resource)##>-skeleton
+            v-bind="mCustomBindins('cv-<##[plural|slug](resource)##>-skeleton')"
+            v-on="mCustomOns('cv-<##[plural|slug](resource)##>-skeleton')"
             :cv-segment="''"
             >
-          </cv-cat-<##[plural|slug](resource)##>-skeleton>
+          </cv-<##[plural|slug](resource)##>-skeleton>
         </div>
       </div>
 
@@ -41,7 +40,7 @@
 </template>
 <script>
 import CvCreate                 from 'cq-crudvuel/resource/CvCreate'
-import CvCat<##[plural|slug](resource)##>Skeleton from 'components/resources/cat-<##[plural|slug](resource)##>/CvCat<##[plural|slug](resource)##>Skeleton'
+import Cv<##[plural|studly](resource)##>Skeleton from 'components/resources/<##[plural|slug](resource)##>/Cv<##[plural|studly](resource)##>Skeleton'
 import CvSkeletonController     from 'cq-crudvuel/resource/CvSkeletonController'
 import VueMirroring             from 'crudvuel/mirroring/VueMirroring'
 let vueMirroring = new VueMirroring('Create').enableRoot()
@@ -49,12 +48,12 @@ export default {
   mixins: [
     CvCreate,
     vueMirroring.restoreBindins(CvCreate).assimilate(
-      {CvCat<##[plural|camel](resource)##>Skeleton}
+      {Cv<##[plural|studly](resource)##>Skeleton}
     ),
     CvSkeletonController
   ],
   components: {
-    CvCat<##[plural|slug](resource)##>Skeleton
+    Cv<##[plural|studly](resource)##>Skeleton
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Crudvel\Libraries\CvScaffSupport\Front\Crud;
+namespace Crudvel\Libraries\CvScaffSupport\Front\Filler;
 
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
@@ -8,9 +8,8 @@ use Illuminate\Support\Str;
 class CvDeleterCatFillerScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseDeleterScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCatTrait;
-  protected $fileExtension       = '.vue';
-  protected $relatedTargetPath   = 'src/components/fillers/';
-  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/front/cv_scaff_cat_filler.txt';
+  protected $fileExtension   = '.js';
+  protected $relatedFilePath = 'src/fillers/';
   public function __construct(){
     parent::__construct();
   }
@@ -23,6 +22,6 @@ class CvDeleterCatFillerScaff extends \Crudvel\Libraries\CvScaffSupport\Front\Cv
 //[Stablishers]
 //[End Stablishers]
   protected function selfRepresentation(){
-    return fixedSlug(Str::plural($this->getResource())).'/cat'.Str::studly(Str::singular($this->getResource()));
+    return Str::camel(Str::singular($this->getResource()));
   }
 }

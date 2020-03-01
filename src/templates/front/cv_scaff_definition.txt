@@ -6,6 +6,7 @@ import CvEdit        from 'src/components/resources/<##[plural|slug](resource)##
 import CvIndex       from 'src/components/resources/<##[plural|slug](resource)##>/CvIndex.vue'
 import CvShow        from 'src/components/resources/<##[plural|slug](resource)##>/CvShow.vue'
 import OwnService    from 'src/services/<##[singular|studly](resource)##>'
+import filler       from 'src/fillers/<##[singular|camel](resource)##>.js'
 
 let resourceName = '<##[plural|slug](resource)##>'
 //TODO: check for default icon
