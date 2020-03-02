@@ -8,6 +8,7 @@ export default {
     description : 'Description',
     id          : 'Id',
     name        : 'Name',
+    cv_search   : 'Representación',
     updated_at  : 'Updated at',
     updated_by  : 'Updated by'
   },

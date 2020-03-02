@@ -3,6 +3,11 @@
 class <##[singular|studly](resource)##>Controller extends \Customs\Crudvel\Controllers\ApiController{
 
   protected $selectables = [
+    'id',
+    'name',
+    'description',
+    'active',
+    'cv_search'
   ];
 
   public function __construct(){

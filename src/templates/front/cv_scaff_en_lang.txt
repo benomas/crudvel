@@ -4,12 +4,15 @@ export default {
   rowLabel  : '<##[singular|title](resource)##>',
   fields    : {
   //Pscaff: Here field list
-    active     : 'Active',
-    created_at : 'Created at',
-    created_by : 'Created by',
-    id         : 'Id',
-    updated_at : 'Updated at',
-    updated_by : 'Updated by'
+    active      : 'Active',
+    created_at  : 'Created at',
+    created_by  : 'Created by',
+    description : 'Description',
+    id          : 'Id',
+    name        : 'Name',
+    cv_search   : 'Representación',
+    updated_at  : 'Updated at',
+    updated_by  : 'Updated by'
   },
   actions: {
     index: {

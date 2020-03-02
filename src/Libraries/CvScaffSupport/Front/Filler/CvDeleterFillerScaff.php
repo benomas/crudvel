@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 
 class CvDeleterFillerScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseDeleterScaff implements CvScaffInterface
 {
-  use \Crudvel\Traits\CvScaffCatTrait;
   protected $fileExtension   = '.js';
   protected $relatedFilePath = 'src/fillers/';
   public function __construct(){

@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 
 class CvDeleterSkeletonScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseDeleterScaff implements CvScaffInterface
 {
-  use \Crudvel\Traits\CvScaffCatTrait;
   protected $fileExtension       = '.vue';
   protected $relatedFilePath     = 'src/components/resources/';
   public function __construct(){

@@ -1,7 +1,11 @@
 <?php namespace App\Models;
 
 class <##[singular|studly](resource)##> extends \Customs\Crudvel\Models\BaseModel{
-  protected $fillable = [];
+  protected $fillable = [
+    'name',
+    'description',
+    'active',
+  ];
 // [Relationships]
 // [End Relationships]
 

@@ -3,12 +3,15 @@ export default {
   rowsLabel : '<##[plural|title](resource)##>',
   rowLabel  : '<##[singular|title](resource)##>',
   fields    : {
-    active     : 'Activo',
-    created_at : 'Creado en',
-    created_by : 'Creado por',
-    id         : 'Id',
-    updated_at : 'Actualizado en',
-    updated_by : 'Actualizado por'
+    active      : 'Activo',
+    created_at  : 'Creado en',
+    created_by  : 'Creado por',
+    description : 'Descripción',
+    id          : 'ID',
+    name        : 'Nombre',
+    cv_search   : 'Representación',
+    updated_at  : 'Actualizado en',
+    updated_by  : 'Actualizado por'
   },
   actions: {
     index: {

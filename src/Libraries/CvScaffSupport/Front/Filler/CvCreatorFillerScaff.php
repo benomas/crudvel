@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 
 class CvCreatorFillerScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseCreatorScaff implements CvScaffInterface
 {
-  use \Crudvel\Traits\CvScaffCatTrait;
   protected $fileExtension       = '.js';
   protected $relatedTargetPath   = 'src/fillers/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/front/cv_scaff_filler.txt';
