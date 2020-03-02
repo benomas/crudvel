@@ -98,6 +98,11 @@ class BaseModel extends Model implements CvCrudInterface
     $query->where($this->preFixed($this->getKeyName(), $preFixed), $key);
   }
 
+  public function scopeKeyLessThan($query, $key, $preFixed = true)
+  {
+    $query->where($this->preFixed($this->getKeyName(), $preFixed), '<', $key);
+  }
+
   public function scopeKeys($query, $keys, $preFixed = true)
   {
     $query->whereIn($this->preFixed($this->getKeyName(), $preFixed), $keys);
