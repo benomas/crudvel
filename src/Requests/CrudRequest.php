@@ -123,9 +123,26 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
   public function attributes()
   {
-    return array_merge(
-      __("crudvel/".$this->getSlugPluralName().".fields")??[],
-      $this->fixedAttributes??[]);
+    $currentLangs = [];
+    $localSegment = $this->getSlugPluralName();
+    $currentLangs[$localSegment] = __("crudvel/".$localSegment.".fields");
+    $attributesLangs = [];
+    foreach ($this->rules as $index=>$rule) {
+      $segments = explode('.', $index);
+      if (count($segments) === 1){
+        $attribute = $segments[0];
+        $attributesLangs[$attribute] = $currentLangs[$localSegment][$attribute] ?? '';
+        continue;
+      }
+      if (count($segments) > 1){
+        $attribute          = $segments[count($segments)-1];
+        $currentLangSegment = Str::plural(fixedSlug($segments[count($segments)-2],'-'));
+        if (empty($currentLangs[$currentLangSegment]))
+          $currentLangs[$currentLangSegment] = __("crudvel/".$currentLangSegment.".fields");
+        $attributesLangs[$index] = $currentLangs[$currentLangSegment][$attribute] ?? '';
+      }
+    }
+    return $attributesLangs;
   }
 
   public function simpleAttributeTranslator($field,$segment = null){
@@ -150,6 +167,15 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
       $fixedRules[$segment.$rulesIndex]=$rulesValue;
       $this->simpleAttributeTranslator($rulesIndex,$segment);
     }
+    return $fixedRules;
+  }
+
+  public static function staFixDepth($rules,$segment = null){
+    $fixedRules = [];
+    if (!$segment)
+      return $fixedRules;
+    foreach($rules as $rulesIndex => $rulesValue)
+      $fixedRules[$segment.$rulesIndex]=$rulesValue;
     return $fixedRules;
   }
 
@@ -261,5 +287,14 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
   public function getSlugSingularName(){
     return $this->slugSingularName??Str::snake(str_replace('Request','',class_basename($this)),'-');
+  }
+
+  public static function mixRules ($action = 'relatedPostStoreRules',$localRules = [],$extraResources = []) {
+    $moreRules = [];
+    foreach ($extraResources as $index=>$value){
+      $segment = !is_numeric($index) ? "$value." : fixedSlug(Str::singular($value)).'.';
+      $moreRules[] = self::staFixDepth(Str::singular(Str::studly($segment))::{$action}(),$segment);
+    }
+    return array_merge($localRules,$moreRules);
   }
 }
