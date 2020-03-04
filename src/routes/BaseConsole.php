@@ -278,7 +278,7 @@ class BaseConsole{
         \Crudvel\Routes\BaseConsole::cvIam()->caller(
           \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().':down',
           \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().':up',
-          'test:seed',
+          'test:seed'
         );
     };
     Artisan::command($this->getWorkspace().':refresh {skipeDev?} {range?}',$callBack)->describe('Restart the proyect from 0');
@@ -293,7 +293,7 @@ class BaseConsole{
       \Crudvel\Routes\BaseConsole::cvIam()->caller(
         \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().':down',
         \Crudvel\Routes\BaseConsole::cvIam()->getWorkspace().":light-up $range",
-        'test:seed',
+        'test:seed'
       );
     };
     Artisan::command($this->getWorkspace().':light-refresh {range?}',$callBack)->describe('Restart the proyect from 0');
