@@ -243,7 +243,7 @@ class BaseConsole{
         'drop:tables',
         'fix:backup',
         'load:backup',
-        'def-pass',
+        'def-pass'
       );
     };
     Artisan::command('reload:backup',$callBack)->describe('Elimina todas las tablas y carga respaldo');
