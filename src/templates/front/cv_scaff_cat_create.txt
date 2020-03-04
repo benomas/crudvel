@@ -19,7 +19,7 @@
           <cv-<##[plural|slug](resource)##>-skeleton
             v-bind="mCustomBindins('cv-<##[plural|slug](resource)##>-skeleton')"
             v-on="mCustomOns('cv-<##[plural|slug](resource)##>-skeleton')"
-            :cv-segment="''"
+            :cv-segment="'*'"
             >
           </cv-<##[plural|slug](resource)##>-skeleton>
         </div>
