@@ -12,7 +12,13 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
     'min_size',
     'types',
     'multiple',
+    'public_path',
     'resource',
+    'active',
+    'created_at',
+    'created_by',
+    'updated_at',
+    'updated_by',
   ];
 
   protected $appends=[
@@ -37,6 +43,11 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
 
   public function scopeHasFile($query){
     $query->whereHas('file');
+  }
+
+  public function scopeSelectCvSearch($query,$alias=null){
+    $alias = $alias ?? $this->getTable();
+    return $query->select("$alias.name");
   }
 // [End Scopes]
 

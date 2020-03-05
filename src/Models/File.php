@@ -6,11 +6,19 @@ class File extends \Customs\Crudvel\Models\BaseModel{
   use \Crudvel\Traits\Related;
 
   protected $fillable = [
-    "active",
-    "cat_file_id",
-    "path",
-    "disk",
-    "resource_id",
+    'disk',
+    'path',
+    'absolute_path',
+    'cat_file_id',
+    'resource_id',
+    'created_at',
+    'created_by',
+    'updated_at',
+    'updated_by',
+  ];
+
+  protected $cvSearches = [
+    'cat_file_cv_search' => 'App\Models\CatFile',
   ];
 
 // [Relationships]
@@ -63,6 +71,11 @@ class File extends \Customs\Crudvel\Models\BaseModel{
     $query->whereHas('catFile',function($query) use($resource){
       $query->where('resource',$resource);
     });
+  }
+
+  public function scopeSelectCvSearch($query,$alias=null){
+    $alias = $alias ?? $this->getTable();
+    return $query->select("$alias.disk");
   }
 // [End Scopes]
 

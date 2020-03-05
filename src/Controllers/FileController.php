@@ -13,11 +13,14 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     'cat_file_name',
     'cat_file_slug',
     'cat_file_resource',
+    'cat_file_cv_search',
+    'resource_cv_search',
     'resource_id',
     'created_at',
     'id',
     'path',
     'updated_at',
+    'disk',
     'cv_search'
   ];
   protected $disk = "public";
@@ -26,12 +29,12 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     parent::__construct();
     $this->addAction('storeUpdate');
   }
-/*
-  public function addedCvSearch(){
+
+  public function addedResourceCvSearch(){
     return $this->selfPreBuilder('f')
       ->join('cat_files as cf', 'f.cat_file_id', '=', 'cf.id')
       ->selectRaw("CONCAT(cf.name, ' ',cf.resource, ' ',f.id)");
-  }*/
+  }
 
   public function addedCatFileMultiple(){
     return CatFile::invokePosfix($this->getModelClass(),'multiple');
@@ -136,7 +139,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
   }
 
   public function deleteFile($file = null){
-    if(!($file??$this->getModelCollectionInstance()))
+    if(!($file = $file??$this->getModelCollectionInstance()))
       return true;
     if(!Storage::disk($file->disk)->exists($file->path))
       return true;
