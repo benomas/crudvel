@@ -17,6 +17,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     'types',
     'updated_at',
     'resource',
+    'cv_search',
   ];
 
   public function __construct(){

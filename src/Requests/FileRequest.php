@@ -36,7 +36,7 @@ class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
       $this->rules['resource_id'] = 'required|integer|key_exist:'.\Str::slug($fields['resource'],'_').',id';
 
     $this->fileName = '';
-    $this->catFile = $this->catFile??CatFile::id($fields['cat_file_id']??null)->first();
+    $this->catFile = CatFile::id($fields['cat_file_id']??null)->first();
     if(!empty($fields['resource']) && $this->catFile){
       $this->fileName .= $fields['resource'];
       $this->fixedAttributes                 =  [];
@@ -44,7 +44,6 @@ class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
       $this->rules[$this->fileName] = 'required';
     }
 
-    //pdd($this->catFile->toArray());
     if($this->catFile){
       $this->rules[$this->fileName] .= '|min:'.$this->catFile->min_size.'|max:'.$this->catFile->max_size.'|mimes:'.$this->catFile->types;
       if(!$this->catFile->multiple && $fields['resource_id']){

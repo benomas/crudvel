@@ -26,12 +26,12 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     parent::__construct();
     $this->addAction('storeUpdate');
   }
-
+/*
   public function addedCvSearch(){
     return $this->selfPreBuilder('f')
       ->join('cat_files as cf', 'f.cat_file_id', '=', 'cf.id')
       ->selectRaw("CONCAT(cf.name, ' ',cf.resource, ' ',f.id)");
-  }
+  }*/
 
   public function addedCatFileMultiple(){
     return CatFile::invokePosfix($this->getModelClass(),'multiple');
