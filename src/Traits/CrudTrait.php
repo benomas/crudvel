@@ -580,12 +580,24 @@ trait CrudTrait {
       $label = in_array($this->getCurrentAction(),$this->getRowsActions())?
         $this->rowsLabelTrans():
         $this->rowLabelTrans();
-    return trans("crudvel.actions.".fixedSnake($this->getCurrentAction()).".success")." ".$label." ".trans("crudvel.actions_extra.common.correctly");
+    return trans("crudvel.actions.".cvSnakeCase($this->getCurrentAction()).".success")." ".$label." ".trans("crudvel.actions_extra.common.correctly");
     }
     return trans("crudvel.web.not_found");
   }
 
   public function owner(){
+    if($this->getUserModelCollectionInstance()->isRoot())
+      return true;
+    if($this->getUserModelCollectionInstance()->specialPermissions()->slug($this->getSlugPluralName().".general-owner")->count())
+      return true;
+    if($this->getUserModelCollectionInstance()->specialPermissions()->slug($this->getSlugPluralName().".particular-owner")->count())
+      return true;
+    if(!$this->getCurrentActionKey())
+      return true;
+    return $this->getModelBuilderInstance()->count();
+  }
+
+  public function ownerOld(){
     if($this->getUserModelCollectionInstance()->isRoot())
       return true;
     if($this->getUserModelCollectionInstance()->

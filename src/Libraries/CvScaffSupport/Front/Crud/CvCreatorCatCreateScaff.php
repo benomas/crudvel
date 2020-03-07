@@ -23,6 +23,6 @@ class CvCreatorCatCreateScaff extends \Crudvel\Libraries\CvScaffSupport\Front\Cv
 //[Stablishers]
 //[End Stablishers]
   protected function selfRepresentation(){
-    return fixedSlug(Str::plural($this->getResource())).'/CvCreate';
+    return cvSlugCase(Str::plural($this->getResource())).'/CvCreate';
   }
 }

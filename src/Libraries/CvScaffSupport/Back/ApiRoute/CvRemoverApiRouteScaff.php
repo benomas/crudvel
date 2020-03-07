@@ -23,7 +23,7 @@ class CvRemoverApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBa
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
         '\[["\']<slot>["\']\]',
-        fixedSlug(Str::plural($this->getResource()))
+        cvSlugCase(Str::plural($this->getResource()))
       )
     );
   }

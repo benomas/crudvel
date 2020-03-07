@@ -1,0 +1,9 @@
+<?php
+$crudvelWords = [
+  'singularToPlural'=>[
+
+  ],
+  'pluralToSingular'=>[
+
+  ],
+];

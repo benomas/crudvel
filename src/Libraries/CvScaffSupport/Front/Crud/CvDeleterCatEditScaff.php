@@ -22,6 +22,6 @@ class CvDeleterCatEditScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBa
 //[Stablishers]
 //[End Stablishers]
   protected function selfRepresentation(){
-    return fixedSlug(Str::plural($this->getResource())).'/CvEdit';
+    return cvSlugCase(Str::plural($this->getResource())).'/CvEdit';
   }
 }

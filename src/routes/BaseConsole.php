@@ -10,7 +10,7 @@ class BaseConsole{
   use \Crudvel\Traits\CvPatronTrait;
   private $workspace;
   public function __construct(){
-    $this->setWorkspace(fixedSlug(config('app.name')));
+    $this->setWorkspace(cvSlugCase(config('app.name')));
   }
 
   public function getWorkspace(){

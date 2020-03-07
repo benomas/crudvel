@@ -1,10 +1,15 @@
 <?php
 
 namespace Crudvel\Libraries\CvResource;
+
 use Illuminate\Support\Str;
+use Crudvel\Models\Scopes\OwnerScope;
+
 class CvResource
 {
   use \Crudvel\Traits\CvResourceTrait;
+  use \Crudvel\Libraries\Helpers\CasesTrait;
+
   protected $camelPluralName;
   protected $camelSingularName;
   protected $slugPluralName;
@@ -45,18 +50,20 @@ class CvResource
 
   public function __construct(){
   }
+
   public function boot($controllerInstance=null){
     if(!$controllerInstance)
       return;
     $params = $this->setControllerInstance($controllerInstance)
-    ->getControllerInstance()
-    ->setCvResourceInstance($this)
-    ->getRootInstance()
-    ->getCallActionParameters();
+      ->getControllerInstance()
+      ->setCvResourceInstance($this)
+      ->getRootInstance()
+      ->getCallActionParameters();
+
     return $this->assignUser()->fixCases()
-    ->setCurrentActionKey($params[$this->getSnakeSingularName()]??null)
-    ->setCurrentAction($this->getRootInstance()->getCallActionMethod())
-    ->loadModel()->loadRequest()->loadPaginator();
+      ->setCurrentActionKey($params[$this->getSnakeSingularName()]??null)
+      ->setCurrentAction($this->getRootInstance()->getCallActionMethod())
+      ->loadModel()->loadRequest()->loadPaginator();
   }
 
   public function startModelBuilderInstance(){
@@ -65,13 +72,12 @@ class CvResource
     return $this;
   }
 
-
   public function fixCases(){
     if($this->getRootInstance()){
-      $this->setSlugSingularName($this->fixedSlugSingularName());
-      $this->setSlugPluralName($this->fixedSlugPluralName());
-      $this->setSnakeSingularName($this->fixedSnakeSingularName());
-      $this->setSnakePluralName($this->fixedSnakePluralName());
+      $this->setSlugSingularName($this->cvSlugCaseSingularName());
+      $this->setSlugPluralName($this->cvSlugCasePluralName());
+      $this->setSnakeSingularName($this->cvSnakeCaseSingularName());
+      $this->setSnakePluralName($this->cvSnakeCasePluralName());
       $this->setCamelSingularName($this->fixedCamelSingularName());
       $this->setCamelPluralName($this->fixedCamelPluralName());
       $this->setStudlySingularName($this->fixedStudlySingularName());
@@ -80,62 +86,51 @@ class CvResource
     return $this;
   }
 
-  public function fixedSlugSingularName($name = null){
+  public function cvSlugCaseSingularName($name = null){
     if($name)
-      return Str::slug(Str::kebab($name));
+      return $this->cvCaseFixer('slug|kebab',$name);
     return $this->getRootInstance()->getSlugSingularName();
   }
 
-  public function fixedSlugPluralName($name = null){
+  public function cvSlugCasePluralName($name = null){
     if($name)
-      return Str::plural(Str::slug(Str::kebab($name)));
-    return Str::plural($this->getRootInstance()->getSlugSingularName());
+      return $this->cvCaseFixer('plural|slug|kebab',$name);
+    return $this->cvPluralCase(($this->getRootInstance()->getSlugSingularName()));
   }
 
   public function fixedCamelSingularName($name = null){
-    if($name)
-      return Str::camel($name);
-    return Str::camel($this->getRootInstance()->getSlugSingularName());
+    return $this->cvCamelCase($name??$this->getRootInstance()->getSlugSingularName());
   }
 
   public function fixedCamelPluralName($name = null){
-    if($name)
-      return Str::plural(Str::camel($name));
-    return Str::plural(Str::camel($this->getRootInstance()->getSlugSingularName()));
+    return $this->cvCaseFixer('plural|camel',$name??$this->getRootInstance()->getSlugSingularName());
   }
 
-  public function fixedSnakeSingularName($name = null){
-    if($name)
-      return Str::snake(Str::camel($name));
-    return Str::snake(Str::camel($this->getRootInstance()->getSlugSingularName()));
+  public function cvSnakeCaseSingularName($name = null){
+    return $this->cvCaseFixer('snake|camel',$name??$this->getRootInstance()->getSlugSingularName());
   }
 
-  public function fixedSnakePluralName($name = null){
-    if($name)
-      return Str::plural(Str::snake(Str::camel($name)));
-    return Str::plural(Str::snake(Str::camel($this->getRootInstance()->getSlugSingularName())));
+  public function cvSnakeCasePluralName($name = null){
+    return $this->cvCaseFixer('plural|snake|camel',$name??$this->getRootInstance()->getSlugSingularName());
   }
 
   public function fixedStudlySingularName($name = null){
-    if($name)
-      return Str::studly($name);
-    return Str::studly($this->getRootInstance()->getSlugSingularName());
+    return $this->cvStudlyCase($name??$this->getRootInstance()->getSlugSingularName());
   }
 
   public function fixedStudlyPluralName($name = null){
-    if($name)
-      return Str::plural(Str::studly($name));
-    return Str::plural(Str::studly($this->getRootInstance()->getSlugSingularName()));
+    return $this->cvCaseFixer('plural|studly',$name??$this->getRootInstance()->getSlugSingularName());
   }
 
   public function loadController($controller=null){
     if(!is_object($controller))
       return $this;
-    return $this->setControlleClass(get_class($controller))->setControlleBuilderInstance($controller);
+    return $this->setControllerClass(get_class($controller))->setControllerBuilderInstance($controller);
     if(!$controller || !class_exists($controller))
-      return $this->generateControlle();
-    return $this->setControlleClass($controller)->setControlleBuilderInstance($controller::noFilters());
+      return $this->generateController();
+    return $this->setControllerClass($controller)->setControllerBuilderInstance($controller::noFilters());
   }
+
   public function loadModel($model=null){
     if(is_object($model))
       return $this->setModelClass(get_class($model))->setModelBuilderInstance($model);
@@ -143,6 +138,7 @@ class CvResource
       return $this->generateModel();
     return $this->setModelClass($model)->setModelBuilderInstance($model::noFilters());
   }
+
   public function loadRequest($request=null){
     if(is_object($request))
       return $this->setRequestClass(get_class($request))->setRequestInstance($request);
@@ -150,6 +146,7 @@ class CvResource
       return $this->generateRequest();
     return $this->setRequestClass($request)->captureRequest();
   }
+
   public function loadPaginator($paginator=null){
     if(is_object($paginator))
       return $this->setPaginatorClass(get_class($paginator))->setPaginatorInstance($paginator);
@@ -161,6 +158,7 @@ class CvResource
     $paginatorClass = $this->getRootInstance()->getPaginator($paginatorMode['searchMode']??null);
     return $this->setPaginatorInstance(new $paginatorClass($this));
   }
+
   public function generateModel(){
     if(!($controller = $this->getRootInstance()))
       return $this;
@@ -175,6 +173,7 @@ class CvResource
     $this->setModelBuilderInstance($modelClassName::noFilters());
     return $this;
   }
+
   public function generateRequest(){
     if(!($controller = $this->getRootInstance()))
       return $this;
@@ -244,18 +243,31 @@ class CvResource
       $this->setRequestInstance($requestInstance);
     return $this;
   }
+
   public function captureRequestHack($requestInstance){
     if(!$this->getRequestInstance())
       $this->setRequestInstance($requestInstance);
     return $this;
   }
+
   public function assignUser(){
+    if ($this->getUserModelCollectionInstance())
+      return $this;
+
     if(!($user = \Auth::user()))
       return $this;
+
     $this->setUserModelBuilderInstance($this->getUserModelClass()::id($user->id));
-    $this->setUserModelCollectionInstance($this->getUserModelBuilderInstance()->first());
+
+    $this->setUserModelCollectionInstance(
+      $this->getUserModelBuilderInstance()
+        ->withoutGlobalScope(OwnerScope::class)
+        ->first()
+      );
+
     return $this;
   }
+
   public function fixActionResource(){
     $this->setActionResource($this->getSlugPluralName().".".Str::snake($this->getCurrentAction(),'-'));
     return $this;

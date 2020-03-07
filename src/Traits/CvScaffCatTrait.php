@@ -17,7 +17,7 @@ trait CvScaffCatTrait
 //[End Stablishers]
   public function unCat($resource=null){
     if($resource)
-      $resource = preg_replace('/(^cat-)(.+)/','$2',fixedSlug($resource));
+      $resource = preg_replace('/(^cat-)(.+)/','$2',cvSlugCase($resource));
     return $resource;
   }
   public function reCat($resource=null){

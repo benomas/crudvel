@@ -6,6 +6,7 @@ use Crudvel\Interfaces\CvCrudInterface;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Crudvel\Models\Scopes\OwnerScope;
 
 class BaseModel extends Model implements CvCrudInterface
 {
@@ -27,6 +28,18 @@ class BaseModel extends Model implements CvCrudInterface
     parent::__construct($attributes);
     $this->setCacheBoots();
     $this->injectCvResource();
+  }
+
+  /**
+   * The "booting" method of the model.
+   *
+   * @return void
+   */
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::addGlobalScope(new OwnerScope);
   }
 
   // [Relationships]

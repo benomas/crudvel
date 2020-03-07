@@ -206,7 +206,7 @@ class CvCreatorScaff extends \Crudvel\Libraries\CvScaffSupport\CvBaseCreatorScaf
     $scaffTree = json_decode(file_get_contents($this->getSource()),true);
     $scaffTree[$this->getParam('target_context')]
       [$this->getParam('target_mode')]
-      [fixedSlug(Str::singular($this->getParam('resource')))]
+      [cvSlugCase(Str::singular($this->getParam('resource')))]
       ['class']=$this->getNameSpace().
         '\Cv'.Str::studly(Str::singular($this->getParam('target_mode'))).
         Str::studly(Str::singular($this->getParam('resource'))).

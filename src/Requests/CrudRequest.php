@@ -136,7 +136,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
       }
       if (count($segments) > 1){
         $attribute          = $segments[count($segments)-1];
-        $currentLangSegment = Str::plural(fixedSlug($segments[count($segments)-2],'-'));
+        $currentLangSegment = Str::plural(cvSlugCase($segments[count($segments)-2],'-'));
         if (empty($currentLangs[$currentLangSegment]))
           $currentLangs[$currentLangSegment] = __("crudvel/".$currentLangSegment.".fields");
         $attributesLangs[$index] = $currentLangs[$currentLangSegment][$attribute] ?? '';
@@ -149,7 +149,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     if (!$segment)
       $fixedLangSegment = $this->getCurrentDinamicResource();
     else
-      $fixedLangSegment = Str::plural(fixedSlug($segment,'-'));
+      $fixedLangSegment = Str::plural(cvSlugCase($segment,'-'));
     $segment = $segment ?? $this->currentDepth;
 
     $this->fixedAttributes[$segment.$field]  = __("crudvel/".$fixedLangSegment.".fields.$field");
@@ -292,7 +292,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public static function mixRules ($action = 'relatedPostStoreRules',$localRules = [],$extraResources = []) {
     $moreRules = [];
     foreach ($extraResources as $index=>$value){
-      $segment = !is_numeric($index) ? "$value." : fixedSlug(Str::singular($value)).'.';
+      $segment = !is_numeric($index) ? "$value." : cvSlugCase(Str::singular($value)).'.';
       $moreRules[] = self::staFixDepth(Str::singular(Str::studly($segment))::{$action}(),$segment);
     }
     return array_merge($localRules,$moreRules);

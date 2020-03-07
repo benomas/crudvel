@@ -24,7 +24,7 @@ class CvRemoverCatApiRouteScaff extends \Crudvel\Libraries\CvScaffSupport\Back\C
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
         '\[["\']<slot>["\']\]',
-        fixedSlug(Str::plural($this->getResource()))
+        cvSlugCase(Str::plural($this->getResource()))
       )
     );
   }

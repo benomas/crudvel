@@ -7,6 +7,7 @@ class CvBaseScaff
 {
   use \Crudvel\Traits\CvPatronTrait;
   use \Crudvel\Traits\CvClosureCommandTrait;
+  use \Crudvel\Libraries\Helpers\CasesTrait;
   private $consoleInstance;
   private $resource;
   private $scaffParams;
@@ -83,12 +84,12 @@ class CvBaseScaff
   public function caseFixer($case=null,$value=null){
     $caseCallBacks = [
       'final'    => function($value){return $value;},
-      'singular' => function($value){return Str::singular($value);},
-      'plural'   => function($value){return Str::plural($value);},
-      'camel'    => function($value){return Str::camel($value);},
-      'snake'    => function($value){return fixedSnake($value);},
-      'slug'     => function($value){return fixedSlug($value);},
-      'studly'   => function($value){return Str::studly($value);},
+      'singular' => function($value){return $this->cvSingularCase($value);},
+      'plural'   => function($value){return $this->cvPluralCase($value);},
+      'camel'    => function($value){return $this->cvCamelCase($value);},
+      'snake'    => function($value){return $this->cvSnakeCase($value);},
+      'slug'     => function($value){return $this->cvSlugCase($value);},
+      'studly'   => function($value){return $this->cvStudlyCase($value);},
       'title'    => function($value){return Str::title($value);},
       'lower'    => function($value){return strtolower($value);},
       'upper'    => function($value){return strtoupper($value);},

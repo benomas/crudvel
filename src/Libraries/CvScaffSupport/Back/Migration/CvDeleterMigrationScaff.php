@@ -34,6 +34,6 @@ class CvDeleterMigrationScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
   }
 //[End Stablishers]
   protected function selfRepresentation(){
-    return fixedSnake(Str::plural($this->getResource()));
+    return cvSnakeCase(Str::plural($this->getResource()));
   }
 }

@@ -12,4 +12,5 @@ class CvHelper{
   use FileTrait;
   use FunctionTrait;
   use TerminalTrait;
+  use CasesTrait;
 }

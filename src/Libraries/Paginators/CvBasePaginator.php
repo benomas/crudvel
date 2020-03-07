@@ -243,7 +243,7 @@ class CvBasePaginator implements CvCrudInterface
 
     if(!$this->getPaginateData()){
       $keyed = $this->getModelBuilderInstance()->get()->keyBy(function ($item) {
-        return fixedSlug($item[$this->getRootInstance()->getSlugField()]);
+        return cvSlugCase($item[$this->getRootInstance()->getSlugField()]);
       });
       $this->setPaginateData($keyed->all());
     }

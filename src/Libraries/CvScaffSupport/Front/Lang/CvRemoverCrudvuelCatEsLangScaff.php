@@ -32,7 +32,7 @@ class CvRemoverCrudvuelCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\
       $this->scapedRegexMaker(
         'import\s+<slot>\s+from\s+\'\.\/crudvuel\/<slot>\'',
         Str::camel(Str::plural($this->getResource())),
-        fixedSlug(Str::plural($this->getResource()))
+        cvSlugCase(Str::plural($this->getResource()))
       )
     );
   }
@@ -41,7 +41,7 @@ class CvRemoverCrudvuelCatEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
         '\'<slot>\'\s*:\s*resourceMixer\(<slot>\)',
-        fixedSlug(Str::plural($this->getResource())),
+        cvSlugCase(Str::plural($this->getResource())),
         Str::camel(Str::plural($this->getResource()))
       )
     );

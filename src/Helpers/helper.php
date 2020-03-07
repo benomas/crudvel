@@ -178,6 +178,7 @@ if(!function_exists("capitalizeWithAccents")){
 		);
 	}
 }
+
 if(!function_exists("renameValidationKey")){
 	function renameValidationKey(&$rules, $oldKey,$newKey){
 		if(is_array($rules) && isset($rules[$oldKey]) && !isset($rules[$newKey])){
@@ -186,6 +187,7 @@ if(!function_exists("renameValidationKey")){
 		}
 	}
 }
+
 if(!function_exists("reloadFormValue")){
 	function reloadFormValue($inputName,$model=null,$columnName=null,$otherValue=null){
 		if($otherValue)
@@ -201,6 +203,7 @@ if(!function_exists("reloadFormValue")){
 		return "";
 	}
 }
+
 if(!function_exists("noEmptyArray")){
 	/**
 	 * Verifica si el parametro mandado es diferente de null, es un array, y tiene almenos un elemento
@@ -215,6 +218,7 @@ if(!function_exists("noEmptyArray")){
 		return $testArray && is_array($testArray) && count($testArray);
 	}
 }
+
 if(!function_exists("arrayIntersect")){
 	/**
 	 * Si los dos parametros pasados son noEmptyArrays, entonces
@@ -253,6 +257,7 @@ if(!function_exists("arrayIntersect")){
 		return $result;
 	}
 }
+
 if(!function_exists("concatToArray")){
 	/**
 	 * Concatena un prefijo a cada elemento del array
@@ -270,6 +275,7 @@ if(!function_exists("concatToArray")){
 		}
 	}
 }
+
 if(!function_exists("versionedAsset")){
 	/**
 	 * Genera la ruta para un asset, agregando su fecha de creacion, lo que permite controlar la forma como el navegador maneja el cache
@@ -284,6 +290,7 @@ if(!function_exists("versionedAsset")){
 		return asset($file)."?creation=".filemtime("../public/".$file);
 	}
 }
+
 if(!function_exists("trueCount")){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
@@ -303,6 +310,7 @@ if(!function_exists("trueCount")){
 		return $trues;
 	}
 }
+
 if(!function_exists("classTrans")){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
@@ -356,6 +364,7 @@ if(!function_exists("classTrans")){
 		return "";
 	}
 }
+
 if(!function_exists("instanceTrans")){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
@@ -401,11 +410,13 @@ if(!function_exists("instanceTrans")){
 		return $instance;
 	}
 }
+
 if(!function_exists("kageBunshinNoJutsu")){
 	function kageBunshinNoJutsu($instance){
 		return clone $instance;
 	}
 }
+
 if(!function_exists("actionAccess")){
 	/**
 	 * check user permission
@@ -450,6 +461,7 @@ if(!function_exists("actionAccess")){
 		return false;
 	}
 }
+
 if(!function_exists("specialAccess")){
 	/**
 	 * check user permission
@@ -471,23 +483,27 @@ if(!function_exists("specialAccess")){
 		return kageBunshinNoJutsu($userInstace)->specialPermission($special)->count()>0;
 	}
 }
+
 if(!function_exists("errorClass")){
 	function errorClass($errors,$cField){
 		return $errors->first($cField)?'has-error':'';
 	}
 }
+
 if(!function_exists("validateGetActionResource")){
 	function validateGetActionResource($action,$only=[],$excludes=[]){
 		return ( empty($only["get"]) || !count($only["get"]) ||  in_array($action,$only["get"])) &&
 			(empty($excludes["get"]) || !in_array($action,$excludes["get"]));
 	}
 }
+
 if(!function_exists("validatePostActionResource")){
 	function validatePostActionResource($action,$only=[],$excludes=[]){
 		return ( empty($only["post"]) || !count($only["post"]) ||  in_array($action,$only["post"])) &&
 			(empty($excludes["post"]) || !in_array($action,$excludes["post"]));
 	}
 }
+
 if(!function_exists("crudvelResource")){
 	function crudvelResource($resource,$controller=null,$conditionals=[]){
 		if(empty($resource))
@@ -524,6 +540,7 @@ if(!function_exists("crudvelResource")){
     }
 	}
 }
+
 if(!function_exists("crudvelResources")){
 	function crudvelResources($resources){
 		foreach ($resources as $resource) {
@@ -531,6 +548,7 @@ if(!function_exists("crudvelResources")){
 		}
 	}
 }
+
 if(!function_exists("apiCrudvelResource")){
 	function apiCrudvelResource($resource,$controller=null,$conditionals=[],$translator=[]){
 		if(empty($resource))
@@ -605,6 +623,7 @@ if(!function_exists("apiCrudvelResource")){
     }
 	}
 }
+
 if(!function_exists("apiCrudvelResources")){
 	function apiCrudvelResources($resources){
 		foreach ($resources as $resource) {
@@ -612,12 +631,14 @@ if(!function_exists("apiCrudvelResources")){
 		}
 	}
 }
+
 if(!function_exists("resourceByForeingKey")){
 	function resourceByForeingKey($foreingKey){
 		$foreingKey = str_replace("_id","",$foreingKey);
 		return Illuminate\Support\Str::slug(str_plural($foreingKey));
 	}
 }
+
 if(!function_exists("propertyByPosition")){
 	function propertyByPosition($object,$position)
 	{
@@ -641,6 +662,7 @@ if(!function_exists("fixedIsInt")){
     return strval($intTest) === strval(intval($intTest));
 	}
 }
+
 if(!function_exists("deletePathContent")){
 	function deletePathContent($path,$subFolder=false) {
     foreach (($files = array_diff(scandir($path), array('.','..'))) as $file)
@@ -649,6 +671,7 @@ if(!function_exists("deletePathContent")){
       return rmdir($path);
 	}
 }
+
 if(!function_exists("pushCrudvuelActions")){
   function pushCrudvuelActions($resource=null,&$targetArray,$actions=null,$excludes=[]) {
     if(!$resource)
@@ -665,6 +688,7 @@ if(!function_exists("pushCrudvuelActions")){
         $targetArray[] = "$resource.$action";
   }
 }
+
 if(!function_exists("recursiveSqlSrvDisableForeing")){
 	function recursiveSqlSrvDisableForeing() {
     if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
@@ -674,6 +698,7 @@ if(!function_exists("recursiveSqlSrvDisableForeing")){
       }
   }
 }
+
 if(!function_exists("recursiveSqlSrvEnableForeing")){
 	function recursiveSqlSrvEnableForeing() {
     if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
@@ -682,6 +707,7 @@ if(!function_exists("recursiveSqlSrvEnableForeing")){
       }
   }
 }
+
 if(!function_exists("disableForeignKeyConstraints")){
 	function disableForeignKeyConstraints($connection=null) {
     if(!config('cv.project_prevent_foreings_conflict') )
@@ -710,6 +736,7 @@ if(!function_exists("disableForeignKeyConstraints")){
     }
 	}
 }
+
 if(!function_exists("enableForeignKeyConstraints")){
 	function enableForeignKeyConstraints($connection=null) {
     if(!config('cv.project_prevent_foreings_conflict') )
@@ -737,6 +764,7 @@ if(!function_exists("enableForeignKeyConstraints")){
     }
 	}
 }
+
 if(!function_exists("columnList")){
 	function columnList($connectionName='sqlsrv',$table) {
     //return 'database.connections.sqlsrv.driver';
@@ -835,6 +863,7 @@ if(!function_exists("sqliteColumnList")){
     return $response;
 	}
 }
+
 if(!function_exists("mysqlColumnList")){
 	function mysqlColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
@@ -842,6 +871,7 @@ if(!function_exists("mysqlColumnList")){
     return null;
 	}
 }
+
 if(!function_exists("pgsqlColumnList")){
 	function pgsqlColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
@@ -849,6 +879,7 @@ if(!function_exists("pgsqlColumnList")){
     return null;
 	}
 }
+
 if(!function_exists("sqlsrvColumnList")){
 	function sqlsrvColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
@@ -891,6 +922,7 @@ if(!function_exists("sqlsrvColumnList")){
     return $response;
 	}
 }
+
 if(!function_exists("sqlsrvDataTypeTraductor")){
 	function sqlsrvDataTypeTraductor($dataType) {
     switch(strtolower($dataType)){
@@ -937,6 +969,7 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
     return '';
   }
 }
+
 if(!function_exists("sqliteDataTypeTraductor")){
 	function sqliteDataTypeTraductor($dataType) {
     switch(strtolower($dataType)){
@@ -986,6 +1019,7 @@ if(!function_exists("sqliteDataTypeTraductor")){
     return '';
   }
 }
+
 if(!function_exists("arrayTranspose")){
 	function arrayTranspose($sourceArray) {
     return array_map(null, ...$sourceArray);
@@ -1083,33 +1117,43 @@ if(!function_exists("uCProp")){
 if(!function_exists('cvConsoler')){
   function cvConsoler($message){return CvHelper::cvConsoler($message);}
 }
+
 if(!function_exists('cvBlackTC')){
   function cvBlackTC($message){return CvHelper::blackTC($message);}
 }
+
 if(!function_exists('cvRedTC')){
   function cvRedTC($message){return CvHelper::redTC($message);}
 }
+
 if(!function_exists('cvGreenTC')){
   function cvGreenTC($message){return CvHelper::greenTC($message);}
 }
+
 if(!function_exists('cvBrownTC')){
   function cvBrownTC($message){return CvHelper::brownTC($message);}
 }
+
 if(!function_exists('cvBlueTC')){
   function cvBlueTC($message){return CvHelper::blueTC($message);}
 }
+
 if(!function_exists('cvPurpleTC')){
   function cvPurpleTC($message){return CvHelper::purpleTC($message);}
 }
+
 if(!function_exists('cvCyanTC')){
   function cvCyanTC($message){return CvHelper::cyanTC($message);}
 }
+
 if(!function_exists('cvWhiteTC')){
   function cvWhiteTC($message){return CvHelper::whiteTC($message);}
 }
+
 if(!function_exists("getCheckPoint")){
   function getCheckPoint(){return CvHelper::getCheckPoint();}
 }
+
 if(!function_exists("getCheckPoint")){
   function getCheckPoint(){return CvHelper::getCheckPoint();}
 }
@@ -1117,51 +1161,93 @@ if(!function_exists("getCheckPoint")){
 if(!function_exists('cvNegative')){
   function cvNegative($message){return CvHelper::redTC($message);}
 }
+
 if(!function_exists('cvPositive')){
   function cvPositive($message){return CvHelper::greenTC($message);}
 }
+
 if(!function_exists('cvInfo')){
   function cvInfo($message){return CvHelper::blueTC($message);}
 }
+
 if(!function_exists('cvWarning')){
   function cvWarning($message){return CvHelper::brownTC($message);}
 }
+
 if(!function_exists('cvPrimary')){
   function cvPrimary($message){return CvHelper::whiteTC($message);}
 }
+
 if(!function_exists('cvSecondary')){
   function cvSecondary($message){return CvHelper::cyanTC($message);}
 }
 
-if(!function_exists("fixedSlug")){
-  function fixedSlug($identifier = ''){
-    return \Illuminate\Support\Str::slug(\Illuminate\Support\Str::kebab($identifier));
-  }
-}
-
-if(!function_exists("fixedSnake")){
-  function fixedSnake($identifier = ''){
-    return \Illuminate\Support\Str::snake(\Illuminate\Support\Str::camel($identifier));
-  }
-}
 if(!function_exists("ptPermutations")){
   function ptPermutations(...$params){return CvHelper::ptPermutations(...$params);}
 }
+
 if(!function_exists("varexport")){
   function varexport(...$params){return CvHelper::varexport(...$params);}
 }
+
 if(!function_exists("fileBaseName")){
   function fileBaseName(...$params){return CvHelper::fileBaseName(...$params);}
 }
+
 if(!function_exists("getClassFromFile")){
   function getClassFromFile(...$params){return CvHelper::getClassFromFile(...$params);}
 }
+
 if(!function_exists("composerDump")){
   function composerDump(...$params){return CvHelper::composerDump(...$params);}
 }
+
 if(!function_exists("isAssociativeArray")){
   function isAssociativeArray(...$params){return CvHelper::isAssociativeArray(...$params);}
 }
+
 if(!function_exists("getSomeKeys")){
   function getSomeKeys(...$params){return CvHelper::getSomeKeys(...$params);}
+}
+
+//to be deprecated
+if(!function_exists("fixedSlug")){
+  function fixedSlug(...$params){return CvHelper::cvSlugCase(...$params);}
+}
+
+//to be deprecated
+if(!function_exists("fixedSnake")){
+  function fixedSnake(...$params){return CvHelper::cvSnakeCase(...$params);}
+}
+
+if(!function_exists("cvCamelCase")){
+  function cvCamelCase(...$params){return CvHelper::cvCamelCase(...$params);}
+}
+
+if(!function_exists("cvSlugCase")){
+  function cvSlugCase(...$params){return CvHelper::cvSlugCase(...$params);}
+}
+
+if(!function_exists("cvSnakeCase")){
+  function cvSnakeCase(...$params){return CvHelper::cvSnakeCase(...$params);}
+}
+
+if(!function_exists("cvKebabCase")){
+  function cvKebabCase(...$params){return CvHelper::cvKebabCase(...$params);}
+}
+
+if(!function_exists("cvStudlyCase")){
+  function cvStudlyCase(...$params){return CvHelper::cvStudlyCase(...$params);}
+}
+
+if(!function_exists("cvSingularCase")){
+  function cvSingularCase(...$params){return CvHelper::cvSingularCase(...$params);}
+}
+
+if(!function_exists("cvPluralCase")){
+  function cvPluralCase(...$params){return CvHelper::cvPluralCase(...$params);}
+}
+
+if(!function_exists("cvCaseFixer")){
+  function cvCaseFixer(...$params){return CvHelper::cvCaseFixer(...$params);}
 }

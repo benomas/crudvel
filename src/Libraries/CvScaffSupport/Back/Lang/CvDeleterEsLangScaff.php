@@ -20,6 +20,6 @@ class CvDeleterEsLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
 //[Stablishers]
 //[End Stablishers]
   protected function selfRepresentation(){
-    return fixedSlug(Str::plural($this->getResource()));
+    return cvSlugCase(Str::plural($this->getResource()));
   }
 }
