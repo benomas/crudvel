@@ -207,7 +207,6 @@ class CvBasePaginator implements CvCrudInterface
 
     $this->tempQuery();
     //if it is not a filter quary defined
-
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
     $this->setPaginateCount($this->getModelBuilderInstance()->count());

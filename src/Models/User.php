@@ -4,6 +4,8 @@ use Carbon\Carbon;
 
 class User extends \Customs\Crudvel\Models\BaseModel{
 
+  use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
   protected $fillable = [
     "active",
     "email",
@@ -22,53 +24,62 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
   }
+
 // [Relationships]
   public function roles(){
-    return $this->belongsToMany("App\Models\Role", "role_user");
+    return $this->belongsToMany("App\Models\Role");
+  }
+
+  public function permissions(){
+    return $this->hasManyDeep('App\Models\Permission', ['role_user', 'App\Models\Role', 'permission_role']);
+  }
+
+  public function rolesroles()
+  {/*
+    return $this->hasManyDeep(
+      'App\Models\Role',
+      ['role_user as aaa', 'App\Models\Role as bbb', 'role_role as ccc']
+    );*/
+    return $this->manyToManyToMany("roles","roles","App\Models\Role");
   }
 // [End Relationships]
 
 //Non standar Relationships
-  public function rolesPermissions()
-  {
+  //To be deprecated
+  public function rolesPermissions(){
     return $this->manyToManyToMany("roles","permissions","App\Models\Permission");
-  }
-
-  public function rolesroles()
-  {
-    return $this->manyToManyToMany("roles","roles","App\Models\Role");
   }
 
   public function sectionPermissions()
   {
-    return $this->rolesPermissions()->secctionPermissions();
+    return $this->permissions()->secctionPermissions();
   }
 
   public function resourcePermissions()
   {
-    return $this->rolesPermissions()->resourcePermissions();
+    return $this->permissions()->resourcePermissions();
   }
 
   public function actionePermissions()
   {
-    return $this->rolesPermissions()->actionePermissions();
+    return $this->permissions()->actionePermissions();
   }
 
   public function fieldPermissions()
   {
-    return $this->rolesPermissions()->fieldPermissions();
+    return $this->permissions()->fieldPermissions();
   }
 
   public function specialPermissions()
   {
-    return $this->rolesPermissions()->specialPermissions();
+    return $this->permissions()->specialPermissions();
   }
 //End Non standar Relationships
 
 // [Scopes]
   public function scopeHidden($query){
     $query->whereHas("roles",function($query){
-      $query->whereNotIn("roles.slug",["root"]);
+      $query->whereNotIn("slug",["root"]);
     })->orWhere(function($query){
       $query->doesntHave("roles");
     });
@@ -145,7 +156,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeParticularOwner($query,$userId){
-    $query->where($this->getTable().".id", $userId);
+    //$query->where($this->getTable().".id", $userId);
   }
 // [End Scopes]
 

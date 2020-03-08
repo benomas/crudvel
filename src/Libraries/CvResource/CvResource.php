@@ -3,7 +3,6 @@
 namespace Crudvel\Libraries\CvResource;
 
 use Illuminate\Support\Str;
-use Crudvel\Models\Scopes\OwnerScope;
 
 class CvResource
 {
@@ -132,11 +131,14 @@ class CvResource
   }
 
   public function loadModel($model=null){
-    if(is_object($model))
+    if(is_object($model)){
+      $model->cvOwner();
       return $this->setModelClass(get_class($model))->setModelBuilderInstance($model);
+    }
     if(!$model || !class_exists($model))
       return $this->generateModel();
-    return $this->setModelClass($model)->setModelBuilderInstance($model::noFilters());
+
+    return $this->setModelClass($model)->setModelBuilderInstance($model::cvOwner());
   }
 
   public function loadRequest($request=null){
@@ -170,7 +172,7 @@ class CvResource
       $modelClassName = 'App\Models\\'.$studlySingularName;
       $this->setModelClass($modelClassName);
     }
-    $this->setModelBuilderInstance($modelClassName::noFilters());
+    $this->setModelBuilderInstance($modelClassName::cvOwner());
     return $this;
   }
 
@@ -259,11 +261,7 @@ class CvResource
 
     $this->setUserModelBuilderInstance($this->getUserModelClass()::id($user->id));
 
-    $this->setUserModelCollectionInstance(
-      $this->getUserModelBuilderInstance()
-        ->withoutGlobalScope(OwnerScope::class)
-        ->first()
-      );
+    $this->setUserModelCollectionInstance($this->getUserModelBuilderInstance()->first());
 
     return $this;
   }

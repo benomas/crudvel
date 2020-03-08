@@ -6,13 +6,13 @@ use Crudvel\Interfaces\CvCrudInterface;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Crudvel\Models\Scopes\OwnerScope;
 
 class BaseModel extends Model implements CvCrudInterface
 {
   use \Crudvel\Traits\CrudTrait;
   use \Crudvel\Traits\CacheTrait;
   use \Crudvel\Traits\CvPatronTrait;
+  use \Crudvel\Libraries\Helpers\CasesTrait;
 
   protected $slugSingularName;
   protected $cvResourceInstance;
@@ -28,18 +28,6 @@ class BaseModel extends Model implements CvCrudInterface
     parent::__construct($attributes);
     $this->setCacheBoots();
     $this->injectCvResource();
-  }
-
-  /**
-   * The "booting" method of the model.
-   *
-   * @return void
-   */
-  protected static function boot()
-  {
-    parent::boot();
-
-    static::addGlobalScope(new OwnerScope);
   }
 
   // [Relationships]
@@ -300,6 +288,24 @@ class BaseModel extends Model implements CvCrudInterface
       ->limit(1)]);
   }
 
+  public function scopeCvOwner($query){
+    $user = \CvResource::assignUser()->getUserModelCollectionInstance();
+
+    if(!$user || $user->isRoot())
+      return;
+
+    $resource = cvCaseFixer('slug|plural',class_basename($this));
+    $ownerPermissions = $user->permissions()->specialPermissions();
+
+    if(kageBunshinNoJutsu($ownerPermissions)->slug("$resource.general-owner")->count())
+      return $query->generalOwner($user);
+
+    if($ownerPermissions->slug("$resource.particular-owner")->count())
+      return $query->particularOwner($user->id);
+
+    $query->nullFilter();
+  }
+
   // [End Scopes]
 
   // [Others]
@@ -319,6 +325,7 @@ class BaseModel extends Model implements CvCrudInterface
     return $this->schema;
   }
 
+  //to be deprecated
   public function manyToManyToMany($firstLevelRelation, $secondLevelRelation, $secondLevelModel)
   {
     if (!is_callable(array($secondLevelModel, "nullFilter")))
@@ -326,7 +333,6 @@ class BaseModel extends Model implements CvCrudInterface
 
     if (!method_exists($this, $firstLevelRelation))
       return null;
-
     $firstLevelRelationInstace = $this->{$firstLevelRelation};
     if (!$firstLevelRelationInstace)
       return $secondLevelModel::nullFilter();

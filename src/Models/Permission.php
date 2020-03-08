@@ -15,14 +15,20 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
   }
+
 // [Relationships]
   public function roles(){
-    return $this->belongsToMany("Crudvel\Models\Role", "permission_role");
+    return $this->belongsToMany("Crudvel\Models\Role");
   }
 
   public function catPermissionType(){
     return $this->belongsTo("Crudvel\Models\CatPermissionType");
   }
+
+  public function users(){
+    return $this->hasManyDeep('App\Models\User', ['permission_role', 'App\Models\Role', 'role_user']);
+  }
+
 // [End Relationships]
 
 // [Transformers]
@@ -99,12 +105,12 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
     $this->scopeParticularOwner($query,$userId);
   }
 
-  public function scopeParticularOwner($query,$userId){
+  public function scopeParticularOwner($query,$userId){/*
     $query->whereHas('roles',function($query) use($userId) {
       $query->whereHas('users',function($query) use($userId) {
         $query->particularOwner($userId);
       });
-    });
+    });*/
   }
 // [End Scopes]
 

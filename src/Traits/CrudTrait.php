@@ -13,26 +13,32 @@ trait CrudTrait {
   public function getCvResourceInstance(){
     return $this->cvResourceInstance??null;
   }
+
   public function getCvResourceInstanceMethod($method=null){
     return $this->cvResourceInstance?
       $this->cvResourceInstance->{$method}():
       $this->getCvResourceClass()::{$method}();
   }
+
   public function setCvResourceInstanceMethod($method=null,...$params){
     $this->cvResourceInstance?
       $this->cvResourceInstance->{$method}(...$params):
       $this->getCvResourceClass()::{$method}(...$params);
     return $this;
   }
+
   public function getCamelPluralName(){
-    return $this->getCvResourceInstanceMethod('getCamelPluralName');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getCamelSingularName(){
-    return $this->getCvResourceInstanceMethod('getCamelSingularName');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getSlugPluralName(){
-    return $this->getCvResourceInstanceMethod('getSlugPluralName');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   //this is the most important case, because all the resource name strategy depends on it
   public function getSlugSingularName(){
     if(!empty($this->getCvResourceInstance()) && ($slugSingularName=$this->getCvResourceInstance()->getSlugSingularName()))
@@ -41,67 +47,87 @@ trait CrudTrait {
       $this->slugSingularName:
       \Str::snake(str_replace('Controller','',class_basename($this)),'-');
   }
+
   public function getSnakePluralName(){
-    return $this->getCvResourceInstanceMethod('getCvResourceInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getSnakeSingularName(){
-    return $this->getCvResourceInstanceMethod('getSnakeSingularName');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getStudlyPluralName(){
-    return $this->getCvResourceInstanceMethod('getStudlyPluralName');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getStudlySingularName(){
-    return $this->getCvResourceInstanceMethod('getStudlySingularName');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
   //-----------
   public function getControllerClass(){
-    return $this->getCvResourceInstanceMethod('getControllerClass');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getControllerInstance(){
-    return $this->getCvResourceInstanceMethod('getControllerInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getModelClass(){
-    return $this->getCvResourceInstanceMethod('getModelClass');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getModelBuilderInstance(){
-    return $this->getCvResourceInstanceMethod('getModelBuilderInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getModelCollectionInstance(){
-    return $this->getCvResourceInstanceMethod('getModelCollectionInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getMainTable(){
     return $this->getModelClass()::cvIam()->getTable();
   }
+
   public function getModelReference(){
     return $this->getModelClass()::cvIam();
   }
+
   public function getRequestClass(){
-    return $this->getCvResourceInstanceMethod('getRequestClass');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getRequestInstance(){
-    return $this->getCvResourceInstanceMethod('getRequestInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getUserModelClass(){
-    return $this->getCvResourceInstanceMethod('getUserModelClass');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getUserModelBuilderInstance(){
-    return $this->getCvResourceInstanceMethod('getUserModelBuilderInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getUserModelCollectionInstance(){
-    return $this->getCvResourceInstanceMethod('getUserModelCollectionInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getPermissionModelClass(){
-    return $this->getCvResourceInstanceMethod('getPermissionModelClass');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getPaginatorClass(){
-    return $this->getCvResourceInstanceMethod('getPaginatorClass');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getPaginatorInstance(){
-    return $this->getCvResourceInstanceMethod('getPaginatorInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getRootInstance(){
-    return $this->getCvResourceInstanceMethod('getRootInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getCvResourceClass(){
     return $this->getCvResourceInstance() ?
       $this->getCvResourceInstance()->getRootInstance()->cvResourceClass():
@@ -109,118 +135,151 @@ trait CrudTrait {
   }
   //-----------
   public function getRows(){
-    return $this->getCvResourceInstanceMethod('getRows');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getRow(){
-    return $this->getCvResourceInstanceMethod('getRow');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getCurrentAction(){
-    return $this->getCvResourceInstanceMethod('getCurrentAction');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getCurrentActionKey(){
-    return $this->getCvResourceInstanceMethod('getCurrentActionKey');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getActionResource(){
-    return $this->getCvResourceInstanceMethod('getActionResource');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getFields(){
-    return $this->getCvResourceInstanceMethod('getFields');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getPaginateFields(){
-    return $this->getCvResourceInstanceMethod('getPaginateFields');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getLangName(){
-    return $this->getCvResourceInstanceMethod('getLangName');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
   //-----------
   public function getActions(){
-    return $this->getCvResourceInstanceMethod('getActions');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getViewActions(){
-    return $this->getCvResourceInstanceMethod('getViewActions');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getRowActions(){
-    return $this->getCvResourceInstanceMethod('getRowActions');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getRowsActions(){
-    return $this->getCvResourceInstanceMethod('getRowsActions');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getSkipModelValidation(){
-    return $this->getCvResourceInstanceMethod('getSkipModelValidation');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getCallActionMethod(){
-    return $this->getCvResourceInstanceMethod('getCallActionMethod');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getCallActionParameters(){
-    return $this->getCvResourceInstanceMethod('getCallActionParameters');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getFlowControl(){
-    return $this->getCvResourceInstanceMethod('getFlowControl');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
   public function getPaginated(){
-    return $this->getCvResourceInstanceMethod('getPaginated');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
   //Getters end
 
   //Setters start
   public function setCamelPluralName($camelPluralName=null){
-    return $this->setCvResourceInstanceMethod('setCamelPluralName',$camelPluralName);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$camelPluralName);
   }
+
   public function setCamelSingularName($camelSingularName=null){
-    return $this->setCvResourceInstanceMethod('setCamelSingularName',$camelSingularName);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$camelSingularName);
   }
+
   public function setSlugPluralName($slugPluralName=null){
-    return $this->setCvResourceInstanceMethod('setSlugPluralName',$slugPluralName);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$slugPluralName);
   }
+
   public function setSlugSingularName($slugSingularName=null){
-    return $this->setCvResourceInstanceMethod('setSlugSingularName',$slugSingularName);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$slugSingularName);
   }
+
   public function setSnakePluralName($snakePluralName=null){
-    return $this->setCvResourceInstanceMethod('setSnakePluralName',$snakePluralName);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$snakePluralName);
   }
+
   public function setSnakeSingularName($snakeSingularName=null){
-    return $this->setCvResourceInstanceMethod('setSnakeSingularName',$snakeSingularName);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$snakeSingularName);
   }
+
   public function setStudlyPluralName($studlyPluralName=null){
-    return $this->setCvResourceInstanceMethod('setStudlyPluralName',$studlyPluralName);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$studlyPluralName);
   }
+
   public function setStudlySingularName($studlySingularName=null){
-    return $this->setCvResourceInstanceMethod('setStudlySingularName',$studlySingularName);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$studlySingularName);
   }
   //-----------
   public function setCvResourceInstance($cvResourceInstance=null){
     return $this->cvResourceInstance=$cvResourceInstance??null;
   }
+
   public function setControllerClass($controllerClass=null){
-    return $this->setCvResourceInstanceMethod('setControllerClass',$controllerClass);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$controllerClass);
   }
+
   public function setControllerInstance($controllerInstance=null){
-    return $this->setCvResourceInstanceMethod('setControllerInstance',$controllerInstance);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$controllerInstance);
   }
+
   public function setModelClass($modelClass=null){
-    return $this->setCvResourceInstanceMethod('setModelClass',$modelClass);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$modelClass);
   }
+
   public function setModelBuilderInstance($modelBuilderInstance=null){
-    return $this->setCvResourceInstanceMethod('setModelBuilderInstance',$modelBuilderInstance);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$modelBuilderInstance);
   }
+
   public function setModelCollectionInstance($modelCollectionInstance=null){
-    return $this->setCvResourceInstanceMethod('setModelCollectionInstance',$modelCollectionInstance);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$modelCollectionInstance);
   }
+
   public function setRequestClass($requestClass=null){
-    return $this->setCvResourceInstanceMethod('setRequestClass',$requestClass);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$requestClass);
   }
+
   public function setRequestInstance($requestInstance=null){
-    return $this->setCvResourceInstanceMethod('setRequestInstance',$requestInstance);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$requestInstance);
   }
+
   public function setUserModelClass($userModelClass=null){
-    return $this->setCvResourceInstanceMethod('setUserModelClass',$userModelClass);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$userModelClass);
   }
+
   public function setUserModelBuilderInstance($userModelBuilderInstance=null){
-    return $this->setCvResourceInstanceMethod('setUserModelBuilderInstance',$userModelBuilderInstance);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$userModelBuilderInstance);
   }
+
   public function setUserModelCollectionInstance($userModelCollectionInstance=null){
-    return $this->setCvResourceInstanceMethod('setUserModelCollectionInstance',$userModelCollectionInstance);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$userModelCollectionInstance);
   }
+
   public function setPermissionModelClass($permissionModelClass=null){
     if($this->cvResourceInstance)
       $this->cvResourceInstance->setPermissionModelClass($permissionModelClass);
@@ -228,36 +287,45 @@ trait CrudTrait {
       $this->getCvResourceClass()::setPermissionModelClass($this);
     return $this;
   }
+
   public function setPaginatorClass($paginatorClass=null){
-    return $this->setCvResourceInstanceMethod('setPaginatorClass',$paginatorClass);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$paginatorClass);
   }
+
   public function setPaginatorInstance($paginatorInstance=null){
-    return $this->setCvResourceInstanceMethod('setPaginatorInstance',$paginatorInstance);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$paginatorInstance);
   }
+
   public function setRootInstance($rootInstance=null){
-    return $this->setCvResourceInstanceMethod('setRootInstance',$rootInstance);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$rootInstance);
   }
   //-----------
   public function setRows($rows=null){
-    return $this->setCvResourceInstanceMethod('setRows',$rows);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$rows);
   }
+
   public function setRow($row=null){
-    return $this->setCvResourceInstanceMethod('setRow',$row);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$row);
   }
+
   public function setCurrentAction($currentAction=null){
-    return $this->setCvResourceInstanceMethod('setCurrentAction',$currentAction);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$currentAction);
   }
+
   public function setCurrentActionKey($currentActionKey=null){
-    return $this->setCvResourceInstanceMethod('setCurrentActionKey',$currentActionKey);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$currentActionKey);
   }
+
   public function setActionResource($actionResource=null){
-    return $this->setCvResourceInstanceMethod('setActionResource',$actionResource);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$actionResource);
   }
+
   public function setFields($fields=null){
-    return $this->setCvResourceInstanceMethod('setFields',$fields);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$fields);
   }
+
   public function setPaginateFields($paginate=null){
-    return $this->setCvResourceInstanceMethod('setPaginateFields',$paginate);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$paginate);
   }
   //consider to include and interface to ensure CvResource requiriments
   public function setCvResource($cvResourceInstance){
@@ -265,47 +333,57 @@ trait CrudTrait {
   }
   //-----------
   public function setActions($actions=null){
-    return $this->setCvResourceInstanceMethod('setActions',$actions);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$actions);
   }
+
   public function setViewActions($viewActions=null){
-    return $this->setCvResourceInstanceMethod('setViewActions',$viewActions);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$viewActions);
   }
+
   public function setRowActions($rowActions=null){
-    return $this->setCvResourceInstanceMethod('setRowActions',$rowActions);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$rowActions);
   }
+
   public function setRowsActions($rowsActions=null){
-    return $this->setCvResourceInstanceMethod('setRowsActions',$rowsActions);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$rowsActions);
   }
+
   public function setSkipModelValidation($skipModelValidation=null){
-    return $this->setCvResourceInstanceMethod('setSkipModelValidation',$skipModelValidation);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$skipModelValidation);
   }
+
   public function setCallActionMethod($callActionMethod=null){
-    return $this->setCvResourceInstanceMethod('setSkipModelValidation',$callActionMethod);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$callActionMethod);
   }
+
   public function setCallActionParameters($callActionParameters=null){
-    return $this->setCvResourceInstanceMethod('setCallActionParameters',$callActionParameters);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$callActionParameters);
   }
+
   public function setFlowControl($flowControl=null){
-    return $this->setCvResourceInstanceMethod('setFlowControl',$flowControl);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$flowControl);
   }
+
   public function setPaginated($paginated=null){
-    return $this->setCvResourceInstanceMethod('setPaginated',$paginated);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$paginated);
   }
   //Setters end
 //-----
   public function injectCvResource(){
     return $this->setCvResourceInstance($this->getCvResourceClass()::getCvResourceInstance());
   }
+
   public function fixActionResource(){
-    $this->getCvResourceInstanceMethod('fixActionResource');
+    $this->getCvResourceInstanceMethod(__FUNCTION__);
     return $this;
   }
+
   public function specialAccess(){
-    return $this->getCvResourceInstanceMethod('specialAccess');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
 
   public function actionAccess(){
-    return $this->getCvResourceInstanceMethod('actionAccess');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
 
   public function autoSetPropertys(...$propertyRewriter){
@@ -315,6 +393,7 @@ trait CrudTrait {
           if(property_exists ( $this , $key))
             $this->{$key} = $value;
   }
+
   public function modelInstanciator($new=false){
     $model = $this->getModelClass();
     if(!class_exists($model))
@@ -325,7 +404,7 @@ trait CrudTrait {
   }
 
   public function fixFlowControl(){
-    return $this->getCvResourceInstanceMethod('fixFlowControl');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
 
   public function loadFields(){
@@ -335,7 +414,7 @@ trait CrudTrait {
   }
 
   public function generateModelCollectionInstance(){
-    return $this->getCvResourceInstanceMethod('generateModelCollectionInstance');
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
 
   public function addField($field=null,$value=null){
@@ -343,17 +422,21 @@ trait CrudTrait {
       $this->getCvResourceInstance()->addField($field,$value);
     return $this;
   }
+
   public function addAction(...$action){
-    return $this->setCvResourceInstanceMethod('addAction',...$action);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__.$action);
   }
+
   public function addViewAction(...$viewAction){
-    return $this->setCvResourceInstanceMethod('addViewAction',...$viewAction);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__.$viewAction);
   }
+
   public function addRowAction(...$rowAction){
-    return $this->setCvResourceInstanceMethod('addRowAction',...$rowAction);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__.$rowAction);
   }
+
   public function addRowsAction(...$rowsAction){
-    return $this->setCvResourceInstanceMethod('addRowsAction',...$rowsAction);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__.$rowsAction);
   }
 
   public function removeField($field=null){
@@ -363,19 +446,19 @@ trait CrudTrait {
   }
 
   public function removeAction($action=null){
-    return $this->setCvResourceInstanceMethod('removeAction',$action);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$action);
   }
 
   public function removeViewAction($viewAction=null){
-    return $this->setCvResourceInstanceMethod('removeViewAction',$viewAction);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$viewAction);
   }
 
   public function removeRowAction($rowAction=null){
-    return $this->setCvResourceInstanceMethod('removeRowAction',$rowAction);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$rowAction);
   }
 
   public function removeRowsAction($rowsAction=null){
-    return $this->setCvResourceInstanceMethod('removeRowsAction',$rowsAction);
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$rowsAction);
   }
 
   public function clearFields(){

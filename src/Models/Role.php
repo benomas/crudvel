@@ -12,7 +12,6 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
   }
-
 // [Relationships]
   public function users(){
     return $this->belongsToMany("App\Models\User", "role_user");
@@ -108,8 +107,9 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
     $user = \App\Models\User::id($userId)->first();
     if(!$user)
       $query->nullFilter();
-    else
+    else{
       $query->ids($user->rolesroles()->get()->pluck("id")->toArray());
+    }
   }
 // [End Scopes]
 
