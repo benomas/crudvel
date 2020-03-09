@@ -18,7 +18,6 @@ class SpreadSheet
   {
     if(!File::exists($this->constructorInstance->getFullFilePath())){
       pdd("File not found:", $this->constructorInstance->getFullFilePath() );
-      return null;
     }else{
       Excel::import(($ExcelCollection = new \App\Imports\ImporterInterceptor()), $this->constructorInstance->getfullFilePath());
       return $ExcelCollection->getRows()->toArray();
