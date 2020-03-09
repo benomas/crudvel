@@ -252,12 +252,13 @@ private function getIgnore(&$parameters)
       return true;
     if(!isset($parameters[0]) || !is_array($value) || count($value)===0)
       return false;
-
-    $query = DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],'=',$value[0]);
-    foreach($value AS $identifier){
-      if(!is_int($identifier + 0))
+    $key = $parameters[1];
+    $itemList = cvGetSomeKeys($value,null,$key);
+    $query = DB::table($parameters[0])->where($parameters[0].'.'.$key,'=',$value[0]);
+    foreach($itemList AS $identifier){
+      if(!is_int(($identifier[$key]??null) + 0))
         return false;
-      $query->orWhere($parameters[0].'.'.$parameters[1],'=',$identifier);
+      $query->orWhere($parameters[0].'.'.$key,'=',$identifier[$key]);
     }
 
     return $query->count() === count($value);

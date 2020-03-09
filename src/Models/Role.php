@@ -111,6 +111,12 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
       $query->ids($user->rolesroles()->get()->pluck("id")->toArray());
     }
   }
+
+  public function scopeRelatedToUser ($query,$userKey) {
+    $query->whereHas("users",function($query) use ($userKey) {
+      $query->key($userKey);
+    });
+  }
 // [End Scopes]
 
 // [Others]

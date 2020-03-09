@@ -26,17 +26,17 @@ trait CasesTrait
   }
 
   public function cvSingularCase($text) {
-    return Str::singular($text);
+    return config("packages.benomas.crudvel.words.pluralToSingular.$text") ?? Str::singular($text);
   }
 
   public function cvPluralCase($text) {
-    return Str::plural($text);
+    return config("packages.benomas.crudvel.words.singularToPlural.$text") ?? Str::plural($text);
   }
 
   public function cvCaseFixer($path,$text) {
     foreach(array_reverse(explode('|',$path)) as $case)
-      if(method_exists($this,$this->cvSlugCase("cv $case Case")))
-        $text = $this->{$this->cvSlugCase("cv $case Case")}($text);
+      if(method_exists($this,$this->cvCamelCase("cv $case Case")))
+        $text = $this->{$this->cvCamelCase("cv $case Case")}($text);
 
     return $text;
   }

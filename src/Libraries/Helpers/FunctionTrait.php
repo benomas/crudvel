@@ -147,7 +147,7 @@ trait FunctionTrait
     return count(array_filter(array_keys($arrayTest), 'is_string')) > 0;
   }
 
-  public function getSomeKeys ($array,$byKey=null,...$keys){
+  public function cvGetSomeKeys ($array,$byKey=null,...$keys){
     $someKeysArray = [];
     foreach ($array as $item){
       $newItem = [];

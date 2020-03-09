@@ -508,6 +508,14 @@ trait CrudTrait {
     );
   }
 
+  public function apiUnproccesable($data=null){
+    return response()->json($data?
+      $data:
+      ["message"=>trans("crudvel.api.unproccesable")]
+      ,422
+    );
+  }
+
   public function apiSuccessResponse($data=null){
     return response()->json($data?
       $data:

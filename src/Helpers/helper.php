@@ -1206,8 +1206,8 @@ if(!function_exists("isAssociativeArray")){
   function isAssociativeArray(...$params){return CvHelper::isAssociativeArray(...$params);}
 }
 
-if(!function_exists("getSomeKeys")){
-  function getSomeKeys(...$params){return CvHelper::getSomeKeys(...$params);}
+if(!function_exists("cvGetSomeKeys")){
+  function cvGetSomeKeys(...$params){return CvHelper::cvGetSomeKeys(...$params);}
 }
 
 //to be deprecated
