@@ -162,4 +162,8 @@ trait FunctionTrait
     }
     return $someKeysArray;
   }
+
+  public function cvGetSomeKeysAsList ($array,$key='id'){
+    return collect($this->cvGetSomeKeys($array,null,$key))->pluck($key)->toArray();
+  }
 }

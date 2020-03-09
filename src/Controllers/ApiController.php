@@ -164,4 +164,13 @@ class ApiController extends CustomController{
       }
     }
   }
+
+  protected function fixPassword(){
+    $fields = $this->getFields();
+    if(empty($fields['password']))
+      $this->removeField('password');
+    else
+      $this->addField('password',bcrypt($fields['password']));
+    return $this;
+  }
 }

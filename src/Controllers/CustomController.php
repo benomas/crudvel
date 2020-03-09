@@ -124,8 +124,10 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   * @return response
   */
   public function callActionJump($method,$parameters=[]){
-    if(method_exists($this,$this->getCurrentAction().'BeforePaginate'))
+    $this->beforePaginate($method,$parameters);
+    if(method_exists($this,$this->getCurrentAction().'BeforePaginate')){
       $this->{$this->getCurrentAction().'BeforePaginate'}($parameters);
+    }
     if(
       $this->getRootInstance() &&
       $this->getRootInstance()->getPaginable() &&
@@ -174,6 +176,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   }
 
   public function modelator($action){} //$this->model
+  public function beforePaginate($method,$parameters){} //$this->model
 
   protected function resetTransaction(){
     $this->committer   = null;
@@ -626,11 +629,28 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $this;
   }
 
-  protected function setStamps(){
-    //$rightNow = Carbon::now()->toDateTimeString();
-    $this->addField('created_by',$this->getRequestInstance()->user()->key??null);
-    $this->addField('updated_by',$this->getRequestInstance()->user()->key??null);
-    //$this->addFields('created_at',$rightNow??null);
-    //$this->addFields('updated_at',$rightNow??null);
+  public static function externalSetStamps($enableCreateStamps = true){
+    $rightNow = \Carbon\Carbon::now()->toDateTimeString();
+    $user = \CvResource::assignUser()->getUserModelCollectionInstance();
+    $stamps = [
+      'updated_by'=>$user->id??null,
+      'updated_at'=>$rightNow??null,
+    ];
+    if($enableCreateStamps){
+      $stamps['created_by']=$user->id??null;
+      $stamps['created_at']=$rightNow??null;
+    }
+    return $stamps;
+  }
+
+  protected function setStamps($enableCreateStamps = true){
+    $stamps = self::externalSetStamps();
+    $this->addField('updated_at',$stamps['updated_at']);
+    $this->addField('updated_by',$stamps['updated_by']);
+    if($enableCreateStamps){
+      $this->addField('created_by',$stamps['created_by']);
+      $this->addField('created_at',$stamps['created_at']);
+    }
+    return $this;
   }
 }

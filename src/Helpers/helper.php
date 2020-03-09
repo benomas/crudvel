@@ -1210,6 +1210,10 @@ if(!function_exists("cvGetSomeKeys")){
   function cvGetSomeKeys(...$params){return CvHelper::cvGetSomeKeys(...$params);}
 }
 
+if(!function_exists("cvGetSomeKeysAsList")){
+  function cvGetSomeKeysAsList(...$params){return CvHelper::cvGetSomeKeysAsList(...$params);}
+}
+
 //to be deprecated
 if(!function_exists("fixedSlug")){
   function fixedSlug(...$params){return CvHelper::cvSlugCase(...$params);}
