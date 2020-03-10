@@ -32,6 +32,7 @@ export default function (globals) {
       component  : CvIndex,
       type       : 'rows'
     },
+
     {
       name       : 'create',
       icon       : '',
@@ -40,6 +41,7 @@ export default function (globals) {
       path       : resource.path + '/create',
       component  : CvCreate
     },
+
     {
       name          : 'show',
       icon          : '',
@@ -51,6 +53,7 @@ export default function (globals) {
       disableFields : true,
       isParentRoute : true
     },
+
     {
       name       : 'edit',
       icon       : '',
@@ -61,6 +64,7 @@ export default function (globals) {
       urlParams  : ['id'],
       component  : CvEdit
     },
+
     {
       name       : 'delete',
       icon       : '',
@@ -71,6 +75,7 @@ export default function (globals) {
       urlParams  : ['id'],
       component  : null
     },
+
     {
       name       : 'activate',
       icon       : '',
@@ -80,6 +85,7 @@ export default function (globals) {
       urlParams  : ['id'],
       component  : null
     },
+
     {
       name       : 'deactivate',
       icon       : '',

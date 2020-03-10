@@ -1,5 +1,6 @@
 <script>
 import CvRowAction from 'src/components/resources/catalogs/catalog1/CvIndex'
+
 export default {
   extends: CvRowAction
 }

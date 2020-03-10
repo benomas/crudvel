@@ -13,6 +13,7 @@
           </label>
         </div>
       </div>
+
       <div slot="cv-content-slot">
         <div class="row w-100">
           <cv-<##[plural|slug](resource)##>-skeleton
@@ -23,6 +24,7 @@
           </cv-<##[plural|slug](resource)##>-skeleton>
         </div>
       </div>
+
       <div slot="cv-buttons-slot">
         <div class="col-xs-12 ">
           <cv-action-buttons
@@ -37,11 +39,13 @@
   </div>
 </template>
 <script>
-import CvCreate                 from 'cq-crudvuel/resource/CvCreate'
-import Cv<##[plural|studly](resource)##>Skeleton     from 'src/components/resources/<##[plural|slug](resource)##>/Cv<##[plural|studly](resource)##>Skeleton'
-import CvSkeletonController     from 'cq-crudvuel/resource/CvSkeletonController'
 import VueMirroring             from 'crudvuel/mirroring/VueMirroring'
+import CvCreate                 from 'cq-crudvuel/resource/CvCreate'
+import CvSkeletonController     from 'cq-crudvuel/resource/CvSkeletonController'
+import Cv<##[plural|studly](resource)##>Skeleton     from 'src/components/resources/<##[plural|slug](resource)##>/Cv<##[plural|studly](resource)##>Skeleton'
+
 let vueMirroring = new VueMirroring('Create').enableRoot()
+
 export default {
   mixins: [
     CvCreate,

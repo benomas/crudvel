@@ -39,11 +39,13 @@
   </div>
 </template>
 <script>
-import CvCreate                 from 'cq-crudvuel/resource/CvCreate'
-import Cv<##[plural|studly](resource)##>Skeleton from 'components/resources/<##[plural|slug](resource)##>/Cv<##[plural|studly](resource)##>Skeleton'
-import CvSkeletonController     from 'cq-crudvuel/resource/CvSkeletonController'
 import VueMirroring             from 'crudvuel/mirroring/VueMirroring'
+import CvCreate                 from 'cq-crudvuel/resource/CvCreate'
+import CvSkeletonController     from 'cq-crudvuel/resource/CvSkeletonController'
+import Cv<##[plural|studly](resource)##>Skeleton from 'components/resources/<##[plural|slug](resource)##>/Cv<##[plural|studly](resource)##>Skeleton'
+
 let vueMirroring = new VueMirroring('Create').enableRoot()
+
 export default {
   mixins: [
     CvCreate,
@@ -52,6 +54,7 @@ export default {
     ),
     CvSkeletonController
   ],
+
   components: {
     Cv<##[plural|studly](resource)##>Skeleton
   }

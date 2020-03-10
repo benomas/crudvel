@@ -5,6 +5,7 @@
         v-bind="mInputBinding('name')"
         v-on="mInputOns('name')"/>
     </div>
+
     <div class="col-xs-12 col-sm-3 col-md-2 q-pa-md m-auto">
       <q-field borderless v-bind="mErrorBinding('active')">
         <q-toggle
@@ -12,6 +13,7 @@
           v-on="mToogleOns('active')"/>
       </q-field>
     </div>
+
     <div class="col-xs-12 q-pa-md">
       <q-input
         v-bind="mInputBinding('description')"
@@ -25,6 +27,7 @@
 </template>
 <script>
 import CvSkeleton     from 'cq-crudvuel/resource/CvSkeleton'
+
 export default {
   mixins: [
     CvSkeleton

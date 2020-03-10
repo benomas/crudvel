@@ -12,10 +12,12 @@ export default {
     updated_at  : 'Updated at',
     updated_by  : 'Updated by'
   },
+
   actions: {
     index: {
       label: '<##[plural|title](resource)##>'
     },
+
     create: {
       label : 'Create <##[singular|lower](resource)##>',
       set   : {
@@ -24,6 +26,7 @@ export default {
         cancel  : 'Creation of <##[singular|lower](resource)##> canceled'
       }
     },
+
     show: {
       label     : '<##[singular|title](resource)##>',
       backLabel : 'Go back',
@@ -34,6 +37,7 @@ export default {
         cancel  : null
       }
     },
+
     edit: {
       label : 'Edit <##[singular|lower](resource)##>',
       set   : {
@@ -42,6 +46,7 @@ export default {
         cancel  : 'Edition of <##[singular|lower](resource)##> canceled'
       }
     },
+
     delete: {
       label     : 'Delete <##[singular|lower](resource)##>',
       nextLabel : 'Continue',
@@ -51,6 +56,7 @@ export default {
         cancel  : 'deletion of <##[singular|lower](resource)##> canceled'
       }
     },
+
     activate: {
       label : 'Activate <##[singular|lower](resource)##>',
       set   : {
@@ -59,6 +65,7 @@ export default {
         cancel  : 'Activation of <##[singular|lower](resource)##> canceled'
       }
     },
+
     deactivate: {
       label : 'Desactivate <##[singular|lower](resource)##>',
       set   : {

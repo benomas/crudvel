@@ -1,6 +1,7 @@
 <script>
 import CvCreate  from 'components/resources/warehouses/CvCreate'
 import CvEdit    from 'cq-crudvuel/resource/CvEdit'
+
 export default {
   mixins: [
     CvCreate,

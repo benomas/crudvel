@@ -2,6 +2,7 @@
 export default {
   rowsLabel : '<##[plural|title](resource)##>',
   rowLabel  : '<##[singular|title](resource)##>',
+
   fields    : {
     active      : 'Activo',
     created_at  : 'Creado en',
@@ -13,10 +14,12 @@ export default {
     updated_at  : 'Actualizado en',
     updated_by  : 'Actualizado por'
   },
+
   actions: {
     index: {
       label: '<##[plural|title](resource)##>'
     },
+
     create: {
       label : 'Crear <##[singular|lower](resource)##>',
       set   : {
@@ -25,6 +28,7 @@ export default {
         cancel  : 'Se ha cancelado la creación de <##[singular|lower](resource)##>'
       }
     },
+
     show: {
       label     : '<##[singular|title](resource)##>',
       backLabel : 'Regresar',
@@ -35,6 +39,7 @@ export default {
         cancel  : null
       }
     },
+
     edit: {
       label : 'Editar <##[singular|lower](resource)##>',
       set   : {
@@ -43,6 +48,7 @@ export default {
         cancel  : 'Se ha cancelado la edición de <##[singular|lower](resource)##>'
       }
     },
+
     delete: {
       label     : 'Eliminar <##[singular|lower](resource)##>',
       nextLabel : 'Continuar',
@@ -52,6 +58,7 @@ export default {
         cancel  : 'Se ha cancelado la eliminación de <##[singular|lower](resource)##>'
       }
     },
+
     activate: {
       label : 'Activar <##[singular|lower](resource)##>',
       set   : {
@@ -60,6 +67,7 @@ export default {
         cancel  : 'Se ha cancelado la activación de <##[singular|lower](resource)##>'
       }
     },
+
     deactivate: {
       label : 'Desactivar <##[singular|lower](resource)##>',
       set   : {
