@@ -90,9 +90,12 @@ class CvBaseScaff
       'snake'    => function($value){return $this->cvSnakeCase($value);},
       'slug'     => function($value){return $this->cvSlugCase($value);},
       'studly'   => function($value){return $this->cvStudlyCase($value);},
+      'human'    => function($value){return Str::slug($this->cvSlugCase($value),' ');},
+      'title'    => function($value){return Str::title($value);},
       'title'    => function($value){return Str::title($value);},
       'lower'    => function($value){return strtolower($value);},
       'upper'    => function($value){return strtoupper($value);},
+      'ucfirst'  => function($value){return ucfirst($value);},
     ];
     $currentCase = $caseCallBacks[$case]??null;
     if(!$currentCase){

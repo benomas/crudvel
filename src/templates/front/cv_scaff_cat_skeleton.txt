@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import CvSkeleton     from 'cq-crudvuel/resource/CvSkeleton'
+import CvSkeleton from 'cq-crudvuel/resource/CvSkeleton'
 
 export default {
   mixins: [

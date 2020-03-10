@@ -1,6 +1,7 @@
 export default {
-  rowsLabel : '<##[plural|title](resource)##>',
-  rowLabel  : '<##[singular|title](resource)##>',
+  rowsLabel : '<##[plural|ucfirst|human](resource)##>',
+  rowLabel  : '<##[singular|ucfirst|human](resource)##>',
+
   fields    : {
     active      : 'Active',
     created_at  : 'Created at',
@@ -15,63 +16,63 @@ export default {
 
   actions: {
     index: {
-      label: '<##[plural|title](resource)##>'
+      label: '<##[plural|ucfirst|human](resource)##>'
     },
 
     create: {
-      label : 'Create <##[singular|lower](resource)##>',
+      label : 'Create <##[singular|lower|human](resource)##>',
       set   : {
-        success : '<##[singular|title](resource)##> created',
-        error   : 'Error creating <##[singular|lower](resource)##>',
-        cancel  : 'Creation of <##[singular|lower](resource)##> canceled'
+        success : '<##[singular|ucfirst|human](resource)##> created',
+        error   : 'Error creating <##[singular|lower|human](resource)##>',
+        cancel  : 'Creation of <##[singular|lower|human](resource)##> canceled'
       }
     },
 
     show: {
-      label     : '<##[singular|title](resource)##>',
+      label     : '<##[singular|ucfirst|human](resource)##>',
       backLabel : 'Go back',
       nextLabel : null,
       set       : {
         success : null,
-        error   : 'Error trying to access:<##[singular|lower](resource)##>',
+        error   : 'Error trying to access:<##[singular|lower|human](resource)##>',
         cancel  : null
       }
     },
 
     edit: {
-      label : 'Edit <##[singular|lower](resource)##>',
+      label : 'Edit <##[singular|lower|human](resource)##>',
       set   : {
-        success : '<##[singular|title](resource)##> Edited Ok',
-        error   : 'Error traying to edit <##[singular|lower](resource)##>',
-        cancel  : 'Edition of <##[singular|lower](resource)##> canceled'
+        success : '<##[singular|ucfirst|human](resource)##> Edited Ok',
+        error   : 'Error traying to edit <##[singular|lower|human](resource)##>',
+        cancel  : 'Edition of <##[singular|lower|human](resource)##> canceled'
       }
     },
 
     delete: {
-      label     : 'Delete <##[singular|lower](resource)##>',
+      label     : 'Delete <##[singular|lower|human](resource)##>',
       nextLabel : 'Continue',
       set       : {
-        success : '<##[singular|title](resource)##> deleted',
-        error   : 'Error trying to delete <##[singular|lower](resource)##>',
-        cancel  : 'deletion of <##[singular|lower](resource)##> canceled'
+        success : '<##[singular|ucfirst|human](resource)##> deleted',
+        error   : 'Error trying to delete <##[singular|lower|human](resource)##>',
+        cancel  : 'deletion of <##[singular|lower|human](resource)##> canceled'
       }
     },
 
     activate: {
-      label : 'Activate <##[singular|lower](resource)##>',
+      label : 'Activate <##[singular|lower|human](resource)##>',
       set   : {
-        success : '<##[singular|title](resource)##> Activated ok',
-        error   : 'Error traying to activate <##[singular|lower](resource)##>',
-        cancel  : 'Activation of <##[singular|lower](resource)##> canceled'
+        success : '<##[singular|ucfirst|human](resource)##> Activated ok',
+        error   : 'Error traying to activate <##[singular|lower|human](resource)##>',
+        cancel  : 'Activation of <##[singular|lower|human](resource)##> canceled'
       }
     },
 
     deactivate: {
-      label : 'Desactivate <##[singular|lower](resource)##>',
+      label : 'Desactivate <##[singular|lower|human](resource)##>',
       set   : {
-        success : '<##[singular|title](resource)##> Desactivated',
-        error   : 'Error traying to desactivate th <##[singular|lower](resource)##>',
-        cancel  : 'Deactivation of <##[singular|lower](resource)##> canceled'
+        success : '<##[singular|ucfirst|human](resource)##> Desactivated',
+        error   : 'Error traying to desactivate th <##[singular|lower|human](resource)##>',
+        cancel  : 'Deactivation of <##[singular|lower|human](resource)##> canceled'
       }
     }
   }

@@ -22,6 +22,7 @@ export default function (globals) {
     mainSection  : 'catalogs',
     filler
   })
+
   resource.setActions([
     {
       name       : 'index',
