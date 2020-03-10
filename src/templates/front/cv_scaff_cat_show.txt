@@ -1,5 +1,5 @@
 <script>
-import CvEdit   from 'components/resources/cat-basic-statuses/CvEdit'
+import CvEdit   from 'components/resources/<##[plural|slug](resource)##>/CvEdit'
 import CvShow   from 'cq-crudvuel/resource/CvShow'
 
 export default {

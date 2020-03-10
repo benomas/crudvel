@@ -1,5 +1,5 @@
 <script>
-import CvCreate  from 'components/resources/cat-basic-statuses/CvCreate'
+import CvCreate  from 'components/resources/<##[plural|slug](resource)##>/CvCreate'
 import CvEdit    from 'cq-crudvuel/resource/CvEdit'
 
 export default {
