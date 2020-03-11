@@ -215,19 +215,11 @@
   </div>
 </template>
 <script>
-import {QIcon}    from 'quasar'
-import CvIndex    from 'cq-crudvuel/resource/CvIndex'
-import cvPageOpt  from 'crudvuel/directives/cvPageOpt'
+import CvIndex from 'cq-crudvuel/resource/CvIndex'
 
 export default {
   mixins: [
     CvIndex
-  ],
-
-  components : { QIcon },
-
-  directives : {
-    cvPageOpt: cvPageOpt
-  }
+  ]
 }
 </script>

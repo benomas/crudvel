@@ -1,6 +1,6 @@
 <script>
-import CvEdit   from 'components/resources/<##[plural|slug](resource)##>/CvEdit'
 import CvShow   from 'cq-crudvuel/resource/CvShow'
+import CvEdit   from 'components/resources/<##[plural|slug](resource)##>/CvEdit'
 
 export default {
   mixins: [
