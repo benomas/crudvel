@@ -99,6 +99,11 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
     $query->where($this->getTable().".slug","<>","root");
   }
 
+  public function scopeSelectCvSearch($query,$alias=null){
+    $alias = $this->alias($alias);
+    return $query->selectRaw("CONCAT($alias.name)");
+  }
+
   public function scopeGeneralOwner($query,$userId){
     $this->scopeHidden($query);
   }
@@ -115,6 +120,12 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
   public function scopeRelatedToUser ($query,$userKey) {
     $query->whereHas("users",function($query) use ($userKey) {
       $query->key($userKey);
+    });
+  }
+
+  public function scopeRelatedToRole ($query,$roleKey) {
+    $query->whereHas("roles",function($query) use ($roleKey) {
+      $query->key($roleKey);
     });
   }
 // [End Scopes]

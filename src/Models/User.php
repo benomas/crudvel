@@ -151,6 +151,11 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     $query->where($this->getTable().".email",$email);
   }
 
+  public function scopeSelectCvSearch($query, $alias = null){
+    $alias = $this->alias($alias);
+    return $query->selectRaw("CONCAT($alias.first_name, ' ',$alias.last_name)");
+  }
+
   public function scopeGeneralOwner($query,$userId){
     $this->scopeHidden($query);
   }

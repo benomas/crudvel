@@ -100,6 +100,11 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
     $query->whereIn($this->getTable().".name",$namePermissions);
   }
 
+  public function scopeSelectCvSearch($query, $alias = null){
+    $alias = $this->alias($alias);
+    return $query->join('cat_permission_types', 'cat_permission_types.id', '=', "$alias.cat_permission_type_id")
+      ->selectRaw("CONCAT($alias.name, ' [',cat_permission_types.name,']')");
+  }
 
   public function scopeGeneralOwner($query,$userId){
     $this->scopeParticularOwner($query,$userId);
@@ -111,6 +116,12 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
         $query->particularOwner($userId);
       });
     });*/
+  }
+
+  public function scopeRelatedToRole ($query,$roleKey) {
+    $query->whereHas("roles",function($query) use ($roleKey) {
+      $query->key($roleKey);
+    });
   }
 // [End Scopes]
 
