@@ -5,7 +5,7 @@ namespace Crudvel\Libraries\SpreadSheetIO\Constructors;
 class PermissionBase {
   use \Crudvel\Traits\SysInstancesTrait;
   public $path = 'permissions'.DIRECTORY_SEPARATOR;
-  public $fullPath= 'app'.DIRECTORY_SEPARATOR.'private'.DIRECTORY_SEPARATOR.'permissions'.DIRECTORY_SEPARATOR;
+  public $fullPath= 'database'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'permissions'.DIRECTORY_SEPARATOR;
   public $format = '.xlsx';
   public $data = [];
 
@@ -22,6 +22,6 @@ class PermissionBase {
   }
 
   public function getFullFilePath(){
-    return storage_path($this->fullPath.$this->getFilenameAttr());
+    return base_path($this->fullPath.$this->getFilenameAttr());
   }
 }
