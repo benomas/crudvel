@@ -391,7 +391,7 @@ class CvBasePaginator implements CvCrudInterface
     return $this;
   }
   public function setSelectQuery($selectQuery=null){
-    customLog($selectQuery);
+    //customLog($selectQuery);
     $this->selectQuery=$selectQuery??null;
     return $this;
   }

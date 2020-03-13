@@ -4,8 +4,8 @@ namespace Crudvel\Libraries\SpreadSheetIO\Constructors;
 /*BaseClass for permissions spreadsheets constructors its used to import and export permissions*/
 class PermissionBase {
   use \Crudvel\Traits\SysInstancesTrait;
-  public $path = 'permissions'.DIRECTORY_SEPARATOR;
-  public $fullPath= 'database'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'permissions'.DIRECTORY_SEPARATOR;
+  public $path = 'permission-role'.DIRECTORY_SEPARATOR;
+  public $fullPath= 'database'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'permission-role'.DIRECTORY_SEPARATOR;
   public $format = '.xlsx';
   public $data = [];
 
