@@ -17,9 +17,10 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
   }
 
   public function build(){
-    $temp = [];
-    $temp[] = 'Recursos Acciones';
-    $actions = $this->getSysLangArrayByKeyName('actions');
+    $temp = ['Recursos Acciones'];
+    //change actions list from cvActions helper that collects actions direct from controllers
+    //$actions = $this->getSysLangArrayByKeyName('actions');
+    $actions = cvActions();
     // $specials = $this->getSysLangArrayByKeyName('specials');
     $specials = $this->getSysSpecials('specials');
     $specials['(Acceso)']= '(Acceso)';

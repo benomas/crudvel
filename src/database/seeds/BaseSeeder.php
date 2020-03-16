@@ -26,26 +26,22 @@ class BaseSeeder extends Seeder
   {
     if(empty($this->data))
       return false;
+
     $this->data = collect($this->data);
     $this->explodeClass();
     Schema::disableForeignKeyConstraints();
-    $modelClass = get_class($this->modelInstanciator(true));
+
     if($this->deleteBeforeInsert)
       $this->modelInstanciator()->delete();
+
     if($this->enableTransaction){
-      DB::transaction(function() use($modelClass){
-        if($this->runChunked)
-          $this->chunckedImplementation($modelClass);
-        else
-          $this->defaultImplementation();
-      });
-    }
-    else{
-      if($this->runChunked)
-        $this->chunckedImplementation($modelClass);
-      else
+      DB::transaction(function(){
         $this->defaultImplementation();
+      });
+    }else{
+      $this->defaultImplementation();
     }
+
     Schema::enableForeignKeyConstraints();
   }
 
@@ -74,6 +70,7 @@ class BaseSeeder extends Seeder
       $this->explodeClass();
     return $this->crudObjectName;
   }
+
   public function modelInstanciator($new=false){
     $model = $this->modelSource = $this->modelSource?
       $this->modelSource:
@@ -99,5 +96,28 @@ class BaseSeeder extends Seeder
 
     if(empty($this->crudObjectName))
       $this->crudObjectName = str_replace($this->classType,"",$this->baseClass);
+  }
+
+  public function runWithCollector() {
+    $this->explodeClass();
+    Schema::disableForeignKeyConstraints();
+    $modelClass = get_class($this->modelInstanciator(true));
+    if($this->deleteBeforeInsert)
+      $this->modelInstanciator()->delete();
+    if($this->enableTransaction){
+      DB::transaction(function() use($modelClass){
+        if($this->runChunked)
+          $this->chunckedImplementation($modelClass);
+        else
+          $this->defaultImplementation();
+      });
+    }
+    else{
+      if($this->runChunked)
+        $this->chunckedImplementation($modelClass);
+      else
+        $this->defaultImplementation();
+    }
+    Schema::enableForeignKeyConstraints();
   }
 }
