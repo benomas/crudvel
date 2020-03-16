@@ -1,10 +1,11 @@
 <?php
 namespace Crudvel\Libraries\DataCollector;
 use \Maatwebsite\Excel\Facades\Excel;
+use Crudvel\Interfaces\DataCollector\{DataCollectorInterface};
 
-Class DataCollectorXLSX implements \Crudvel\Interfaces\DataCollectorInterface {
+Class DataCollectorXLSX implements DataCollectorInterface {
 
-  public $totalRecords = 0;
+  public $count          = 0;
   public $sourceLocation = '';
 
   public function __construct(){

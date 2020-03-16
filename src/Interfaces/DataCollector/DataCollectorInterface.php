@@ -1,11 +1,16 @@
 <?php
-namespace Crudvel\Interfaces;
-
+namespace Crudvel\Interfaces\DataCollector;
 interface DataCollectorInterface{
-  // init import , open file, open source and set totalRecords
+  public function getChunkedCollection();
+  public function getNextChunk();
+  public function getPage();
+  public function getChuckSize();
+  public function getOffSet();
+  public function getCount();
+  public function setPage($page);
+  public function setCount($count);
+  public function counter();
+  public function setChuckSize($chuckSize);
+  public function incresePage();
   public function init();
-  public function getTotalRecordsAttr();
-  public function getCollectionFromSource();
-  public function getChunkedCollection($chuckSize, $pageNumber);
-  public function getCurrentPageNumber();
 }
