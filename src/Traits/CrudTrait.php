@@ -165,6 +165,10 @@ trait CrudTrait {
   public function getLangName(){
     return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
+
+  public function getResourceAlias(){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  }
   //-----------
   public function getActions(){
     return $this->getCvResourceInstanceMethod(__FUNCTION__);
@@ -326,6 +330,10 @@ trait CrudTrait {
 
   public function setPaginateFields($paginate=null){
     return $this->setCvResourceInstanceMethod(__FUNCTION__,$paginate);
+  }
+
+  public function setResourceAlias($resourceAlias=null){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$resourceAlias);
   }
   //consider to include and interface to ensure CvResource requiriments
   public function setCvResource($cvResourceInstance){

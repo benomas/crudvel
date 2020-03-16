@@ -41,6 +41,7 @@ class CvResource
   protected $actionResource;
   protected $actionsAccess;
   protected $fields;
+  protected $resourceAlias;
 
   protected $rowActions;
   protected $viewActions;

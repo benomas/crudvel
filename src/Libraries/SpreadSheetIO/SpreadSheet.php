@@ -29,4 +29,11 @@ class SpreadSheet
     $ExporterInterceptor = new \App\Exports\ExporterInterceptor(collect($this->constructorInstance->build()));
     return Excel::download($ExporterInterceptor, $this->constructorInstance->getFileNameAttr());
   }
+
+  public function storeSpreadSheet()
+  {
+    $ExporterInterceptor = new \App\Exports\ExporterInterceptor(collect($this->constructorInstance->build()));
+    \Excel::store($ExporterInterceptor, $this->constructorInstance->getFileNameAttr(), 'seed');
+  }
 }
+

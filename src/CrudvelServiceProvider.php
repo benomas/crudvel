@@ -21,6 +21,7 @@ class CrudvelServiceProvider extends ServiceProvider
 
     if ($this->app->runningInConsole()) {
       $commandClasses=[
+        'Customs\Crudvel\Commands\CvRolePermissionLayout',
         'Customs\Crudvel\Commands\InstallCommand',
         'Customs\Crudvel\Commands\MakeRootUser',
         'Customs\Crudvel\Commands\CvScaff',

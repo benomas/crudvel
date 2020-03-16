@@ -1255,3 +1255,16 @@ if(!function_exists("cvPluralCase")){
 if(!function_exists("cvCaseFixer")){
   function cvCaseFixer(...$params){return CvHelper::cvCaseFixer(...$params);}
 }
+
+if(!function_exists("cvActions")){
+  function cvActions(...$params){return CvHelper::cvActions(...$params);}
+}
+
+if(!function_exists("cvControllers")){
+  function cvControllers(...$params){return CvHelper::cvControllers(...$params);}
+}
+
+if(!function_exists("cvResources")){
+  function cvResources(...$params){return CvHelper::cvResources(...$params);}
+}
+

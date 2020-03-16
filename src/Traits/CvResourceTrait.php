@@ -93,6 +93,10 @@ trait CvResourceTrait
     return $this->rootInstance??null;
   }
 
+  public function getResourceAlias(){
+    return $this->resourceAlias;
+  }
+
   public function getCvResourceInstance(){
     return $this;
   }
@@ -310,6 +314,11 @@ trait CvResourceTrait
 
   public function setFields($fields=null){
     $this->fields=$fields;
+    return $this;
+  }
+
+  public function setResourceAlias($resourceAlias=null){
+    $this->resourceAlias=$resourceAlias;
     return $this;
   }
 

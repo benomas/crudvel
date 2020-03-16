@@ -264,8 +264,17 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function prepareRequest(){
     $this->injectCvResource();
     $this->cvResourceInstance->captureRequestHack($this);
-    $this->setCurrentAction($this->route()?explode('@', $this->route()->getActionName())[1]:null);
-    $this->setCurrentActionKey($this->route($this->getSnakeSingularName()))->fixActionResource();
+    $routeNameSegments = explode('.', $this->route()->getName());
+    $resourceKey       = null;
+    $resource          = $this->getCamelSingularName();
+    if (count ($routeNameSegments) > 1){
+      $resource = cvCaseFixer('camel|singular',$routeNameSegments[count($routeNameSegments)-2]);
+      $this->setCurrentAction($routeNameSegments[count($routeNameSegments)-1]);
+      $resourceKey = $this->route()->parameters()[cvCaseFixer('slug|singular',$resource)] ?? null;
+    }
+    if ($resourceKey === null)
+      $resourceKey = $this->route($this->getSnakeSingularName());
+    $this->setCurrentActionKey($resourceKey)->setResourceAlias($resource)->fixActionResource();
     $this->fixFlowControl();
   }
 
