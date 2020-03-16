@@ -33,7 +33,10 @@ class SpreadSheet
   public function storeSpreadSheet()
   {
     $ExporterInterceptor = new \App\Exports\ExporterInterceptor(collect($this->constructorInstance->build()));
-    \Excel::store($ExporterInterceptor, $this->constructorInstance->getFileNameAttr(), 'seed');
+    if(file_exists($this->constructorInstance->getFullFilePath()))
+      \Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().'layout_original'.DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
+    else
+      \Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
   }
 }
 

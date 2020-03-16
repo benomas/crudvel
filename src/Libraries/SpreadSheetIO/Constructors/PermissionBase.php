@@ -24,4 +24,8 @@ class PermissionBase {
   public function getFullFilePath(){
     return base_path($this->fullPath.$this->getFilenameAttr());
   }
+
+  public function getRelatedPath(){
+    return $this->path;
+  }
 }
