@@ -1,6 +1,6 @@
 <?php
 namespace Crudvel\Interfaces\DataCaller;
 
-interface ArrayDataCallerInterface{
+interface ArrayDataCallerInterface extends DataCallerInterface{
   public function loadArrayData();
 }

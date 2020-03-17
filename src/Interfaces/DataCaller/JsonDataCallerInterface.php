@@ -1,6 +1,6 @@
 <?php
 namespace Crudvel\Interfaces\DataCaller;
 
-interface JsonDataCallerInterface{
+interface JsonDataCallerInterface extends DataCallerInterface{
   public function loadJsonPath();
 }

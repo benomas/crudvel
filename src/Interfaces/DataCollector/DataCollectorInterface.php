@@ -1,8 +1,8 @@
 <?php
 namespace Crudvel\Interfaces\DataCollector;
 interface DataCollectorInterface{
-  public function getChunkedCollection();
-  public function getNextChunk();
+  public function getChunkedCollection():array;
+  public function getNextChunk():array;
   public function getPage();
   public function getChuckSize();
   public function getOffSet();

@@ -1,10 +1,10 @@
 <?php
 namespace Crudvel\Libraries\DataCollector;
+
 use \Maatwebsite\Excel\Facades\Excel;
 use Crudvel\Interfaces\DataCollector\{DataCollectorInterface};
 
 Class DataCollectorXLSX implements DataCollectorInterface {
-
   public $count          = 0;
   public $sourceLocation = '';
 
@@ -32,6 +32,4 @@ Class DataCollectorXLSX implements DataCollectorInterface {
   public function getCurrentPageNumber(){
 
   }
-
-
 }

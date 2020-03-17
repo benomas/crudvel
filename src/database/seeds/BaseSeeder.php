@@ -24,11 +24,13 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   ];
   protected $currentCollectorInstance = null;
   use CrudTrait;
+
   /**
    * Run the database seeds.
    *
    * @return void
    */
+  /* deprecated
   public function run()
   {
     if(empty($this->data))
@@ -51,31 +53,21 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
 
     Schema::enableForeignKeyConstraints();
   }
+  */
 
   public function chunkSize(){
     return $this->chunckedSize;
   }
 
   public function defaultImplementation(){
-    foreach ($this->data as $key => $value){
+    foreach ($this->data as $key => $value)
       $this->modelInstanciator(true)->fill($value)->save();
-    }
   }
-/*
-  public function chunckedImplementation($modelClass){
-    foreach($this->data->chunk($this->chunkSize()) as $subData){
-      try{
-        $modelClass::insert($subData->toArray());
-      }catch(\Exception $e){
-        customLog('Seeder transaction fail with',$subData,json_encode($e));
-        cvConsoler(cvNegative("\n".'Exception when running seeder '.json_encode($e)));
-      }
-    }
-  }
-*/
+
   public function getResource(){
     if(empty($this->resource))
       $this->explodeClass();
+
     return $this->resource;
   }
 
@@ -85,7 +77,9 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
 
     if(!class_exists($this->modelSource))
       return null;
+
     $model = $this->modelSource;
+
     if($new)
       return new $model;
 
@@ -106,10 +100,14 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
 
     if($this->deleteBeforeInsert)
       $this->modelInstanciator()->delete();
+
+    return $this;
   }
 
   protected function finishSeeder(){
     Schema::enableForeignKeyConstraints();
+
+    return $this;
   }
 
   /*
@@ -137,12 +135,12 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
           $this->modelInstanciator(true)->fill($item)->save();
       }
     }
+
+    return $this;
   }
 
-  public function runWithCollector() {
-    $this->prepareSeeder();
-    $this->collectorIterator();
-    $this->finishSeeder();
+  public function run() {
+    $this->prepareSeeder()->collectorIterator()->finishSeeder();
   }
 
   public function getCollectors(){
@@ -155,22 +153,30 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
 
   public function setCollectors($collectors=null){
     $this->collectors = $collectors??null;
+
     return $this;
   }
 
   public function setCurrentCollectorInstance(DataCollectorInterface $currentCollectorInstance=null){
     $this->currentCollectorInstance = $currentCollectorInstance??null;
+
     return $this;
   }
 
   public function loadArrayData(){
     $this->getCurrentCollectorInstance()->setArrayData($this->data??[]);
+
     return $this;
   }
 
   public function loadJsonPath(){
     $resource = cvCaseFixer('plural|slug',$this->resource);
     $this->getCurrentCollectorInstance()->setJsonPath(database_path("data/$resource/"));
+
     return $this;
+  }
+
+  public function dataTransform(Array $arraySegment):Array{
+    return $arraySegment;
   }
 }
