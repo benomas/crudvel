@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+
 class Create<##[plural|studly](resource)##>Table extends \Customs\Crudvel\Database\Migrations\BaseMigration{
   /**
    * Run the migrations.

@@ -140,7 +140,13 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   }
 
   public function run() {
-    $this->prepareSeeder()->collectorIterator()->finishSeeder();
+    if($this->enableTransaction){
+      DB::transaction(function(){
+        $this->prepareSeeder()->collectorIterator()->finishSeeder();
+      });
+    }else{
+      $this->prepareSeeder()->collectorIterator()->finishSeeder();
+    }
   }
 
   public function getCollectors(){

@@ -1252,6 +1252,22 @@ if(!function_exists("cvPluralCase")){
   function cvPluralCase(...$params){return CvHelper::cvPluralCase(...$params);}
 }
 
+if(!function_exists("cvLowerCase")){
+  function cvLowerCase(...$params){return CvHelper::cvLowerCase(...$params);}
+}
+
+if(!function_exists("cvUpperCase")){
+  function cvUpperCase(...$params){return CvHelper::cvUpperCase(...$params);}
+}
+
+if(!function_exists("cvUcfirstCase")){
+  function cvUcfirstCase(...$params){return CvHelper::cvUcfirstCase(...$params);}
+}
+
+if(!function_exists("cvTitleCase")){
+  function cvTitleCase(...$params){return CvHelper::cvTitleCase(...$params);}
+}
+
 if(!function_exists("cvCaseFixer")){
   function cvCaseFixer(...$params){return CvHelper::cvCaseFixer(...$params);}
 }

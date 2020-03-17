@@ -33,6 +33,22 @@ trait CasesTrait
     return config("packages.benomas.crudvel.words.singularToPlural.$text") ?? Str::plural($text);
   }
 
+  public function cvLowerCase($text) {
+    return strtolower($text);
+  }
+
+  public function cvUpperCase($text) {
+    return strtoupper($text);
+  }
+
+  public function cvUcfirstCase($text) {
+    return ucfirst($text);
+  }
+
+  public function cvTitleCase($text) {
+    return Str::title($text);
+  }
+
   public function cvCaseFixer($path,$text) {
     foreach(array_reverse(explode('|',$path)) as $case)
       if(method_exists($this,$this->cvCamelCase("cv $case Case")))
