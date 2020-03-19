@@ -49,6 +49,15 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
    *
    * @return array
    */
+  public function defaultRules()
+  {
+  }
+
+  /**
+   * Get the validation rules that apply to the request.
+   *
+   * @return array
+   */
   public function rules()
   {
     $this->rules           = [];
