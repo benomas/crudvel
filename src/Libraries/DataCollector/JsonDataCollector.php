@@ -115,8 +115,14 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
   public function counter(){
     $count = 0;
 
-    foreach($this->getJsonFilePaths() as $jsonPath)
-      $count = $count + count($this->loadJsonContent($jsonPath));
+    foreach($this->getJsonFilePaths() as $jsonPath){
+      try{
+        $count = $count + count($this->loadJsonContent($jsonPath));
+      }catch(\Exception $e){
+        pdd($jsonPath);
+        cvConsoleException($e,$jsonPath);
+      }
+    }
 
     return $count;
   }

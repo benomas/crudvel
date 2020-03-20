@@ -57,7 +57,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   protected $callActionParameters = null;
   protected $actions         = [
     'index',
-    'related-index',
+    'relatedIndex',
     'sluged',
     'show',
     'create',
@@ -87,7 +87,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   protected $viewActions = [
     'index',
-    'related-index',
+    'relatedIndex',
     'show',
     'create',
     'edit',
@@ -96,7 +96,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   protected $rowsActions = [
     'index',
-    'related-index',
+    'relatedIndex',
     'sluged',
     'import',
     'importing',

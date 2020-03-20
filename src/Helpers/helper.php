@@ -1150,6 +1150,10 @@ if(!function_exists('cvWhiteTC')){
   function cvWhiteTC($message){return CvHelper::whiteTC($message);}
 }
 
+if(!function_exists('cvConsoleException')){
+  function cvConsoleException($message){return CvHelper::cvConsoleException($message);}
+}
+
 if(!function_exists("getCheckPoint")){
   function getCheckPoint(){return CvHelper::getCheckPoint();}
 }

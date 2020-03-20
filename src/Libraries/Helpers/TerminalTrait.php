@@ -100,4 +100,23 @@ trait TerminalTrait
     return $scriptResponse;
   }
 
+  public function cvConsoleException(\Exception $e, $extraParam = null){
+    $this->cvConsoler(
+      "\n"
+      .cvNegative($e->getMessage())
+      ."\n"
+      .cvInfo(' at file ')
+      .cvWarning($e->getFile())
+      ."\n"
+      .cvInfo(' at line ')
+      .cvWarning($e->getLine())
+    );
+    if($extraParam)
+      $this->cvConsoler(
+        "\n"
+        .cvNegative('with data')
+        ."\n"
+        .cvInfo(json_encode($extraParam))
+      );
+  }
 }
