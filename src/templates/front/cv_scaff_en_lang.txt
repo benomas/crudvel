@@ -4,7 +4,6 @@ export default {
   rowLabel  : '<##[singular|title](resource)##>',
 
   fields    : {
-  //Pscaff: Here field list
     active      : 'Active',
     created_at  : 'Created at',
     created_by  : 'Created by',
