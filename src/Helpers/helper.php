@@ -509,9 +509,9 @@ if(!function_exists("crudvelResource")){
 		if(empty($resource))
 			return false;
 		$urlSegments = explode("/",$resource);
-		$rowName = \Illuminate\Support\Str::slug(\Illuminate\Support\Str::singular(end($urlSegments)),"_");
+		$rowName = cvSlugCase(cvSingularCase(end($urlSegments)),"_");
 		if(!$controller)
-			$controller=\Illuminate\Support\Str::studly($rowName)."Controller";
+			$controller=cvStudlyCase($rowName)."Controller";
     if(!count($conditionals)){
       Route::get($resource."/import", $controller."@import");
       Route::get($resource."/export", $controller."@export");
@@ -556,14 +556,14 @@ if(!function_exists("apiCrudvelResource")){
 		$urlSegments = explode(".",$resource);
 		$baseSegmentResource = end($urlSegments);
     $rowName = !empty($translator[$baseSegmentResource])?
-      $translator[$baseSegmentResource]:\Illuminate\Support\Str::slug(\Illuminate\Support\Str::singular($baseSegmentResource),"_");
+      $translator[$baseSegmentResource]:cvSlugCase(cvSingularCase($baseSegmentResource),"_");
     if(!$controller)
-      $controller="Api\\".\Illuminate\Support\Str::studly($rowName)."Controller";
+      $controller="Api\\".cvStudlyCase($rowName)."Controller";
     if(!count($conditionals)){
       if(count($urlSegments)>1){
         foreach ($urlSegments as $segment){
           $i=empty($i)?1:$i+1;
-          $currentSegment=!empty($translator[$segment])?$segment:\Illuminate\Support\Str::singular($segment);
+          $currentSegment=!empty($translator[$segment])?$segment:cvSingularCase($segment);
           $prefixRoute = (empty($prefixRoute)?"":$prefixRoute."/").$segment.($i<count($urlSegments)?"/{".$currentSegment."}":"");
         }
       }

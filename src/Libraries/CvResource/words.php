@@ -1,13 +1,11 @@
 <?php
 $crudvelWords = [
   'singularToPlural'=>[
-
-  ],
-  'pluralToSingular'=>[
-    'cv_example' => 'cv_example',
-    'cv example' => 'cv example',
-    'cvExample'  => 'cvExample',
-    'CvExample'  => 'CvExample',
-    'CVEXAMPLE'  => 'CVEXAMPLE'
-  ],
+    'cv_example' => 'cv_examples',
+    'cv example' => 'cv examples',
+    'cvExample'  => 'cvExamples',
+    'CvExample'  => 'CvExamples',
+    'CVEXAMPLE'  => 'CVEXAMPLEs'
+  ]
 ];
+$crudvelWords[ 'pluralToSingular'] = array_flip($crudvelWords['singularToPlural']);
