@@ -10,7 +10,7 @@ class <##[singular|studly](resource)##> extends \Customs\Crudvel\Models\Catalog1
 
 // [Scopes]
   public function scopeSelectCvSearch($query,$alias=null){
-    $alias = $alias ?? $this->getTable();
+    $alias = $this->alias($alias);
     return $query->select("$alias.name");
   }
 // [End Scopes]

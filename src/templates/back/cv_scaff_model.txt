@@ -14,7 +14,7 @@ class <##[singular|studly](resource)##> extends \Customs\Crudvel\Models\BaseMode
 
 // [Scopes]
   public function scopeSelectCvSearch($query,$alias=null){
-    $alias = $alias ?? $this->getTable();
+    $alias = $this->alias($alias);
     return $query->selectRaw("CONCAT(
       'scopeSelectCvSearch needs to be customized at App\Models<##[singular|studly](resource)##> scopeSelectCvSearch',$alias.id)");
   }

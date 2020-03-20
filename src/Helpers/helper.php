@@ -556,7 +556,7 @@ if(!function_exists("apiCrudvelResource")){
 		$urlSegments = explode(".",$resource);
 		$baseSegmentResource = end($urlSegments);
     $rowName = !empty($translator[$baseSegmentResource])?
-      $translator[$baseSegmentResource]:cvSlugCase(cvSingularCase($baseSegmentResource),"_");
+      $translator[$baseSegmentResource]:cvCaseFixer('snake|singular',$baseSegmentResource);
     if(!$controller)
       $controller="Api\\".cvStudlyCase($rowName)."Controller";
     if(!count($conditionals)){
