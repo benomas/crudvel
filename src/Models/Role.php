@@ -3,10 +3,12 @@
 class Role extends \Customs\Crudvel\Models\BaseModel{
 
   protected $fillable = [
-    "slug",
-    "name",
-    "description",
-    "active",
+    'slug',
+    'name',
+    'internal',
+    'external',
+    'description',
+    'active',
   ];
 
   public function __construct($attributes = array())  {

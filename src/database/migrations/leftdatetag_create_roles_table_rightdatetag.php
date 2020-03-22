@@ -16,6 +16,8 @@ class CreateRolesTablerightdatetag extends BaseMigration
         $table->string('name');
         $table->string('description')->nullable();
         $table->boolean('active')->default(true);
+        $table->boolean('internal')->default(true);
+        $table->boolean('external')->default(false);
         $table->timestamps();
         $this->userStamps($table);
         $table->engine = 'InnoDB';
