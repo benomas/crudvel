@@ -338,7 +338,7 @@ private function getIgnore(&$parameters)
   }
 
   /**
-   * Validate that a unique combination of keys
+   * Validate user name
    *
    * @author	Beni (beni@intagono.com) 2016-12-05
    *
@@ -350,7 +350,7 @@ private function getIgnore(&$parameters)
   }
 
   /**
-   * Validate that a unique combination of keys
+   * Validate rfc
    *
    * @author	Beni (beni@intagono.com) 2016-12-05
    *
@@ -372,8 +372,87 @@ private function getIgnore(&$parameters)
   {
       if(empty($parameters))
           return true;
+
+      if(is_array($value)){
+        foreach($value as $item)
+          if(!in_array($item,$parameters))
+            return false;
+
+        return true;
+      }
+
       return in_array($value,$parameters);
   }
+
+  /**
+  * No simultaneus items in list
+  *
+  * @author benomas benomas@gmail.com
+  * @date   2019-07-15
+  * @return void
+  *
+  */
+  function validateNoSimultaneus($attribute, $value, $parameters)
+  {
+    $list1  = [];
+    $list2  = [];
+    $pushTo = 'list1';
+
+    foreach($parameters as $item){
+      if($item===';'){
+        $pushTo = 'list2';
+        continue;
+      }
+      $$pushTo[]=$item;
+    }
+
+    $inList1 = [];
+
+    foreach($value as $item)
+      if(in_array($item,$list1))
+        $inList1[] = $item;
+
+    if(!count($inList1))
+      return true;
+
+    $inList2 = [];
+
+    foreach($value as $item)
+      if(in_array($item,$list2))
+        $inList2[] = $item;
+
+    return count($inList2);
+  }
+
+  /**
+   * Replace all place-holders for the unique_with rule.
+   *
+   * @param  string  $message
+   * @param  string  $attribute
+   * @param  string  $rule
+   * @param  array   $parameters
+   *
+   * @return string
+   */
+    public function replaceNoSimultaneus($message, $attribute, $rule, $parameters)
+    {
+      $list1  = [];
+      $list2  = [];
+      $pushTo = 'list1';
+
+      foreach($parameters as $item){
+        if($item===';'){
+          $pushTo = 'list2';
+          continue;
+        }
+        $$pushTo[]=$item;
+      }
+
+      $message = str_replace(':list1', implode(',',$list1), $message);
+      $message = str_replace(':list2', implode(',',$list2), $message);
+
+      return $message;
+    }
 
   //TODO validate that internally, for now it will be evaluated in request, and if is called will be triggered always as false
   /**
