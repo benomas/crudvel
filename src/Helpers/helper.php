@@ -1003,6 +1003,8 @@ if(!function_exists("arrayTranspose")){
 if(!function_exists("assetsMap")){
   function assetsMap($source_dir, $directory_depth = 0, $hidden = FALSE)
   {
+    if(!file_exists($source_dir))
+      return [];
     if ($fp = @opendir($source_dir))
     {
       $filedata   = array();
