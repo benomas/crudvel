@@ -14,8 +14,8 @@ class <##[singular|studly](resource)##>Request extends \Customs\Crudvel\Requests
   public function defaultRules()
   {
     $this->rules=[
-      "name"   => "required|unique:".$this->getMainTable().",name",
-      "active" => "boolean",
+      'name'   => 'required|unique:'.$this->getMainTable().',name',
+      'active' => 'boolean',
     ];
   }
 // [End Rules]
