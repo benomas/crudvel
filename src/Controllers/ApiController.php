@@ -14,6 +14,7 @@ class ApiController extends CustomController{
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
   }
+
   public function callAction($method,$parameters=[]){
     $this->setCallActionMethod($method)
       ->setCallActionParameters($parameters)
@@ -27,6 +28,7 @@ class ApiController extends CustomController{
       $this->apiSuccessResponse($this->getModelBuilderInstance()->get());
   }
 
+// [Actions]
   /**
    * Display a listing of the resource.
    *
@@ -46,7 +48,10 @@ class ApiController extends CustomController{
     try{
       if ($key === null || $key === 'null')
         return $this->apiSuccessResponse([]);
-      $this->getModelBuilderInstance()->{'relatedTo'.Str::studly(Str::singular($resource))}($key);
+      if (method_exists($this->getModelBuilderInstance(),'relatedTo'.Str::studly(Str::singular($resource))))
+        $this->getModelBuilderInstance()->{'relatedTo'.Str::studly(Str::singular($resource))}($key);
+      else
+        $this->getModelBuilderInstance()->relatedTo($resource,$key);
       return $this->actionResponse();
     }catch(\Exception $e) {
     }
@@ -153,7 +158,9 @@ class ApiController extends CustomController{
     }
     return $this->apiSuccessResponse($actionPermittions);
   }
+// [End Actions]
 
+// [Methods]
   protected function getDataRequest(){
     $this->fields =  $this->getRequestInstance()->all();
 
@@ -173,4 +180,20 @@ class ApiController extends CustomController{
       $this->addField('password',bcrypt($fields['password']));
     return $this;
   }
+
+  protected function attacher($resource){
+    $toAttach = cvGetSomeKeysAsList($this->getFields()[cvCaseFixer('plural|snake',$resource).'_attach']??[]);
+    $this->getModelCollectionInstance()->{cvCaseFixer('plural|camel',$resource)}()->detach($toAttach);
+    $this->getModelCollectionInstance()->{cvCaseFixer('plural|camel',$resource)}()->attach($toAttach);
+
+    return $this;
+  }
+
+  protected function detacher($resource){
+    $toDetach = cvGetSomeKeysAsList($this->getFields()[cvCaseFixer('plural|snake',$resource).'_detach']??[]);
+    $this->getModelCollectionInstance()->{cvCaseFixer('plural|camel',$resource)}()->detach($toDetach);
+
+    return $this;
+  }
+// [End Methods]
 }

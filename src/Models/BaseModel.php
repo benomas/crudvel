@@ -313,6 +313,11 @@ class BaseModel extends Model implements CvCrudInterface
     return $query->nullFilter();
   }
 
+  public function scopeRelatedTo ($query,$relatedResource,$relatedKey) {
+    $query->whereHas(cvCaseFixer('plural|camel',$relatedResource),function($query) use ($relatedKey) {
+      $query->key($relatedKey);
+    });
+  }
   // [End Scopes]
 
   // [Others]
