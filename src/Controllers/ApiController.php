@@ -195,5 +195,44 @@ class ApiController extends CustomController{
 
     return $this;
   }
+
+  protected function storeRelation($resource){
+    return $this->attacher($resource);
+  }
+
+  protected function updateRelation($resource){
+    return $this->detacher($resource)->attacher($resource);
+  }
+
+
+  protected function dissociateResource($resource,$resourceKeys=[],$forceColumn = null){
+    $resourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$resource);
+    $resourceRows = $resourceModel::byResource($this->getSlugSingularName(),$this->getModelCollectionInstance()->id)
+    ->noKeys($resourceKeys)->get();
+    $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
+    foreach($resourceRows as $resource)
+      if(!$resource->fill([$forceColumn=>null])->save())
+        return false;
+
+    return true;
+  }
+
+  protected function associateResource($resource,$resourceKeys=[],$forceColumn = null){
+    $resourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$resource);
+    $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
+    foreach($resourceModel::keys($resourceKeys)->get() as $resource)
+      if(!$resource->fill([$forceColumn=>$this->getModelCollectionInstance()->id])->save())
+        return false;
+
+    return true;
+  }
+
+  protected function storeAssociated($resource,$resourceKeys=[],$forceColumn = null){
+    return $this->associateResource($resource,$resourceKeys,$forceColumn);
+  }
+
+  protected function updateAssociated($resource,$resourceKeys=[],$forceColumn = null){
+    return $this->dissociateResource($resource,$resourceKeys,$forceColumn) &&  $this->associateResource($resource,$resourceKeys,$forceColumn);
+  }
 // [End Methods]
 }

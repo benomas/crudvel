@@ -318,6 +318,13 @@ class BaseModel extends Model implements CvCrudInterface
       $query->key($relatedKey);
     });
   }
+
+  public function scopeByResource($query,$resource,$resourceKey){
+    return $query->whereHas(cvCaseFixer('singluar|camel',$resource),function($query) use($resourceKey) {
+      $query->key($resourceKey);
+    });
+  }
+
   // [End Scopes]
 
   // [Others]
