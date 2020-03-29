@@ -14,7 +14,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   protected $src;
   protected $modelDest;
   protected $modelSrc;
-  protected $model;
+  // protected $model;
   protected $chunckedSize       = 999;
   protected $runChunked         = false;
   protected $enableTransaction  = true;
@@ -148,8 +148,11 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
       $this->setCurrentCollectorInstance(new $collectorClass($this))->getCurrentCollectorInstance()->init();
       while($slicedData = $this->getCurrentCollectorInstance()->getNextChunk()){
         foreach($slicedData as $item)
-          // pdd($this->modelInstanciator(true), $item);
-          $this->modelInstanciator(true)->fill($item)->save();
+        try{
+            $this->modelInstanciator(true)->fill($item)->save();
+        }catch(\Exception $e){
+          continue;
+        }
       }
     }
     return $this;
@@ -180,7 +183,6 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
 
   public function setCollectors($collectors=null){
     $this->collectors = $collectors??null;
-
     return $this;
   }
 
@@ -190,8 +192,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   }
 
   public function loadArrayData(){
-    $this->getCurrentCollectorInstance()->setArrayData($this->getData()??[]);
-
+    $this->getCurrentCollectorInstance()->setArrayData($this->data??[]);
     return $this;
   }
 
@@ -203,7 +204,6 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   public function loadJsonPath(){
     $src = cvCaseFixer('plural|slug',$this->getSrc());
     $this->getCurrentCollectorInstance()->setJsonPath(database_path("data/$src/"));
-
     return $this;
   }
 
