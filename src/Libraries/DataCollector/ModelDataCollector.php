@@ -33,7 +33,7 @@ Class ModelDataCollector extends BaseDataCollector implements DataCollectorInter
     }
 
     $arraySegment = array_slice($this->getModelData(), $this->getOffSet(), $this->nextSegment());
-    customLog($arraySegment);
+    customLog($this->getOffSet(),$this->nextSegment(),count($arraySegment) );
     if(is_callable($next))
       if(!$next($arraySegment))
         throw new \Exception('next callback fail');

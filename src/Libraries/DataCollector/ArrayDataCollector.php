@@ -23,14 +23,14 @@ Class ArrayDataCollector extends BaseDataCollector implements DataCollectorInter
     if ($offset >= $this->getCount())
       return [];
 
-    return array_slice($this->getArrayData(), $offset, $offset+$chuckSize);
+    return array_slice($this->getArrayData(), $offset, $this->nextSegment());
   }
 
   public function getNextChunk($next=null):Array {
     if ($this->getOffSet() >= $this->getCount())
       return [];
 
-    $arraySegment = array_slice($this->getArrayData(), $this->getOffSet(), $this->getOffSet() + $this->getChuckSize());
+    $arraySegment = array_slice($this->getArrayData(), $this->getOffSet(), $this->nextSegment());
 
     if(is_callable($next))
       if(!$next($arraySegment))

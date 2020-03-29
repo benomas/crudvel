@@ -56,8 +56,8 @@ Class BaseDataCollector{
     $nextSegment  =  $this->getOffSet() + $this->getChuckSize();
 
     if($nextSegment > $this->getCount())
-      $nextSegment = $this->getCount();
+      return $this->getCount() - $this->getOffSet();
 
-    return $nextSegment;
+    return $this->getChuckSize();
   }
 }
