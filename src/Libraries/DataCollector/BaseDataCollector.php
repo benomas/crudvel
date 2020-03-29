@@ -51,4 +51,13 @@ Class BaseDataCollector{
 
     return $this;
   }
+
+  public function nextSegment(){
+    $nextSegment  =  $this->getOffSet() + $this->getChuckSize();
+
+    if($nextSegment > $this->getCount())
+      $nextSegment = $this->getCount();
+
+    return $nextSegment;
+  }
 }

@@ -12,9 +12,8 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   protected $baseClass;
   protected $classType = "TableSeeder";
   protected $src;
-  protected $modelDest;
+  protected $model;
   protected $modelSrc;
-  // protected $model;
   protected $chunckedSize       = 999;
   protected $runChunked         = false;
   protected $enableTransaction  = true;
@@ -26,36 +25,6 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   ];
   protected $currentCollectorInstance = null;
   use CrudTrait;
-
-  /**
-   * Run the database seeds.
-   *
-   * @return void
-   */
-  /* deprecated
-  public function run()
-  {
-    if(empty($this->data))
-      return false;
-
-    $this->data = collect($this->data);
-    $this->explodeClass();
-    Schema::disableForeignKeyConstraints();
-
-    if($this->deleteBeforeInsert)
-      $this->modelInstanciator()->delete();
-
-    if($this->enableTransaction){
-      DB::transaction(function(){
-        $this->defaultImplementation();
-      });
-    }else{
-      $this->defaultImplementation();
-    }
-
-    Schema::enableForeignKeyConstraints();
-  }
-  */
 
   public function chunkSize(){
     return $this->chunckedSize;
@@ -77,8 +46,8 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
     return $this->modelSrc;
   }
 
-  public function getModelDest(){
-    return $this->modelDest;
+  public function getModel(){
+    return $this->model;
   }
 
   public function getData(){
@@ -86,12 +55,11 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   }
 
   public function modelInstanciator($new=false){
-    if(!class_exists($this->getModelSrc()) || !class_exists($this->getModelDest()))
+    if(!class_exists($this->getModel()))
       return null;
 
-    $model = $this->getModelSrc();
+    $model = $this->getModel();
     if($new){
-      $model = $this->getModelDest();
       return new $model;
     }
     return $model::noFilters();
@@ -104,20 +72,28 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
     if(empty($this->src))
       $this->src = cvCaseFixer('singular|studly',str_replace($this->classType,"",$this->baseClass));
 
+    /*
     if(empty($this->modelSrc))
       $this->modelSrc = 'App\Models\\'.$this->getSrc();
+    */
 
-    if(empty($this->modelDest))
-      $this->modelDest = 'App\Models\\'.$this->getSrc();
+    if(empty($this->model))
+      $this->model = 'App\Models\\'.$this->getSrc();
 
   }
 
   protected function prepareSeeder(){
     $this->explodeClass();
+
     Schema::disableForeignKeyConstraints();
+
     if($this->deleteBeforeInsert){
       $this->modelInstanciator()->delete();
     }
+
+    $model = $this->getModel();
+    $model::reguard();
+
     return $this;
   }
 
@@ -147,11 +123,8 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
     foreach($this->getCollectors() as $collectorClass){
       $this->setCurrentCollectorInstance(new $collectorClass($this))->getCurrentCollectorInstance()->init();
       while($slicedData = $this->getCurrentCollectorInstance()->getNextChunk()){
-        foreach($slicedData as $item)
-        try{
-            $this->modelInstanciator(true)->fill($item)->save();
-        }catch(\Exception $e){
-          continue;
+        foreach($slicedData as $item){
+          $this->modelInstanciator(true)->fill($item)->save();
         }
       }
     }

@@ -17,23 +17,23 @@ Class ModelDataCollector extends BaseDataCollector implements DataCollectorInter
     $this->setCount($this->counter());
   }
 
+  // TODO : complete this implementation
   public function getChunkedCollection($chuckSize = 100, $pageNumber = 0):Array {
     $offset = $pageNumber * $chuckSize;
 
     if ($offset >= $this->getCount())
       return [];
-
-    // return $this->getModelData()->slice($offset, $offset+$chuckSize);
-    return array_slice($this->getModelData()->toArray(), $offset, $offset+$chuckSize);
+    return array_slice($this->getModelData(), $offset, $offset+$chuckSize);
   }
 
   public function getNextChunk($next=null):Array {
-    if ($this->getOffSet() >= $this->getCount())
+    if ($this->getOffSet() >= $this->getCount()){
+      customLog("entre");
       return [];
+    }
 
-    // $arraySegment= $this->getModelData()->slice($this->getOffSet(), $this->getOffSet() + $this->getChuckSize())->toArray();
-    $arraySegment = array_slice($this->getModelData()->toArray(), $this->getOffSet(), $this->getOffSet() + $this->getChuckSize());
-    // pdd($arraySegment);
+    $arraySegment = array_slice($this->getModelData(), $this->getOffSet(), $this->nextSegment());
+    customLog($arraySegment);
     if(is_callable($next))
       if(!$next($arraySegment))
         throw new \Exception('next callback fail');
@@ -41,7 +41,7 @@ Class ModelDataCollector extends BaseDataCollector implements DataCollectorInter
   }
 
   public function getModelData(){
-    return $this->modelData??null;
+    return $this->modelData??[];
   }
 
   public function getDataCallerInstace():ModelDataCallerInterface{
@@ -49,8 +49,13 @@ Class ModelDataCollector extends BaseDataCollector implements DataCollectorInter
   }
 
   public function setModelData($modelName=null){
+    if(!$modelName){
+      $this->modelData = [];
+      return $this;
+    }
+
     $model = new $modelName;
-    $this->modelData = $model::all();
+    $this->modelData = $model::all()->toArray();
     return $this;
   }
 
@@ -60,6 +65,6 @@ Class ModelDataCollector extends BaseDataCollector implements DataCollectorInter
   }
 
   public function counter(){
-    return $this->modelData->count();
+    return count($this->modelData);
   }
 }
