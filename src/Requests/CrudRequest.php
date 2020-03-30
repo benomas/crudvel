@@ -155,10 +155,12 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   }
 
   public function simpleAttributeTranslator($field,$segment = null){
+
     if (!$segment)
       $fixedLangSegment = $this->getCurrentDinamicResource();
     else
       $fixedLangSegment = Str::plural(cvSlugCase($segment,'-'));
+
     $segment = $segment ?? $this->currentDepth;
 
     $this->fixedAttributes[$segment.$field]  = __("crudvel/".$fixedLangSegment.".fields.$field");
@@ -172,10 +174,12 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function fixDepth($rules,$segment = null){
     $segment = $segment ?? $this->currentDepth;
     $fixedRules = [];
+
     foreach($rules as $rulesIndex => $rulesValue){
       $fixedRules[$segment.$rulesIndex]=$rulesValue;
       $this->simpleAttributeTranslator($rulesIndex,$segment);
     }
+
     return $fixedRules;
   }
 
