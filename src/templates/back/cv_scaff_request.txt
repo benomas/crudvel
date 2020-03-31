@@ -6,17 +6,27 @@ class <##[singular|studly](resource)##>Request extends \Customs\Crudvel\Requests
 // [End Authorization]
 
 // [Rules]
-  /**
-   * Get the validation rules that apply to the request.
-   *
-   * @return array
-   */
-  public function defaultRules()
-  {
-    $this->rules=[
-      'name'   => 'required|unique:'.$this->getMainTable().',name',
-      'active' => 'boolean',
-    ];
+  public function defaultRules() {
+    $this->rules = self::externalPostStoreRules()->fixRules();
+  }
+
+  public static function externalPostStoreRules(){
+    return self::externalize([
+      "name"   => "required|unique:<##[plural|snake](resource)##>,name",
+      "active" => "boolean",
+    ]);
+  }
+
+  public static function externalPutUpdateRules(){
+    return self::externalize(self::externalPostStoreRules()->fixRules())->setExtraRules([
+      'name' => "required|unique:<##[plural|snake](resource)##>,name,@<##[singular|camel](resource)##>Key@",
+    ])->setMethod(__FUNCTION__);
+  }
+
+  public function putUpdate(){
+    $this->rules = self::externalPutUpdateRules()
+      ->setParam('<##[singular|camel](resource)##>Key',$this->getCurrentActionKey())
+      ->fixRules();
   }
 // [End Rules]
 }

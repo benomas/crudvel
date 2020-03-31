@@ -27,6 +27,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   //imports/export
   public $importResults          = [];
   public $importerCursor         = 1;
+
   use \Crudvel\Traits\CrudTrait;
   use \Crudvel\Traits\CvPatronTrait;
   /**
@@ -183,15 +184,6 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     return $fixedRules;
   }
 
-  public static function staFixDepth($rules,$segment = null){
-    $fixedRules = [];
-    if (!$segment)
-      return $fixedRules;
-    foreach($rules as $rulesIndex => $rulesValue)
-      $fixedRules[$segment.$rulesIndex]=$rulesValue;
-    return $fixedRules;
-  }
-
   //Todo
   public function validateImportingRow($row){
     $this->defaultRules();
@@ -310,7 +302,16 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     return $this->slugSingularName??Str::snake(str_replace('Request','',class_basename($this)),'-');
   }
 
-  public static function mixRules ($action = 'relatedPostStoreRules',$localRules = [],$extraResources = []) {
+  public static function staFixDepth($rules,$segment = null){
+    $fixedRules = [];
+    if (!$segment)
+      return $fixedRules;
+    foreach($rules as $rulesIndex => $rulesValue)
+      $fixedRules[$segment.$rulesIndex]=$rulesValue;
+    return $fixedRules;
+  }
+
+  public static function mixRules ($action = 'externalPostStoreRules',$localRules = [],$extraResources = []) {
     $moreRules = [];
     foreach ($extraResources as $index=>$value){
       $segment = !is_numeric($index) ? "$value." : cvSlugCase(Str::singular($value)).'.';
@@ -318,4 +319,17 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     }
     return array_merge($localRules,$moreRules);
   }
+
+  public static function externalize($rules = []){
+    return new \Crudvel\Requests\ExternalRequestBuilder($rules);
+  }
+/*
+  public static function externalPostStoreRules(){
+    return [];
+  }
+
+  public static function externalPutUpdateRules(){
+    return [];
+  }
+  */
 }
