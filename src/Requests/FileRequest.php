@@ -5,21 +5,7 @@ use App\Models\CatFile;
 
 class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
 
-  /**
-   * Determine if the user is authorized to make this request.
-   *
-   * @return bool
-   */
-  /*
-  public function authorize()
-  {
-    if(!parent::authorize())
-      return false;
-
-    if($this->currentAction === 'destroy')
-      return actionAccess($this->getUserModelBuilderInstance(),$this->catFile->resource.".update");
-    return true;
-  }*/
+  //TODO homologate external rules methods
   /**
    * Get the validation rules that apply to the request.
    *

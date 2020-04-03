@@ -2,29 +2,34 @@
 
 class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
 
-  /**
-   * Get the validation rules that apply to the request.
-   *
-   * @return array
-   */
-  public function defaultRules()
-  {
-    $this->rules=[
-      "active"      => "boolean",
-      "description" => "required|min:10",
-      "max_size"    => "required|numeric",
-      "min_size"    => "required|numeric",
-      "multiple"    => "boolean",
-      "resource"    => "required",
-      "name"        => "required|unique:".$this->getMainTable().",name",
-      "required"    => "boolean",
-      "slug"        => "required|unique:".$this->getMainTable().",slug",
-      "types"       => "required",
-    ];
-  }
+  // [Authorization]
+  // [End Authorization]
 
-  public function putUpdate(){
-    $this->rules["name"] .=",".$this->getCurrentActionKey();
-    $this->rules["slug"] .=",".$this->getCurrentActionKey();
-  }
+  // [Rules]
+    public static function externalPostStoreRules(){
+      return (get_called_class())::externalize([
+        "active"      => "boolean",
+        "description" => "required|min:10",
+        "max_size"    => "required|numeric",
+        "min_size"    => "required|numeric",
+        "multiple"    => "boolean",
+        "resource"    => "required",
+        "name"        => "required|unique:cat_files,name",
+        "required"    => "boolean",
+        "slug"        => "required|unique:cat_files,slug",
+        "types"       => "required",
+      ]);
+    }
+
+    public static function externalPutUpdateRules(){
+      return (get_called_class())::externalize((get_called_class())::externalPostStoreRules()->fixRules())->setExtraRules([
+        'name' => 'required|unique:cat_files,name,@catFileKey@',
+        'slug' => 'required|unique:cat_files,slug,@catFileKey@',
+      ])->setMethod(__FUNCTION__);
+    }
+
+    public function putUpdate(){
+      $this->rules = (get_called_class())::externalPutUpdateRules()->setParam('catFileKey',$this->getCurrentActionKey())->fixRules();
+    }
+  // [End Rules]
 }

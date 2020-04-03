@@ -305,7 +305,7 @@ private function getIgnore(&$parameters)
             $exceptionTableValue= $property;
         }
         else{
-          if($property==="exception"){
+          if($property===";"){
             $hasExceptions = $key;
             continue;
           }
@@ -318,8 +318,10 @@ private function getIgnore(&$parameters)
       }
       if($test->count()>0)
         return true;
+
+      $segments = explode('.',$attribute);
       if($hasExceptions && DB::table($parameters[0])->where($parameters[0].'.'.$parameters[1],'=',$value)->count()){
-        $exceptionQuery = DB::table($exceptionTable)->where($exceptionTable.".".$attribute,$value);
+        $exceptionQuery = DB::table($exceptionTable)->where($exceptionTable.".".end($segments),$value);
         if(!$exceptionQuery->count())
           return false;
         if(!empty($exceptionTableColumn) && !empty($exceptionTableValue))
@@ -506,7 +508,7 @@ private function getIgnore(&$parameters)
             $exceptionTableValue= $property;
         }
         else{
-          if($property==="exception"){
+          if($property===";"){
             $hasExceptions = $key;
             continue;
           }

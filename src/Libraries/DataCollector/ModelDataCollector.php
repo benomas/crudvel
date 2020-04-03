@@ -48,7 +48,7 @@ Class ModelDataCollector extends BaseDataCollector implements DataCollectorInter
   }
 
   public function setModelData($modelName=null){
-    if(!$modelName){
+    if(!$modelName || !class_exists($modelName)){
       $this->modelData = [];
       return $this;
     }
