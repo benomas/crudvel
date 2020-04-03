@@ -28,12 +28,11 @@ Class ModelDataCollector extends BaseDataCollector implements DataCollectorInter
 
   public function getNextChunk($next=null):Array {
     if ($this->getOffSet() >= $this->getCount()){
-      customLog("entre");
       return [];
     }
 
     $arraySegment = array_slice($this->getModelData(), $this->getOffSet(), $this->nextSegment());
-    customLog($this->getOffSet(),$this->nextSegment(),count($arraySegment) );
+
     if(is_callable($next))
       if(!$next($arraySegment))
         throw new \Exception('next callback fail');
