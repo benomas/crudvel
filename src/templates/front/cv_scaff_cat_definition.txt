@@ -12,14 +12,14 @@ let resourceName = '<##[plural|slug](resource)##>'
 //TODO: check for default icon
 export default function (globals) {
   let resource = new CvResourceMap({
-    name         : resourceName,
-    icon         : 'fas fa-',
-    path         : resourceName,
-    keyName      : 'id',
-    pluralName   : '<##[plural|slug](resource)##>',
-    singularName : '<##[singular|slug](resource)##>',
-    crudServices : new OwnService(globals['cvComunicator'],resourceName),
-    mainSection  : 'catalogs',
+    name             : resourceName,
+    icon             : 'fas fa-list',
+    path             : resourceName,
+    keyName          : 'id',
+    pluralName       : '<##[plural|slug](resource)##>',
+    singularName     : '<##[singular|slug](resource)##>',
+    crudServices     : new OwnService(globals['cvComunicator'],resourceName),
+    resourceSections : ['catalogs'],
     filler
   })
 
