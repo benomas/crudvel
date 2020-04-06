@@ -69,18 +69,15 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
 
   public function fixRules(){
     $rules = [$this->getExtraRules()];
-
     foreach($this->getChildrenRequest() as $child){
       $rules[]= $child->fixRules();
     }
 
     $rules = array_merge($this->getSelfRules(),...$rules);
 
-    foreach($rules as $key=>$rule){
-      foreach($this->getParams() as $param=>$value){
-        $rules[$key] = str_replace("@$param@",$value,$rule);
-      }
-    }
+    foreach($rules as $key=>$rule)
+      foreach($this->getParams() as $param=>$value)
+        $rules[$key] = str_replace("@$param@",$value,$rules[$key]);
 
     return $this->setRules($rules)->getRules();
   }
