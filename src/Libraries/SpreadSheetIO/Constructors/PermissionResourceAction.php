@@ -29,6 +29,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
       array_push($temp, $action);
     foreach ($specials as $special=> $value)
       array_push($temp, $special);
+
     // Set row to heading
     $a[0] = $temp;
     // get resources from
