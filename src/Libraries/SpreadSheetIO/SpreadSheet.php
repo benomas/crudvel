@@ -14,13 +14,14 @@ class SpreadSheet
     $this->constructorInstance = $CvSpreadSheetConstructor;
   }
 
-  function importSpreadSheet()
+  function importSpreadSheet($ignoreIfNotExists = false)
   {
     if(!File::exists($this->constructorInstance->getFullFilePath())){
+      if($ignoreIfNotExists) return [];
       pdd("File not found:", $this->constructorInstance->getFullFilePath() );
     }else{
       Excel::import(($ExcelCollection = new \App\Imports\ImporterInterceptor()), $this->constructorInstance->getfullFilePath());
-      return $ExcelCollection->getRows()->toArray();
+      return $ExcelCollection->getRows();
     }
   }
 
@@ -30,13 +31,38 @@ class SpreadSheet
     return Excel::download($ExporterInterceptor, $this->constructorInstance->getFileNameAttr());
   }
 
-  public function storeSpreadSheet()
+  public function storeSpreadSheet($fromData=false)
   {
-    $ExporterInterceptor = new \App\Exports\ExporterInterceptor(collect($this->constructorInstance->build()));
+    if($fromData){
+      $data = $this->constructorInstance->getData();
+    }else{
+      $data = $this->constructorInstance->build();
+    }
+    // use specific export interceptor with background color in cells
+    $ExporterInterceptor = new \App\Exports\ResourcePermissionExportInterceptor(collect($data), $this->constructorInstance->bgRanges??[]);
+    // check if file exist
     if(file_exists($this->constructorInstance->getFullFilePath()))
-      \Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().'layout_original'.DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
+      Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().'synchronized'.DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
     else
-      \Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
+      Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
+  }
+
+  public function synchronize(){
+    // import existing data xlsx file
+    $importData = $this->importSpreadSheet(true);
+    if(empty($importData)) return $this->storeSpreadSheet();
+    // set keyby 0, to this I get key by 'name resource', then, map to convert keys of each resource for actions names
+    $importData = $importData->keyby(0)->map(function($row) use ($importData){
+      $newRow=[];
+      // add resource-names keys
+      foreach ($row as $k=> $v) {
+        $newRow[$importData->first()[$k]] = $v;
+      }
+        return $newRow;
+    });
+    $this->constructorInstance->data =$importData;
+    $this->constructorInstance->synchronize();
+    $this->storeSpreadSheet(true);
   }
 }
 

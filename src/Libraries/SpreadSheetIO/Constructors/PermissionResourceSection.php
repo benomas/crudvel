@@ -10,6 +10,7 @@ extends PermissionBase
 implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
 {
   public $postfixFilename = 'section-permissions';
+  public $data = [];
 
   public function __construct($filename, $format = '.xlsx'){
     $this->format = $format;
@@ -27,6 +28,11 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
       $a[] = [$resource];
     }
     return $a;
+
+  }
+
+  public function synchronize()
+  {
 
   }
 

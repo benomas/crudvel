@@ -13,6 +13,7 @@ trait SysInstancesTrait
       $key = str_replace('_','-',$key);
       $items[]=$key;
     }
+    // pdd($items);
     return $items;
   }
   public function getSysLangArray($mainKey='', $lang='en'){
