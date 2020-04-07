@@ -14,13 +14,14 @@ trait ResourceTrait
       return $controllerActions;
     }
 
-    if ($this->getActions())
-      return $this->getActions();
+    if ($this->getCalculedActions())
+      return $this->mergeActions();
 
     foreach ($this->cvControllers() as $controllerResource => $controllerClass)
       $actions[$controllerResource] = (new $controllerClass)->getActions();
 
-    $this->setActions($actions);
+    $this->setCalculedActions($actions);
+
     return $this->mergeActions();
   }
 
@@ -65,6 +66,16 @@ trait ResourceTrait
     return $this;
   }
 
+  protected function getCalculedActions(){
+    return $this->calculedActions??null;
+  }
+
+  protected function setCalculedActions($actions = null){
+    $this->calculedActions = $actions ?? null;
+
+    return $this;
+  }
+
   protected function addActions($controllerResource=null,$actions=null){
     if(!$controllerResource)
       return $this;
@@ -74,7 +85,7 @@ trait ResourceTrait
 
   protected function mergeActions () {
     $actions = [];
-    foreach($this->getActions() AS $controllerActions)
+    foreach($this->getCalculedActions() AS $controllerActions)
       foreach($controllerActions AS $action)
         if(empty($actions[$action]))
           $actions[$action] = true;
