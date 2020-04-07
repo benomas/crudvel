@@ -325,6 +325,10 @@ class BaseModel extends Model implements CvCrudInterface
     });
   }
 
+  public function scopeWithUser($query, $userId){
+    return $query->where($this->preFixed('user_id'), $userId);
+  }
+
   // [End Scopes]
 
   // [Others]
