@@ -144,11 +144,11 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeWithUserName($query,$username){
-    $query->where($this->getTable().".username",$username);
+    $query->where($this->preFixed('username'),$username);
   }
 
   public function scopeWithEmail($query,$email){
-    $query->where($this->getTable().".email",$email);
+    $query->where($this->preFixed('email'),$email);
   }
 
   public function scopeSelectCvSearch($query, $alias = null){
@@ -162,6 +162,18 @@ class User extends \Customs\Crudvel\Models\BaseModel{
 
   public function scopeParticularOwner($query,$userId){
     //$query->where($this->getTable().".id", $userId);
+  }
+
+  public function scopeHasInternalRole($query){
+    $query->whereHas('roles',function($query){
+      $query->internal();
+    });
+  }
+
+  public function scopeHasExternalRole($query){
+    $query->whereHas('roles',function($query){
+      $query->external();
+    });
   }
 // [End Scopes]
 
@@ -191,6 +203,14 @@ class User extends \Customs\Crudvel\Models\BaseModel{
 
   public function inRoles(...$roles){
     return $this->roles()->inRoles($roles)->count();
+  }
+
+  public function hasInternalRole(){
+    return $this->roles()->internal()->count() > 0;
+  }
+
+  public function hasExternalRole(){
+    return $this->roles()->external()->count() > 0;
   }
 // [End Others]
 }

@@ -130,6 +130,14 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
       $query->key($roleKey);
     });
   }
+
+  public function scopeInternal($query){
+    return $query->where($this->preFixed('internal'),1);
+  }
+
+  public function scopeExternal($query){
+    return $query->where($this->preFixed('external'),1);
+  }
 // [End Scopes]
 
 // [Others]
