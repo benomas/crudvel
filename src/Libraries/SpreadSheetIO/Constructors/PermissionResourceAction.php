@@ -15,7 +15,6 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
   public $postfixFilename = 'resource-actions';
   public $spreadSheetTitle= 'Recursos/Acciones';
   public $data = [];
-  public $actions = [];
   public $bgRanges = [];
 
   public function __construct($filename, $format = '.xlsx'){
@@ -27,8 +26,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     $header [0]= $this->getSpreadSheetTitle();
     // $actions = $this->getSysLangArrayByKeyName('actions');
     // $specials = $this->getSysLangArrayByKeyName('specials');
-    if(empty($this->actions)) $this->actions= cvActions();
-    $actions= $this->actions;
+    $actions = cvActions();
     $specials = $this->getSysSpecials('specials');
     $specials['(Acceso)']= '(Acceso)';
     // Set headers: actions and specials actions
@@ -69,12 +67,8 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     // get new resources from system
     $newResources = cvResources();
     // get new actions from system
-    if(empty($this->actions))
-      $this->actions = cvActions();
-    $newActions = $this->actions;
-    // TODO: remove this test
-    $newActions [] = 'new Action';
-    $newResources [] = 'new Resource';
+    $newActions = cvActions();
+    // pdd(cvActions(), cvActions('users'));
     // add special actions
     $specials = $this->getSysSpecials('specials');
     $specials['(Acceso)']= '(Acceso)';

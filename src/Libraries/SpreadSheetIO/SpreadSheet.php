@@ -40,11 +40,7 @@ class SpreadSheet
     }
     // use specific export interceptor with background color in cells
     $ExporterInterceptor = new \App\Exports\ResourcePermissionExportInterceptor(collect($data), $this->constructorInstance->bgRanges??[]);
-    // check if file exist
-    if(file_exists($this->constructorInstance->getFullFilePath()))
-      Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().'synchronized'.DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
-    else
-      Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
+    Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
   }
 
   public function synchronize(){
