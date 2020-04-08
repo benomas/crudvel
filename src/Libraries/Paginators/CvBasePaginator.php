@@ -120,10 +120,10 @@ class CvBasePaginator implements CvCrudInterface
   */
   public function tempQuery(){
     $querySql = $this->getModelBuilderInstance()->toSql();
+    $bindings = $this->getModelBuilderInstance()->getBindings();
     $this->getModelBuilderInstance()
       ->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))
-      ->setBindings($this->getModelBuilderInstance()
-      ->getBindings())
+      ->setBindings($bindings)
     );
   }
 

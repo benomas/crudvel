@@ -40,14 +40,14 @@ class User extends \Customs\Crudvel\Models\BaseModel{
       'App\Models\Role',
       ['role_user as aaa', 'App\Models\Role as bbb', 'role_role as ccc']
     );*/
-    return $this->manyToManyToMany("roles","roles","App\Models\Role");
+    return $this->manyToManyToMany('roles','roles',"App\Models\Role");
   }
 // [End Relationships]
 
 //Non standar Relationships
   //To be deprecated
   public function rolesPermissions(){
-    return $this->manyToManyToMany("roles","permissions","App\Models\Permission");
+    return $this->manyToManyToMany('roles',"permissions","App\Models\Permission");
   }
 
   public function sectionPermissions()
@@ -78,15 +78,17 @@ class User extends \Customs\Crudvel\Models\BaseModel{
 
 // [Scopes]
   public function scopeHidden($query){
-    $query->whereHas("roles",function($query){
-      $query->whereNotIn("slug",["root"]);
+    return $query->where(function($query){
+      $query->whereHas('roles',function($query){
+        $query->hidden();
+      });
     })->orWhere(function($query){
-      $query->doesntHave("roles");
+      $query->doesntHave('roles');
     });
   }
 
   public function scopeSectionPermission($query,$section){
-    $query->whereHas("roles",function($query) use($section){
+    $query->whereHas('roles',function($query) use($section){
       $query->whereHas("permissions",function($query) use($section){
         $query->section($section);
       });
@@ -94,7 +96,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeResourcePermission($query,$resource){
-    $query->whereHas("roles",function($query) use($resource){
+    $query->whereHas('roles',function($query) use($resource){
       $query->whereHas("permissions",function($query) use($resource){
         $query->resource($resource);
       });
@@ -102,7 +104,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeActionPermission($query,$action){
-    $query->whereHas("roles",function($query) use($action){
+    $query->whereHas('roles',function($query) use($action){
       $query->whereHas("permissions",function($query) use($action){
         $query->action($action);
       });
@@ -110,7 +112,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeFieldPermission($query,$field){
-    $query->whereHas("roles",function($query) use($field){
+    $query->whereHas('roles',function($query) use($field){
       $query->whereHas("permissions",function($query) use($field){
         $query->field($field);
       });
@@ -118,7 +120,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeSpecialPermission($query,$special){
-    $query->whereHas("roles",function($query) use($special){
+    $query->whereHas('roles',function($query) use($special){
       $query->whereHas("permissions",function($query) use($special){
         $query->special($special);
       });
@@ -126,19 +128,19 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeWithRole($query,$role){
-    $query->whereHas("roles",function($query) use($role){
+    $query->whereHas('roles',function($query) use($role){
       $query->where("roles.slug",$role);
     });
   }
 
   public function scopeWithRoles($query,$roles){
-    $query->whereHas("roles",function($query) use($roles){
+    $query->whereHas('roles',function($query) use($roles){
       $query->whereIn("roles.slug",$roles);
     });
   }
 
   public function scopeWithRoleIds($query,$roles){
-    $query->whereHas("roles",function($query) use($roles){
+    $query->whereHas('roles',function($query) use($roles){
       $query->whereIn("roles.id",$roles);
     });
   }
@@ -157,11 +159,16 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeGeneralOwner($query,$userId){
-    $this->scopeHidden($query);
+    if(!($user = $this->fixUser($userId)))
+      return $query->nullFilter();
+
+    return $query->hidden()->whereHas('roles',function($query) use($user){
+      $query->keys($user->rolesroles()->get()->pluck("id")->toArray());
+    });
   }
 
   public function scopeParticularOwner($query,$userId){
-    //$query->where($this->getTable().".id", $userId);
+    $query->key($userId);
   }
 
   public function scopeHasInternalRole($query){

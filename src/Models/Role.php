@@ -59,74 +59,74 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
 
 // [Scopes]
   public function scopeInRoles($query,$rolesSlug){
-    $query->whereIn($this->getTable().".slug",$rolesSlug);
+    return $query->whereIn($this->preFixed('slug'),$rolesSlug);
   }
 
   public function scopeNotInRoles($query,$rolesSlug){
-    $query->whereNotIn($this->getTable().".slug",$rolesSlug);
+    return $query->whereNotIn($this->preFixed('slug'),$rolesSlug);
   }
 
   public function scopeWithRole($query,$roleSlug){
-    $this->scopeInRoles($query,[$roleSlug]);
+    return $query->inRoles([$roleSlug]);
   }
 
   public function scopeWithoutRole($query,$roleSlug){
-    $this->scopeNotInRoles($query,[$roleSlug]);
+    return $query->notInRoles([$roleSlug]);
   }
 
   public function scopeWithRoot($query){
-    $this->scopeWithRole($query,"root");
+    return $query->withRole('root');
   }
 
   public function scopeWithAdmin($query){
-    $this->scopeWithRole($query,"adminsitrator");
+    return $query->withRole('adminsitrator');
   }
 
   public function scopeWithoutRoot($query){
-    $this->scopeWithoutRole($query,"root");
+    $query->where($this->preFixed('slug'),"<>","root");
   }
 
   public function scopeWithoutAdmin($query){
-    $this->scopeWithoutRole($query,"adminsitrator");
+    return $query->withoutRole('adminsitrator');
   }
+
   public function scopeWithManager($query){
-    $this->scopeWithRole($query,"manager");
+    return $query->withRole('manager');
   }
 
   public function scopeWithDistribuitor($query){
-    $this->scopeWithRole($query,"distributor");
+    return $query->withRole('distributor');
   }
 
   public function scopeHidden($query){
-    $query->where($this->getTable().".slug","<>","root");
+    $query->where($this->preFixed('slug'),"<>","root");
   }
 
   public function scopeSelectCvSearch($query,$alias=null){
     $alias = $this->alias($alias);
+
     return $query->selectRaw("CONCAT($alias.name)");
   }
 
   public function scopeGeneralOwner($query,$userId){
-    $this->scopeHidden($query);
+    return $query->hidden();
   }
 
   public function scopeParticularOwner($query,$userId){
-    $user = \App\Models\User::id($userId)->first();
-    if(!$user)
-      $query->nullFilter();
-    else{
-      $query->ids($user->rolesroles()->get()->pluck("id")->toArray());
-    }
+    if(!($user = \App\Models\User::id($userId)->first()))
+      return $query->nullFilter();
+
+    return $query->ids($user->rolesroles()->get()->pluck("id")->toArray());
   }
 
   public function scopeRelatedToUser ($query,$userKey) {
-    $query->whereHas("users",function($query) use ($userKey) {
+    return $query->whereHas("users",function($query) use ($userKey) {
       $query->key($userKey);
     });
   }
 
   public function scopeRelatedToRole ($query,$roleKey) {
-    $query->whereHas("roles",function($query) use ($roleKey) {
+    return $query->whereHas("roles",function($query) use ($roleKey) {
       $query->key($roleKey);
     });
   }

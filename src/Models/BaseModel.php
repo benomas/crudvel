@@ -209,6 +209,7 @@ class BaseModel extends Model implements CvCrudInterface
   {
     if (!in_array($column, $this->getTableColumns()))
       return 0;
+
     return kageBunshinNoJutsu($query)->count(DB::raw("DISTINCT " . $this->preFixed($column, $preFixed)));
   }
 
@@ -305,7 +306,7 @@ class BaseModel extends Model implements CvCrudInterface
     $ownerPermissions = $user->permissions()->specialPermissions();
 
     if(kageBunshinNoJutsu($ownerPermissions)->slug("$resource.general-owner")->count())
-      return $query->generalOwner($user);
+      return $query->generalOwner($user->id);
 
     if($ownerPermissions->slug("$resource.particular-owner")->count())
       return $query->particularOwner($user->id);
@@ -410,6 +411,7 @@ class BaseModel extends Model implements CvCrudInterface
   {
     if (!$fixed)
       return $column;
+
     return $this->getTable() . '.' . $column;
   }
 
@@ -534,5 +536,23 @@ class BaseModel extends Model implements CvCrudInterface
       return substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"),0,$length);
     };
     return $randomWord();
+  }
+
+  public function fixUser($userKey = null){
+    if(!$userKey){
+      if(!$this->getUserModelCollectionInstance())
+        return null;
+
+      return $this->getUserModelCollectionInstance();
+    }
+
+    if(!$this->getUserModelCollectionInstance() || $this->getUserModelCollectionInstance()->getKeyValue() !== $userKey) {
+      if(!($user = \App\Models\User::key($userKey)->first()))
+        return null;
+
+      return $user;
+    }
+
+    return $this->getUserModelCollectionInstance();
   }
 }
