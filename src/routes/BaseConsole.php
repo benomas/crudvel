@@ -376,7 +376,7 @@ class BaseConsole{
         DB::table('oauth_clients')->WHERE('name','mobile-app')->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
 
     };
-    Artisan::command("create:mobile-app",$callBack)->describe('Create password grant client for mobile app');
+    Artisan::command("create:mobile-client",$callBack)->describe('Create password grant client for mobile app');
     return $this;
   }
 
