@@ -365,6 +365,21 @@ class BaseConsole{
     return $this;
   }
 
+  public function loadCreateMobileClient($callBack=null){
+    $callBack = $callBack ?? function (){
+      if(DB::table('oauth_clients')->WHERE('oauth_clients.name','mobile-app')->count())
+        return ;
+
+      \Crudvel\Routes\BaseConsole::cvIam()->caller(['command'=>'passport:client','params'=>['--name'=> 'mobile-app','--password'=>null]]);
+
+      if(config('app.env')!=='production')
+        DB::table('oauth_clients')->WHERE('name','mobile-app')->UPDATE(['secret'=>'devdevdevdevdevdevdevdevdevdevdevdevdevd']);
+
+    };
+    Artisan::command("create:mobile-app",$callBack)->describe('Create password grant client for mobile app');
+    return $this;
+  }
+
   public function loadFixModelMetaData($callBack=null){
     $callBack = $callBack ?? function ($model=null,$mode=false){
       if(!$model)
