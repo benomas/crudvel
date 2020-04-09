@@ -15,7 +15,9 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
   public $postfixFilename = 'resource-actions';
   public $spreadSheetTitle= 'Recursos/Acciones';
   public $data = [];
+  public $bgColors = ['toModify' =>'b3b3cc', 'toIgnore' => '000000'];
   public $bgRanges = [];
+  public $lastActionName = '(Acceso)';
 
   public function __construct($filename, $format = '.xlsx'){
     $this->format = $format;
@@ -28,7 +30,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     // $specials = $this->getSysLangArrayByKeyName('specials');
     $actions = cvActions();
     $specials = $this->getSysSpecials('specials');
-    $specials['(Acceso)']= '(Acceso)';
+    $specials[$this->lastActionName]= $this->lastActionName;
     // Set headers: actions and specials actions
     foreach ($actions as $action)
       array_push($header, $action);
@@ -40,17 +42,34 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     $resources = cvResources();
     $countActions = count($data[0]);
     $countResources= count($resources)+1;
-    foreach ($resources as $resource) {
+
+    $toIgnore = [];
+    // iter over resources to define data and bgColors
+    foreach ($resources as $rIndex => $resource) {
       $rowData = [];
       $rowData []= $resource;
+      // for Data:
       for($e=1; $e < $countActions; $e++){
         $rowData[] = '0';
       }
       $data[] = $rowData;
+
+      // for bgColor: check toIgnore bgColor, getting actions by resource
+      $resourceActions = cvActions($resource);
+      foreach ($header as $aIndex => $action) {
+        // Omit first col and last col (Acceso)
+        if($aIndex == 0) continue;
+          $init = $this->num2alpha($aIndex);
+          $init.=$rIndex+2;
+          $finish = $init;
+        if(array_search($action, $resourceActions) === false && $action != $this->lastActionName){
+          $this->bgRanges[] = ['range'=>$init.':'.$finish, 'bgColor'=>$this->bgColors['toIgnore'], 'protection'=>true];
+        }else{
+          $this->bgRanges[] = ['range'=>$init.':'.$finish, 'bgColor'=>$this->bgColors['toModify'], 'protection'=>false];
+        }
+      }
     }
     $this->data = $data;
-    $finish = $this->num2alpha($countActions-1).$countResources;
-    $this->bgRanges = ['A1'.':'.$finish];
     return $this->data;
   }
 
@@ -68,16 +87,13 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     $newResources = cvResources();
     // get new actions from system
     $newActions = cvActions();
-    // pdd(cvActions(), cvActions('users'));
     // add special actions
     $specials = $this->getSysSpecials('specials');
-    $specials['(Acceso)']= '(Acceso)';
+    $specials[$this->lastActionName]= $this->lastActionName;
     foreach ($specials as $special=> $value)
       array_push($newActions, $special);
-
     // get collection from data
     $c = $this->data;
-    $bgRanges = [];
     // counters for row and col
     $nRow = 1;
     $nCol = 1;
@@ -89,15 +105,6 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     array_unshift($syncData[0], $this->getSpreadSheetTitle());
     // get first row (Action headers)
     $oldActions = $c->first();
-    foreach ($newActions as $action) {
-      $index = array_search($action, $oldActions);
-      if($index === false){
-        $init = $this->num2alpha($nCol)."1";
-        $finish = $this->num2alpha($nCol).$countResources;
-        $bgRanges[] = $init.':'.$finish;
-      }
-      $nCol++;
-    }
     // counters for row and col
     $nRow = 2;
     $nCol = 0;
@@ -105,17 +112,17 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     foreach($newResources as $resource){
       $data = [];
       $data[0] = $resource;
+      $resourceActions = cvActions($resource);
       foreach ($newActions as $action) {
         $finish = '';
         $init = '';
         // does resource name exist in old data collection ?
         if(is_null($c->get($resource))){
-          $init = 'A'.$nRow;
-          $finish = $this->num2alpha($countActions).$nRow;
-          // mark as new cell to identificate with background color
-          $bgRanges[] = $init.':'.$finish;
           // fill all resource data row with zero
           for($e = 1; $e <= $countActions; $e++){
+            $init = 'A'.$nRow;
+            $finish = $this->num2alpha($e).$nRow;
+            $this->bgRanges[] = ['range'=> $init.':'.$finish, 'bgColor'=>$this->bgColors['toModify'], 'protection'=>false];
             $data[$e] = '0';
           }
           break;
@@ -128,14 +135,22 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
             // Set the old resource/action value in the new data for spreadsheet
             $data[] = (string)$row[$action];
           }
+          $nCol++;
         }
-        $nCol++;
+        $init = $this->num2alpha($nCol);
+        $init.=$nRow;
+        $finish = $init;
+        // check if action exist in resource actions to bgs
+        if(array_search($action, $resourceActions) === false && $nCol < count($newActions)-1){
+          $this->bgRanges[] = ['range'=>$init.':'.$finish, 'bgColor'=>$this->bgColors['toIgnore'], 'protection'=>true];
+        }else{
+          $this->bgRanges[] = ['range'=>$init.':'.$finish, 'bgColor'=>$this->bgColors['toModify'], 'protection'=>false];
+        }
       }
       $syncData[] = $data;
       $nRow++;
       $nCol = 0;
     }
     $this->data = $syncData;
-    $this->bgRanges= $bgRanges;
   }
 }
