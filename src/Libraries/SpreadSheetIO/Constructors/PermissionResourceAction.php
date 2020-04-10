@@ -18,9 +18,11 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
   public $bgColors = ['toModify' =>'b3b3cc', 'toIgnore' => '000000'];
   public $bgRanges = [];
   public $lastActionName = '(Acceso)';
+  public $role = '';
 
   public function __construct($filename, $format = '.xlsx'){
     $this->format = $format;
+    $this->role = $filename;
     $this->filename = $filename.'-'.$this->postfixFilename.$format;
   }
 
@@ -87,6 +89,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     $newResources = cvResources();
     // get new actions from system
     $newActions = cvActions();
+    $newActions[] = 'hola';
     // add special actions
     $specials = $this->getSysSpecials('specials');
     $specials[$this->lastActionName]= $this->lastActionName;

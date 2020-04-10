@@ -12,9 +12,11 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
   public $postfixFilename = 'global-specials';
   public $spreadSheetTitle= 'GlobalEspecial/Permiso';
   public $data = [];
+  public $role = '';
 
   public function __construct($filename, $format = '.xlsx'){
     $this->format = $format;
+    $this->role = $filename;
     $this->filename = $filename.'-'.$this->postfixFilename.$format;
   }
 

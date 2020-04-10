@@ -8,6 +8,7 @@ class PermissionBase {
   public $fullPath= 'database'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'permission-role'.DIRECTORY_SEPARATOR;
   public $format = '.xlsx';
   public $data = [];
+  public $role = '';
 
   public function getFilenameAttr(){
     return $this->filename;
@@ -18,15 +19,19 @@ class PermissionBase {
   }
 
   public function getFilePath(){
-    return $this->path.$this->getFilenameAttr();
+    return $this->path.$this->getRole().DIRECTORY_SEPARATOR.$this->getFilenameAttr();
   }
 
   public function getFullFilePath(){
-    return base_path($this->fullPath.$this->getFilenameAttr());
+    return base_path($this->fullPath.$this->getRole().DIRECTORY_SEPARATOR.$this->getFilenameAttr());
   }
 
   public function getRelatedPath(){
-    return $this->path;
+    return $this->path.$this->getRole().DIRECTORY_SEPARATOR;
+  }
+
+  public function getRole(){
+    return $this->role;
   }
 
   public function num2alpha($n)
