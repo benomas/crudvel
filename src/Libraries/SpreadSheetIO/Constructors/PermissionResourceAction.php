@@ -15,7 +15,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
   public $postfixFilename = 'resource-actions';
   public $spreadSheetTitle= 'Recursos/Acciones';
   public $data = [];
-  public $bgColors = ['toModify' =>'b3b3cc', 'toIgnore' => '000000'];
+  public $bgColors = ['toModify' =>'b3b3cc', 'toIgnore' => '000000', 'none' => null];
   public $bgRanges = [];
   public $lastActionName = '(Acceso)';
   public $role = '';
@@ -134,6 +134,10 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
           if(is_null($row) || !isset($row[$action])){
             // Set 0, cuz I dont have old value for this resource/action
             $data[] = '0';
+            $init = $this->num2alpha($nCol);
+            $init.=$nRow;
+            $finish = $init;
+            $this->bgRanges[] = ['range'=>$init.':'.$finish, 'bgColor'=>$this->bgColors['toModify'], 'protection'=>false];
           }else{
             // Set the old resource/action value in the new data for spreadsheet
             $data[] = (string)$row[$action];
@@ -147,7 +151,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
         if(array_search($action, $resourceActions) === false && $nCol < count($newActions)-1){
           $this->bgRanges[] = ['range'=>$init.':'.$finish, 'bgColor'=>$this->bgColors['toIgnore'], 'protection'=>true];
         }else{
-          $this->bgRanges[] = ['range'=>$init.':'.$finish, 'bgColor'=>$this->bgColors['toModify'], 'protection'=>false];
+          $finish = $init;$this->bgRanges[] = ['range'=>$init.':'.$finish, 'bgColor'=>$this->bgColors['none'], 'protection'=>false];
         }
       }
       $syncData[] = $data;
