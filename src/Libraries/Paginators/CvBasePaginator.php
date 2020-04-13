@@ -62,23 +62,30 @@ class CvBasePaginator implements CvCrudInterface
     if(!noEmptyArray($this->getPaginate())){
       if(!$this->getFlexPaginable())
         return false;
+
       $this->getRootInstance()->setBadPaginablePetition(true);
     }
+
     $this->fixSelectQuery()->fixFilterQuery()->fixOrderables();
+
     return true;
   }
 
   public function fixedSelectables(){
     return array_intersect((array) $this->getSelectQuery(),(array) $this->getSelectables());
   }
+
   public function fixedFilterables(){
     if($this->getFilterables()!==null)
       return $this->getFilterables();
+
     return $this->fixedSelectables();
   }
+
   public function fixedOrderables(){
     if($this->getOrderables()!==null)
       return $this->getOrderables();
+
     return $this->fixedFilterables();
   }
 
@@ -86,9 +93,11 @@ class CvBasePaginator implements CvCrudInterface
     //if selectables is disabled
     if($this->getSelectables()===false)
       return $this->setSelectQuery(false);
+
     //define columns to be present in the response
     if(noEmptyArray($this->getSelectQuery()))
       return $this->setSelectQuery($this->fixedSelectables());
+
     return $this->setSelectQuery($this->getSelectables());
   }
 
@@ -101,7 +110,9 @@ class CvBasePaginator implements CvCrudInterface
     foreach((array) $this->getFilterQuery() as $key=>$value)
       if(in_array($key,$this->fixedFilterables()))
         $fixFilterQuery[$key]=$value;
+
     $this->setFilterQuery($fixFilterQuery)->getDbEngineContainer()->setFilterQueryString($this->getFilterQuery());
+
     return $this;
   }
 
@@ -111,6 +122,7 @@ class CvBasePaginator implements CvCrudInterface
 
     //set order by column
     $this->setOrderBy(arrayIntersect([$this->getOrderBy()],$this->fixedOrderables())[0]??null);
+
     return $this;
   }
 
@@ -121,6 +133,7 @@ class CvBasePaginator implements CvCrudInterface
   public function tempQuery(){
     $querySql = $this->getModelBuilderInstance()->toSql();
     $bindings = $this->getModelBuilderInstance()->getBindings();
+
     $this->getModelBuilderInstance()
       ->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))
       ->setBindings($bindings)
@@ -130,6 +143,7 @@ class CvBasePaginator implements CvCrudInterface
 
   protected function loadBasicPropertys(){
     $paginate = $this->getPaginateFields();
+
     $this->setLimit(fixedIsInt($paginate["limit"]??null)?$paginate["limit"]:null)
     ->setPage(fixedIsInt($paginate["page"]??null)?$paginate["page"]:null)
     ->setAscending($paginate["ascending"]??null)
@@ -145,10 +159,13 @@ class CvBasePaginator implements CvCrudInterface
   public function applyCustomFilter($field,$filter){
     $lop = $filter['lOp'] ?? 'or';
     $eOp = $filter['eOp'] ?? 'like';
+
     if(empty($this->logicConnectors[$lop]))
       jdd('invalid custom filter, require to define lOp property');
+
     if(!in_array($eOp,$this->comparators))
       jdd('invalid custom filter, require to define eOp property');
+
     $lop = $this->logicConnectors[$lop];
     if($eOp === 'like')
       $this->getModelBuilderInstance()->$lop($field,$eOp,'%'.$filter['value'].'%');
@@ -158,8 +175,10 @@ class CvBasePaginator implements CvCrudInterface
 
   public function fixables($property){
     $simpleColumns=$this->$property;
+
     if($simpleColumns && count($simpleColumns)){
       $columns = $this->getRootInstance()->modelInstanciator(true)->getTableColumns();
+
       foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue){
         if (in_array($simpleColumnValue,$columns))
           $this->$property[$simpleColumnKey] = $this->getRootInstance()->getMainTableName().$simpleColumnValue." AS ".$simpleColumnValue;
@@ -209,6 +228,7 @@ class CvBasePaginator implements CvCrudInterface
     //if it is not a filter quary defined
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
+
     $this->setPaginateCount($this->getModelBuilderInstance()->count());
     //if limit for que query is defined
     if($this->getLimit()){
@@ -234,6 +254,7 @@ class CvBasePaginator implements CvCrudInterface
         "count"  =>0,
         "message" =>trans("crudvel.api.success")
       ]);
+
     if(!empty($this->getModelCollectionInstance()->id) || $this->getRootInstance()->getForceSingleItemPagination())
       $this->setPaginateData($this->getModelBuilderInstance()->first());
 
@@ -246,6 +267,7 @@ class CvBasePaginator implements CvCrudInterface
       });
       $this->setPaginateData($keyed->all());
     }
+
     return $this->getRootInstance()->apiSuccessResponse([
       "data"    => $this->getPaginateData(),
       "count"   => $this->getPaginateCount(),
@@ -258,12 +280,14 @@ class CvBasePaginator implements CvCrudInterface
    */
   public function paginatedResponse() {
     $this->processPaginatedResponse();
+
     return $this->paginateResponder();
   }
 
   public function noPaginatedResponse(){
     $response = $this->getModelCollectionInstance();
     $selectables = $this->getSelectables();
+
     if($selectables && count($selectables)){
       $this->selectQuery = $selectables;
       $this->fixSelectables();
@@ -278,12 +302,14 @@ class CvBasePaginator implements CvCrudInterface
   public function addUnsolvedColumn($unsolvedColumn=null){
     if($unsolvedColumn)
       $this->unsolvedColumns[]=$unsolvedColumn;
+
     return $this;
   }
 
   public function removeUnsolvedColumn($unsolvedKey=null){
     if($unsolvedKey !== null)
       unset($this->unsolvedColumns[$unsolvedKey]);
+
     return $this;
   }
   //Getters start
@@ -352,67 +378,83 @@ class CvBasePaginator implements CvCrudInterface
   //Setters start
   public function setPaginateCount($paginateCount=null){
     $this->paginateCount = $paginateCount??null;
+
     return $this;
   }
   public function setPaginate($paginate=null){
     $this->paginate = $paginate??null;
+
     return $this;
   }
   public function setPaginateData($paginateData=null){
     $this->paginateData = $paginateData??null;
+
     return $this;
   }
   public function setFlexPaginable($flexPaginable=null){
     $this->flexPaginable = $flexPaginable??null;
+
     return $this;
   }
   public function setJoinables($joinables){
     $this->joinables = $joinables??null;
+
     return $this;
   }
   public function setLimit($limit=null){
     $this->limit = $limit??null;
+
     return $this;
   }
   public function setPage($page=null){
     $this->page = $page??null;
+
     return $this;
   }
   public function setAscending($ascending=null){
     $this->ascending = $ascending??null;
+
     return $this;
   }
   public function setByColumn($byColumn=null){
     $this->byColumn=$byColumn??null;
+
     return $this;
   }
   public function setSearchObject($searchObject=null){
     $this->searchObject=$searchObject??null;
+
     return $this;
   }
   public function setSelectQuery($selectQuery=null){
     //customLog($selectQuery);
     $this->selectQuery=$selectQuery??null;
+
     return $this;
   }
   public function setFilterQuery($filterQuery=null){
     $this->filterQuery=$filterQuery??null;
+
     return $this;
   }
   public function setOrderBy($orderBy=null){
     $this->orderBy=$orderBy??null;
+
     return $this;
   }
   public function setComparator($comparator=null){
     $this->comparator=$comparator??null;
+
     return $this;
   }
   public function setUnsolvedColumns($unsolvedColumns=null){
     $this->unsolvedColumns=$unsolvedColumns??null;
+
     return $this;
   }
   public function setDbEngineContainer($dbEngineContainer=null){
     $this->dbEngineContainer=$dbEngineContainer??null;
+
     return $this;
   }
   //Setters end

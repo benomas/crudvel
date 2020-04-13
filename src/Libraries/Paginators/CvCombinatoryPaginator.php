@@ -13,6 +13,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
   protected $currentUnionDepth        = 0;
   protected $preProcessedQueryBuilder = null;
   protected $permutedWords            = [];
+  protected $searchMode               = 'cv-combinatory-paginator';
 
   /**
    * Respond to the paginate request with permutation strategy

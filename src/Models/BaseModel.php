@@ -402,6 +402,22 @@ class BaseModel extends Model implements CvCrudInterface
     return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getSimpleTable());
   }
 
+  public function getPrefixedTableColumns()
+  {
+    $tableName = $this->getTable();
+    return array_map(function($column) use($tableName){
+      return "$tableName.$column";
+    },$this->getTableColumns());
+  }
+
+  public function recoverDefaultBinding()
+  {
+    return array_map(function($column) {
+      return "$column AS $column";
+    },$this->getPrefixedTableColumns());
+  }
+
+
   public function getSearchFieldColumn()
   {
     return 'search_field';

@@ -1288,3 +1288,7 @@ if(!function_exists("cvResources")){
   function cvResources(...$params){return CvHelper::cvResources(...$params);}
 }
 
+if(!function_exists("cvResourcesCatalog")){
+  function cvResourcesCatalog(...$params){return CvHelper::cvResourcesCatalog(...$params);}
+}
+

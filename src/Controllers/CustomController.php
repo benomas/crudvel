@@ -34,7 +34,8 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   //mapa de columnas join,
   protected $paginators = [
     'cv-simple-paginator'      => \Crudvel\Libraries\Paginators\CvSimplePaginator::class,
-    'cv-combinatory-paginator' => \Crudvel\Libraries\Paginators\CvCombinatoryPaginator::class
+    'cv-combinatory-paginator' => \Crudvel\Libraries\Paginators\CvCombinatoryPaginator::class,
+    'cv-collection-paginator'  => \Crudvel\Libraries\Paginators\CvCollectionPaginator::class,
   ];
   protected $defaultPaginator = 'cv-simple-paginator';
   protected $currentPaginator = null;
@@ -421,16 +422,19 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function addAction(...$moreActions){
     $this->actions=array_merge($this->actions,$moreActions);
+
     return $this;
   }
 
   public function addRowActions(...$moreActions){
     $this->rowActions=array_merge($this->rowActions,$moreActions);
+
     return $this;
   }
 
   public function addRowsActions(...$moreActions){
     $this->rowsActions=array_merge($this->rowsActions,$moreActions);
+
     return $this;
   }
 

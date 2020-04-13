@@ -91,4 +91,17 @@ trait ResourceTrait
           $actions[$action] = true;
     return array_keys($actions);
   }
+
+  public function cvResourcesCatalog(){
+    $resources = [];
+
+    foreach(cvResources() as $resource){
+      $resources[]=[
+        'label' => __("crudvel/".$resource.".row_label") ?? $resource,
+        'value' => $resource,
+      ];
+    }
+
+    return $resources;
+  }
 }

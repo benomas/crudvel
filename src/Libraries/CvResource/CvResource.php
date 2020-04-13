@@ -282,8 +282,9 @@ class CvResource
     return kageBunshinNoJutsu($this->getUserModelBuilderInstance())->specialPermission($special)->count()>0;
   }
 
-  public function actionAccess(){
-    $currentActionAccess = $this->actionsAccess[$this->getActionResource()] ?? null;
+  public function actionAccess($actionResource = null){
+    $actionResource = $actionResource ?? $this->getActionResource();
+    $currentActionAccess = $this->actionsAccess[$actionResource] ?? null;
     if($currentActionAccess !== null)
       return $currentActionAccess;
     if(
@@ -291,14 +292,14 @@ class CvResource
       !$this->getUserModelCollectionInstance() ||
       !$this->getUserModelCollectionInstance()->active
     )
-      return $this->actionsAccess[$this->getActionResource()] = false;
+      return $this->actionsAccess[$actionResource] = false;
     if($this->getUserModelCollectionInstance()->isRoot())
-      return $this->actionsAccess[$this->getActionResource()] = true;
-    if(!$this->getPermissionModelClass()::action($this->getActionResource())->count())
-      return $this->actionsAccess[$this->getActionResource()] = true;
-    if(kageBunshinNoJutsu($this->getUserModelBuilderInstance())->actionPermission($this->getActionResource())->count())
-      return $this->actionsAccess[$this->getActionResource()] = true;
-    return $this->actionsAccess[$this->getActionResource()] = false;
+      return $this->actionsAccess[$actionResource] = true;
+    if(!$this->getPermissionModelClass()::action($actionResource)->count())
+      return $this->actionsAccess[$actionResource] = true;
+    if(kageBunshinNoJutsu($this->getUserModelBuilderInstance())->actionPermission($actionResource)->count())
+      return $this->actionsAccess[$actionResource] = true;
+    return $this->actionsAccess[$actionResource] = false;
   }
 
   public function addField($field=null,$value=null){

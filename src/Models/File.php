@@ -74,7 +74,7 @@ class File extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeSelectCvSearch($query,$alias=null){
-    $alias = $alias ?? $this->getTable();
+    $alias = $this->alias($alias);
     return $query->select("$alias.disk");
   }
 // [End Scopes]
