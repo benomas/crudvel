@@ -14,10 +14,10 @@ trait CrudTrait {
     return $this->cvResourceInstance??null;
   }
 
-  public function getCvResourceInstanceMethod($method=null){
+  public function getCvResourceInstanceMethod($method=null,...$params){
     return $this->cvResourceInstance?
-      $this->cvResourceInstance->{$method}():
-      $this->getCvResourceClass()::{$method}();
+      $this->cvResourceInstance->{$method}(...$params):
+      $this->getCvResourceClass()::{$method}(...$params);
   }
 
   public function setCvResourceInstanceMethod($method=null,...$params){
@@ -390,8 +390,8 @@ trait CrudTrait {
     return $this->getCvResourceInstanceMethod(__FUNCTION__);
   }
 
-  public function actionAccess(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function actionAccess($actionResource=null){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,$actionResource);
   }
 
   public function autoSetPropertys(...$propertyRewriter){
