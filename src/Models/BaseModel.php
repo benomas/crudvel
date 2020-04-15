@@ -180,12 +180,12 @@ class BaseModel extends Model implements CvCrudInterface
     return $query->where($this->preFixed('sublevel_id', $preFixed), $sublevel_id);
   }
 
-  public function scopeGeneralOwner($query, $userId)
+  public function scopeGeneralOwner($query, $userId=null)
   {
     return $query;
   }
 
-  public function scopeParticularOwner($query, $userId)
+  public function scopeParticularOwner($query, $userId=null)
   {
     return $query->where($this->preFixed('user_id', true), $userId);
   }
@@ -570,5 +570,21 @@ class BaseModel extends Model implements CvCrudInterface
     }
 
     return $this->getUserModelCollectionInstance();
+  }
+
+  public function resourceCatalogs($userId =  null){
+    if(!($user = $this->fixUser($userId)))
+      return cvResourcesCatalog();
+
+    $resourcesCatalog = [];
+
+    foreach(cvResourcesCatalog() AS $resource){
+      if(!$this->actionAccess($resource['value'].'.update') || !$this->actionAccess($resource['value'].'.create') || !$this->actionAccess($resource['value'].'.index'))
+        continue;
+
+      $resourcesCatalog[] = $resource;
+    }
+
+    return $resourcesCatalog;
   }
 }

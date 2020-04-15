@@ -158,7 +158,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     return $query->selectRaw("CONCAT($alias.first_name, ' ',$alias.last_name)");
   }
 
-  public function scopeGeneralOwner($query,$userId){
+  public function scopeGeneralOwner($query,$userId=null){
     if(!($user = $this->fixUser($userId)))
       return $query->nullFilter();
 
@@ -167,7 +167,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     });
   }
 
-  public function scopeParticularOwner($query,$userId){
+  public function scopeParticularOwner($query,$userId=null){
     $query->key($userId);
   }
 

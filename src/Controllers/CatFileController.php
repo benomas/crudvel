@@ -18,7 +18,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     'updated_at',
     'resource',
     'cv_search',
-    'resource_label',
+    //'resource_label',
   ];
 
   public function __construct(){
@@ -28,16 +28,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
   }
   // [Actions]
   public function resources(){
-    $resourcesCatalog = [];
-    if(method_exists($this,'getUserModelCollectionInstance') && $this->getUserModelCollectionInstance()){
-      foreach(cvResourcesCatalog() AS $resource){
-        if(!$this->actionAccess($resource['value'].'.update') || !$this->actionAccess($resource['value'].'.create') || !$this->actionAccess($resource['value'].'.index'))
-          continue;
-
-        $resourcesCatalog[] = $resource;
-      }
-    }
-    $this->getPaginatorInstance()->setCollectionData(collect($resourcesCatalog));
+    $this->getPaginatorInstance()->setCollectionData(collect(\App\Models\CatFile::cvIam()->resourceCatalogs()));
 
     return $this->actionResponse();
   }
@@ -49,7 +40,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
   }
 
   public function beforePaginate($method,$parameters){
-    $this->getModelBuilderInstance()->setQuery(\App\Models\CatFile::cvIam()->selfDinamic());
+    //$this->getModelBuilderInstance()->setQuery(\App\Models\CatFile::cvIam()->selfDinamic());
   }
   // [End Methods]
 }

@@ -45,6 +45,11 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
   {
     $this->attributes['slug'] = cvSlugCase($value);
   }
+
+  public function setResourceLabelAttribute($value)
+  {
+    $this->attributes['resource_label'] = __("crudvel/".$this->attributes['resource'].".row_label") ?? $this->attributes['resource'];
+  }
 // [End Transformers]
 
 // [Scopes]
@@ -52,40 +57,58 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
     $query->where($this->getTable().'.resource',$resource);
   }
 
-  public function scopeHasFile($query){
-    $query->whereHas('file');
+  public function scopeHasFiles($query){
+    $query->whereHas('files');
   }
 
+  public function scopeParticularOwner($query, $userId=null)
+  {
+    if(!($user = $this->fixUser($userId)))
+      return $query->nullFilter();
+  }
+/*
   public function scopeCvSearch($query,$alias=null){
-    return ;
     $alias      = $this->alias($alias);
     $table      = $this->cvIam()->getTable();
     $modelClass = get_class($this->cvIam());
-    return $query->addSelect(['cv_search' => $modelClass::from("$table as $alias")
+
+    $resources            = self::groupBy('resource')->get()->pluck('resource');
+    $catFileUnions        = [];
+    foreach($resources as $resource){
+      $resourceModel = 'App\Models\\'.cvCaseFixer('studly|singular',$resource);
+      if(class_exists($resourceModel)){
+        $resource_label  = __("crudvel/$resource.row_label") ?? $resource;
+        $catFileUnions[] = kageBunshinNoJutsu($query)
+          ->where('resource',$resource)
+          ->addSelect(['resource_label' => kageBunshinNoJutsu($query)->limit(1)->selectRaw("'$resource_label'")])
+          ->addSelect(['cv_search' => $this->autoBuilder('din_cv_search')->whereColumn("din_cv_search.id", "cat_files.id")->limit(1)->selectRaw("CONCAT(cat_files.name,', recurso: [','$resource_label]')")]);
+      }
+    }
+
+    foreach($catFileUnions as $unionBuilder){
+      if(empty($catFileBuilder))
+        $catFileBuilder = $unionBuilder;
+      else
+        $catFileBuilder->union($unionBuilder);
+    }
+
+    $query = $catFileBuilder;
+
+    $query->addSelect(['cv_search' => $modelClass::from("$table as $alias")
       ->selectCvSearch($alias)
       ->whereColumn("$alias.id", "$table.id")
       ->limit(1)]);
+
+    return $query;
   }
 
   public function scopeSelectCvSearch($query,$alias=null){
-    $alias = $this->alias($alias);
-    return $query->select("$alias.name");
-  }
+    //return $query->select("{$this->alias($alias)}.name");
+  }*/
 // [End Scopes]
 
 // [Others]
-  public function modelClassInstance(){
-    $targetModel = \Str::camel(Str::singular($this->attributes['resource']));
-    if (method_exists($this,$targetModel.'ModelClassInstance'))
-      return $this->$targetModel.'ModelClassInstance'();
-    $testModel  = '\App\Models\\'.\Str::studly(\Str::singular($this->attributes['resource']));
-    if(class_exists($testModel))
-      return new $testModel;
-    return null;
-  }
-
   public function selfDinamic() {
-    $defaultColumnBinding = self::cvIam()->recoverDefaultBinding();
     $resources            = DB::table('cat_files')->groupBy('resource')->get()->pluck('resource');
     $catFileUnions        = [];
     foreach($resources as $resource){
@@ -95,7 +118,7 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
         $catFileUnions[] = $this->autoBuilder()
           ->where('resource',$resource)
           ->addSelect(['resource_label' => $this->autoBuilder()->limit(1)->selectRaw("'$resource_label'")])
-          ->addSelect(['cv_search' => $this->autoBuilder('din_cv_search')->whereColumn("din_cv_search.id", "cat_files.id")->limit(1)->selectRaw("CONCAT(cat_files.name,',recurso[','$resource_label]')")]);
+          ->addSelect(['cv_search' => $this->autoBuilder('din_cv_search')->whereColumn("din_cv_search.id", "cat_files.id")->limit(1)->selectRaw("CONCAT(cat_files.name,', recurso: [','$resource_label]')")]);
       }
     }
 
@@ -113,14 +136,13 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
     $builder = null;
     if(method_exists($this,'getModelBuilderInstance'))
       $builder =  kageBunshinNoJutsu($this->getModelBuilderInstance()->getQuery());
-
-    $builder = DB::table(self::cvIam()->getTable());
+    else
+      $builder = DB::table(self::cvIam()->getTable());
 
     if($tableAlias){
       $table = $this->cvIam()->getTable();
       $builder->from("$table as $tableAlias");
     }
-
 
     return $builder;
   }

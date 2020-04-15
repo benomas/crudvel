@@ -108,11 +108,11 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
     return $query->selectRaw("CONCAT($alias.name)");
   }
 
-  public function scopeGeneralOwner($query,$userId){
+  public function scopeGeneralOwner($query,$userId=null){
     return $query->hidden();
   }
 
-  public function scopeParticularOwner($query,$userId){
+  public function scopeParticularOwner($query,$userId=null){
     if(!($user = \App\Models\User::id($userId)->first()))
       return $query->nullFilter();
 
