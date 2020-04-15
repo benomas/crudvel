@@ -4,6 +4,8 @@ use Customs\Crudvel\Models\BaseModel;
 
 class File extends \Customs\Crudvel\Models\BaseModel{
   use \Crudvel\Traits\Related;
+  protected $catFileIdValue  = null;
+  protected $resourceIdValue = null;
 
   protected $fillable = [
     'disk',
@@ -37,6 +39,19 @@ class File extends \Customs\Crudvel\Models\BaseModel{
 // [End Relationships]
 
 // [Transformers]
+  public function setCatFileIdAttribute($value)
+  {
+    $this->catFileIdValue             = $value;
+    $this->attributes['cat_file_id']  = $value;
+    $this->fixMixedCvSearch();
+  }
+
+  public function setResourceIdAttribute($value)
+  {
+    $this->resourceIdValue            = $value;
+    $this->attributes['resource_id']  = $value;
+    $this->fixMixedCvSearch();
+  }
 // [End Transformers]
 
 // [End Scopes]
@@ -65,84 +80,31 @@ class File extends \Customs\Crudvel\Models\BaseModel{
     });
   }
 
-  //cv_search was disabled because this model rewrite builder instance with unions
-  public function scopeCvSearch($query,$alias=null){
-    return ;
-  }
-
   public function scopeSelectCvSearch($query,$alias=null){
     $alias = $this->alias($alias);
-    return $query->select("$alias.disk");
+    return $query->select("$alias.mixed_cv_search");
   }
 // [End Scopes]
 
 // [Others]
-  public function selfDinamic() {
-    $catFiles = \App\Models\CatFile::hasFiles()->get();
-    $fileUnions        = [];
-    foreach($catFiles as $catFile){
-      $resourceModel = 'App\Models\\'.cvCaseFixer('studly|singular',$catFile->resource);
-      if(class_exists($resourceModel)){
-        $resource_label  = __("crudvel/$catFile->resource.row_label") ?? $catFile->resource;
-        $fileUnions[] = $this->autoBuilder()
-          ->where('cat_file_id',$catFile->id)
-          ->addSelect(['cv_search' => $resourceModel::cvSearch()->whereColumn("id", "files.resource_id")->limit(1)->selectRaw("id")]);
-          //->addSelect(['cv_search' => $this->autoBuilder('din_cv_search')->whereColumn("din_cv_search.id", "files.id")->limit(1)->selectRaw("CONCAT(files.id,', recurso: [','$resource_label]')")]);
-      }
-    }
+  public function fixMixedCvSearch(){
+    $this->attributes['mixed_cv_search']  = '';
 
-    foreach($fileUnions as $unionBuilder){
-      if(empty($fileBuilder))
-        $fileBuilder = $unionBuilder;
-      else
-        $fileBuilder->union($unionBuilder);
-    }
+    if($this->catFileIdValue === null || $this->resourceIdValue === null)
+      return ;
 
-    return $fileBuilder;
-  }
+    if(!$catFileInstance = \App\Models\CatFile::key($this->catFileIdValue)->solveSearches()->first())
+      return ;
 
-  public function autoBuilder($tableAlias=null){
-    $builder = null;
-    if(method_exists($this,'getModelBuilderInstance'))
-      $builder =  kageBunshinNoJutsu($this->getModelBuilderInstance()->getQuery());
-    else
-      $builder = DB::table(self::cvIam()->getTable());
+    $resourceModel = '\App\Models\\'.cvCaseFixer('studly|singular',$catFileInstance->resource);
 
-    if($tableAlias){
-      $table = $this->cvIam()->getTable();
-      $builder->from("$table as $tableAlias");
-    }
+    if(!class_exists($resourceModel))
+      return ;
 
-    return $builder;
-  }
+    if(!$resourceModelInstance = $resourceModel::key($this->resourceIdValue)->solveSearches()->first())
+      return ;
 
-  public function dinamicResourceFiles(){
-    $catFiles   = \App\Models\CatFile::cvOwner()->hasFiles()->get();
-    $filesUnion = [];
-    foreach($catFiles as $catFile){
-      $resourceModel    = 'App\Models\\'.cvCaseFixer('studly|singular',$catFile->resource);
-      $resource_label   = __("crudvel/$catFile->resource.row_label") ?? $catFile->resource;
-      if(class_exists($resourceModel)){
-        $filesUnion[] =  \App\Models\File::cvOwner()->joinsub($resourceModel::cvOwner()->cvSearch(),'resource', function ($join) {
-          $join->on('resource.id', '=', 'files.resource_id');
-        })->joinsub(\App\Models\CatFile::cvOwner(),'cat_files', function ($join) {
-          $join->on('cat_files.id', '=', 'files.cat_file_id');
-        })
-        ->selectRaw('
-          files.*,
-          resource.cv_search as r_cv_search,
-          cat_files.resource as cf_resource,
-          CONCAT(cat_files.name,", recurso: [","'.$resource_label.'","]") as cf_resource_cv_search'
-        );
-      }
-    }
-    foreach($filesUnion as $unionBuilder){
-      if(empty($fileBuilder))
-        $fileBuilder = $unionBuilder;
-      else
-        $fileBuilder->union($unionBuilder);
-    }
-    return $fileBuilder;
+    $this->attributes['mixed_cv_search']  = $catFileInstance->cv_search . ' - '.$resourceModelInstance->cv_search;
   }
 // [End Others]
 }

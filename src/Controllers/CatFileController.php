@@ -18,7 +18,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     'updated_at',
     'resource',
     'cv_search',
-    //'resource_label',
+    'resource_label',
   ];
 
   public function __construct(){
@@ -39,8 +39,13 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     $this->setSelectables(['label','value']);
   }
 
-  public function beforePaginate($method,$parameters){
-    //$this->getModelBuilderInstance()->setQuery(\App\Models\CatFile::cvIam()->selfDinamic());
+  public function syncCvSearch(){
+    \DB::transaction(function () {
+      foreach(\App\Models\CatFile::all() as $catFile){
+        $catFile->resource = $catFile->resource;
+        $catFile->save();
+      }
+    });
   }
   // [End Methods]
 }

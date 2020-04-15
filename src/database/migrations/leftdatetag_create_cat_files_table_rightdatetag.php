@@ -13,8 +13,6 @@ class CreateCatFilesTablerightdatetag extends BaseMigration
   {
     if(!Schema::hasTable($this->mainTable)){
       Schema::create($this->mainTable, function (Blueprint $table) {
-        $table->engine = 'InnoDB';
-
         $table->bigIncrements("id");
         $table->string("name");
         $table->string("slug");
@@ -25,8 +23,9 @@ class CreateCatFilesTablerightdatetag extends BaseMigration
         $table->decimal("min_size",10,2);
         $table->string("types");
         $table->boolean('multiple')->default(false);
-        $table->string("public_path")->nullable();;
+        $table->string("public_path")->nullable();
         $table->string("resource");
+        $table->string("resource_label",254)->nullable();
         $this->defaultColumns($table);
 
         $table->index("name");

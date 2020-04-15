@@ -404,4 +404,20 @@ class BaseConsole{
     Artisan::command("fix-models-meta-data {mode?}",$callBack)->describe('autogenerate def model meta data');
     return $this;
   }
+
+  public function loadSyncCatFileCvSearch($callBack=null){
+    $callBack = $callBack ?? function (){
+      \App\Http\Controllers\Api\CatFileController::cvIam()->syncCvSearch();
+    };
+    Artisan::command("sync-cat-file-cv-search",$callBack)->describe('recalculate langs');
+    return $this;
+  }
+
+  public function loadSyncFileCvSearch($callBack=null){
+    $callBack = $callBack ?? function (){
+      \App\Http\Controllers\Api\FileController::cvIam()->syncCvSearch();
+    };
+    Artisan::command("sync-file-cv-search",$callBack)->describe('recalculate langs');
+    return $this;
+  }
 }

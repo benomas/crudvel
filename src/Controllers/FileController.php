@@ -14,7 +14,6 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     'cat_file_slug',
     'cat_file_resource',
     'cat_file_cv_search',
-    'resource_cv_search',
     'resource_id',
     'created_at',
     'id',
@@ -22,7 +21,6 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     'updated_at',
     'disk',
     'cv_search',
-    //'cv_searchaaa'
   ];
   protected $disk = "public";
 
@@ -88,11 +86,6 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
   // [End Actions]
 
   // [Methods]
-  public function addedResourceCvSearch(){
-    return $this->selfPreBuilder('f')
-      ->join('cat_files as cf', 'f.cat_file_id', '=', 'cf.id')
-      ->selectRaw("CONCAT(cf.name, ' ',cf.resource, ' ',f.id)");
-  }
 
   public function addedCatFileMultiple(){
     return CatFile::invokePosfix($this->getModelClass(),'multiple');
@@ -172,8 +165,14 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     $this->setSelectables(['label','value']);
   }
 
-  public function beforePaginate($method,$parameters){
-    $this->getModelBuilderInstance()->setQuery(\App\Models\File::cvIam()->selfDinamic());
+  public function syncCvSearch(){
+    \DB::transaction(function () {
+      foreach(\App\Models\File::all() as $file){
+        $file->resource_id = $file->resource_id;
+        $file->cat_file_id = $file->cat_file_id;
+        $file->save();
+      }
+    });
   }
   // [End Methods]
 }
