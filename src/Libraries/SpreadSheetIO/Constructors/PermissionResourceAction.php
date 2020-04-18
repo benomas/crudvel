@@ -28,8 +28,6 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
 
   public function build(){
     $header [0]= $this->getSpreadSheetTitle();
-    // $actions = $this->getSysLangArrayByKeyName('actions');
-    // $specials = $this->getSysLangArrayByKeyName('specials');
     $actions = cvActions();
     $specials = $this->getSysSpecials('specials');
     $specials[$this->lastActionName]= $this->lastActionName;
@@ -43,9 +41,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     // get resources
     $resources = cvResources();
     $countActions = count($data[0]);
-    $countResources= count($resources)+1;
 
-    $toIgnore = [];
     // iter over resources to define data and bgColors
     foreach ($resources as $rIndex => $resource) {
       $rowData = [];
@@ -96,18 +92,15 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     foreach ($specials as $special=> $value)
       array_push($newActions, $special);
     // get collection from data
-    $c = $this->data;
+    $oldDataCollection = $this->data;
     // counters for row and col
     $nRow = 1;
     $nCol = 1;
-    $countResources = count($newResources)+1;
     $countActions = count($newActions);
     // syncData to return
     $syncData = [];
     $syncData [] = $newActions;
     array_unshift($syncData[0], $this->getSpreadSheetTitle());
-    // get first row (Action headers)
-    $oldActions = $c->first();
     // counters for row and col
     $nRow = 2;
     $nCol = 0;
@@ -120,7 +113,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
         $finish = '';
         $init = '';
         // does resource name exist in old data collection ?
-        if(is_null($c->get($resource))){
+        if(is_null($oldDataCollection->get($resource))){
           // fill all resource data row with zero
           for($e = 1; $e <= $countActions; $e++){
             $init = 'A'.$nRow;
@@ -130,7 +123,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
           }
           break;
         }else{
-          $row = $c->get($resource);
+          $row = $oldDataCollection->get($resource);
           if(is_null($row) || !isset($row[$action])){
             // Set 0, cuz I dont have old value for this resource/action
             $data[] = '0';
