@@ -46,7 +46,9 @@ class SpreadSheet
   public function synchronize(){
     // import existing data xlsx file
     $importData = $this->importSpreadSheet(true);
-    if(empty($importData)) return $this->storeSpreadSheet();
+    if(empty($importData)) {
+      return $this->storeSpreadSheet();
+    }
     // set keyby 0, to this I get key by 'name resource', then, map to convert keys of each resource for actions names
     $importData = $importData->keyby(0)->map(function($row) use ($importData){
       $newRow=[];
