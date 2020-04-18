@@ -168,7 +168,10 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeParticularOwner($query,$userId=null){
-    $query->key($userId);
+    if(!($user = $this->fixUser($userId)))
+      return $query->nullFilter();
+
+    $query->key($user->id);
   }
 
   public function scopeHasInternalRole($query){
@@ -181,6 +184,10 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     $query->whereHas('roles',function($query){
       $query->external();
     });
+  }
+
+  public function scopeAddUserFullNamed($query){
+    return $this->selfPreBuilder('u')->selectRaw("CONCAT(u.first_name, ' ',u.last_name) as user_full_name");
   }
 // [End Scopes]
 

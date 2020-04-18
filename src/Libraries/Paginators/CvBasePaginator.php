@@ -135,7 +135,7 @@ class CvBasePaginator implements CvCrudInterface
     $bindings = $this->getModelBuilderInstance()->getBindings();
 
     $this->getModelBuilderInstance()
-      ->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))
+      ->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))
       ->setBindings($bindings)
     );
   }

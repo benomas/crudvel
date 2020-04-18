@@ -687,12 +687,16 @@ trait CrudTrait {
   public function owner(){
     if($this->getUserModelCollectionInstance()->isRoot())
       return true;
+
     if($this->getUserModelCollectionInstance()->specialPermissions()->slug($this->getSlugPluralName().".general-owner")->count())
       return true;
+
     if($this->getUserModelCollectionInstance()->specialPermissions()->slug($this->getSlugPluralName().".particular-owner")->count())
       return true;
+
     if(!$this->getCurrentActionKey())
       return true;
+
     return $this->getModelBuilderInstance()->count();
   }
 
@@ -723,7 +727,7 @@ trait CrudTrait {
       die('alias required');
     }
     $table = $this->getMainTable();
-    return $this->getModelClass()::from("$table as $alias")
+    return $this->getModelClass()::withoutGlobalScopes()->from("$table as $alias")
     ->whereColumn("$alias.id", "$table.id")
     ->limit(1);
   }

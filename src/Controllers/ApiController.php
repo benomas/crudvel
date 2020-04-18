@@ -19,10 +19,11 @@ class ApiController extends CustomController{
     $this->setCallActionMethod($method)
       ->setCallActionParameters($parameters)
       ->prepareResource();
+
     return $this->getFlowControl() ? $this->getFlowControl()():parent::callActionJump($method,$parameters);
   }
 
-  public function actionResponse(){
+  public function actionResponse(){$this->getPaginated();
     return $this->getPaginated()?
       $this->getPaginatorInstance()->paginatedResponse():
       $this->apiSuccessResponse($this->getModelBuilderInstance()->get());
@@ -48,13 +49,16 @@ class ApiController extends CustomController{
     try{
       if ($key === null || $key === 'null')
         return $this->apiSuccessResponse([]);
+
       if (method_exists($this->getModelBuilderInstance(),'relatedTo'.Str::studly(Str::singular($resource))))
         $this->getModelBuilderInstance()->{'relatedTo'.Str::studly(Str::singular($resource))}($key);
       else
         $this->getModelBuilderInstance()->relatedTo($resource,$key);
+
       return $this->actionResponse();
     }catch(\Exception $e) {
     }
+
     return $this->apiSuccessResponse([
       "data"    => [],
       "count"   => 0,
@@ -71,6 +75,7 @@ class ApiController extends CustomController{
   {
     if($this->setSlugField())
       $this->slugedResponse=true;
+
     return $this->actionResponse();
   }
 
@@ -92,8 +97,10 @@ class ApiController extends CustomController{
   public function store()
   {
     $this->setStamps();
+
     if($this->persist())
       return $this->actionResponse();
+
     return $this->apiFailResponse();
   }
 

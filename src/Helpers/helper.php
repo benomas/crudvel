@@ -1292,3 +1292,7 @@ if(!function_exists("cvResourcesCatalog")){
   function cvResourcesCatalog(...$params){return CvHelper::cvResourcesCatalog(...$params);}
 }
 
+if(!function_exists("cvDbBuilder")){
+  function cvDbBuilder(...$params){return CvHelper::cvDbBuilder(...$params);}
+}
+

@@ -180,14 +180,14 @@ class BaseModel extends Model implements CvCrudInterface
     return $query->where($this->preFixed('sublevel_id', $preFixed), $sublevel_id);
   }
 
-  public function scopeGeneralOwner($query, $userId=null)
+  public function scopeGeneralOwner($query, $userKey=null)
   {
     return $query;
   }
 
-  public function scopeParticularOwner($query, $userId=null)
+  public function scopeParticularOwner($query, $userKey=null)
   {
-    return $query->where($this->preFixed('user_id', true), $userId);
+    return $query->key($userId);
   }
 
   public function scopeUpdatedBefore($query, $date, $preFixed = true)
@@ -268,7 +268,7 @@ class BaseModel extends Model implements CvCrudInterface
     $alias         = $this->alias($alias);
     return $query
       ->from("{$this->getTable()} as $alias")
-      ->whereColumn($related::cvIam()->getTable() . ".$foreintColumn", "$alias.id")
+      ->whereColumn($foreintColumn, "$alias.id")
       ->limit(1)->selectCvSearch($alias);
   }
 
@@ -281,7 +281,7 @@ class BaseModel extends Model implements CvCrudInterface
   public function scopeSolveSearches($query){
     $modelClass = get_class($this->cvIam());
     foreach($this->getCvSearches() as $searchColumn=>$relatedModel){
-      $query->addSelect([$searchColumn => $relatedModel::externalCvSearch($modelClass,$searchColumn)]);
+      $query->addSelect([$searchColumn => $relatedModel::withoutGlobalScopes()->externalCvSearch($modelClass,$searchColumn)]);
     }
     return $query->cvSearch();
   }
@@ -290,13 +290,17 @@ class BaseModel extends Model implements CvCrudInterface
     $alias      = $this->alias($alias);
     $table      = $this->cvIam()->getTable();
     $modelClass = get_class($this->cvIam());
-    return $query->addSelect(['cv_search' => $modelClass::from("$table as $alias")
+    return $query->addSelect(['cv_search' => $modelClass::withoutGlobalScopes()->from("$table as $alias")
       ->selectCvSearch($alias)
       ->whereColumn("$alias.id", "$table.id")
       ->limit(1)]);
   }
 
-  public function scopeCvOwner($query){
+  public function scopeCvOwner($query, $userKey=null){
+
+    if(!($user = $this->fixUser($userKey)))
+      return $query->nullFilter();
+
     $user = \CvResource::assignUser()->getUserModelCollectionInstance();
 
     if(!$user || $user->isRoot())
@@ -555,21 +559,20 @@ class BaseModel extends Model implements CvCrudInterface
   }
 
   public function fixUser($userKey = null){
+    $userInstace = null;
+    $userInstace = \CvResource::assignUser()->getUserModelCollectionInstance();
     if(!$userKey){
-      if(!$this->getUserModelCollectionInstance())
+      if(!$userInstace)
         return null;
 
-      return $this->getUserModelCollectionInstance();
+      return $userInstace;
     }
 
-    if(!$this->getUserModelCollectionInstance() || $this->getUserModelCollectionInstance()->getKeyValue() !== $userKey) {
-      if(!($user = \App\Models\User::key($userKey)->first()))
+    if(!$userInstace || $userInstace->getKeyValue() !== $userKey)
+      if(!($userInstace = \App\Models\User::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->key($userKey)->first()))
         return null;
 
-      return $user;
-    }
-
-    return $this->getUserModelCollectionInstance();
+    return $userInstace;
   }
 
   public function resourceCatalogs($userId =  null){
@@ -586,5 +589,11 @@ class BaseModel extends Model implements CvCrudInterface
     }
 
     return $resourcesCatalog;
+  }
+
+  protected static function boot(){
+    parent::boot();
+
+    static::addGlobalScope(new \Crudvel\Scopes\PermissionsScope);
   }
 }

@@ -114,6 +114,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function prepareResource(){
     $this->getCvResourceClass()::setRootInstance($this)->boot($this);
+
     return $this;
   }
 

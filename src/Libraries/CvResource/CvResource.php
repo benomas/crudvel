@@ -54,6 +54,7 @@ class CvResource
   public function boot($controllerInstance=null){
     if(!$controllerInstance)
       return;
+
     $params = $this->setControllerInstance($controllerInstance)
       ->getControllerInstance()
       ->setCvResourceInstance($this)
@@ -128,25 +129,27 @@ class CvResource
     return $this->setControllerClass(get_class($controller))->setControllerBuilderInstance($controller);
     if(!$controller || !class_exists($controller))
       return $this->generateController();
-    return $this->setControllerClass($controller)->setControllerBuilderInstance($controller::noFilters());
+    return $this->setControllerClass($controller)->setControllerBuilderInstance($controller);
   }
 
   public function loadModel($model=null){
     if(is_object($model)){
-      $model->cvOwner();
+      $model->noFilters();
       return $this->setModelClass(get_class($model))->setModelBuilderInstance($model);
     }
     if(!$model || !class_exists($model))
       return $this->generateModel();
 
-    return $this->setModelClass($model)->setModelBuilderInstance($model::cvOwner());
+    return $this->setModelClass($model)->setModelBuilderInstance($model::noFilters());
   }
 
   public function loadRequest($request=null){
     if(is_object($request))
       return $this->setRequestClass(get_class($request))->setRequestInstance($request);
+
     if(!$request || !class_exists($request))
       return $this->generateRequest();
+
     return $this->setRequestClass($request)->captureRequest();
   }
 
@@ -165,21 +168,26 @@ class CvResource
   public function generateModel(){
     if(!($controller = $this->getRootInstance()))
       return $this;
+
     if(($modelClassName = $controller->getModelClassName()) && class_exists($modelClassName)){
       $this->setModelClass($modelClassName);
     }else{
       if(!($studlySingularName = $this->getStudlySingularName()) || !class_exists('App\Models\\'.$studlySingularName))
         return $this;
+
       $modelClassName = 'App\Models\\'.$studlySingularName;
       $this->setModelClass($modelClassName);
     }
-    $this->setModelBuilderInstance($modelClassName::cvOwner());
+
+    $this->setModelBuilderInstance($modelClassName::noFilters());
+
     return $this;
   }
 
   public function generateRequest(){
     if(!($controller = $this->getRootInstance()))
       return $this;
+
     if(($requestClassName = $controller->getRequestClassName()) && class_exists($requestClassName)){
       $this->setRequestClass($requestClassName);
     }else{
@@ -188,6 +196,7 @@ class CvResource
       $requestClassName = 'App\Http\Requests\\'.$studlySingularName.'Request';
       $this->setRequestClass($requestClassName);
     }
+
     return $this->setRequestClass($requestClassName)->captureRequest();
   }
 
@@ -209,13 +218,16 @@ class CvResource
       return $this->setFlowControl(function () {
         return $this->getRootInstance()->apiNotFound();
       });
+
     if(
       $this->getSkipModelValidation() &&
       !$this->specialAccess('inactives') &&
       !$this->specialAccess($this->getSlugPluralName().'.inactives')
     )
       $this->getModelBuilderInstance()->actives();
+
     $this->getRootInstance()->loadFields();
+
     if(
       ($preactionResponse = $this->getRootInstance()->preAction(
         $this->getCallActionParameters(),
@@ -225,7 +237,9 @@ class CvResource
       return $this->setFlowControl(function () use($preactionResponse){
         return $preactionResponse;
       });
+
     $this->generateModelCollectionInstance();
+    //pdd('asd');
     if( in_array($this->getCurrentAction(),$this->getRowsActions()) &&
         $this->getModelBuilderInstance() &&
         !$this->getModelBuilderInstance()->count()
@@ -260,7 +274,7 @@ class CvResource
     if(!($user = \Auth::user()))
       return $this;
 
-    $this->setUserModelBuilderInstance($this->getUserModelClass()::id($user->id));
+    $this->setUserModelBuilderInstance($this->getUserModelClass()::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->key($user->id));
 
     $this->setUserModelCollectionInstance($this->getUserModelBuilderInstance()->first());
 

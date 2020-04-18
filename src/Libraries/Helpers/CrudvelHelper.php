@@ -16,4 +16,5 @@ class CvHelper{
   use TerminalTrait;
   use CasesTrait;
   use ResourceTrait;
+  use DbTrait;
 }
