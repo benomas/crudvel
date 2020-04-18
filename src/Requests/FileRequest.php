@@ -22,12 +22,12 @@ class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
       $this->rules['resource_id'] = 'required|key_exist:'.\Str::slug($fields['resource'],'_').',id';
 
     $this->fileName = '';
-    $this->catFile = CatFile::id($fields['cat_file_id']??null)->first();
+    $this->catFile = CatFile::id($fields['cat_file_id']??null)->CvSearch()->first();
     if(!empty($fields['resource']) && $this->catFile){
-      $this->fileName .= $fields['resource'];
-      $this->fixedAttributes                 =  [];
+      $this->fileName                         .= $fields['resource'];
+      $this->fixedAttributes                  = [];
       $this->fixedAttributes[$this->fileName] = ' '.$this->catFile->name;
-      $this->rules[$this->fileName] = 'required';
+      $this->rules          [$this->fileName] = 'required';
     }
 
     if($this->catFile){
@@ -36,7 +36,8 @@ class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
         if($this->modelInstanciator()->catFileId($fields["cat_file_id"])->resourceId($fields["resource_id"])->count())
           $this->rules[$this->fileName] = 'file_already_exist';
       }
-      if(!actionAccess($this->getUserModelBuilderInstance(),$this->catFile->resource.".update"))
+
+      if(!$this->actionAccess($this->catFile->resource.".update"))
         $this->rules['cat_file_id'].='|file_resource';
     }
   }
@@ -50,7 +51,7 @@ class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
   }
 
   public function deleteDestroy(){
-    if(!actionAccess($this->getUserModelBuilderInstance(),$this->getModelCollectionInstance()->catFile.".update"))
+    if(!$this->actionAccess($this->getModelCollectionInstance()->catFile.".update"))
       $this->rules['cat_file_id'].='file_resource';
   }
 }

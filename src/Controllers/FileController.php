@@ -15,6 +15,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     'cat_file_resource',
     'cat_file_cv_search',
     'resource_id',
+    'resource_cv_search',
     'created_at',
     'id',
     'path',

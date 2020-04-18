@@ -88,7 +88,8 @@ class File extends \Customs\Crudvel\Models\BaseModel{
 
 // [Others]
   public function fixMixedCvSearch(){
-    $this->attributes['mixed_cv_search']  = '';
+    $this->attributes['mixed_cv_search']    = '';
+    $this->attributes['resource_cv_search'] = '';
 
     if($this->catFileIdValue === null || $this->resourceIdValue === null)
       return ;
@@ -104,7 +105,8 @@ class File extends \Customs\Crudvel\Models\BaseModel{
     if(!$resourceModelInstance = $resourceModel::key($this->resourceIdValue)->solveSearches()->first())
       return ;
 
-    $this->attributes['mixed_cv_search']  = $catFileInstance->cv_search . ' - '.$resourceModelInstance->cv_search;
+    $this->attributes['resource_cv_search'] = $resourceModelInstance->cv_search;
+    $this->attributes['mixed_cv_search']    = $catFileInstance->cv_search . ' - '.$resourceModelInstance->cv_search;
   }
 // [End Others]
 }
