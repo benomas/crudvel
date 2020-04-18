@@ -31,11 +31,14 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     $actions = cvActions();
     $specials = $this->getSysSpecials('specials');
     $specials[$this->lastActionName]= $this->lastActionName;
+    $openSpecials = [];
     // Set headers: actions and specials actions
     foreach ($actions as $action)
       array_push($header, $action);
-    foreach ($specials as $special=> $value)
+    foreach ($specials as $special=> $value){
       array_push($header, $special);
+      array_push($openSpecials, $special);
+    }
     // Set row to heading in data
     $data[0] = $header;
     // get resources
@@ -53,7 +56,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
       $data[] = $rowData;
 
       // for bgColor: check toIgnore bgColor, getting actions by resource
-      $resourceActions = cvActions($resource);
+      $resourceActions = array_merge(cvActions($resource), $openSpecials);
       foreach ($header as $aIndex => $action) {
         // Omit first col and last col (Acceso)
         if($aIndex == 0) continue;
@@ -81,16 +84,16 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
 
   public function synchronize()
   {
-    // get new resources from system
-    $newResources = cvResources();
     // get new actions from system
     $newActions = cvActions();
-    $newActions[] = 'hola';
     // add special actions
     $specials = $this->getSysSpecials('specials');
     $specials[$this->lastActionName]= $this->lastActionName;
-    foreach ($specials as $special=> $value)
+    $openSpecials =[];
+    foreach ($specials as $special=> $value){
       array_push($newActions, $special);
+      array_push($openSpecials, $special);
+    }
     // get collection from data
     $oldDataCollection = $this->data;
     // counters for row and col
@@ -104,11 +107,13 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     // counters for row and col
     $nRow = 2;
     $nCol = 0;
+    // get new resources from system
+    $newResources = cvResources();
     // iter new resources
     foreach($newResources as $resource){
       $data = [];
       $data[0] = $resource;
-      $resourceActions = cvActions($resource);
+      $resourceActions = array_merge(cvActions($resource), $openSpecials);
       foreach ($newActions as $action) {
         $finish = '';
         $init = '';
