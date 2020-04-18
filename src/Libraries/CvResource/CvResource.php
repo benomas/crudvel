@@ -126,6 +126,7 @@ class CvResource
   public function loadController($controller=null){
     if(!is_object($controller))
       return $this;
+
     return $this->setControllerClass(get_class($controller))->setControllerBuilderInstance($controller);
     if(!$controller || !class_exists($controller))
       return $this->generateController();
@@ -137,6 +138,7 @@ class CvResource
       $model->noFilters();
       return $this->setModelClass(get_class($model))->setModelBuilderInstance($model);
     }
+
     if(!$model || !class_exists($model))
       return $this->generateModel();
 
@@ -227,7 +229,6 @@ class CvResource
       $this->getModelBuilderInstance()->actives();
 
     $this->getRootInstance()->loadFields();
-
     if(
       ($preactionResponse = $this->getRootInstance()->preAction(
         $this->getCallActionParameters(),
@@ -239,7 +240,6 @@ class CvResource
       });
 
     $this->generateModelCollectionInstance();
-    //pdd('asd');
     if( in_array($this->getCurrentAction(),$this->getRowsActions()) &&
         $this->getModelBuilderInstance() &&
         !$this->getModelBuilderInstance()->count()
@@ -289,10 +289,13 @@ class CvResource
 	public function specialAccess($special){
     if(!$this->getUserModelBuilderInstance() || !$this->getUserModelCollectionInstance())
       return false;
+
     if($this->getUserModelCollectionInstance()->isRoot())
       return true;
+
     if(!\App\Models\Permission::special($special)->count())
       return true;
+
     return kageBunshinNoJutsu($this->getUserModelBuilderInstance())->specialPermission($special)->count()>0;
   }
 

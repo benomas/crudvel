@@ -8,11 +8,18 @@ use Illuminate\Database\Eloquent\Builder;
 class PermissionsScope implements Scope
 {
   public function apply(Builder $builder, Model $model){
-    if(($GLOBALS[get_class($model)] = $GLOBALS[get_class($model)] ?? true)){
+    if(!$this->modelExceptions($model)){
       customLog(get_class($model));
+      //customLog([get_class($model)=>debug_backtrace()]);
       $GLOBALS[get_class($model)] = false;
       $model->scopeCvOwner($builder);
       $GLOBALS[get_class($model)] = true;
     }
+  }
+
+  public function modelExceptions($currentModel){
+    if(class_basename($currentModel) === 'CatPermissionType')
+      return true;
+    return !($GLOBALS[get_class($currentModel)] = $GLOBALS[get_class($currentModel)] ?? true);
   }
 }

@@ -297,23 +297,37 @@ class BaseModel extends Model implements CvCrudInterface
   }
 
   public function scopeCvOwner($query, $userKey=null){
+    $GLOBALS['disablePermissionsScope'] =  true;
 
-    if(!($user = $this->fixUser($userKey)))
-      return $query->nullFilter();
+    if(!($user = $this->fixUser($userKey))){
+      $GLOBALS['disablePermissionsScope'] =  false;
 
-    $user = \CvResource::assignUser()->getUserModelCollectionInstance();
+      return $query->noFilters();
+    }
 
-    if(!$user || $user->isRoot())
-      return;
+    if($user->isRoot()){
+      $GLOBALS['disablePermissionsScope'] =  false;
+
+      return $query;
+    }
 
     $resource = cvCaseFixer('slug|plural',class_basename($this));
-    $ownerPermissions = $user->permissions()->specialPermissions();
 
-    if(kageBunshinNoJutsu($ownerPermissions)->slug("$resource.general-owner")->count())
+    $ownerPermissions = $user->permissions()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->specialPermissions();
+
+    if(kageBunshinNoJutsu($ownerPermissions)->slug("$resource.general-owner")->count()){
+      $GLOBALS['disablePermissionsScope'] =  false;
+
       return $query->generalOwner($user->id);
+    }
 
-    if($ownerPermissions->slug("$resource.particular-owner")->count())
+    if($ownerPermissions->slug("$resource.particular-owner")->count()){
+      $GLOBALS['disablePermissionsScope'] =  false;
+
       return $query->particularOwner($user->id);
+    }
+
+    $GLOBALS['disablePermissionsScope'] =  false;
 
     return $query->nullFilter();
   }
@@ -594,6 +608,7 @@ class BaseModel extends Model implements CvCrudInterface
   protected static function boot(){
     parent::boot();
 
-    static::addGlobalScope(new \Crudvel\Scopes\PermissionsScope);
+    if(!($GLOBALS['disablePermissionsScope']??false))
+      static::addGlobalScope(new \Crudvel\Scopes\PermissionsScope);
   }
 }

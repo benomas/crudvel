@@ -44,6 +44,9 @@ class CvRolePermissionLayout extends \Crudvel\Commands\BaseCommand
       $spreadSheetConstructor = new \Crudvel\Libraries\SpreadSheetIO\Constructors\PermissionResourceAction($role->slug);
       $excel = new \Crudvel\Libraries\SpreadSheetIO\SpreadSheet($spreadSheetConstructor);
       $excel->synchronize();
+      $spreadSheetConstructor = new \Crudvel\Libraries\SpreadSheetIO\Constructors\PermissionGlobalSpecials($role->slug);
+      $excel = new \Crudvel\Libraries\SpreadSheetIO\SpreadSheet($spreadSheetConstructor);
+      $excel->synchronize();
     }
   }
 }

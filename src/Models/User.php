@@ -208,23 +208,23 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     return $loginTest;
   }
   public function isRoot(){
-    return $this->roles()->withRoot()->count();
+    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->withRoot()->count();
   }
 
   public function isAdmin(){
-    return $this->roles()->withAdmin()->count();
+    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->withAdmin()->count();
   }
 
   public function inRoles(...$roles){
-    return $this->roles()->inRoles($roles)->count();
+    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->inRoles($roles)->count();
   }
 
   public function hasInternalRole(){
-    return $this->roles()->internal()->count() > 0;
+    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->internal()->count() > 0;
   }
 
   public function hasExternalRole(){
-    return $this->roles()->external()->count() > 0;
+    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->external()->count() > 0;
   }
 // [End Others]
 }

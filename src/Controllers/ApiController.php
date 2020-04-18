@@ -23,7 +23,7 @@ class ApiController extends CustomController{
     return $this->getFlowControl() ? $this->getFlowControl()():parent::callActionJump($method,$parameters);
   }
 
-  public function actionResponse(){$this->getPaginated();
+  public function actionResponse(){
     return $this->getPaginated()?
       $this->getPaginatorInstance()->paginatedResponse():
       $this->apiSuccessResponse($this->getModelBuilderInstance()->get());
