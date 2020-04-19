@@ -35,11 +35,11 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function rolesroles()
-  {/*
-    return $this->hasManyDeep(
-      'App\Models\Role',
-      ['role_user as aaa', 'App\Models\Role as bbb', 'role_role as ccc']
-    );*/
+  {
+    return \App\Models\Role::whereHas('dominedBy',function($query){
+      $query->inRoles($this->roles()->get()->pluck('slug'));
+    });
+    //toBeDeprecated
     return $this->manyToManyToMany('roles','roles',"App\Models\Role");
   }
 // [End Relationships]

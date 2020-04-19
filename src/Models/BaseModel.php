@@ -375,7 +375,8 @@ class BaseModel extends Model implements CvCrudInterface
 
     if (!method_exists($this, $firstLevelRelation))
       return null;
-    $firstLevelRelationInstace = $this->{$firstLevelRelation};
+
+    $firstLevelRelationInstace = $this->{$firstLevelRelation}()->get();
     if (!$firstLevelRelationInstace)
       return $secondLevelModel::nullFilter();
 

@@ -24,7 +24,7 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function dominedBy(){
-    return $this->belongsToMany("App\Models\Role", 'role_role', 'id', 'domineering_role_id');
+    return $this->belongsToMany("App\Models\Role", 'role_role', 'domined_role_id', 'domineering_role_id');
   }
 
   public function roles(){

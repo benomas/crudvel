@@ -240,6 +240,12 @@ class CvResource
       });
 
     $this->generateModelCollectionInstance();
+
+    if( in_array($this->getCurrentAction(),$this->getRowActions()) && !$this->getModelCollectionInstance())
+      return $this->setFlowControl(function(){
+        return $this->getRootInstance()->apiUnautorized();
+      });
+
     if( in_array($this->getCurrentAction(),$this->getRowsActions()) &&
         $this->getModelBuilderInstance() &&
         !$this->getModelBuilderInstance()->count()
