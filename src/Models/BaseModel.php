@@ -619,8 +619,8 @@ class BaseModel extends Model implements CvCrudInterface
       $GLOBALS['disablePermissionsScope'] = true;
       $relatedFiles = $model->relatedFiles();
       if($relatedFiles)
-        foreach($relatedFiles->get() as $relatedFile){
-          $catFile =  \App\Models\CatFile::key($relatedFile->catFile->id)->first();
+        foreach($relatedFiles->solveSearches()->get() as $relatedFile){
+          $catFile =  \App\Models\CatFile::key($relatedFile->catFile->solveSearches()->id)->first();
           $catFile->resource = $relatedFile->catFile->resource;
           $catFile->save();
 
