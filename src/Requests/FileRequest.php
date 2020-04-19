@@ -36,9 +36,9 @@ class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
         if($this->modelInstanciator()->catFileId($fields["cat_file_id"])->resourceId($fields["resource_id"])->count())
           $this->rules[$this->fileName] = 'file_already_exist';
       }
-
+/*
       if(!$this->actionAccess($this->catFile->resource.".update"))
-        $this->rules['cat_file_id'].='|file_resource';
+        $this->rules['cat_file_id'].='|file_resource';*/
     }
   }
 

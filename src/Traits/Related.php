@@ -9,11 +9,11 @@ trait Related
   //End Relationships
 
   // Scopes
-  public function scopeGeneralOwner($query,$userId=null){
+  public function scopeGeneralOwner($query,$user=null){
   }
 
-  public function scopeParticularOwner($query,$userId=null){
-    $query->defParticularOwner($userId,'report');
+  public function scopeParticularOwner($query,$user=null){
+    $query->defParticularOwner($user->id,'report');
   }
   // End Scopes
 }

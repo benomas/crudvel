@@ -119,12 +119,12 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
       ->selectRaw("CONCAT($alias.name, ' [',cat_permission_types.name,']')");
   }
 
-  public function scopeGeneralOwner($query,$userId=null){
+  public function scopeGeneralOwner($query,$user=null){
     return $query->noFilters();
   }
 
-  public function scopeParticularOwner($query,$userId=null){
-    if(!($user = $this->fixUser($userId)))
+  public function scopeParticularOwner($query,$user=null){
+    if(!$user)
       return $query->noFilters();
 
     $query->whereHas('roles',function($query) use($user) {

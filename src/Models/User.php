@@ -158,8 +158,8 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     return $query->selectRaw("CONCAT($alias.first_name, ' ',$alias.last_name)");
   }
 
-  public function scopeGeneralOwner($query,$userId=null){
-    if(!($user = $this->fixUser($userId)))
+  public function scopeGeneralOwner($query,$user=null){
+    if(!$user)
       return $query->noFilters();
 
     return $query->hidden()->whereHas('roles',function($query) use($user){
@@ -167,8 +167,8 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     });
   }
 
-  public function scopeParticularOwner($query,$userId=null){
-    if(!($user = $this->fixUser($userId)))
+  public function scopeParticularOwner($query,$user=null){
+    if(!$user)
       return $query->noFilters();
 
     $query->key($user->id);

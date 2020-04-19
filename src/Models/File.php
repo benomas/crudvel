@@ -24,17 +24,13 @@ class File extends \Customs\Crudvel\Models\BaseModel{
   ];
 
 // [Relationships]
-  public function catFile(){
-    return $this->belongsTo("\App\Models\CatFile");
+
+  public function relatedFiles(){
+    return null;
   }
 
-  //this relation cant work as preload
-  public function resource(){
-    return $this->belongsTo(
-      "\App\Models\\".\Str::studly(\Str::singular($this->catFile()->first()->resource)),
-      'resource_id',
-      'id'
-    );
+  public function catFile(){
+    return $this->belongsTo("\App\Models\CatFile");
   }
 // [End Relationships]
 
@@ -56,7 +52,7 @@ class File extends \Customs\Crudvel\Models\BaseModel{
 
 // [End Scopes]
   public function scopeCatFileId($query,$catFileId){
-    $query->where($this->getTable().'.cat_file_id',$catFileId);
+    $query->where($this->preFixed('cat_file_id'),$catFileId);
   }
 
   public function scopeCatFileSlug($query,$catFileSlug){
@@ -66,12 +62,17 @@ class File extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeResourceId($query,$resourceId){
-    $query->where($this->getTable().'.resource_id',$resourceId);
+    $query->where($this->preFixed('resource_id'),$resourceId);
   }
 
-  public function scopeParticularOwner($query, $userId=null){
-    if(!($user = $this->fixUser($userId)))
+  public function scopeParticularOwner($query, $user=null){
+    if(!$user)
       return $query->noFilters();
+    //$resources = \App\Models\CatFile::cvOwner()->groupBy('resource')->get();
+    $query->whereHas('catFile',function($query){
+      $query->cvOwner();
+    });
+    //$query->whereHasMorph('resourcer','*');
   }
 
   public function scopeFromResource($query,$resource){
@@ -90,6 +91,7 @@ class File extends \Customs\Crudvel\Models\BaseModel{
   public function fixMixedCvSearch(){
     $this->attributes['mixed_cv_search']    = '';
     $this->attributes['resource_cv_search'] = '';
+    $this->attributes['resource']           = '';
 
     if($this->catFileIdValue === null || $this->resourceIdValue === null)
       return ;
@@ -107,6 +109,11 @@ class File extends \Customs\Crudvel\Models\BaseModel{
 
     $this->attributes['resource_cv_search'] = $resourceModelInstance->cv_search;
     $this->attributes['mixed_cv_search']    = $catFileInstance->cv_search . ' - '.$resourceModelInstance->cv_search;
+    $this->attributes['resource']           = $resourceModel;
+  }
+
+  public function resourcer(){
+    return $this->morphTo(null,'resource','resource_id','id');
   }
 // [End Others]
 }

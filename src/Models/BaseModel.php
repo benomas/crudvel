@@ -31,6 +31,9 @@ class BaseModel extends Model implements CvCrudInterface
   }
 
   // [Relationships]
+  public function relatedFiles(){
+    return $this->morphMany('App\Models\File', 'resourcer', 'resource', 'resource_id');
+  }
   // [End Relationships]
 
   // [Transformers]
@@ -180,16 +183,6 @@ class BaseModel extends Model implements CvCrudInterface
     return $query->where($this->preFixed('sublevel_id', $preFixed), $sublevel_id);
   }
 
-  public function scopeGeneralOwner($query, $userKey=null)
-  {
-    return $query;
-  }
-
-  public function scopeParticularOwner($query, $userKey=null)
-  {
-    return $query->key($userId);
-  }
-
   public function scopeUpdatedBefore($query, $date, $preFixed = true)
   {
     return $query->where($this->preFixed('updated_at', $preFixed), '>', $date);
@@ -296,6 +289,16 @@ class BaseModel extends Model implements CvCrudInterface
       ->limit(1)]);
   }
 
+  public function scopeGeneralOwner($query, $user=null)
+  {
+    return $query;
+  }
+
+  public function scopeParticularOwner($query, $user=null)
+  {
+    return $query->key($user->id);
+  }
+
   public function scopeCvOwner($query, $userKey=null){
     $GLOBALS['disablePermissionsScope'] =  true;
 
@@ -318,13 +321,13 @@ class BaseModel extends Model implements CvCrudInterface
     if(kageBunshinNoJutsu($ownerPermissions)->slug("$resource.general-owner")->count()){
       $GLOBALS['disablePermissionsScope'] =  false;
 
-      return $query->generalOwner($user->id);
+      return $query->generalOwner($user);
     }
 
     if($ownerPermissions->slug("$resource.particular-owner")->count()){
       $GLOBALS['disablePermissionsScope'] =  false;
 
-      return $query->particularOwner($user->id);
+      return $query->particularOwner($user);
     }
 
     $GLOBALS['disablePermissionsScope'] =  false;
@@ -611,5 +614,22 @@ class BaseModel extends Model implements CvCrudInterface
 
     if(!($GLOBALS['disablePermissionsScope']??false))
       static::addGlobalScope(new \Crudvel\Scopes\PermissionsScope);
+
+    self::updated(function($model){
+      $GLOBALS['disablePermissionsScope'] = true;
+      $relatedFiles = $model->relatedFiles();
+      if($relatedFiles)
+        foreach($relatedFiles->get() as $relatedFile){
+          $catFile =  \App\Models\CatFile::key($relatedFile->catFile->id)->first();
+          $catFile->resource = $relatedFile->catFile->resource;
+          $catFile->save();
+
+          $file =  \App\Models\File::key($relatedFile->id)->first();
+          $file->cat_file_id = $relatedFile->catFile->id;
+          $file->resource_id = $model->id;
+          $file->save();
+        }
+      $GLOBALS['disablePermissionsScope'] = false;
+    });
   }
 }

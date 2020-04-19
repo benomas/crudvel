@@ -141,7 +141,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     $this->getModelCollectionInstance()->absolute_path = $this->filePath();
       return $this->getModelCollectionInstance()->save();
     });
-    $this->getModelCollectionInstance()->resource->touch();
+    //$this->getModelCollectionInstance()->relatedFiles()->first()->touch();
     $this->transactionComplete();
     if(!$this->isTransactionCompleted())
       return $this->apiFailResponse();
