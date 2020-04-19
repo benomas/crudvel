@@ -15,6 +15,7 @@ class CreatePermissionsTablerightdatetag extends BaseMigration
         $table->string('slug');
         $table->string('name');
         $table->string('description')->nullable();
+        $table->string('resource')->nullable();
         $table->boolean('active')->default(true);
         $table->timestamps();
         $this->userStamps($table);

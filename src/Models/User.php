@@ -160,7 +160,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
 
   public function scopeGeneralOwner($query,$userId=null){
     if(!($user = $this->fixUser($userId)))
-      return $query->nullFilter();
+      return $query->noFilters();
 
     return $query->hidden()->whereHas('roles',function($query) use($user){
       $query->keys($user->rolesroles()->get()->pluck("id")->toArray());
@@ -169,7 +169,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
 
   public function scopeParticularOwner($query,$userId=null){
     if(!($user = $this->fixUser($userId)))
-      return $query->nullFilter();
+      return $query->noFilters();
 
     $query->key($user->id);
   }

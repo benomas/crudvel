@@ -687,6 +687,7 @@ trait CrudTrait {
   public function owner(){
     if($this->getUserModelCollectionInstance()->isRoot())
       return true;
+
     if($this->getUserModelCollectionInstance()->specialPermissions()->slug($this->getSlugPluralName().".general-owner")->count())
       return true;
 

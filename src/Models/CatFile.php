@@ -54,8 +54,12 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
 // [End Transformers]
 
 // [Scopes]
+  public function scopeInResources($query,$resources){
+    $query->whereIn($this->preFixed('resource'),$resources);
+  }
+
   public function scopeResource($query,$resource){
-    $query->where($this->getTable().'.resource',$resource);
+    $query->where($this->preFixed('resource'),$resource);
   }
 
   public function scopeHasFiles($query){
@@ -65,7 +69,13 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
   public function scopeParticularOwner($query, $userId=null)
   {
     if(!($user = $this->fixUser($userId)))
-      return $query->nullFilter();
+      return $query->noFilters();
+
+    $resourcePermissions = $user->permissions()->whereHas('catPermissionType',function($query){
+      $query->actionType();
+    })->groupBy('resource')->get()->pluck('resource');
+
+    return $query->inResources($resourcePermissions);
   }
 
   public function scopeSelectCvSearch($query,$alias=null){

@@ -2,7 +2,9 @@
 
 class Permission extends  \Customs\Crudvel\Models\BaseModel{
 
-  public static $enablePermissionCheck = true;
+  public static $enablePermissionCheck    = true;
+  protected $permissionTypeIdValue        = null;
+  protected $slugValue                    = null;
 
   protected $fillable = [
     "slug",
@@ -32,6 +34,17 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
 // [End Relationships]
 
 // [Transformers]
+  public function setSlugAttribute($value)
+  {
+    $this->slugValue = $this->attributes['slug'] = $value;
+    $this->fixResource();
+  }
+
+  public function setCatPermissionTypeIdAttribute($value)
+  {
+    $this->permissionTypeIdValue = $this->attributes['cat_permission_type_id'] = $value;
+    $this->fixResource();
+  }
 // [End Transformers]
 
 // [Scopes]
@@ -107,15 +120,18 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeGeneralOwner($query,$userId=null){
-    $this->scopeParticularOwner($query,$userId=null);
+    return $query->noFilters();
   }
 
-  public function scopeParticularOwner($query,$userId=null){/*
-    $query->whereHas('roles',function($query) use($userId) {
-      $query->whereHas('users',function($query) use($userId) {
-        $query->particularOwner($userId);
+  public function scopeParticularOwner($query,$userId=null){
+    if(!($user = $this->fixUser($userId)))
+      return $query->noFilters();
+
+    $query->whereHas('roles',function($query) use($user) {
+      $query->whereHas('users',function($query) use($user) {
+        $query->key($user->id);
       });
-    });*/
+    });
   }
 
   public function scopeRelatedToRole ($query,$roleKey) {
@@ -126,5 +142,24 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
 // [End Scopes]
 
 // [Others]
+  public function fixResource(){
+    $this->attributes['resource'] = null;
+
+    if($this->permissionTypeIdValue === null || $this->slugValue === null)
+      return ;
+
+    if(!$catFileInstance = \App\Models\CatPermissionType::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->key($this->permissionTypeIdValue)->solveSearches()->first())
+      return ;
+
+    if($catFileInstance->slug==='resource'){
+      $this->attributes['resource'] = $this->slugValue;
+      return ;
+    }
+
+    if($catFileInstance->slug==='action'){
+      $this->attributes['resource'] = explode('.', $this->slugValue)[0]??null;
+      return ;
+    }
+  }
 // [End Others]
 }

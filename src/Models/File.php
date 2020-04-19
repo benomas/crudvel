@@ -71,7 +71,7 @@ class File extends \Customs\Crudvel\Models\BaseModel{
 
   public function scopeParticularOwner($query, $userId=null){
     if(!($user = $this->fixUser($userId)))
-      return $query->nullFilter();
+      return $query->noFilters();
   }
 
   public function scopeFromResource($query,$resource){
@@ -94,7 +94,7 @@ class File extends \Customs\Crudvel\Models\BaseModel{
     if($this->catFileIdValue === null || $this->resourceIdValue === null)
       return ;
 
-    if(!$catFileInstance = \App\Models\CatFile::key($this->catFileIdValue)->solveSearches()->first())
+    if(!$catFileInstance = \App\Models\CatFile::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->key($this->catFileIdValue)->solveSearches()->first())
       return ;
 
     $resourceModel = '\App\Models\\'.cvCaseFixer('studly|singular',$catFileInstance->resource);

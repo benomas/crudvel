@@ -114,7 +114,7 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
 
   public function scopeParticularOwner($query,$userId=null){
     if(!($user = $this->fixUser($userId)))
-      return $query->nullFilter();
+      return $query->noFilters();
 
     return $query->ids($user->rolesroles()->get()->pluck("id")->toArray());
   }

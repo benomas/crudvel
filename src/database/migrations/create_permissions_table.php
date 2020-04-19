@@ -16,6 +16,7 @@ class CreatePermissionsTabler extends BaseMigration
         $table->string('slug');
         $table->string('name');
         $table->string('description');
+        $table->string('resource')->nullable();
         $table->boolean('active')->default(true);
         $table->timestamps();
         $table->bigInteger('created_by')->nullable();
