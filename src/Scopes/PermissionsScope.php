@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 class PermissionsScope implements Scope
 {
   public function apply(Builder $builder, Model $model){
+    customLog(get_class($model));
     if(!$this->modelExceptions($model)){
       customLog(get_class($model));
       //customLog([get_class($model)=>debug_backtrace()]);

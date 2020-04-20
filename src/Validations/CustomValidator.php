@@ -414,7 +414,7 @@ private function getIgnore(&$parameters)
       if(in_array($item,$list1))
         $inList1[] = $item;
 
-    if(!count($inList1))
+    if(count($inList1) === 0)
       return true;
 
     $inList2 = [];
@@ -423,7 +423,7 @@ private function getIgnore(&$parameters)
       if(in_array($item,$list2))
         $inList2[] = $item;
 
-    return count($inList2);
+    return !count($inList2);
   }
 
   /**
@@ -441,7 +441,6 @@ private function getIgnore(&$parameters)
       $list1  = [];
       $list2  = [];
       $pushTo = 'list1';
-
       foreach($parameters as $item){
         if($item===';'){
           $pushTo = 'list2';

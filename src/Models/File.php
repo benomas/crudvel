@@ -24,11 +24,6 @@ class File extends \Customs\Crudvel\Models\BaseModel{
   ];
 
 // [Relationships]
-
-  public function relatedFiles(){
-    return null;
-  }
-
   public function catFile(){
     return $this->belongsTo("\App\Models\CatFile");
   }

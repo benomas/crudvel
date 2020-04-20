@@ -31,10 +31,6 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
   ];
 
 // [Relationships]
-  public function relatedFiles(){
-    return null;
-  }
-
   public function files(){
     return $this->hasMany("\App\Models\File");
   }

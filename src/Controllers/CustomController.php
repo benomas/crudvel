@@ -292,25 +292,61 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $this->committer === $committer;
   }
 
+  public function syncFiles(){
+    $GLOBALS['disablePermissionsScope'] = true;
+
+    if(!$this->getModelCollectionInstance()->relatedFiles || $this->getModelCollectionInstance()->relatedFiles->count() === 0)
+      return true;
+
+    foreach($this->getModelCollectionInstance()->relatedFiles->solveSearches()->get() as $relatedFile){
+      pdd('asdasdas');
+      $catFile = $relatedFile->catFile()->solveSearches()->first();
+      $catFile->resource = $catFile->resource;
+
+      if(!$catFile->save())
+        return false;
+
+      $relatedFile->cat_file_id = $relatedFile->catFile->id;
+      $relatedFile->resource_id = $relatedFile->resource_id;
+
+      if(!$relatedFile->save())
+        return false;
+    }
+
+    $GLOBALS['disablePermissionsScope'] = false;
+  }
+
   public function persist($callBack=null){
     $this->resetTransaction();
     $this->startTranstaction();
+
     $this->testTransaction(function() use($callBack){
       $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
       $fields = $this->getFields();
       $this->getModelCollectionInstance()->fill($fields);
+
       if(!empty($fields['created_by']))
         $this->getModelCollectionInstance()->created_by=$fields['created_by'];
+
       if(!empty($fields['updated_by']))
         $this->getModelCollectionInstance()->updated_by=$fields['updated_by'];
+
       $this->dirtyPropertys = $this->getModelCollectionInstance()->getDirty();
+
       if(!$this->getModelCollectionInstance()->save())
         return false;
+
+      if(!$this->syncFiles())
+        return false;
+
       if($callBack && is_callable($callBack))
         return $callBack();
+
       return true;
     });
+
     $this->transactionComplete();
+
     return $this->isTransactionCompleted();
   }
 
