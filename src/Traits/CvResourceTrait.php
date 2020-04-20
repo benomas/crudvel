@@ -152,6 +152,14 @@ trait CvResourceTrait
   public function getSkipModelValidation(){
     if($this->getRootInstance())
       return $this->getRootInstance()->getSkipModelValidation();
+
+    return null;
+  }
+
+  public function getSkipCollectionValidation(){
+    if($this->getRootInstance())
+      return $this->getRootInstance()->getSkipCollectionValidation();
+
     return null;
   }
 
@@ -354,6 +362,12 @@ trait CvResourceTrait
   public function setSkipModelValidation($skipModelValidation=null){
     if($this->getRootInstance())
       $this->getRootInstance()->setSkipModelValidation($skipModelValidation??null);
+    return $this;
+  }
+
+  public function setSkipCollectionValidation($skipCollectionValidation=null){
+    if($this->getRootInstance())
+      $this->getRootInstance()->setSkipCollectionValidation($skipCollectionValidation??null);
     return $this;
   }
 

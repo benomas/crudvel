@@ -240,8 +240,7 @@ class CvResource
       });
 
     $this->generateModelCollectionInstance();
-
-    if( in_array($this->getCurrentAction(),$this->getRowActions()) && !$this->getModelCollectionInstance())
+    if( in_array($this->getCurrentAction(),$this->getRowActions()) && !$this->getModelCollectionInstance() && !$this->getSkipCollectionValidation())
       return $this->setFlowControl(function(){
         return $this->getRootInstance()->apiUnautorized();
       });

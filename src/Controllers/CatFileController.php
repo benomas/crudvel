@@ -26,6 +26,13 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
 
     $this->addAction('resources')->addRowActions('resources');
   }
+
+  public function callAction($method,$parameters=[]){
+    if ($method === 'resources')
+      $this->setSkipCollectionValidation(true);
+
+    return parent::callAction($method,$parameters);
+  }
   // [Actions]
   public function resources(){
     $this->getPaginatorInstance()->setCollectionData(collect(\App\Models\CatFile::cvIam()->resourceCatalogs()));

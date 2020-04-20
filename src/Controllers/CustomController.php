@@ -46,7 +46,8 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   protected $transStatus;
   protected $committer;
   //modelo cargado en memoria
-  protected $skipModelValidation = false;
+  protected $skipModelValidation      = false;
+  protected $skipCollectionValidation = false;
   //validador autorizador anonimo
   protected $slugField      = null;
   protected $slugedResponse = false;
@@ -600,6 +601,10 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $this->skipModelValidation??null;
   }
 
+  public function getSkipCollectionValidation(){
+    return $this->skipCollectionValidation??null;
+  }
+
   public function getCallActionMethod(){
     return $this->callActionMethod??null;
   }
@@ -614,11 +619,19 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 //------------------
   public function setBadPaginablePetition($badPaginablePetition=null){
     $this->badPaginablePetition = $badPaginablePetition??null;
+
     return $this;
   }
 
   public function setSkipModelValidation($skipModelValidation=null){
     $this->skipModelValidation = $skipModelValidation??null;
+
+    return $this;
+  }
+
+  public function setSkipCollectionValidation($skipCollectionValidation=null){
+    $this->skipCollectionValidation = $skipCollectionValidation??null;
+
     return $this;
   }
 
