@@ -614,22 +614,28 @@ class BaseModel extends Model implements CvCrudInterface
 
     if(!($GLOBALS['disablePermissionsScope']??false))
       static::addGlobalScope(new \Crudvel\Scopes\PermissionsScope);
-    /*
+
     self::updated(function($model){
       $GLOBALS['disablePermissionsScope'] = true;
-      $relatedFiles = $model->relatedFiles();
-      if($relatedFiles)
-        foreach($relatedFiles->solveSearches()->get() as $relatedFile){
-          $catFile =  \App\Models\CatFile::key($relatedFile->catFile->solveSearches()->id)->first();
-          $catFile->resource = $relatedFile->catFile->resource;
-          $catFile->save();
 
-          $file =  \App\Models\File::key($relatedFile->id)->first();
-          $file->cat_file_id = $relatedFile->catFile->id;
-          $file->resource_id = $model->id;
-          $file->save();
-        }
+      if(!($relatedFiles = $model->relatedFiles())){
+        $GLOBALS['disablePermissionsScope'] = false;
+        return;
+      }
+
+      $relatedFiles = $relatedFiles->solveSearches()->get();
+
+      foreach($relatedFiles as $relatedFile){
+        $catFile = $relatedFile->catFile;
+        $catFile->resource = $relatedFile->catFile->resource;
+        $catFile->save();
+
+        $relatedFile->cat_file_id = $relatedFile->catFile->id;
+        $relatedFile->resource_id = $model->id;
+        $relatedFile->save();
+      }
+
       $GLOBALS['disablePermissionsScope'] = false;
-    });*/
+    });
   }
 }

@@ -337,9 +337,6 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       if(!$this->getModelCollectionInstance()->save())
         return false;
 
-      if(!$this->syncFiles())
-        return false;
-
       if($callBack && is_callable($callBack))
         return $callBack();
 
