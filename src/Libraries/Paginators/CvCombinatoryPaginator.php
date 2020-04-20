@@ -61,7 +61,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       $querySql = preg_replace('/^select \* from/','select *,1.0  as pt_order from',$this->getModelBuilderInstance()->toSql());
       $bindings = $this->getModelBuilderInstance()->getBindings();
       $this->getModelBuilderInstance()
-        ->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag")))
+        ->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}")))
         ->setBindings($bindings);
       return $this->getModelBuilderInstance();
     }

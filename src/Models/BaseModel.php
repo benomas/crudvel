@@ -614,7 +614,7 @@ class BaseModel extends Model implements CvCrudInterface
 
     if(!($GLOBALS['disablePermissionsScope']??false))
       static::addGlobalScope(new \Crudvel\Scopes\PermissionsScope);
-
+    /*
     self::updated(function($model){
       $GLOBALS['disablePermissionsScope'] = true;
       $relatedFiles = $model->relatedFiles();
@@ -630,6 +630,6 @@ class BaseModel extends Model implements CvCrudInterface
           $file->save();
         }
       $GLOBALS['disablePermissionsScope'] = false;
-    });
+    });*/
   }
 }
