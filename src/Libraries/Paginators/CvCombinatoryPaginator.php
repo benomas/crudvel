@@ -137,7 +137,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       );
     $querySql = preg_replace('/^select \* from/','select *,"'.($position).'" as pt_order from',$likeBuilder->toSql());
     $bindings = $likeBuilder->getBindings();
-    $likeBuilder->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($bindings));
+    $likeBuilder->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))->setBindings($bindings));
     $this->combinatoryUnions[] = $likeBuilder;
   }
 
@@ -151,7 +151,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       );
     $querySql = preg_replace('/^select \* from/','select *,"'.($position).'" as pt_order from',$likeBuilder->toSql());
     $bindings = $likeBuilder->getBindings();
-    $likeBuilder->setQuery(\DB::table(\DB::raw("($querySql) as cv_pag"))->setBindings($bindings));
+    $likeBuilder->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))->setBindings($bindings));
     $this->combinatoryUnions[] = $likeBuilder;
   }
   public function unions(){
@@ -169,7 +169,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     $bindings = $allUnions->getBindings();
     $allUnions
       ->setQuery(
-        \DB::table(\DB::raw('('.$allUnions->toSql().') as cv_pag'))
+        \DB::table(\DB::raw("({$allUnions->toSql()}) as {$this->getModelClass()::cvIam()->getTable()}"))
         ->setBindings($bindings)
       );
     $this->setModelBuilderInstance($allUnions);

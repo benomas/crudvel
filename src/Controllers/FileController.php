@@ -30,6 +30,11 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     $this->addAction('storeUpdate');
   }
 
+  public function beforePaginate($method,$parameters){
+    $this->getModelBuilderInstance()->aditionalParticularOwner();
+    //pendent to be implementent, doest work well with laravel 6, but does with laravel 7, wait to upgrade before enable it
+    //$this->getModelBuilderInstance()->with('resourcer')->solveSearches();
+  }
 
   // [Actions]
   public function show($id){

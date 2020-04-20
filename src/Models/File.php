@@ -63,11 +63,17 @@ class File extends \Customs\Crudvel\Models\BaseModel{
   public function scopeParticularOwner($query, $user=null){
     if(!$user)
       return $query->noFilters();
-    //$resources = \App\Models\CatFile::cvOwner()->groupBy('resource')->get();
-    $query->whereHas('catFile',function($query){
+
+    return $query->whereHas('catFile',function($query){
       $query->cvOwner();
     });
-    //$query->whereHasMorph('resourcer','*');
+  }
+
+  public function scopeAditionalParticularOwner($query, $userId=null){
+    if(!($user = $this->fixUser($userId)))
+      return $query->noFilters();
+
+    return $query->whereHasMorph('resourcer','*');
   }
 
   public function scopeFromResource($query,$resource){
@@ -94,7 +100,7 @@ class File extends \Customs\Crudvel\Models\BaseModel{
     if(!$catFileInstance = \App\Models\CatFile::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->key($this->catFileIdValue)->solveSearches()->first())
       return ;
 
-    $resourceModel = '\App\Models\\'.cvCaseFixer('studly|singular',$catFileInstance->resource);
+    $resourceModel = 'App\Models\\'.cvCaseFixer('studly|singular',$catFileInstance->resource);
 
     if(!class_exists($resourceModel))
       return ;
