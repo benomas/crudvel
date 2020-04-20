@@ -342,7 +342,6 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
       return true;
     });
-
     $this->transactionComplete();
 
     return $this->isTransactionCompleted();

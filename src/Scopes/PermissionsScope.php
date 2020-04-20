@@ -9,8 +9,6 @@ class PermissionsScope implements Scope
 {
   public function apply(Builder $builder, Model $model){
     if(!$this->modelExceptions($model)){
-      //customLog(get_class($model));
-      //customLog([get_class($model)=>debug_backtrace()]);
       $GLOBALS[get_class($model)] = false;
       $model->scopeCvOwner($builder);
       $GLOBALS[get_class($model)] = true;
