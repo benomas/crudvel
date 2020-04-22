@@ -109,20 +109,24 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     return CatFile::invokePosfix($this->getModelClass(),'resource');
   }
 
-  public function saveFile($clean=null){
+  public function saveFile($clean=false){
     $fields =  $this->getFields();
     $this->resetTransaction();
     $this->startTranstaction();
     $this->testTransaction(function() use($clean,$fields){
       $catFile  = CatFile::id($fields["cat_file_id"]??$this->getModelCollectionInstance()->cat_file_id)->first();
 
+      if($clean){
+        $this->deleteFile($this->getModelCollectionInstance());
+      }
+      /*
       if(!$catFile->multiple || $clean){
         foreach ($this->getModelCollectionInstance() as $file) {
           $this->deleteFile($file);
           if($catFile->multiple)
             $file->delete();
         }
-      }
+      }*/
 
     if($this->getCurrentAction()==='store')
       $this->modelInstanciator(true);
@@ -161,6 +165,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
   public function deleteFile($file = null){
     if(!($file = $file??$this->getModelCollectionInstance()))
       return true;
+
     if(!Storage::disk($file->disk)->exists($file->path))
       return true;
 
