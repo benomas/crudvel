@@ -128,26 +128,31 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
         }
       }*/
 
-    if($this->getCurrentAction()==='store')
-      $this->modelInstanciator(true);
+      if($this->getCurrentAction()==='store')
+        $this->modelInstanciator(true);
 
-    $this->setModelCollectionInstance(
-      $this->getModelCollectionInstance()->first()??$this->modelInstanciator(true)
-    );
-    $this->setStamps();
-    $fields["path"]="";
-    $fields["disk"]=$this->disk;
-    $this->getModelCollectionInstance()->fill($fields);
-    $this->dirtyPropertys = $this->getModelCollectionInstance()->getDirty();
-    if(!$this->getModelCollectionInstance()->save())
-      return false;
+      $this->setModelCollectionInstance(
+        $this->getModelCollectionInstance()->first()??$this->modelInstanciator(true)
+      );
 
-    $filePath  = 'uploads/'.$this->getModelCollectionInstance()->catFile->resource.'/'.$this->getModelCollectionInstance()->resource_id;
-    $fileInput = $this->getModelCollectionInstance()->catFile->resource;
-    $fileName  = \Str::slug($this->getModelCollectionInstance()->catFile()->first()->name)."-".$this->getModelCollectionInstance()->id.".".$this->getRequestInstance()->{$fileInput}->extension();
-    if(!$this->getModelCollectionInstance()->path = Storage::disk($this->getModelCollectionInstance()->disk)->putFileAs($filePath, $this->getRequestInstance()->{$fileInput},$fileName))
-      return false;
-    $this->getModelCollectionInstance()->absolute_path = $this->filePath();
+      $this->setStamps();
+      $fields["path"]="";
+      $fields["disk"]=$this->disk;
+      $this->getModelCollectionInstance()->fill($fields);
+
+      $this->dirtyPropertys = $this->getModelCollectionInstance()->getDirty();
+      if(!$this->getModelCollectionInstance()->save())
+        return false;
+
+      $filePath  = 'uploads/'.$this->getModelCollectionInstance()->catFile->resource.'/'.$this->getModelCollectionInstance()->resource_id;
+      $fileInput = $this->getModelCollectionInstance()->catFile->resource;
+      $fileName  = \Str::slug($this->getModelCollectionInstance()->catFile()->first()->name)."-".$this->getModelCollectionInstance()->id.".".$this->getRequestInstance()->{$fileInput}->extension();
+
+      if(!$this->getModelCollectionInstance()->path = Storage::disk($this->getModelCollectionInstance()->disk)->putFileAs($filePath, $this->getRequestInstance()->{$fileInput},$fileName))
+        return false;
+
+      $this->getModelCollectionInstance()->absolute_path = $this->filePath();
+
       return $this->getModelCollectionInstance()->save();
     });
     //$this->getModelCollectionInstance()->relatedFiles()->first()->touch();
@@ -155,7 +160,11 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     if(!$this->isTransactionCompleted())
       return $this->apiFailResponse();
 
-    return $this->show(0);
+    return $this->apiSuccessResponse([
+      "data"    => $this->getModelCollectionInstance(),
+      "count"   => 1,
+      "message" => trans("crudvel.api.success")
+    ]);
   }
 
   public function filePath(){

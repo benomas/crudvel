@@ -22,6 +22,16 @@
             :cv-segment="'*'"
             >
           </cv-<##[plural|slug](resource)##>-skeleton>
+
+          <div class="w-100" v-if="cpDinGenKeyValue" v-cv-can-access="`special:${cResourceName}-index-files`">
+            <h6 class="col-12 q-my-none q-pl-md">
+              {{mrLang('actions.indexResourcer.label','catFiles')}}
+            </h6>
+            <cv-index-resoucer
+              :cv-resourcer="cResource"
+              :cv-resourcer-key="cpDinGenKeyValue">
+            </cv-index-resoucer>
+          </div>
         </div>
       </div>
 
