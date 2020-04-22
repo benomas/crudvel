@@ -293,6 +293,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $this->committer === $committer;
   }
 
+  //to be deprecated
   public function syncFiles(){
     $GLOBALS['disablePermissionsScope'] = true;
 

@@ -23,8 +23,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
 
   public function __construct(){
     parent::__construct();
-
-    $this->addAction('resources')->addRowActions('resources');
+    $this->addAction('resources','resourcer')->addRowActions('resources')->addRowsActions('resourcer');
   }
 
   public function callAction($method,$parameters=[]){
@@ -33,7 +32,12 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
 
     return parent::callAction($method,$parameters);
   }
+
   // [Actions]
+  public function resourcer($resource,$key){
+    return $this->index();
+  }
+
   public function resources(){
     $this->getPaginatorInstance()->setCollectionData(collect(\App\Models\CatFile::cvIam()->resourceCatalogs()));
 
@@ -42,7 +46,13 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
   // [End Actions]
 
   // [Methods]
-  protected function resourcesBeforePaginate(){
+  protected function resourcerBeforePaginate($parameters){
+    $this->getModelBuilderInstance()->resource($parameters['resource'])->with(['files'=>function($query) use($parameters){
+      $query->resourceKey($parameters['key']);
+    }]);
+  }
+
+  protected function resourcesBeforePaginate($parameters){
     $this->setSelectables(['label','value']);
   }
 

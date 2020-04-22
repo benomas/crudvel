@@ -60,6 +60,10 @@ class File extends \Customs\Crudvel\Models\BaseModel{
     $query->where($this->preFixed('resource_id'),$resourceId);
   }
 
+  public function scopeResourceKey($query,$resourceKey){
+    $query->where($this->preFixed('resource_id'),$resourceKey);
+  }
+
   public function scopeParticularOwner($query, $user=null){
     if(!$user)
       return $query->noFilters();
