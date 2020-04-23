@@ -39,20 +39,29 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
   // [Actions]
   public function show($id){
     $this->getModelBuilderInstance()->with('catFile');
+
     return $this->actionResponse();
   }
 
   public function store(){
-    $fields =  $this->getFields();
-    $catFile  = CatFile::id($fields["cat_file_id"])->first();
-    $this->setModelCollectionInstance(
-      $this->getModelBuilderInstance()->catFileId($fields["cat_file_id"])->resourceId($fields["resource_id"])->get()
-    );
-    return $this->saveFile();
+    $catFile  = CatFile::id($this->getFields()["cat_file_id"])->first();
+
+    if ($catFile->multiple)
+      return $this->storeAMultiple($catFile);
+
+    if ($this->getModelBuilderInstance()->catFileId($this->getFields()["cat_file_id"])->resourceId($this->getFields()["resource_id"])->count())
+      return $this->updateASingle($catFile);
+
+    return $this->storeASingle($catFile);
   }
 
   public function update($id){
-    return $this->saveFile(true);
+    $catFile  = CatFile::id($this->getFields()["cat_file_id"])->first();
+
+    if ($catFile->multiple)
+      return $this->updateAMultiple($catFile);
+
+    return $this->updateASingle($catFile);
   }
 
   public function storeUpdate(){
@@ -92,6 +101,93 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
   // [End Actions]
 
   // [Methods]
+
+  //Refactoring
+
+  protected function storeAMultiple ($catFile) {
+
+  }
+
+  protected function updateAMultiple ($catFile) {
+
+  }
+
+  protected function destroyAMultiple ($catFile) {
+
+  }
+
+  protected function storeASingle ($catFile) {
+    $this->resetTransaction();
+    $this->startTranstaction();
+    $this->testTransaction(function() use($catFile){
+      $fields   = $this->setStamps()->addField('path','')->addField('disk',$this->getDisk())->getFields();
+
+      if(!$this->setModelCollectionInstance($this->modelInstanciator(true))->getModelCollectionInstance()->fill($fields)->save())
+        return false;
+
+      [$filePath, $fileInput, $fileName] = $this->paths();
+
+      if(!$this->getModelCollectionInstance()->path = Storage::disk($this->getModelCollectionInstance()->disk)->putFileAs($filePath, $this->getRequestInstance()->{$fileInput},$fileName))
+        return false;
+
+      $this->getModelCollectionInstance()->absolute_path = $this->filePath();
+
+      $this->getModelCollectionInstance()->resourcer->touch();
+
+      return $this->getModelCollectionInstance()->save();
+    });
+
+    $this->transactionComplete();
+
+    if(!$this->isTransactionCompleted())
+      return $this->apiFailResponse();
+
+    return $this->apiSuccessResponse([
+      "data"    => $this->getModelCollectionInstance(),
+      "count"   => 1,
+      "message" => trans("crudvel.api.success")
+    ]);
+  }
+
+  protected function updateASingle ($catFile) {
+    $this->resetTransaction();
+    $this->startTranstaction();
+    $this->testTransaction(function() use($catFile){
+      $fields   = $this->setStamps()->addField('path','')->addField('disk',$this->getDisk())->getFields();
+
+      if(!$this->deleteFile($this->getModelCollectionInstance()))
+        return false;
+
+      if(!$this->getModelCollectionInstance()->fill($fields)->save())
+        return false;
+
+      [$filePath, $fileInput, $fileName] = $this->paths();
+
+      if(!$this->getModelCollectionInstance()->path = Storage::disk($this->getModelCollectionInstance()->disk)->putFileAs($filePath, $this->getRequestInstance()->{$fileInput},$fileName))
+        return false;
+
+      $this->getModelCollectionInstance()->absolute_path = $this->filePath();
+
+      $this->getModelCollectionInstance()->resourcer->touch();
+
+      return $this->getModelCollectionInstance()->save();
+    });
+
+    $this->transactionComplete();
+
+    if(!$this->isTransactionCompleted())
+      return $this->apiFailResponse();
+
+    return $this->apiSuccessResponse([
+      "data"    => $this->getModelCollectionInstance(),
+      "count"   => 1,
+      "message" => trans("crudvel.api.success")
+    ]);
+  }
+
+  protected function destroyASingle ($catFile) {
+
+  }
 
   public function addedCatFileMultiple(){
     return CatFile::invokePosfix($this->getModelClass(),'multiple');
@@ -146,7 +242,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
 
       $filePath  = 'uploads/'.$this->getModelCollectionInstance()->catFile->resource.'/'.$this->getModelCollectionInstance()->resource_id;
       $fileInput = $this->getModelCollectionInstance()->catFile->resource;
-      $fileName  = \Str::slug($this->getModelCollectionInstance()->catFile()->first()->name)."-".$this->getModelCollectionInstance()->id.".".$this->getRequestInstance()->{$fileInput}->extension();
+      $fileName  = cvSlugCase($this->getModelCollectionInstance()->catFile()->first()->name)."-".$this->getModelCollectionInstance()->id.".".$this->getRequestInstance()->{$fileInput}->extension();
 
       if(!$this->getModelCollectionInstance()->path = Storage::disk($this->getModelCollectionInstance()->disk)->putFileAs($filePath, $this->getRequestInstance()->{$fileInput},$fileName))
         return false;
@@ -195,4 +291,27 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     });
   }
   // [End Methods]
+
+  public function getDisk(){
+      return $this->disk??null;
+  }
+
+  public function setDisk($disk=null){
+    $this->disk = $disk??null;
+
+    return $this;
+  }
+
+  protected function paths(){
+    //$fileName  = cvSlugCase($this->getModelCollectionInstance()->catFile()->first()->name)."-{$this->getModelCollectionInstance()->id}.{$this->getRequestInstance()->{$fileInput}->extension()}";
+    $filePath   = "uploads/{$this->getModelCollectionInstance()->catFile->resource}/{$this->getModelCollectionInstance()->resource_id}";
+    $fileInput  = $this->getModelCollectionInstance()->catFile->resource;
+    $uuid       = (string) \Illuminate\Support\Str::uuid();
+    $fileName  = "{$this->getModelCollectionInstance()->mixed_cv_search}-{$uuid}.{$this->getRequestInstance()->{$fileInput}->extension()}";
+    return [
+      $filePath,
+      $fileInput,
+      $fileName,
+    ];
+  }
 }

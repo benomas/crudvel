@@ -27,6 +27,10 @@ class File extends \Customs\Crudvel\Models\BaseModel{
   public function catFile(){
     return $this->belongsTo("\App\Models\CatFile");
   }
+
+  public function resourcer(){
+    return $this->morphTo(null,'resource','resource_id','id');
+  }
 // [End Relationships]
 
 // [Transformers]
@@ -115,10 +119,6 @@ class File extends \Customs\Crudvel\Models\BaseModel{
     $this->attributes['resource_cv_search'] = $resourceModelInstance->cv_search;
     $this->attributes['mixed_cv_search']    = $catFileInstance->cv_search . ' - '.$resourceModelInstance->cv_search;
     $this->attributes['resource']           = $resourceModel;
-  }
-
-  public function resourcer(){
-    return $this->morphTo(null,'resource','resource_id','id');
   }
 // [End Others]
 }
