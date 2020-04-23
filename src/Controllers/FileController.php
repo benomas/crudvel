@@ -105,7 +105,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
   //Refactoring
 
   protected function storeAMultiple ($catFile) {
-
+    return $this->storeASingle($catFile);
   }
 
   protected function updateAMultiple ($catFile) {
