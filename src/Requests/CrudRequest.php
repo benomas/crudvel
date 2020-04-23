@@ -42,7 +42,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     if(!$this->getCurrentAction())
       return true;
 
-    if($this->owner() && in_array($this->getCurrentAction(),['index','show','resourcer']))
+    if($this->owner() && in_array($this->getCurrentAction(),['index','show']))
       return true;
 
     return $this->actionAccess();

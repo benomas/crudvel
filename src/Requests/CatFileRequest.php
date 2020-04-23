@@ -3,6 +3,23 @@
 class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
 
   // [Authorization]
+  /**
+   * Determine if the user is authorized to make this request.
+   *
+   * @return bool
+   */
+  public function authorize()
+  {
+    $this->prepareRequest();
+
+    if(!$this->getCurrentAction())
+      return true;
+
+    if($this->owner() && in_array($this->getCurrentAction(),['index','show','resourcer']))
+      return true;
+
+    return $this->actionAccess();
+  }
   // [End Authorization]
 
   // [Rules]

@@ -134,6 +134,17 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
     });
   }
 
+  public function scopeInverseParticularOwner($query,$user=null){
+    if(!$user)
+      return $query->noFilters();
+
+    $query->whereHas('roles',function($query) use($user) {
+      $query->whereHas('users',function($query) use($user) {
+        $query->noKey($user->id);
+      });
+    });
+  }
+
   public function scopeRelatedToRole ($query,$roleKey) {
     $query->whereHas("roles",function($query) use ($roleKey) {
       $query->key($roleKey);
