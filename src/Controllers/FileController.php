@@ -109,7 +109,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
   }
 
   protected function updateAMultiple ($catFile) {
-
+    return $this->updateASingle($catFile);
   }
 
   protected function destroyAMultiple ($catFile) {
