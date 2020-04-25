@@ -23,15 +23,21 @@
             >
           </cv-<##[plural|slug](resource)##>-skeleton>
 
-          <div class="w-100" v-if="cpDinGenKeyValue" v-cv-can-access="`special:${cResourceName}-index-files`">
-            <h6 class="col-12 q-my-none q-pl-md">
-              {{mrLang('actions.indexResourcer.label','catFiles')}}
-            </h6>
-            <cv-index-resoucer
-              :cv-resourcer="cResource"
-              :cv-resourcer-key="cpDinGenKeyValue">
-            </cv-index-resoucer>
-          </div>
+          <q-expansion-item
+            v-if="cpDinGenKeyValue && cdRow && cdRow.cv_has_files"
+            v-cv-can-access="`special:${cResourceName}-index-files`"
+            class="w-100 ba-1px border-black-l-72 q-ma-sm rounded-borders"
+            :header-class="'w-100 txt-secondary'"
+            icon="fas fa-filter"
+            :label="mrLang('actions.indexResourcer.label','catFiles')"
+          >
+            <div class="w-100" >
+              <cv-index-resoucer
+                :cv-resourcer="cResource"
+                :cv-resourcer-key="cpDinGenKeyValue">
+              </cv-index-resoucer>
+            </div>
+          </q-expansion-item>
         </div>
       </div>
 
@@ -53,6 +59,7 @@ import VueMirroring             from 'crudvuel/mirroring/VueMirroring'
 import CvCreate                 from 'cq-crudvuel/resource/CvCreate'
 import CvSkeletonController     from 'cq-crudvuel/resource/CvSkeletonController'
 import Cv<##[plural|studly](resource)##>Skeleton     from 'src/components/resources/<##[plural|slug](resource)##>/Cv<##[plural|studly](resource)##>Skeleton'
+import CvIndexResoucer          from 'components/resources/cat-files/CvIndexResoucer'
 
 let vueMirroring = new VueMirroring('Create').enableRoot()
 
@@ -66,7 +73,8 @@ export default {
   ],
 
   components: {
-    Cv<##[plural|studly](resource)##>Skeleton
+    Cv<##[plural|studly](resource)##>Skeleton,
+    CvIndexResoucer
   }
 }
 </script>
