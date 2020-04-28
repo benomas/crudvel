@@ -34,6 +34,7 @@
             <div class="w-100" >
               <cv-index-resoucer
                 :cv-resourcer="cResource"
+                :cv-resourcer-action="cpStaGenAction"
                 :cv-resourcer-key="cpDinGenKeyValue">
               </cv-index-resoucer>
             </div>
