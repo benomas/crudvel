@@ -112,10 +112,6 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     return $this->updateASingle($catFile);
   }
 
-  protected function destroyAMultiple ($catFile) {
-
-  }
-
   protected function storeASingle ($catFile) {
     $this->resetTransaction();
     $this->startTranstaction();

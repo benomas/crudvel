@@ -137,6 +137,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       $this->getPaginatorInstance()->extractPaginate()
     )
       $this->setPaginated(true);
+
     return parent::callAction($method,$parameters);
   }
 

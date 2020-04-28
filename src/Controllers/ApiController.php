@@ -98,8 +98,11 @@ class ApiController extends CustomController{
   {
     $this->setStamps();
 
-    if($this->persist())
+    if($this->persist()){
+      $this->getModelBuilderInstance()->key($this->getModelCollectionInstance()->getKeyValue());
+
       return $this->actionResponse();
+    }
 
     return $this->apiFailResponse();
   }
@@ -137,8 +140,10 @@ class ApiController extends CustomController{
     $this->addField('id',$id);
     $this->setStamps();
     $this->removeField('created_by');
+
     if($this->persist())
       return $this->actionResponse();
+
     return $this->apiFailResponse();
   }
 
