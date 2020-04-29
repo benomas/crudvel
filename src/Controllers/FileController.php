@@ -236,7 +236,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
       if(!$this->getModelCollectionInstance()->save())
         return false;
 
-      $filePath  = 'uploads/'.$this->getModelCollectionInstance()->catFile->resource.'/'.$this->getModelCollectionInstance()->resource_id;
+      $filePath  = 'uploads'.DIRECTORY_SEPARATOR.$this->getModelCollectionInstance()->catFile->resource.DIRECTORY_SEPARATOR.$this->getModelCollectionInstance()->resource_id;
       $fileInput = $this->getModelCollectionInstance()->catFile->resource;
       $fileName  = cvSlugCase($this->getModelCollectionInstance()->catFile()->first()->name)."-".$this->getModelCollectionInstance()->id.".".$this->getRequestInstance()->{$fileInput}->extension();
 
