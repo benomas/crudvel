@@ -573,7 +573,7 @@ if(!function_exists("apiCrudvelResource")){
       Route::get($prefixRoute."/related-to/{resource}/{key}", $controller."@relatedIndex")->name($resource.".related-index");
       Route::get($prefixRoute."/sluged", $controller."@sluged")->name($resource.".sluged");
       Route::get($prefixRoute."/import", $controller."@import")->name($resource.".import");
-      Route::get($prefixRoute."/exports", $controller."@exports")->name($resource.".exports");
+      Route::get($prefixRoute."/export", $controller."@export")->name($resource.".export");
       Route::get($prefixRoute."/{".$rowName."}/export", $controller."@export")->name($resource.".export");
       Route::post($prefixRoute."/import", $controller."@importing")->name($resource.".importing");
       Route::get($prefixRoute."/exporting", $controller."@exportings")->name($resource.".exportings");
@@ -596,8 +596,8 @@ if(!function_exists("apiCrudvelResource")){
         Route::get($resource."/sluged", $controller."@sluged")->name($resource.".sluged");
       if(in_array("import",$conditionals))
         Route::get($resource."/import", $controller."@import")->name($resource.".import");
-      if(in_array("exports",$conditionals))
-        Route::get($resource."/exports", $controller."@exports")->name($resource.".exports");
+      if(in_array("export",$conditionals))
+        Route::get($resource."/export", $controller."@export")->name($resource.".export");
       if(in_array("export",$conditionals))
         Route::get($resource."/{".$rowName."}/export", $controller."@export")->name($resource.".export");
       if(in_array("importing",$conditionals))
