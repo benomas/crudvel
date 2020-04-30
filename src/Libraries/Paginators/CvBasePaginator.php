@@ -141,7 +141,7 @@ class CvBasePaginator implements CvCrudInterface
   }
 
 
-  protected function loadBasicPropertys(){
+  public function loadBasicPropertys(){
     $paginate = $this->getPaginateFields();
 
     $this->setLimit(fixedIsInt($paginate["limit"]??null)?$paginate["limit"]:null)
