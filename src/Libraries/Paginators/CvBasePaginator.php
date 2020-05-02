@@ -50,7 +50,6 @@ class CvBasePaginator implements CvCrudInterface
     $this->injectCvResource();
     $this->setPaginate($this->getPaginateFields());
     $this->setFlexPaginable($this->getRootInstance()->getFlexPaginable());
-    $this->loadBasicPropertys();
     $this->setDbEngineContainer(new EngineContainer($this->getModelclass()::cvIam()->getConnectionName()));
   }
 
@@ -66,7 +65,7 @@ class CvBasePaginator implements CvCrudInterface
       $this->getRootInstance()->setBadPaginablePetition(true);
     }
 
-    $this->fixSelectQuery()->fixFilterQuery()->fixOrderables();
+    $this->loadBasicPropertys()->fixSelectQuery()->fixFilterQuery()->fixOrderables();
 
     return true;
   }
@@ -144,14 +143,14 @@ class CvBasePaginator implements CvCrudInterface
   public function loadBasicPropertys(){
     $paginate = $this->getPaginateFields();
 
-    $this->setLimit(fixedIsInt($paginate["limit"]??null)?$paginate["limit"]:null)
-    ->setPage(fixedIsInt($paginate["page"]??null)?$paginate["page"]:null)
-    ->setAscending($paginate["ascending"]??null)
-    ->setByColumn($paginate["byColumn"]??null)
-    ->setSearchObject($paginate["searchObject"]??'')
-    ->setSelectQuery($paginate["selectQuery"]??null)
-    ->setFilterQuery($paginate["filterQuery"]??null)
-    ->setOrderBy($paginate["orderBy"]??null);
+    return $this->setLimit(fixedIsInt($paginate["limit"]??null)?$paginate["limit"]:null)
+      ->setPage(fixedIsInt($paginate["page"]??null)?$paginate["page"]:null)
+      ->setAscending($paginate["ascending"]??null)
+      ->setByColumn($paginate["byColumn"]??null)
+      ->setSearchObject($paginate["searchObject"]??'')
+      ->setSelectQuery($paginate["selectQuery"]??null)
+      ->setFilterQuery($paginate["filterQuery"]??null)
+      ->setOrderBy($paginate["orderBy"]??null);
   }
   public function filter() {
   }
@@ -215,14 +214,20 @@ class CvBasePaginator implements CvCrudInterface
    */
   public function processPaginatedResponse() {
     //if no model builder instance defined
-    if($this->getModelBuilderInstance()===null)
+    if($this->getModelBuilderInstance()===null){
+      $this->getModelBuilderInstance()->select($this->getSelectQuery());
+
       return ;
+    }
       //if it is not a select query defined
     if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
 
-    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0)
+    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0){
+      $this->getModelBuilderInstance()->select($this->getSelectQuery());
+
       return ;
+    }
 
     $this->tempQuery();
     //if it is not a filter quary defined
@@ -243,10 +248,11 @@ class CvBasePaginator implements CvCrudInterface
 
     if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->id))
       $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id,false);
+
+    $this->getModelBuilderInstance()->select($this->getSelectQuery());
   }
 
   public function paginateResponder(){
-    $this->getModelBuilderInstance()->select($this->getSelectQuery());
     // TODO: include this validation || !$this->getModelBuilderInstance()->count()
     if(!$this->getModelBuilderInstance())
       return $this->getRootInstance()->apiSuccessResponse([

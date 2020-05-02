@@ -30,7 +30,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     $this->addAction('storeUpdate');
   }
 
-  public function beforePaginate($method,$parameters){
+  public function beforeFlowControl(){
     $this->getModelBuilderInstance()->aditionalParticularOwner();
     //pendent to be implementent, doest work well with laravel 6, but does with laravel 7, wait to upgrade before enable it
     //$this->getModelBuilderInstance()->with('resourcer')->solveSearches();
@@ -273,7 +273,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     return Storage::disk($file->disk)->delete($file->path);
   }
 
-  protected function resourcesBeforePaginate(){
+  protected function resourcesBeforeFlowControl(){
     $this->setSelectables(['label','value']);
   }
 

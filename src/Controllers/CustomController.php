@@ -180,6 +180,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   }
 
   public function modelator($action){} //$this->model
+  public function beforeFlowControl(){} //$this->model
   public function beforePaginate($method,$parameters){} //$this->model
 
   protected function resetTransaction(){

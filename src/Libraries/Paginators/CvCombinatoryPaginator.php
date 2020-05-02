@@ -20,14 +20,20 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
    */
   public function processPaginatedResponse() {
     //if no model builder instance defined
-    if($this->getModelBuilderInstance()===null)
+    if($this->getModelBuilderInstance()===null){
+      $this->getModelBuilderInstance()->select($this->getSelectQuery());
+
       return ;
+    }
     //if it is not a select query defined
     if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
 
-    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0)
+    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0){
+      $this->getModelBuilderInstance()->select($this->getSelectQuery());
+
       return ;
+    }
 
     $this->setPreProcessedQueryBuilder(kageBunshinNoJutsu($this->getModelBuilderInstance()));
     $this->tempQuery();

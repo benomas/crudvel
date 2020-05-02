@@ -211,6 +211,12 @@ class CvResource
   }
 
   public function fixFlowControl(){
+
+    $this->getRootInstance()->beforeFlowControl($this->getCurrentAction());
+    if(method_exists($this->getRootInstance(),$this->getCurrentAction().'BeforeFlowControl')){
+      $this->getRootInstance()->{$this->getCurrentAction().'BeforeFlowControl'}();
+    }
+
     if(!$this->getSkipModelValidation() && !$this->getModelBuilderInstance())
       return $this->setFlowControl(function () {
         return $this->getRootInstance()->apiNotFound();
