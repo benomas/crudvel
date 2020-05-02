@@ -46,13 +46,13 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
   // [End Actions]
 
   // [Methods]
-  protected function resourcerBeforePaginate($parameters){
-    $this->getModelBuilderInstance()->resource($parameters['resource'])->with(['files'=>function($query) use($parameters){
-      $query->resourceKey($parameters['key']);
+  public function resourcerBeforeFlowControl(){
+    $this->getModelBuilderInstance()->resource($this->getCallActionParameters()['resource'])->with(['files'=>function($query) {
+      $query->resourceKey($this->getCallActionParameters()['key']);
     }]);
   }
 
-  protected function resourcesBeforeFlowControl(){
+  public function resourcesBeforeFlowControl(){
     $this->setSelectables(['label','value']);
   }
 
