@@ -51,21 +51,21 @@ class File extends \Customs\Crudvel\Models\BaseModel{
 
 // [End Scopes]
   public function scopeCatFileId($query,$catFileId){
-    $query->where($this->preFixed('cat_file_id'),$catFileId);
+    return $query->where($this->preFixed('cat_file_id'),$catFileId);
   }
 
   public function scopeCatFileSlug($query,$catFileSlug){
-    $query->whereHas('catFile',function($query) use($catFileSlug) {
+    return $query->whereHas('catFile',function($query) use($catFileSlug) {
       $query->where('cat_files.slug',$catFileSlug);
     });
   }
 
   public function scopeResourceId($query,$resourceId){
-    $query->where($this->preFixed('resource_id'),$resourceId);
+    return $query->where($this->preFixed('resource_id'),$resourceId);
   }
 
   public function scopeResourceKey($query,$resourceKey){
-    $query->where($this->preFixed('resource_id'),$resourceKey);
+    return $query->where($this->preFixed('resource_id'),$resourceKey);
   }
 
   public function scopeParticularOwner($query, $user=null){
@@ -85,13 +85,14 @@ class File extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeFromResource($query,$resource){
-    $query->whereHas('catFile',function($query) use($resource){
+    return $query->whereHas('catFile',function($query) use($resource){
       $query->where('resource',$resource);
     });
   }
 
   public function scopeSelectCvSearch($query,$alias=null){
     $alias = $this->alias($alias);
+
     return $query->select("$alias.mixed_cv_search");
   }
 // [End Scopes]

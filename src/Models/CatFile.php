@@ -55,15 +55,15 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
 
 // [Scopes]
   public function scopeInResources($query,$resources){
-    $query->whereIn($this->preFixed('resource'),$resources);
+    return $query->whereIn($this->preFixed('resource'),$resources);
   }
 
   public function scopeResource($query,$resource){
-    $query->where($this->preFixed('resource'),$resource);
+    return $query->where($this->preFixed('resource'),$resource);
   }
 
   public function scopeHasFiles($query){
-    $query->whereHas('files');
+    return $query->whereHas('files');
   }
 
   public function scopeParticularOwner($query, $user=null)
@@ -86,6 +86,7 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
 
   public function scopeSelectCvSearch($query,$alias=null){
     $alias = $this->alias($alias);
+
     return $query->selectRaw("CONCAT($alias.name,' - ',$alias.resource_label)");
   }
 // [End Scopes]

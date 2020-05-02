@@ -40,6 +40,7 @@ class BaseModel extends Model implements CvCrudInterface
   // [Transformers]
   public function getCvHasFilesAttribute(){
     $resource = cvCaseFixer('slug|plural',class_basename($this));
+
     return \App\Models\CatFile::resource($resource)->count();
   }
   // [End Transformers]
@@ -250,13 +251,14 @@ class BaseModel extends Model implements CvCrudInterface
   public function scopeInvoker($query, $related)
   {
     $foreintColumn = \Str::snake(\Str::singular(($table = $this->getTable()))) . '_id';
-    return $query->whereColumn($related::cvIam()->getTable() . ".$foreintColumn", "$table.id")
-      ->limit(1);
+
+    return $query->whereColumn($related::cvIam()->getTable().".$foreintColumn","$table.id")->limit(1);
   }
 
   public function scopeInvokePosfix($query, $related, $posfix)
   {
     $table = $this->getTable();
+
     return $query->invoker($related)->select("$table.$posfix as $table" . '_' . $posfix);
   }
 
@@ -269,6 +271,7 @@ class BaseModel extends Model implements CvCrudInterface
   {
     $foreintColumn = str_replace('cv_search',$this->getKeyName(),$searchColumn);
     $alias         = $this->alias($alias);
+
     return $query
       ->from("{$this->getTable()} as $alias")
       ->whereColumn($foreintColumn, "$alias.id")
@@ -277,15 +280,17 @@ class BaseModel extends Model implements CvCrudInterface
 
   public function scopeSelectCvSearch($query,$alias=null){
     $alias = $this->alias($alias);
-    return $query->selectRaw(
-      "CONCAT('scopeSelectCvSearch needs to be customized at ".get_class($this)." scopeSelectCvSearch ',$alias.id)");
+
+    return $query->selectRaw("CONCAT('scopeSelectCvSearch needs to be customized at ".get_class($this)." scopeSelectCvSearch ',$alias.id)");
   }
 
   public function scopeSolveSearches($query){
     $modelClass = get_class($this->cvIam());
+
     foreach($this->getCvSearches() as $searchColumn=>$relatedModel){
       $query->addSelect([$searchColumn => $relatedModel::withoutGlobalScopes()->externalCvSearch($modelClass,$searchColumn)]);
     }
+
     return $query->cvSearch();
   }
 
@@ -293,6 +298,7 @@ class BaseModel extends Model implements CvCrudInterface
     $alias      = $this->alias($alias);
     $table      = $this->cvIam()->getTable();
     $modelClass = get_class($this->cvIam());
+
     return $query->addSelect(['cv_search' => $modelClass::withoutGlobalScopes()->from("$table as $alias")
       ->selectCvSearch($alias)
       ->whereColumn("$alias.id", "$table.id")
@@ -390,10 +396,12 @@ class BaseModel extends Model implements CvCrudInterface
       return null;
 
     $firstLevelRelationInstace = $this->{$firstLevelRelation}()->get();
+
     if (!$firstLevelRelationInstace)
       return $secondLevelModel::nullFilter();
 
     $secondLevelRelationArray = [];
+
     foreach ($firstLevelRelationInstace as $firstLevelRelationItem) {
       if (method_exists($firstLevelRelationItem, $secondLevelRelation) && $firstLevelRelationItem->{$secondLevelRelation}()->count())
         $secondLevelRelationArray = array_unique(array_merge($secondLevelRelationArray, $firstLevelRelationItem->{$secondLevelRelation}()->get()->pluck("id")->toArray()));
@@ -406,6 +414,7 @@ class BaseModel extends Model implements CvCrudInterface
   {
     $clonedInstace = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
     $clonedInstace->setModel($this->getModel());
+
     return $clonedInstace;
   }
 
@@ -413,6 +422,7 @@ class BaseModel extends Model implements CvCrudInterface
   {
     if (!is_null($this->connection))
       return $this->connection;
+
     return config('database.default');
   }
 
@@ -426,6 +436,7 @@ class BaseModel extends Model implements CvCrudInterface
   {
     if (!in_array($column, $this->getTableColumns()))
       return null;
+
     return $this->getTable() . '.' . $column;
   }
 
@@ -437,6 +448,7 @@ class BaseModel extends Model implements CvCrudInterface
   public function getPrefixedTableColumns()
   {
     $tableName = $this->getTable();
+
     return array_map(function($column) use($tableName){
       return "$tableName.$column";
     },$this->getTableColumns());
@@ -481,6 +493,7 @@ class BaseModel extends Model implements CvCrudInterface
   public function setModelMetaData($modelMetaData = null)
   {
     $this->modelMetaData = $modelMetaData ?? null;
+
     return $this;
   }
 
@@ -497,15 +510,19 @@ class BaseModel extends Model implements CvCrudInterface
     $undeclaredPatern         = '/class\s*\w+\s*extends\s*.+{\n/';
     preg_match($declaredAndDefinedPatern, $modelContent, $matches);
     $declaredAndDefined = $matches[3] ?? null;
+
     if (!$declaredAndDefined) {
       preg_match($declaredPatern, $modelContent, $matches);
       $declared = $matches[2] ?? null;
     }
+
     if ($declaredAndDefined)
       $defined = $this->modelMetaData;
     else
       $defined = [];
+
     $foreings = $this->autoFixModelForeings($tables, $columns);
+
     if (isset($defined['foreings'])) {
       foreach ($foreings as $key => $value) {
         if ($force)
@@ -517,6 +534,7 @@ class BaseModel extends Model implements CvCrudInterface
       }
     } else
       $defined['foreings'] = $foreings;
+
     if ($declaredAndDefined) {
       $modelContent = preg_replace(
         $declaredAndDefinedPatern,
@@ -538,6 +556,7 @@ class BaseModel extends Model implements CvCrudInterface
         );
       }
     }
+
     file_put_contents(cvClassFile($this), $modelContent);
     //file_put_contents($pathFile, str_replace($matches[1],$idColName, $fileToMod));
     //pdd($tables,$columns,cvClassFile($this));
@@ -545,15 +564,19 @@ class BaseModel extends Model implements CvCrudInterface
   public function autoFixModelForeings($tables, $columns)
   {
     $foreings = [];
+
     foreach ($tables as $table) {
       foreach ($columns as $column) {
         $singularTable = Str::singular($table);
         preg_match('/^(' . $singularTable . ')_(.+)/', $column, $matches);
+
         if (count($matches)) {
           $testModel     = 'App\Models\\' . Str::studly($singularTable);
           $relatedColumn = $matches[2] ?? null;
+
           if (!class_exists($testModel) || !in_array($relatedColumn, $testModel::cvIam()->getTableColumns()))
             continue;
+
           $foreings[$column] = [
             'relatedModel'  => $testModel,
             'relatedColumn' => $relatedColumn
@@ -561,6 +584,7 @@ class BaseModel extends Model implements CvCrudInterface
         }
       }
     }
+
     return $foreings;
   }
   public function autoFixModelRelations($force = false)
@@ -574,21 +598,25 @@ class BaseModel extends Model implements CvCrudInterface
 
   public function setCvSearches($cvSearches=null){
     $this->cvSearches = $cvSearches??null;
+
     return $this;
   }
 
   public function alias($alias = null){
     if ($alias)
       return $alias;
+
     $randomWord = function ($length=10){
       return substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"),0,$length);
     };
+
     return $randomWord();
   }
 
   public function fixUser($userKey = null){
     $userInstace = null;
     $userInstace = \CvResource::assignUser()->getUserModelCollectionInstance();
+
     if(!$userKey){
       if(!$userInstace)
         return null;
