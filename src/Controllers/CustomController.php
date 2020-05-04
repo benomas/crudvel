@@ -74,6 +74,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     'importing',
     'export',
     'exporting',
+    "exportings",
   ];
 
   protected $rowActions = [
@@ -104,6 +105,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     'importing',
     'export',
     'exporting',
+    "exportings",
   ];
 
   use \Crudvel\Traits\CrudTrait;

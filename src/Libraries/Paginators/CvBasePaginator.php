@@ -212,6 +212,46 @@ class CvBasePaginator implements CvCrudInterface
   /**
    * make http request with a paginate set of data, accorded to the given parameters
    */
+  public function processPaginated() {
+    //if no model builder instance defined
+    if($this->getModelBuilderInstance()===null){
+
+      return ;
+    }
+      //if it is not a select query defined
+    if(noEmptyArray($this->getSelectQuery()))
+      $this->fixSelectables();
+
+    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0){
+
+      return ;
+    }
+
+    $this->tempQuery();
+    //if it is not a filter quary defined
+    if(noEmptyArray($this->getFilterQuery()))
+      $this->filter();
+
+    $this->setPaginateCount($this->getModelBuilderInstance()->count());
+    //if limit for que query is defined
+    if($this->getLimit()){
+      $this->getModelBuilderInstance()->limit($this->getLimit());
+      //if a page number to get is defined
+      if($this->getPage() && $this->getPaginateCount() >= $this->getLimit() * ($this->getPage()-1))
+        $this->getModelBuilderInstance()->skip($this->getLimit() * ($this->getPage()-1));
+    }
+
+    if ($this->getOrderBy())
+      $this->getModelBuilderInstance()->orderBy($this->getOrderBy(),$this->getAscending()==1?"ASC":"DESC");
+
+    if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->id))
+      $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id,false);
+
+  }
+
+  /**
+   * make http request with a paginate set of data, accorded to the given parameters
+   */
   public function processPaginatedResponse() {
     //if no model builder instance defined
     if($this->getModelBuilderInstance()===null){
