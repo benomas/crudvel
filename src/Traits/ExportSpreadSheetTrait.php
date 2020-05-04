@@ -15,7 +15,7 @@ trait ExportSpreadSheetTrait
 
   public function exportSpreadSheet()
   {
-    $ExporterInterceptor = new \Crudvel\Libraries\CvGenericSpreadSheetExport\CvQueryBuilderExport($this->query);
+    $ExporterInterceptor = new \Crudvel\Exports\CvQueryBuilderInterceptor($this->query);
     Excel::store($ExporterInterceptor, $this->getSlugPluralName().'.xlsx');
   }
 

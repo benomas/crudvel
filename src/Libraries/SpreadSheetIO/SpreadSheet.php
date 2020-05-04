@@ -38,8 +38,9 @@ class SpreadSheet
     }else{
       $data = $this->constructorInstance->build();
     }
+    // Crudvel\Exports\CvResourcePermissionInterceptor
     // use specific export interceptor with background color in cells
-    $ExporterInterceptor = new \App\Exports\ResourcePermissionExportInterceptor(collect($data), $this->constructorInstance->bgRanges??[]);
+    $ExporterInterceptor = new \Crudvel\Exports\CvResourcePermissionInterceptor(collect($data), $this->constructorInstance->bgRanges??[]);
     Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
   }
 
