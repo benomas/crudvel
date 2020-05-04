@@ -211,6 +211,7 @@ class CvResource
   }
 
   public function fixFlowControl(){
+    $this->getRootInstance()->loadFields();
 
     $this->getRootInstance()->beforeFlowControl($this->getCurrentAction());
     if(method_exists($this->getRootInstance(),$this->getCurrentAction().'BeforeFlowControl')){
@@ -234,7 +235,6 @@ class CvResource
     )
       $this->getModelBuilderInstance()->actives();
 
-    $this->getRootInstance()->loadFields();
     if(
       ($preactionResponse = $this->getRootInstance()->preAction(
         $this->getCallActionParameters(),

@@ -14,22 +14,20 @@ trait ExportSpreadSheetTrait
 
   public function exportsSpreadSheet()
   {
-    $this->processPaginatedResponse();
-    $ExporterInterceptor = new \Crudvel\Exports\CvQueryBuilderInterceptor($this->query);
-    // Excel::store($ExporterInterceptor, $this->getSlugPluralName().'.xlsx');
     return (new \Crudvel\Exports\CvQueryBuilderInterceptor($this->query))->download($this->getSlugPluralName().'.xlsx');
-    // return Excel::download($ExporterInterceptor, $this->getSlugPluralName().'.xlsx');
   }
 
   public function exportings(){
-    $query = $this->getModelBuilderInstance();
-
     $resourceFieldList = __("crudvel/{$this->getSlugPluralName()}.fields");
-    $this->headers = [];
-    foreach (kageBunshinNoJutsu($query)->first()->getAttributes() as $key => $value)
+    $this->headers     = [];
+    $this->processPaginatedResponse();
+
+    foreach (kageBunshinNoJutsu($this->getModelBuilderInstance())->first()->getAttributes() as $key => $value)
       $this->headers[] = $resourceFieldList[$key] ?? $key;
-    $this->query = $query;
+
+    $this->query = $this->getModelBuilderInstance();
     $this->query->exportHeaders = $this->headers;
+
     return $this->exportsSpreadSheet();
   }
 
@@ -39,5 +37,7 @@ trait ExportSpreadSheetTrait
     $this->getPaginatorInstance()->extractPaginate();
     $this->getPaginatorInstance()->processPaginated();
     $this->getModelBuilderInstance()->select($this->getPaginatorInstance()->getSelectQuery());
+
+    return $this;
   }
 }
