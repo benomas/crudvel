@@ -603,9 +603,9 @@ if(!function_exists("apiCrudvelResource")){
       if(in_array("importing",$conditionals))
         Route::post($resource."/import", $controller."@importing")->name($resource.".importing");
       if(in_array("exportings",$conditionals))
-        Route::post($resource."/exporting", $controller."@exportings")->name($resource.".exportings");
+        Route::get($resource."/exporting", $controller."@exportings")->name($resource.".exportings");
       if(in_array("exporting",$conditionals))
-        Route::post($resource."/{".$rowName."}/exporting", $controller."@exporting")->name($resource.".exporting");
+        Route::get($resource."/{".$rowName."}/exporting", $controller."@exporting")->name($resource.".exporting");
       if(in_array("activate",$conditionals))
         Route::put($resource."/{".$rowName."}/activate", $controller."@activate")->name($resource.".activate");
       if(in_array("deactivate",$conditionals))
