@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 //Se extiende transactionController, para manejo de transacciones
 
 class ApiController extends CustomController{
+  use \Crudvel\Traits\ExportSpreadSheetTrait;
 
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
