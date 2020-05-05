@@ -247,5 +247,13 @@ class ApiController extends CustomController{
   protected function updateAssociated($resource,$resourceKeys=[],$forceColumn = null){
     return $this->dissociateResource($resource,$resourceKeys,$forceColumn) &&  $this->associateResource($resource,$resourceKeys,$forceColumn);
   }
+
+  public function blackListExportingColumns(){
+    return [];
+  }
+
+  public function whiteListExportingColumns(){
+    return [];
+  }
 // [End Methods]
 }

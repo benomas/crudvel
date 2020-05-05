@@ -6,14 +6,43 @@ use \Maatwebsite\Excel\Facades\Excel;
 trait ExportSpreadSheetTrait
 {
 
+  /* Function to filter pagination cols */
+  public function filterExportingColumns($paginate){
+    $paginate['limit'] = null;
+    $blackList = $this->blackListExportingColumns();
+    $whiteList = $this->whiteListExportingColumns();
+
+    if(count($whiteList) > 0  && count($blackList))
+      pdd("You cant define simultaneously white and black list for exporting cols");
+
+    // check if it has a black list
+    if(count($blackList) > 0){
+      foreach($blackList as $col){
+        $find = array_search($col, $paginate['selectQuery']);
+        if($find != false){
+          unset($paginate['selectQuery'][$find]);
+        }
+      }
+    }
+
+    // check if it has a white list
+    if(count($whiteList) > 0){
+      $paginate['selectQuery'] = [];
+      foreach($whiteList as $col){
+        $paginate['selectQuery'][] = $col;
+      }
+    }
+    return $paginate;
+  }
+
+  /* Function to get Pagination */
   public function exportingsBeforeFlowControl(){
     $paginate = $this->getFields()['paginate'] ?? [];
-    $paginate['limit'] = null;
+    $paginate = $this->filterExportingColumns($paginate);
     $this->addField('paginate', $paginate);
   }
 
-  public function exportsSpreadSheet()
-  {
+  public function exportsSpreadSheet(){
     return (new \Crudvel\Exports\CvQueryBuilderInterceptor($this->query))->download($this->getSlugPluralName().'.xlsx');
   }
 
@@ -37,7 +66,6 @@ trait ExportSpreadSheetTrait
     $this->getPaginatorInstance()->extractPaginate();
     $this->getPaginatorInstance()->processPaginated();
     $this->getModelBuilderInstance()->select($this->getPaginatorInstance()->getSelectQuery());
-
     return $this;
   }
 }
