@@ -322,11 +322,11 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     $GLOBALS['disablePermissionsScope'] = false;
   }
 
-  public function persist($callBack=null){
+  public function persist($callBack=null, $passLastSave = false){
     $this->resetTransaction();
     $this->startTranstaction();
 
-    $this->testTransaction(function() use($callBack){
+    $this->testTransaction(function() use($callBack, $passLastSave){
       $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
       $fields = $this->getFields();
       $this->getModelCollectionInstance()->fill($fields);
@@ -339,11 +339,14 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
       $this->dirtyPropertys = $this->getModelCollectionInstance()->getDirty();
 
-      if(!$this->getModelCollectionInstance()->save())
+      $lastSave = $this->getModelCollectionInstance()->save();
+      if(!$lastSave)
         return false;
 
-      if($callBack && is_callable($callBack))
+      if($callBack && is_callable($callBack)){
+        if($passLastSave) return $callBack($this->getModelCollectionInstance());
         return $callBack();
+      }
 
       return true;
     });
