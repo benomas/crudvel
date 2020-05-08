@@ -77,6 +77,7 @@ class BaseMigration extends Migration
     $blueprintTable->boolean('active')->default(true);
     $blueprintTable->timestamps();
     $this->userStamps($blueprintTable);
+    $blueprintTable->engine = 'InnoDB';
     $blueprintTable->index("active");
   }
 
