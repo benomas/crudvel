@@ -11,12 +11,22 @@ trait ExportSpreadSheetTrait
     $paginate['limit'] = null;
     $blackList = $this->blackListExportingColumns();
     $whiteList = $this->whiteListExportingColumns();
+    $blackListCount = count($blackList);
+    $whiteListCount = count($whiteList);
 
-    if(count($whiteList) > 0  && count($blackList))
+    // check for programmer error defining white and blacklist in the same controller
+    if($whiteListCount > 0  && $blackListCount > 0)
       pdd("You cant define simultaneously white and black list for exporting cols");
 
+    // check to export all cols bu default without white and black list
+    if($whiteListCount <= 0  && $blackListCount <= 0){
+      // $paginate['selectQuery'] = null;
+      $paginate['selectQuery'] = $this->selectables;
+      return $paginate;
+    }
+
     // check if it has a black list
-    if(count($blackList) > 0){
+    if($blackListCount > 0){
       foreach($blackList as $col){
         $find = array_search($col, $paginate['selectQuery']);
         if($find != false){
@@ -26,7 +36,7 @@ trait ExportSpreadSheetTrait
     }
 
     // check if it has a white list
-    if(count($whiteList) > 0){
+    if($whiteListCount > 0){
       $paginate['selectQuery'] = [];
       foreach($whiteList as $col){
         $paginate['selectQuery'][] = $col;
