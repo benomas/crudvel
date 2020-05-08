@@ -4,6 +4,8 @@ use Customs\Crudvel\Models\BaseModel;
 
 class File extends \Customs\Crudvel\Models\BaseModel{
   use \Crudvel\Traits\Related;
+  protected $hidden = ['resource'];
+
   protected $catFileIdValue  = null;
   protected $resourceIdValue = null;
 
