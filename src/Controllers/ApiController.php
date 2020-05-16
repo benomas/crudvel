@@ -199,7 +199,7 @@ class ApiController extends CustomController{
     $modelCollectionInstance->{cvCaseFixer('plural|camel',$resource)}()->detach($toAttach);
     $modelCollectionInstance->{cvCaseFixer('plural|camel',$resource)}()->attach($toAttach);
 
-    return $this;
+    return $modelCollectionInstance;
   }
 
   protected function attacher($resource){
@@ -242,14 +242,11 @@ class ApiController extends CustomController{
     return true;
   }
 
-  public static function externalAssociateResource($resource,$relatedResource,$resourceKeys=[],$forceColumn = null){
-    pdd($resource,$relatedResource,$resourceKeys,$forceColumn);
-    $resourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$relatedResource);
-    $forceColumn = $forceColumn ??  cvCaseFixer('snake|singular',$resource).'_id';
-    $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
+  public static function externalAssociateResource($keyValueResource,$relatedResource,$relatedResourceKeys=[]){
+    $relatedResourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$relatedResource);
 
-    foreach($resourceModel::keys($resourceKeys)->get() as $currentResource)
-      if(!$currentResource->fill([$forceColumn=>$this->getModelCollectionInstance()->id])->save())
+    foreach($relatedResourceModel::keys($relatedResourceKeys)->get() as $currentResource)
+      if(!$currentResource->fill($keyValueResource)->save())
         return false;
 
     return true;
@@ -265,8 +262,8 @@ class ApiController extends CustomController{
     return true;
   }
 
-  public static function externalStoreAssociated($resource,$relatedResource,$resourceKeys=[],$forceColumn = null){
-    return static::externalAssociateResource($resource,$relatedResource,$resourceKeys,$forceColumn);
+  public static function externalStoreAssociated($keyValueResource,$relatedResource,$relatedResourceKeys=[]){
+    return static::externalAssociateResource($keyValueResource,$relatedResource,$relatedResourceKeys);
   }
 
   protected function storeAssociated($resource,$resourceKeys=[],$forceColumn = null){
