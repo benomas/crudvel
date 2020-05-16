@@ -185,24 +185,27 @@
             <!-- cv-grid-flexi-data-cells-->
             <template v-if="1" slot="flexi-properties-slot" slot-scope="props">
               <q-item>
-                <q-item-label>
-                  <q-item-section label class="f-bold text-subtitle2">{{ mfLang('cv_search') }}</q-item-section>
-                  <q-item-section sublabel class="limit-label">{{props.slotRow.cv_search}}</q-item-section>
-                </q-item-label>
+                <q-item-section>
+                  <q-item-label>{{ mfLang('cv_search') }}</q-item-label>
+
+                  <q-item-label caption class="q-pl-xs">{{props.slotRow.cv_search}}</q-item-label>
+                </q-item-section>
               </q-item>
 
               <q-item>
-                <q-item-label>
-                  <q-item-section label class="f-bold text-subtitle2">{{ mfLang('name') }}</q-item-section>
-                  <q-item-section sublabel class="limit-label">{{props.slotRow.name}}</q-item-section>
-                </q-item-label>
+                <q-item-section>
+                  <q-item-label>{{ mfLang('name') }}</q-item-label>
+
+                  <q-item-label caption class="q-pl-xs">{{props.slotRow.name}}</q-item-label>
+                </q-item-section>
               </q-item>
 
               <q-item>
-                <q-item-label>
-                  <q-item-section label class="f-bold text-subtitle2">{{ mfLang('description') }}</q-item-section>
-                  <q-item-section sublabel class="limit-label">{{props.slotRow.description}}</q-item-section>
-                </q-item-label>
+                <q-item-section>
+                  <q-item-label>{{ mfLang('description') }}</q-item-label>
+
+                  <q-item-label caption class="q-pl-xs">{{props.slotRow.description}}</q-item-label>
+                </q-item-section>
               </q-item>
             </template>
             <!-- cv-grid-flexi-extra-actions-->

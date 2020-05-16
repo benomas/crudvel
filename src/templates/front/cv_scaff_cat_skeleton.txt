@@ -1,15 +1,18 @@
 <template>
   <div class="row w-100">
-    <div class="col-xs-8 col-sm-9 col-md-10 q-pa-sm">
+    <div class="col-xs-7 col-sm-9 col-md-10 q-pa-sm">
       <q-input
         v-bind="mInputBinding('name')"
         v-on="mInputOns('name')"/>
     </div>
 
-    <div class="row col-xs-4 col-sm-3 col-md-2 m-auto">
-      <q-toggle
-        v-bind="mToogleBinding('active')"
-        v-on="mToogleOns('active')"/>
+    <div class="row col-xs-5 col-sm-2 col-md-2 my-auto q-px-md">
+      <div class="row w-100" v-bind="mToogleTittleBinding('active')">
+        <span class="col-xs-8 m-auto q-pl-sm" >{{mfLang('active')}}</span>
+
+        <q-toggle class="col-xs-4 m-unset q-pl-sm" v-bind="mToogleBinding('active')" v-on="mToogleOns('active')" :label="''"/>
+      </div>
+
       <div v-cv-error="{field:'active'}"></div>
     </div>
 
