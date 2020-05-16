@@ -24,7 +24,7 @@ class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
 
   // [Rules]
     public static function externalPostStoreRules(){
-      return (get_called_class())::externalize([
+      return static::externalize([
         "active"      => "boolean",
         "description" => "required|min:10",
         "max_size"    => "required|numeric",
@@ -39,14 +39,14 @@ class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
     }
 
     public static function externalPutUpdateRules(){
-      return (get_called_class())::externalize((get_called_class())::externalPostStoreRules()->fixRules())->setExtraRules([
+      return static::externalize(static::externalPostStoreRules()->fixRules())->setExtraRules([
         'name' => 'required|unique:cat_files,name,@catFileKey@',
         'slug' => 'required|unique:cat_files,slug,@catFileKey@',
       ])->setMethod(__FUNCTION__);
     }
 
     public function putUpdate(){
-      $this->rules = (get_called_class())::externalPutUpdateRules()->setParam('catFileKey',$this->getCurrentActionKey())->fixRules();
+      $this->rules = static::externalPutUpdateRules()->setParam('catFileKey',$this->getCurrentActionKey())->fixRules();
     }
   // [End Rules]
 }

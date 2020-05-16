@@ -321,7 +321,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     $moreRules = [];
     foreach ($extraResources as $index=>$value){
       $segment = !is_numeric($index) ? "$value." : cvSlugCase(Str::singular($value)).'.';
-      $moreRules[] = (get_called_class())::staFixDepth(Str::singular(Str::studly($segment))::{$action}(),$segment);
+      $moreRules[] = static::staFixDepth(Str::singular(Str::studly($segment))::{$action}(),$segment);
     }
     return array_merge($localRules,$moreRules);
   }

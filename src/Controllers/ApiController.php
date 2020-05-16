@@ -218,7 +218,7 @@ class ApiController extends CustomController{
   }
 
   public static function externalStoreRelation($modelCollectionInstance,$resource,$fields){
-    return (get_called_class())::externalAttacher($modelCollectionInstance,$resource,$fields);
+    return static::externalAttacher($modelCollectionInstance,$resource,$fields);
   }
 
   protected function storeRelation($resource){
@@ -243,6 +243,7 @@ class ApiController extends CustomController{
   }
 
   public static function externalAssociateResource($resource,$relatedResource,$resourceKeys=[],$forceColumn = null){
+    pdd($resource,$relatedResource,$resourceKeys,$forceColumn);
     $resourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$relatedResource);
     $forceColumn = $forceColumn ??  cvCaseFixer('snake|singular',$resource).'_id';
     $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
@@ -264,8 +265,8 @@ class ApiController extends CustomController{
     return true;
   }
 
-  public static function externalStoreAssociated($resource,$resourceKeys=[],$forceColumn = null){
-    return (get_called_class())::externalAssociateResource($resource,$resourceKeys,$forceColumn);
+  public static function externalStoreAssociated($resource,$relatedResource,$resourceKeys=[],$forceColumn = null){
+    return static::externalAssociateResource($resource,$relatedResource,$resourceKeys,$forceColumn);
   }
 
   protected function storeAssociated($resource,$resourceKeys=[],$forceColumn = null){
