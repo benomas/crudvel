@@ -27,16 +27,16 @@ trait CrudTrait {
     return $this;
   }
 
-  public function getCamelPluralName(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getCamelPluralName(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getCamelSingularName(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getCamelSingularName(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getSlugPluralName(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getSlugPluralName(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
   //this is the most important case, because all the resource name strategy depends on it
@@ -48,40 +48,40 @@ trait CrudTrait {
       \Str::snake(str_replace('Controller','',class_basename($this)),'-');
   }
 
-  public function getSnakePluralName(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getSnakePluralName(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getSnakeSingularName(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getSnakeSingularName(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getStudlyPluralName(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getStudlyPluralName(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getStudlySingularName(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getStudlySingularName(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
   //-----------
-  public function getControllerClass(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getControllerClass(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getControllerInstance(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getControllerInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getModelClass(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getModelClass(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getModelBuilderInstance(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getModelBuilderInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getModelCollectionInstance(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getModelCollectionInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
   public function getMainTable(){
@@ -92,40 +92,40 @@ trait CrudTrait {
     return $this->getModelClass()::cvIam();
   }
 
-  public function getRequestClass(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getRequestClass(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getRequestInstance(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getRequestInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getUserModelClass(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getUserModelClass(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getUserModelBuilderInstance(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getUserModelBuilderInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getUserModelCollectionInstance(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getUserModelCollectionInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getPermissionModelClass(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getPermissionModelClass(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getPaginatorClass(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getPaginatorClass(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getPaginatorInstance(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getPaginatorInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getRootInstance(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getRootInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
   public function getCvResourceClass(){
@@ -134,76 +134,76 @@ trait CrudTrait {
       'CvResource';
   }
   //-----------
-  public function getRows(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getRows(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getRow(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getRow(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getCurrentAction(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getCurrentAction(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getCurrentActionKey(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getCurrentActionKey(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getActionResource(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getActionResource(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getFields(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getFields(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getPaginateFields(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getPaginateFields(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getLangName(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getLangName(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getResourceAlias(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getResourceAlias(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
   //-----------
-  public function getActions(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getActions(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getViewActions(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getViewActions(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getRowActions(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getRowActions(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getRowsActions(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getRowsActions(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getSkipModelValidation(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getSkipModelValidation(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getCallActionMethod(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getCallActionMethod(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getCallActionParameters(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getCallActionParameters(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getFlowControl(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getFlowControl(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
-  public function getPaginated(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function getPaginated(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
   //Getters end
 
@@ -381,13 +381,13 @@ trait CrudTrait {
     return $this->setCvResourceInstance($this->getCvResourceClass()::getCvResourceInstance());
   }
 
-  public function fixActionResource(){
-    $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function fixActionResource(...$params){
+    $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
     return $this;
   }
 
-  public function specialAccess(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function specialAccess(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
   public function actionAccess($actionResource=null){
@@ -411,8 +411,8 @@ trait CrudTrait {
     return $model::noFilters();
   }
 
-  public function fixFlowControl(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function fixFlowControl(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
   public function loadFields(){
@@ -421,8 +421,8 @@ trait CrudTrait {
     return $this;
   }
 
-  public function generateModelCollectionInstance(){
-    return $this->getCvResourceInstanceMethod(__FUNCTION__);
+  public function generateModelCollectionInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
   public function addField($field=null,$value=null){

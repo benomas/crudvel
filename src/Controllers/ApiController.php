@@ -194,6 +194,14 @@ class ApiController extends CustomController{
     return $this;
   }
 
+  public static function externalAttacher($modelCollectionInstance,$resource,$fields){
+    $toAttach = cvGetSomeKeysAsList($fields[cvCaseFixer('plural|snake',$resource).'_attach']??[]);
+    $modelCollectionInstance->{cvCaseFixer('plural|camel',$resource)}()->detach($toAttach);
+    $modelCollectionInstance->{cvCaseFixer('plural|camel',$resource)}()->attach($toAttach);
+
+    return $this;
+  }
+
   protected function attacher($resource){
     $toAttach = cvGetSomeKeysAsList($this->getFields()[cvCaseFixer('plural|snake',$resource).'_attach']??[]);
     $this->getModelCollectionInstance()->{cvCaseFixer('plural|camel',$resource)}()->detach($toAttach);
@@ -207,6 +215,10 @@ class ApiController extends CustomController{
     $this->getModelCollectionInstance()->{cvCaseFixer('plural|camel',$resource)}()->detach($toDetach);
 
     return $this;
+  }
+
+  public static function externalStoreRelation($modelCollectionInstance,$resource,$fields){
+    return (get_called_class())::externalAttacher($modelCollectionInstance,$resource,$fields);
   }
 
   protected function storeRelation($resource){
@@ -230,6 +242,18 @@ class ApiController extends CustomController{
     return true;
   }
 
+  public static function externalAssociateResource($resource,$relatedResource,$resourceKeys=[],$forceColumn = null){
+    $resourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$relatedResource);
+    $forceColumn = $forceColumn ??  cvCaseFixer('snake|singular',$resource).'_id';
+    $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
+
+    foreach($resourceModel::keys($resourceKeys)->get() as $currentResource)
+      if(!$currentResource->fill([$forceColumn=>$this->getModelCollectionInstance()->id])->save())
+        return false;
+
+    return true;
+  }
+
   protected function associateResource($resource,$resourceKeys=[],$forceColumn = null){
     $resourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$resource);
     $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
@@ -238,6 +262,10 @@ class ApiController extends CustomController{
         return false;
 
     return true;
+  }
+
+  public static function externalStoreAssociated($resource,$resourceKeys=[],$forceColumn = null){
+    return (get_called_class())::externalAssociateResource($resource,$resourceKeys,$forceColumn);
   }
 
   protected function storeAssociated($resource,$resourceKeys=[],$forceColumn = null){
