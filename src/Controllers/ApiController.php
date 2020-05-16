@@ -229,6 +229,17 @@ class ApiController extends CustomController{
     return $this->detacher($resource)->attacher($resource);
   }
 
+  protected function externalDissociateResource($relatedResource,$relatedResourceKeys=[],$forceColumn = null){
+    $relatedResourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$relatedResource);
+    $relatedResourceRows = $relatedResourceModel::byResource($this->getSlugSingularName(),$this->getModelCollectionInstance()->id)
+    ->noKeys($relatedResourceKeys)->get();
+    $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
+    foreach($relatedResourceRows as $relatedResource)
+      if(!$relatedResource->fill([$forceColumn=>null])->save())
+        return false;
+
+    return true;
+  }
 
   protected function dissociateResource($resource,$resourceKeys=[],$forceColumn = null){
     $resourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$resource);
@@ -268,6 +279,10 @@ class ApiController extends CustomController{
 
   protected function storeAssociated($resource,$resourceKeys=[],$forceColumn = null){
     return $this->associateResource($resource,$resourceKeys,$forceColumn);
+  }
+
+  public static function externalUpdateAssociated($keyValueResource,$relatedResource,$relatedResourceKeys=[]){
+    return static::externalAssociateResource($keyValueResource,$relatedResource,$relatedResourceKeys);
   }
 
   protected function updateAssociated($resource,$resourceKeys=[],$forceColumn = null){
