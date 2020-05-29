@@ -193,7 +193,7 @@ class ApiController extends CustomController{
       $this->addField('password',bcrypt($fields['password']));
     return $this;
   }
-
+// atachers
   public static function externalAttacher($modelCollectionInstance,$resource,$fields){
     $toAttach = cvGetSomeKeysAsList($fields[cvCaseFixer('plural|snake',$resource).'_attach']??[]);
     $modelCollectionInstance->{cvCaseFixer('plural|camel',$resource)}()->detach($toAttach);
@@ -203,20 +203,24 @@ class ApiController extends CustomController{
   }
 
   protected function attacher($resource){
-    $toAttach = cvGetSomeKeysAsList($this->getFields()[cvCaseFixer('plural|snake',$resource).'_attach']??[]);
-    $this->getModelCollectionInstance()->{cvCaseFixer('plural|camel',$resource)}()->detach($toAttach);
-    $this->getModelCollectionInstance()->{cvCaseFixer('plural|camel',$resource)}()->attach($toAttach);
+    static::externalAttacher($this->getModelCollectionInstance(),$resource,$this->getFields());
 
     return $this;
+  }
+// detachers
+  protected function externalDetacher($modelCollectionInstance,$resource,$fields){
+    $toDetach = cvGetSomeKeysAsList($fields[cvCaseFixer('plural|snake',$resource).'_detach']??[]);
+    $modelCollectionInstance->{cvCaseFixer('plural|camel',$resource)}()->detach($toDetach);
+
+    return $modelCollectionInstance;
   }
 
   protected function detacher($resource){
-    $toDetach = cvGetSomeKeysAsList($this->getFields()[cvCaseFixer('plural|snake',$resource).'_detach']??[]);
-    $this->getModelCollectionInstance()->{cvCaseFixer('plural|camel',$resource)}()->detach($toDetach);
+    static::externalDetacher($this->getModelCollectionInstance(),$resource,$this->getFields());
 
     return $this;
   }
-
+// relation stores
   public static function externalStoreRelation($modelCollectionInstance,$resource,$fields){
     return static::externalAttacher($modelCollectionInstance,$resource,$fields);
   }
@@ -224,16 +228,27 @@ class ApiController extends CustomController{
   protected function storeRelation($resource){
     return $this->attacher($resource);
   }
+// relation updaters
+  protected function externalUpdateRelation($modelCollectionInstance,$resource,$fields){
+    static::externalDetacher($modelCollectionInstance,$resource,$fields);
+    static::externalAttacher($modelCollectionInstance,$resource,$fields);
 
-  protected function updateRelation($resource){
-    return $this->detacher($resource)->attacher($resource);
+    return $modelCollectionInstance;
   }
 
+  protected function updateRelation($resource){
+    static::externalUpdateRelation($this->getModelCollectionInstance(),$resource,$this->getFields());
+
+    return $this;
+  }
+
+// dissociaters
   protected function externalDissociateResource($relatedResource,$relatedResourceKeys=[],$forceColumn = null){
     $relatedResourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$relatedResource);
-    $relatedResourceRows = $relatedResourceModel::byResource($this->getSlugSingularName(),$this->getModelCollectionInstance()->id)
-    ->noKeys($relatedResourceKeys)->get();
+    $relatedResourceRows  = $relatedResourceModel::byResource($this->getSlugSingularName(),$this->getModelCollectionInstance()->id)
+      ->noKeys($relatedResourceKeys)->get();
     $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
+
     foreach($relatedResourceRows as $relatedResource)
       if(!$relatedResource->fill([$forceColumn=>null])->save())
         return false;
@@ -242,15 +257,12 @@ class ApiController extends CustomController{
   }
 
   protected function dissociateResource($resource,$resourceKeys=[],$forceColumn = null){
-    $resourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$resource);
-    $resourceRows = $resourceModel::byResource($this->getSlugSingularName(),$this->getModelCollectionInstance()->id)
-    ->noKeys($resourceKeys)->get();
-    $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
-    foreach($resourceRows as $resource)
-      if(!$resource->fill([$forceColumn=>null])->save())
-        return false;
+    return static::externalDissociateResource($resource,$resourceKeys,$forceColumn);
+  }
 
-    return true;
+// Associaters
+  public static function cvAssociacionInteractionsLoader(){
+    return new \Crudvel\Libraries\CvAssociations\CvAssociacionInteractions();
   }
 
   public static function externalAssociateResource($keyValueResource,$relatedResource,$relatedResourceKeys=[]){
@@ -273,7 +285,11 @@ class ApiController extends CustomController{
     return true;
   }
 
-  public static function externalStoreAssociated($keyValueResource,$relatedResource,$relatedResourceKeys=[]){
+  public static function externalStoreAssociated(){
+    return static::externalAssociateResource();
+  }
+
+  public static function externalStoreAssociatedOld($keyValueResource,$relatedResource,$relatedResourceKeys=[]){
     return static::externalAssociateResource($keyValueResource,$relatedResource,$relatedResourceKeys);
   }
 
