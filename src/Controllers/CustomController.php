@@ -355,6 +355,43 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $this->isTransactionCompleted();
   }
 
+  public function persistWithNoFillables($callBack=null, $noFillables=[], $passLastSave = false){
+    if(empty($noFillables)) return false;
+    $this->resetTransaction();
+    $this->startTranstaction();
+
+    $this->testTransaction(function() use($callBack, $passLastSave, $noFillables){
+      $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
+      $fields = $this->getFields();
+      $this->getModelCollectionInstance()->fill($fields);
+
+      // iter data and set each
+      foreach($noFillables as $col => $value) {
+        $this->getModelCollectionInstance()->{$col} = $value;
+      }
+
+      if(!empty($fields['created_by']))
+        $this->getModelCollectionInstance()->created_by=$fields['created_by'];
+
+      if(!empty($fields['updated_by']))
+        $this->getModelCollectionInstance()->updated_by=$fields['updated_by'];
+
+      $lastSave = $this->getModelCollectionInstance()->save();
+      if(!$lastSave)
+        return false;
+
+      if($callBack && is_callable($callBack)){
+        if($passLastSave) return $callBack($this->getModelCollectionInstance());
+        return $callBack();
+      }
+
+      return true;
+    });
+    $this->transactionComplete();
+
+    return $this->isTransactionCompleted();
+  }
+
   public function activate($id)
   {
     $this->clearFields()->addField('id',$id)->addField('active',1)->setStamps()->removeField('created_by')->removeField('created_at');
