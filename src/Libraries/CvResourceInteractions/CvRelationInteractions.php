@@ -1,8 +1,8 @@
 <?php
 
-namespace Crudvel\Libraries\CvAssociations;
+namespace Crudvel\Libraries\CvResourceInteractions;
 
-class CvRelationInteractions extends \Crudvel\Libraries\CvAssociations\CvInteractionsCore
+class CvRelationInteractions extends \Crudvel\Libraries\CvResourceInteractions\CvInteractionsCore
 {
   public function CvAttacher(){
     $toAttach = cvGetSomeKeysAsList($this->getFields()[cvCaseFixer('plural|snake',$this->getResource()).'_attach']??[]);

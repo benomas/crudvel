@@ -1,6 +1,6 @@
 <?php
 
-namespace Crudvel\Libraries\CvAssociations;
+namespace Crudvel\Libraries\CvResourceInteractions;
 
 class CvInteractionsCore
 {
@@ -32,6 +32,10 @@ class CvInteractionsCore
     $this->resource = $resource??null;
 
     return $this;
+  }
+
+  public function fixResource($resource){
+    return $this->setResource(cvCaseFixer('snake|plural',$resource));
   }
 
   public function getFields(){

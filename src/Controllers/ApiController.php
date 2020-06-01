@@ -193,6 +193,20 @@ class ApiController extends CustomController{
       $this->addField('password',bcrypt($fields['password']));
     return $this;
   }
+
+  public function blackListExportingColumns(){
+    return [];
+  }
+
+  public function whiteListExportingColumns(){
+    return [];
+  }
+
+  public static function loadAssociator(){
+    return new \Crudvel\Libraries\CvResourceInteractions\CvAssociator;
+  }
+//to be deprecated
+
 // atachers
   public static function externalAttacher($modelCollectionInstance,$resource,$fields){
     $toAttach = cvGetSomeKeysAsList($fields[cvCaseFixer('plural|snake',$resource).'_attach']??[]);
@@ -243,21 +257,21 @@ class ApiController extends CustomController{
   }
 
 // dissociaters
-  protected function externalDissociateResource($relatedResource,$relatedResourceKeys=[],$forceColumn = null){
+  protected function externalDissociateResource($relatedResource,$relatedResourceKeys=[],$foreingColumn = null){
     $relatedResourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$relatedResource);
     $relatedResourceRows  = $relatedResourceModel::byResource($this->getSlugSingularName(),$this->getModelCollectionInstance()->id)
       ->noKeys($relatedResourceKeys)->get();
-    $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
+    $foreingColumn = $foreingColumn ??  $this->getSnakeSingularName().'_id';
 
     foreach($relatedResourceRows as $relatedResource)
-      if(!$relatedResource->fill([$forceColumn=>null])->save())
+      if(!$relatedResource->fill([$foreingColumn=>null])->save())
         return false;
 
     return true;
   }
 
-  protected function dissociateResource($resource,$resourceKeys=[],$forceColumn = null){
-    return static::externalDissociateResource($resource,$resourceKeys,$forceColumn);
+  protected function dissociateResource($resource,$resourceKeys=[],$foreingColumn = null){
+    return static::externalDissociateResource($resource,$resourceKeys,$foreingColumn);
   }
 
 // Associaters
@@ -275,11 +289,11 @@ class ApiController extends CustomController{
     return true;
   }
 
-  protected function associateResource($resource,$resourceKeys=[],$forceColumn = null){
+  protected function associateResource($resource,$resourceKeys=[],$foreingColumn = null){
     $resourceModel = '\App\Models\\'.cvCaseFixer('singular|studly',$resource);
-    $forceColumn = $forceColumn ??  $this->getSnakeSingularName().'_id';
+    $foreingColumn = $foreingColumn ??  $this->getSnakeSingularName().'_id';
     foreach($resourceModel::keys($resourceKeys)->get() as $resource)
-      if(!$resource->fill([$forceColumn=>$this->getModelCollectionInstance()->id])->save())
+      if(!$resource->fill([$foreingColumn=>$this->getModelCollectionInstance()->id])->save())
         return false;
 
     return true;
@@ -293,24 +307,16 @@ class ApiController extends CustomController{
     return static::externalAssociateResource($keyValueResource,$relatedResource,$relatedResourceKeys);
   }
 
-  protected function storeAssociated($resource,$resourceKeys=[],$forceColumn = null){
-    return $this->associateResource($resource,$resourceKeys,$forceColumn);
+  protected function storeAssociated($resource,$resourceKeys=[],$foreingColumn = null){
+    return $this->associateResource($resource,$resourceKeys,$foreingColumn);
   }
 
   public static function externalUpdateAssociated($keyValueResource,$relatedResource,$relatedResourceKeys=[]){
     return static::externalAssociateResource($keyValueResource,$relatedResource,$relatedResourceKeys);
   }
 
-  protected function updateAssociated($resource,$resourceKeys=[],$forceColumn = null){
-    return $this->dissociateResource($resource,$resourceKeys,$forceColumn) &&  $this->associateResource($resource,$resourceKeys,$forceColumn);
-  }
-
-  public function blackListExportingColumns(){
-    return [];
-  }
-
-  public function whiteListExportingColumns(){
-    return [];
+  protected function updateAssociated($resource,$resourceKeys=[],$foreingColumn = null){
+    return $this->dissociateResource($resource,$resourceKeys,$foreingColumn) &&  $this->associateResource($resource,$resourceKeys,$foreingColumn);
   }
 // [End Methods]
 }
