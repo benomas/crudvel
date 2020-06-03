@@ -7,6 +7,7 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
   protected $fields;
   protected $toDetach;
   protected $toAttach;
+  protected $toSync;
 
   public function __construct(){
     parent::__construct();
@@ -28,6 +29,9 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
 
     if(!$this->getToAttach())
       $this->fixToAttach();
+
+    if(!$this->getToSync())
+      $this->fixToSync();
 
     if(!$this->getRelatedResourceRelation())
       $this->fixRelatedResourceRelation();
@@ -57,7 +61,7 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
   }
 
   public function CvSync(){
-    $this->getRelatedResourceRelation()->sync($this->getToAttach());
+    $this->getRelatedResourceRelation()->sync($this->getToSync());
 
     return $this;
   }
@@ -74,9 +78,8 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
 
   public function fixToDetach(){
     $toDetach = cvGetSomeKeysAsList(($this->getFields()[cvCaseFixer('plural|snake',$this->getRelatedResource()).'_detach']??[]));
-    $this->setToDetach($toDetach);
 
-    return $this;
+    return $this->setToDetach($toDetach);
   }
 
   public function getToAttach(){
@@ -91,9 +94,23 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
 
   public function fixToAttach(){
     $toAttach = cvGetSomeKeysAsList(($this->getFields()[cvCaseFixer('plural|snake',$this->getRelatedResource()).'_attach']??[]));
-    $this->setToAttach($toAttach);
+
+    return $this->setToAttach($toAttach);
+  }
+
+  public function getToSync(){
+      return $this->toSync??null;
+  }
+
+  public function setToSync($toSync=null){
+    $this->toSync = $toSync??null;
 
     return $this;
+  }
+
+  public function fixToSync(){
+    $toSync = cvGetSomeKeysAsList(($this->getFields()[cvCaseFixer('plural|snake',$this->getRelatedResource()).'_sync']??[]));
+    return $this->setToSync($toSync);
   }
 
   public function getFields(){
