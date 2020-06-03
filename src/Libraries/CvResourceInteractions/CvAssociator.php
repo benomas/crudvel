@@ -3,10 +3,9 @@
 namespace Crudvel\Libraries\CvResourceInteractions;
 
 class CvAssociator extends \Crudvel\Libraries\CvResourceInteractions\CvInteractionsCore{
-  protected $relatedResource;
   protected $relatedResourceModelBuilderInstance;
-  protected $associatedColumns = 'id';
-  protected $associatedData = [];
+  protected $associatedColumns   = 'id';
+  protected $associatedData      = [];
   protected $associatedFixedData = [];
   protected $foreingColumn;
 
@@ -31,10 +30,10 @@ class CvAssociator extends \Crudvel\Libraries\CvResourceInteractions\CvInteracti
     if(!$this->getRelatedResource())
       return null;
 
-    if(!$this->getAssociatedData())
-      return null;
-
     $this->fixAssociatedData();
+
+    if(!$this->getRelatedResourceRelation())
+      $this->fixRelatedResourceRelation();
 
     if(!$this->makeDoRelatedResourceModelBuilderInstance())
       return null;
@@ -43,18 +42,20 @@ class CvAssociator extends \Crudvel\Libraries\CvResourceInteractions\CvInteracti
   }
 
   public function cvDissociateResource(){
+    if($this->getRelatedResourceRelation())
+      foreach($this->getRelatedResourceRelation()->get() as $oldRelatedResource){
+        $oldRelatedResource->{$this->getForeingColumn()} = null;
 
-    foreach($this->getRelatedResourceModelBuilderInstance()->get() as $currentResource){
-      $currentResource->{$this->getForeingColumn()} = $this->getModelCollectionInstance()->id;
-
-      if(!$currentResource->save())
-        return false;
-    }
+        if(!$oldRelatedResource->save())
+          return false;
+      }
 
     return true;
   }
 
   public function cvAssociateResource(){
+    if(!$this->cvDissociateResource())
+      return false;
 
     foreach($this->getRelatedResourceModelBuilderInstance()->get() as $currentResource){
       $currentResource->{$this->getForeingColumn()} = $this->getModelCollectionInstance()->id;
@@ -64,16 +65,6 @@ class CvAssociator extends \Crudvel\Libraries\CvResourceInteractions\CvInteracti
     }
 
     return true;
-  }
-
-  public function getRelatedResource(){
-    return $this->relatedResource??null;
-  }
-
-  public function setRelatedResource($relatedResource=null){
-    $this->relatedResource = $relatedResource??null;
-
-    return $this;
   }
 
   public function getRelatedResourceModelBuilderInstance(){
@@ -110,11 +101,11 @@ class CvAssociator extends \Crudvel\Libraries\CvResourceInteractions\CvInteracti
   }
 
   public function getAssociatedData(){
-    return $this->associatedData??null;
+    return $this->associatedData??[];
   }
 
-  public function setAssociatedData($associatedData=null){
-    $this->associatedData = $associatedData??null;
+  public function setAssociatedData($associatedData=[]){
+    $this->associatedData = $associatedData??[];
 
     return $this;
   }

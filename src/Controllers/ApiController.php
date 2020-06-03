@@ -205,8 +205,12 @@ class ApiController extends CustomController{
   public static function loadAssociator(){
     return new \Crudvel\Libraries\CvResourceInteractions\CvAssociator;
   }
-//to be deprecated
 
+  public static function loadRelationator(){
+    return new \Crudvel\Libraries\CvResourceInteractions\CvRelationator;
+  }
+//to be deprecated
+/*
 // atachers
   public static function externalAttacher($modelCollectionInstance,$resource,$fields){
     $toAttach = cvGetSomeKeysAsList($fields[cvCaseFixer('plural|snake',$resource).'_attach']??[]);
@@ -317,6 +321,6 @@ class ApiController extends CustomController{
 
   protected function updateAssociated($resource,$resourceKeys=[],$foreingColumn = null){
     return $this->dissociateResource($resource,$resourceKeys,$foreingColumn) &&  $this->associateResource($resource,$resourceKeys,$foreingColumn);
-  }
+  }*/
 // [End Methods]
 }

@@ -6,6 +6,8 @@ class CvInteractionsCore
 {
   protected $modelCollectionInstance;
   protected $resource;
+  protected $relatedResource;
+  protected $relatedResourceRelation;
   protected $fields;
   protected $Key;
   protected $KeyValue;
@@ -36,6 +38,35 @@ class CvInteractionsCore
 
   public function fixResource($resource){
     return $this->setResource(cvCaseFixer('snake|plural',$resource));
+  }
+
+  public function getRelatedResource(){
+    return $this->relatedResource??null;
+  }
+
+  public function setRelatedResource($relatedResource=null){
+    $this->relatedResource = $relatedResource??null;
+
+    return $this;
+  }
+
+  public function getRelatedResourceRelation(){
+    return $this->relatedResourceRelation??null;
+  }
+
+  public function setRelatedResourceRelation($relatedResourceRelation=null){
+    $this->relatedResourceRelation = $relatedResourceRelation??null;
+
+    return $this;
+  }
+
+  public function fixRelatedResourceRelation(){
+    if (!$this->getModelCollectionInstance())
+      return $this;
+
+    $relacion = $this->getModelCollectionInstance()->{cvCaseFixer('camel|plural',$this->getRelatedResource())}();
+
+    return $this->setRelatedResourceRelation($relacion);
   }
 
   public function getFields(){
