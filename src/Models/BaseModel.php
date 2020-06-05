@@ -267,14 +267,14 @@ class BaseModel extends Model implements CvCrudInterface
     return $query->invoker($related)->select("{$this->getTable()}.name as cv_search");
   }
 
-  public function scopeExternalCvSearch($query, $related, $searchColumn,$alias=null)
-  {
+  public function scopeExternalCvSearch($query, $searchColumn,$alias=null,$localPrefix = null){
+    $localPrefix   = $localPrefix??'';
     $foreintColumn = str_replace('cv_search',$this->getKeyName(),$searchColumn);
     $alias         = $this->alias($alias);
 
     return $query
       ->from("{$this->getTable()} as $alias")
-      ->whereColumn($foreintColumn, "$alias.id")
+      ->whereColumn("$localPrefix$foreintColumn", "$alias.id")
       ->limit(1)->selectCvSearch($alias);
   }
 
@@ -285,10 +285,10 @@ class BaseModel extends Model implements CvCrudInterface
   }
 
   public function scopeSolveSearches($query){
-    $modelClass = get_class($this->cvIam());
+    //$modelClass = get_class($this->cvIam());
 
     foreach($this->getCvSearches() as $searchColumn=>$relatedModel){
-      $query->addSelect([$searchColumn => $relatedModel::withoutGlobalScopes()->externalCvSearch($modelClass,$searchColumn)]);
+      $query->addSelect([$searchColumn => $relatedModel::withoutGlobalScopes()->externalCvSearch($searchColumn)]);
     }
 
     return $query->cvSearch();
