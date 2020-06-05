@@ -50,7 +50,6 @@ class ApiController extends CustomController{
     try{
       if ($key === null || $key === 'null')
         return $this->apiSuccessResponse([]);
-
       if (method_exists($this->getModelBuilderInstance(),'relatedTo'.Str::studly(Str::singular($resource))))
         $this->getModelBuilderInstance()->{'relatedTo'.Str::studly(Str::singular($resource))}($key);
       else
