@@ -70,6 +70,7 @@ class CvResource
   public function startModelBuilderInstance(){
     if($this->modelClass)
       return $this->modelBuilderInstance = new $this->modelClass;
+
     return $this;
   }
 
@@ -84,18 +85,21 @@ class CvResource
       $this->setStudlySingularName($this->fixedStudlySingularName());
       $this->setStudlyPluralName($this->fixedStudlyPluralName());
     }
+
     return $this;
   }
 
   public function cvSlugCaseSingularName($name = null){
     if($name)
       return $this->cvCaseFixer('slug|kebab',$name);
+
     return $this->getRootInstance()->getSlugSingularName();
   }
 
   public function cvSlugCasePluralName($name = null){
     if($name)
       return $this->cvCaseFixer('plural|slug|kebab',$name);
+
     return $this->cvPluralCase(($this->getRootInstance()->getSlugSingularName()));
   }
 
@@ -128,8 +132,10 @@ class CvResource
       return $this;
 
     return $this->setControllerClass(get_class($controller))->setControllerBuilderInstance($controller);
+
     if(!$controller || !class_exists($controller))
       return $this->generateController();
+
     return $this->setControllerClass($controller)->setControllerBuilderInstance($controller);
   }
 
@@ -164,6 +170,7 @@ class CvResource
 
     $paginatorMode = $this->getRequestInstance()->get("paginate");
     $paginatorClass = $this->getRootInstance()->getPaginator($paginatorMode['searchMode']??null);
+
     return $this->setPaginatorInstance(new $paginatorClass($this));
   }
 
@@ -207,6 +214,7 @@ class CvResource
       $key = $key ?? $this->getCurrentActionKey();
       return $this->setModelCollectionInstance($this->getModelBuilderInstance()->key($key)->first());
     }
+
     return $this;
   }
 
@@ -214,6 +222,7 @@ class CvResource
     $this->getRootInstance()->loadFields();
 
     $this->getRootInstance()->beforeFlowControl($this->getCurrentAction());
+
     if(method_exists($this->getRootInstance(),$this->getCurrentAction().'BeforeFlowControl')){
       $this->getRootInstance()->{$this->getCurrentAction().'BeforeFlowControl'}();
     }
@@ -246,6 +255,7 @@ class CvResource
       });
 
     $this->generateModelCollectionInstance();
+
     if( in_array($this->getCurrentAction(),$this->getRowActions()) && !$this->getModelCollectionInstance() && !$this->getSkipCollectionValidation())
       return $this->setFlowControl(function(){
         return $this->getRootInstance()->apiUnautorized();
@@ -262,19 +272,23 @@ class CvResource
           "message" => trans("crudvel.api.success")
         ]);
       });
+
     return $this;
   }
 
   public function captureRequest(){
     $requestInstance = app($this->getRequestClass());
+
     if(!$this->getRequestInstance())
       $this->setRequestInstance($requestInstance);
+
     return $this;
   }
 
   public function captureRequestHack($requestInstance){
     if(!$this->getRequestInstance())
       $this->setRequestInstance($requestInstance);
+
     return $this;
   }
 
@@ -294,6 +308,7 @@ class CvResource
 
   public function fixActionResource(){
     $this->setActionResource($this->getSlugPluralName().".".Str::snake($this->getCurrentAction(),'-'));
+
     return $this;
   }
 
@@ -313,26 +328,33 @@ class CvResource
   public function actionAccess($actionResource = null){
     $actionResource = $actionResource ?? $this->getActionResource();
     $currentActionAccess = $this->actionsAccess[$actionResource] ?? null;
+
     if($currentActionAccess !== null)
       return $currentActionAccess;
+
     if(
       !$this->getUserModelBuilderInstance() ||
       !$this->getUserModelCollectionInstance() ||
       !$this->getUserModelCollectionInstance()->active
     )
       return $this->actionsAccess[$actionResource] = false;
+
     if($this->getUserModelCollectionInstance()->isRoot())
       return $this->actionsAccess[$actionResource] = true;
+
     if(!$this->getPermissionModelClass()::action($actionResource)->count())
       return $this->actionsAccess[$actionResource] = true;
+
     if(kageBunshinNoJutsu($this->getUserModelBuilderInstance())->actionPermission($actionResource)->count())
       return $this->actionsAccess[$actionResource] = true;
+
     return $this->actionsAccess[$actionResource] = false;
   }
 
   public function addField($field=null,$value=null){
     if($field)
       $this->fields[$field]=$value;
+
     return $this;
   }
 
@@ -343,6 +365,7 @@ class CvResource
       else
         $this->actions[]=$action;
     }
+
     return $this;
   }
   public function addViewAction($viewAction=null){
@@ -352,6 +375,7 @@ class CvResource
       else
         $this->viewActions[]=$viewAction;
     }
+
     return $this;
   }
   public function addRowAction($rowAction=null){
@@ -361,6 +385,7 @@ class CvResource
       else
         $this->rowActions[]=$rowAction;
     }
+
     return $this;
   }
   public function addRowsAction($rowsAction=null){
@@ -370,41 +395,48 @@ class CvResource
       else
         $this->rowsActions[]=$rowsAction;
     }
+
     return $this;
   }
 
   public function removeField($field=null){
     if($field !== null)
       unset($this->fields[$field]);
+
     return $this;
   }
 
   public function clearFields(){
     $this->fields = [];
+
     return $this;
   }
 
   public function removeAction($action=null){
     if (($key = array_search($action, $this->actions)) !== false)
       unset($this->actions[$key]);
+
     return $this;
   }
 
   public function removeViewAction($viewAction=null){
     if (($key = array_search($viewAction, $this->viewActions)) !== false)
       unset($this->viewActions[$key]);
+
     return $this;
   }
 
   public function removeRowAction($rowAction=null){
     if (($key = array_search($rowAction, $this->rowActions)) !== false)
       unset($this->rowActions[$key]);
+
     return $this;
   }
 
   public function removeRowsAction($rowsAction=null){
     if (($key = array_search($rowsAction, $this->rowsActions)) !== false)
       unset($this->rowsActions[$key]);
+
     return $this;
   }
 }
