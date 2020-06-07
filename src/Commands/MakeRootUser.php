@@ -28,10 +28,12 @@ class MakeRootUser extends Command {
         if(!($role = \App\Models\Role::withRoot()->first())){
           if(
             !($role = new \App\Models\Role())->fill([
-              "slug"    =>"root",
-              "name"    =>"Root",
-              "description" =>"Usuario con super privilegios",
-              "active"    =>1,
+              "slug"        => "root",
+              "name"        => "Root",
+              "description" => "Usuario con super privilegios",
+              "active"      => 1,
+              'internal'    => 1,
+              'external'    => 1,
             ])->save()
           )
           {
