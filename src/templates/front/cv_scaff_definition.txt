@@ -10,7 +10,7 @@ import filler         from 'src/fillers/<##[singular|camel](resource)##>.js'
 
 let resourceName = '<##[plural|slug](resource)##>'
 //TODO: check for default icon
-export default function (globals) {
+export default function (store) {
   let resource = new CvResourceMap({
     name             : resourceName,
     icon             : 'fas fa-list',
@@ -18,7 +18,7 @@ export default function (globals) {
     keyName          : 'id',
     pluralName       : '<##[plural|slug](resource)##>',
     singularName     : '<##[singular|slug](resource)##>',
-    crudServices     : new OwnService(globals['cvComunicator'],resourceName),
+    crudServices     : new OwnService(store.getters.cStCvComunicator,resourceName),
     resourceSections : ['<##[slug](resourceSections)##>'],
     filler
   })
