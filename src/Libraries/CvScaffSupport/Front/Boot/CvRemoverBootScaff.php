@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 class CvRemoverBootScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseRemoverScaff implements CvScaffInterface
 {
   protected $relatedFilePath   = 'src/boot/boot.js';
+
   public function __construct(){
     parent::__construct();
   }
@@ -21,6 +22,7 @@ class CvRemoverBootScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseR
   protected function fixFile(){
     return $this->fixImportSection()->fixResourcesSection();
   }
+
 //[End Stablishers]
   protected function selfRepresentation(){
     return 'boot';
@@ -39,7 +41,7 @@ class CvRemoverBootScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseR
   private function fixResourcesSection(){
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
-        '\'<slot>\'\s*:\s*<slot>\(cvGlobDep.globals\)',
+        '\'<slot>\'\s*:\s*<slot>\(store\)',
         Str::camel(Str::plural($this->getResource())),
         Str::camel(Str::plural($this->getResource()))
       )

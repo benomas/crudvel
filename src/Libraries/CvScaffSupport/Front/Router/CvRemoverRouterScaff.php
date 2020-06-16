@@ -21,8 +21,7 @@ class CvRemoverRouterScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBas
   protected function fixFile(){
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
-        'this\.resources\.<slot>\.getRoutes\(\)',
-        Str::camel(Str::plural($this->getResource()))
+        'this\.mGetStResources\(\):plural($this->getResource()))
       )
     );
   }

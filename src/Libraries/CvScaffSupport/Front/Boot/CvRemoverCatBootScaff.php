@@ -9,6 +9,7 @@ class CvRemoverCatBootScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBa
 {
   use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedFilePath   = 'src/boot/boot.js';
+
   public function __construct(){
     parent::__construct();
   }
@@ -22,6 +23,7 @@ class CvRemoverCatBootScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBa
   protected function fixFile(){
     return $this->fixImportSection()->fixResourcesSection();
   }
+
 //[End Stablishers]
   protected function selfRepresentation(){
     return 'boot';
@@ -40,7 +42,7 @@ class CvRemoverCatBootScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBa
   private function fixResourcesSection(){
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
-        '\'<slot>\'\s*:\s*<slot>\(cvGlobDep.globals\)',
+        '\'<slot>\'\s*:\s*<slot>\(store\)',
         Str::camel(Str::plural($this->getResource())),
         Str::camel(Str::plural($this->getResource()))
       )

@@ -1,10 +1,4 @@
 import CvResourceMap from 'src/customs/crudvuel/resource/CvResourceMap'
-//TODO
-//Convert to slug
-import CvCreate    from 'src/components/resources/<##[plural|slug](resource)##>/CvCreate.vue'
-import CvEdit      from 'src/components/resources/<##[plural|slug](resource)##>/CvEdit.vue'
-import CvIndex     from 'src/components/resources/<##[plural|slug](resource)##>/CvIndex.vue'
-import CvShow      from 'src/components/resources/<##[plural|slug](resource)##>/CvShow.vue'
 import OwnService  from 'src/services/<##[singular|studly](resource)##>'
 import filler      from 'src/fillers/<##[singular|camel](resource)##>.js'
 
@@ -18,7 +12,7 @@ export default function (store) {
     keyName          : 'id',
     pluralName       : '<##[plural|slug](resource)##>',
     singularName     : '<##[singular|slug](resource)##>',
-    crudServices     : new OwnService(store.getters.cStCvComunicator,resourceName),
+    crudServices     : new OwnService(store,resourceName),
     resourceSections : ['catalogs'],
     filler
   })
@@ -30,7 +24,7 @@ export default function (store) {
       getService : resource.loadService('index'),
       resource   : resource,
       path       : resource.path + '',
-      component  : CvIndex,
+      component  : () => import('src/components/resources/<##[plural|slug](resource)##>/CvIndex'),
       type       : 'rows'
     },
 
@@ -40,7 +34,7 @@ export default function (store) {
       setService : resource.loadService('store'),
       resource   : resource,
       path       : resource.path + '/create',
-      component  : CvCreate
+      component  : () => import('src/components/resources/<##[plural|slug](resource)##>/CvCreate')
     },
 
     {
@@ -50,7 +44,7 @@ export default function (store) {
       resource      : resource,
       path          : resource.path + '/:id',
       urlParams     : ['id'],
-      component     : CvShow,
+      component     : () => import('src/components/resources/<##[plural|slug](resource)##>/CvShow'),
       disableFields : true,
       isParentRoute : true
     },
@@ -63,7 +57,7 @@ export default function (store) {
       resource   : resource,
       path       : resource.path + '/:id/edit',
       urlParams  : ['id'],
-      component  : CvEdit
+      component  : () => import('src/components/resources/<##[plural|slug](resource)##>/CvEdit')
     },
 
     {

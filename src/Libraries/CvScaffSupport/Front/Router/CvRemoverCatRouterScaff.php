@@ -22,7 +22,7 @@ class CvRemoverCatRouterScaff extends \Crudvel\Libraries\CvScaffSupport\Front\Cv
   protected function fixFile(){
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
-        'this\.resources\.<slot>\.getRoutes\(\)',
+        'this\.mGetStResources\(\)\.<slot>\.getRoutes\(\)',
         Str::camel(Str::plural($this->getResource()))
       )
     );
