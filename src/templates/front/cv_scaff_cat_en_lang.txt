@@ -74,6 +74,17 @@ export default {
         error   : 'Error traying to desactivate th <##[singular|lower|human](resource)##>',
         cancel  : 'Deactivation of <##[singular|lower|human](resource)##> canceled'
       }
+    },
+
+    exportings: {
+      label     : 'Export',
+      backLabel : null,
+      nextLabel : 'Export',
+      set       : {
+        success : 'file geretaed',
+        error   : 'Error when try to make file',
+        cancel  : 'File generation was calcel'
+      }
     }
   }
 }

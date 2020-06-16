@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class CvRemoverCatRouterScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseRemoverScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCatTrait;
-  protected $relatedFilePath   = 'src/router/Router.js';
+  protected $relatedFilePath   = 'src/router/CvPrivateInternalRouter.js';
   public function __construct(){
     parent::__construct();
   }
@@ -22,7 +22,7 @@ class CvRemoverCatRouterScaff extends \Crudvel\Libraries\CvScaffSupport\Front\Cv
   protected function fixFile(){
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
-        'this\.mGetStResources\(\)\.<slot>\.getRoutes\(\)',
+        '\.\.\.this\.mGetStResources\(\)\.<slot>\.getRoutes\(\)',
         Str::camel(Str::plural($this->getResource()))
       )
     );

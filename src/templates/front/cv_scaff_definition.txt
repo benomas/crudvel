@@ -89,6 +89,15 @@ export default function (store) {
       path       : resource.path + '/:id/deactivate',
       urlParams  : ['id'],
       component  : null
+    },
+    {
+      name       : 'exportings',
+      icon       : '',
+      getService : resource.crudServices.exportings,
+      resource   : resource,
+      path       : resource.path + '/:id/exportings',
+      urlParams  : ['id'],
+      component  : null
     }
   ])
   resource.resourcelangLoader()

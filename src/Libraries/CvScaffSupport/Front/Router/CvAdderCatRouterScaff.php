@@ -21,12 +21,12 @@ class CvAdderCatRouterScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBa
 //[Stablishers]
 //[End Stablishers]
   protected function fixFile(){
-    $basePatern       = 'this\.mGetStResources\(\)\.<slot>\.getRoutes\(\)';
+    $basePatern       = '\.\.\.this\.mGetStResources\(\)\.<slot>\.getRoutes\(\)';
     $camelResource    = Str::camel(Str::plural($this->getResource()));
     return $this->globalFileRegexAdder(
       $this->regexMaker($basePatern,'[^\s,]+'),
       $this->scapedRegexMaker($basePatern,$camelResource),
-      'this.mGetStResources().'.$camelResource.'.getRoutes()'
+      '...this.mGetStResources().'.$camelResource.'.getRoutes()'
     );
   }
 

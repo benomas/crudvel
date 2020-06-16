@@ -75,6 +75,17 @@ export default {
         error   : 'Error al intentar activar <##[singular|lower|human](resource)##>',
         cancel  : 'Se ha cancelado la desactivación de <##[singular|lower|human](resource)##>'
       }
+    },
+
+    exportings: {
+      label     : 'Exportar',
+      backLabel : null,
+      nextLabel : 'Exportar',
+      set       : {
+        success : 'Archivo generado',
+        error   : 'Error al intentar generar archivo',
+        cancel  : 'Se ha cancelado la obtención del archivo'
+      }
     }
   }
 }

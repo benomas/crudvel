@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class CvAdderRouterScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseAdderScaff implements CvScaffInterface
 {
-  protected $relatedFilePath   = 'src/router/Router.js';
+  protected $relatedFilePath   = 'src/router/CvPrivateInternalRouter.js';
   public function __construct(){
     parent::__construct();
   }
@@ -20,12 +20,12 @@ class CvAdderRouterScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseA
 //[Stablishers]
 //[End Stablishers]
   protected function fixFile(){
-    $basePatern       = 'this\.mGetStResources\(\)\.<slot>\.getRoutes\(\)';
+    $basePatern       = '\.\.\.this\.mGetStResources\(\)\.<slot>\.getRoutes\(\)';
     $camelResource    = Str::camel(Str::plural($this->getResource()));
     return $this->globalFileRegexAdder(
       $this->regexMaker($basePatern,'[^\s,]+'),
       $this->scapedRegexMaker($basePatern,$camelResource),
-      'this.mGetStResources().'.$camelResource.'.getRoutes()'
+      '...this.mGetStResources().'.$camelResource.'.getRoutes()'
     );
   }
   protected function selfRepresentation(){
