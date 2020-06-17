@@ -726,10 +726,12 @@ trait CrudTrait {
       customLog('alias required');
       die('alias required');
     }
+
     $table = $this->getMainTable();
+
     return $this->getModelClass()::withoutGlobalScopes()->from("$table as $alias")
-    ->whereColumn("$alias.id", "$table.id")
-    ->limit(1);
+      ->whereColumn("$alias.id", "$table.id")
+      ->limit(1);
   }
 
   /**
@@ -741,5 +743,11 @@ trait CrudTrait {
   */
   public function defCvSearch(){
     return $this->selfPreBuilder('self')->selectRaw("CONCAT(self.name, '')");
+  }
+
+  public function getModelLang(){
+    $langRelPath = cvCaseFixer('plural|slug',class_basename(get_class($this)));
+
+    return __("crudvel/$langRelPath");
   }
 }

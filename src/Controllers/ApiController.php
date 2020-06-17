@@ -97,6 +97,7 @@ class ApiController extends CustomController{
   public function store()
   {
     $this->setStamps();
+    $this->removeField('updated_by');
 
     if($this->persist()){
       $this->getModelBuilderInstance()->key($this->getModelCollectionInstance()->getKeyValue());
