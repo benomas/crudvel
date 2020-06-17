@@ -77,7 +77,7 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
   }
 
   public function fixToDetach(){
-    $toDetach = cvGetSomeKeysAsList(($this->getFields()[cvCaseFixer('plural|snake',$this->getRelatedResource()).'_detach']??[]));
+    $toDetach = cvGetSomeKeysAsList(($this->getFields()[$this->getDetachField()]??[]));
 
     return $this->setToDetach($toDetach);
   }
@@ -93,7 +93,7 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
   }
 
   public function fixToAttach(){
-    $toAttach = cvGetSomeKeysAsList(($this->getFields()[cvCaseFixer('plural|snake',$this->getRelatedResource()).'_attach']??[]));
+    $toAttach = cvGetSomeKeysAsList(($this->getFields()[$this->getAttachField()]??[]));
 
     return $this->setToAttach($toAttach);
   }
@@ -109,7 +109,7 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
   }
 
   public function fixToSync(){
-    $toSync = cvGetSomeKeysAsList(($this->getFields()[cvCaseFixer('plural|snake',$this->getRelatedResource()).'_sync']??[]));
+    $toSync = cvGetSomeKeysAsList(($this->getFields()[$this->getSyncField()]??[]));
     return $this->setToSync($toSync);
   }
 
@@ -121,5 +121,17 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
     $this->fields = $fields??null;
 
     return $this;
+  }
+
+  public function getDetachField(){
+    return cvCaseFixer('plural|snake',$this->getRelatedResource()).'_detach';
+  }
+
+  public function getAttachField(){
+    return cvCaseFixer('plural|snake',$this->getRelatedResource()).'_attach';
+  }
+
+  public function getSyncField(){
+    return cvCaseFixer('plural|snake',$this->getRelatedResource()).'_sync';
   }
 }
