@@ -34,6 +34,7 @@
             <div class="w-100" >
               <cv-index-resoucer
                 :cv-resourcer="cResource"
+                :cv-file-count="cdRow.cv_has_files"
                 :cv-resourcer-action="cpStaGenAction"
                 :cv-resourcer-key="cpDinGenKeyValue">
               </cv-index-resoucer>
