@@ -56,6 +56,9 @@ class ApiController extends CustomController{
       else
         $this->getModelBuilderInstance()->relatedTo($resource,$key);
 
+      if(!$this->getModelBuilderInstance()->count())
+        return $this->apiSuccessResponse([]);
+
       return $this->actionResponse();
     }catch(\Exception $e) {
       pdd($e->getMessage());
