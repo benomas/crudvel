@@ -15,6 +15,7 @@ class BaseModel extends Model implements CvCrudInterface
   use \Crudvel\Libraries\Helpers\CasesTrait;
   use \Crudvel\Models\Traits\CvBaseScopeTrait;
   use \Crudvel\Models\Traits\CvBaseMethodsTrait;
+  use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
   protected $slugSingularName;
   protected $cvResourceInstance;

@@ -23,12 +23,12 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
     return $this->belongsToMany("App\Models\Permission", "permission_role");
   }
 
-  public function dominedBy(){
-    return $this->belongsToMany("App\Models\Role", 'role_role', 'domined_role_id', 'domineering_role_id');
+  public function domineeringRoles(){
+    return $this->belongsToMany("App\Models\Role as r2", 'domineering_role_domined_role', 'domined_role_id', 'domineering_role_id');
   }
 
-  public function roles(){
-    return $this->belongsToMany("App\Models\Role", 'role_role', 'domineering_role_id', 'domined_role_id');
+  public function dominedRoles(){
+    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domineering_role_id', 'domined_role_id');
   }
 // [End Relationships]
 
@@ -116,7 +116,7 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
     if(!$user)
       return $query->noFilters();
 
-    return $query->ids($user->rolesroles()->get()->pluck("id")->toArray());
+    return $query->ids($user->dominedRoles()->get()->pluck("id")->toArray());
   }
 
   public function scopeRelatedToUser ($query,$userKey) {

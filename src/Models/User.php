@@ -4,8 +4,6 @@ use Carbon\Carbon;
 
 class User extends \Customs\Crudvel\Models\BaseModel{
 
-  use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
-
   protected $fillable = [
     "active",
     "email",
@@ -34,6 +32,18 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     return $this->hasManyDeep('App\Models\Permission', ['role_user', 'App\Models\Role', 'permission_role']);
   }
 
+  public function domineeringRoles () {
+    return $this->hasManyDeep('App\Models\Role', ['role_user', 'App\Models\Role', 'domineering_role_domined_role', 'domineering_role_id', 'domined_role_id']);
+  }
+
+  public function dominedRoles(){
+    return $this->hasManyDeepFromRelations(
+        $this->roles(),
+        (new \App\Models\Role)->setAlias('r2')->dominedRoles()
+    );
+    //return $this->hasManyDeep('App\Models\Role', ['role_user', 'App\Models\Role', 'domineering_role_domined_role', 'domined_role_id', 'domineering_role_id']);
+  }
+/*
   public function rolesroles()
   {
     return \App\Models\Role::whereHas('dominedBy',function($query){
@@ -41,7 +51,7 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     });
     //toBeDeprecated
     return $this->manyToManyToMany('roles','roles',"App\Models\Role");
-  }
+  }*/
 // [End Relationships]
 
 //Non standar Relationships
@@ -162,8 +172,9 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     if(!$user)
       return $query->noFilters();
 
+    return $query->noFilters();
     return $query->hidden()->whereHas('roles',function($query) use($user){
-      $query->keys($user->rolesroles()->get()->pluck("id")->toArray());
+      $query->keys($user->dominedRoles->pluck("id")->toArray());
     });
   }
 
