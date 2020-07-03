@@ -29,37 +29,19 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function permissions(){
-    return $this->hasManyDeep('App\Models\Permission', ['role_user', 'App\Models\Role', 'permission_role']);
+    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->permissions());
   }
 
   public function domineeringRoles () {
-    return $this->hasManyDeep('App\Models\Role', ['role_user', 'App\Models\Role', 'domineering_role_domined_role', 'domineering_role_id', 'domined_role_id']);
+    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->domineeringRoles());
   }
 
   public function dominedRoles(){
-    return $this->hasManyDeepFromRelations(
-        $this->roles(),
-        (new \App\Models\Role)->setAlias('r2')->dominedRoles()
-    );
-    //return $this->hasManyDeep('App\Models\Role', ['role_user', 'App\Models\Role', 'domineering_role_domined_role', 'domined_role_id', 'domineering_role_id']);
+    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->dominedRoles());
   }
-/*
-  public function rolesroles()
-  {
-    return \App\Models\Role::whereHas('dominedBy',function($query){
-      $query->inRoles($this->roles()->get()->pluck('slug'));
-    });
-    //toBeDeprecated
-    return $this->manyToManyToMany('roles','roles',"App\Models\Role");
-  }*/
 // [End Relationships]
 
 //Non standar Relationships
-  //To be deprecated
-  public function rolesPermissions(){
-    return $this->manyToManyToMany('roles',"permissions","App\Models\Permission");
-  }
-
   public function sectionPermissions()
   {
     return $this->permissions()->secctionPermissions();
@@ -199,6 +181,10 @@ class User extends \Customs\Crudvel\Models\BaseModel{
 
   public function scopeAddUserFullNamed($query){
     return $this->selfPreBuilder('u')->selectRaw("CONCAT(u.first_name, ' ',u.last_name) as user_full_name");
+  }
+
+  public function scopeCurrentUser($query){
+    return $query->key(\CvResource::getUserModelCollectionInstance()->id);
   }
 // [End Scopes]
 

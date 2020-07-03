@@ -700,27 +700,6 @@ trait CrudTrait {
     return $this->getModelBuilderInstance()->count();
   }
 
-  public function ownerOld(){
-    if($this->getUserModelCollectionInstance()->isRoot())
-      return true;
-    if($this->getUserModelCollectionInstance()->
-      specialPermissions()->
-      slug($this->getSlugPluralName().".general-owner")->
-      count()
-    ){
-      $this->getModelBuilderInstance()->generalOwner($this->getUserModelCollectionInstance()->id);
-    }else{
-      if($this->getUserModelCollectionInstance()->specialPermissions()->slug($this->getSlugPluralName().".particular-owner")->count())
-        $this->getModelBuilderInstance()->particularOwner($this->getUserModelCollectionInstance()->id);
-    }
-    if(!$this->getCurrentActionKey())
-      return true;
-
-    $this->getModelBuilderInstance()->id($this->getCurrentActionKey());
-
-    return $this->getModelBuilderInstance()->count();
-  }
-
   public function selfPreBuilder($alias=null){
     if(!$alias){
       customLog('alias required');

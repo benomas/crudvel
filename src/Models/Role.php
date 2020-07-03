@@ -1,6 +1,7 @@
 <?php namespace Crudvel\Models;
 
 class Role extends \Customs\Crudvel\Models\BaseModel{
+  use \Staudenmeir\EloquentHasManyDeep\HasTableAlias;
 
   protected $fillable = [
     'slug',
@@ -24,7 +25,7 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function domineeringRoles(){
-    return $this->belongsToMany("App\Models\Role as r2", 'domineering_role_domined_role', 'domined_role_id', 'domineering_role_id');
+    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domined_role_id', 'domineering_role_id');
   }
 
   public function dominedRoles(){
