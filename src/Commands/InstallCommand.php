@@ -37,8 +37,8 @@ class InstallCommand extends Command {
         $this->cloneFileData("Role.php",base_path("vendor/benomas/crudvel/src/templates/role.txt"),base_path("app/Models"));
       }
 
-      if(!count(glob(database_path()."/migrations/*create_role_role_table*.php")))
-        $migrations[]= "create_role_role_table";
+      if(!count(glob(database_path()."/migrations/*create_domineering_role_domined_role_table*.php")))
+        $migrations[]= "create_domineering_role_domined_role_table";
 
       if(!count(glob(database_path()."/migrations/*create_role_user_table*.php")))
         $migrations[]= "create_role_user_table";
@@ -70,7 +70,8 @@ class InstallCommand extends Command {
         $this->publishMigration($baseName);
     }
     catch(\Exception $e){
-      return cvConsoler("\n".cvRedTC('Exception, the proccess fail.'));
+
+      return cvConsoler("\n".cvRedTC('Exception, the proccess fail. '.$e->getMessage()));
     }
 
     $myFile = json_decode(file_get_contents(base_path('').'/composer.json'));
