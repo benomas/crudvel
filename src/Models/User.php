@@ -184,7 +184,10 @@ class User extends \Customs\Crudvel\Models\BaseModel{
   }
 
   public function scopeCurrentUser($query){
-    return $query->key(\CvResource::getUserModelCollectionInstance()->id);
+    if(\CvResource::getUserModelCollectionInstance())
+      return $query->key(\CvResource::getUserModelCollectionInstance()->id);
+
+      return $query;
   }
 // [End Scopes]
 
