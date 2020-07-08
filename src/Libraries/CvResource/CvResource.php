@@ -439,4 +439,8 @@ class CvResource
 
     return $this;
   }
+
+  public function extractPaginateFields(){
+    return $this->setPaginateFields($this->fields['b64Query']['paginate'] ?? null);
+  }
 }

@@ -416,8 +416,15 @@ trait CrudTrait {
   }
 
   public function loadFields(){
-    if($this->getCvResourceInstance() && $this->getCvResourceInstance()->getRequestInstance())
-      return $this->setFields($this->getCvResourceInstance()->getRequestInstance()->all());
+    if($this->getCvResourceInstance() && $this->getCvResourceInstance()->getRequestInstance()){
+      $this->setFields($this->getCvResourceInstance()->getRequestInstance()->all());
+      $b64Query = $this->getFields()['b64Query'] ?? null;
+      if($b64Query)
+        $this->addField('b64Query',json_decode(base64_decode($b64Query),true))->extractPaginateFields();
+
+      return $this;
+    }
+
     return $this;
   }
 
@@ -473,6 +480,10 @@ trait CrudTrait {
     if($this->getCvResourceInstance() && $this->getCvResourceInstance()->getRequestInstance())
       $this->getCvResourceInstance()->clearFields();
     return $this;
+  }
+
+  public function extractPaginateFields(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
   public function apiAlreadyExist($data=null){
