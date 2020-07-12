@@ -317,5 +317,9 @@ trait CvBaseMethodsTrait
   public function getPluralLang(){
     return $this->getModelLang()['rows_label'] ?? cvCaseFixer('plural|slug',class_basename(get_class($this)));
   }
+
+  public function textIdentifierConcat($alias){
+    return "IF($alias.text_identifier IS NOT NULL,CONCAT('(',$alias.text_identifier,')'),'')";
+  }
 // [End Others]
 }
