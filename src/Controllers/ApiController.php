@@ -214,6 +214,10 @@ class ApiController extends CustomController{
   public static function loadRelationator(){
     return new \Crudvel\Libraries\CvResourceInteractions\CvRelationator;
   }
+
+  public static function loadSimpleRelationator(){
+    return new \Crudvel\Libraries\CvResourceInteractions\CvSimpleRelationator;
+  }
 //to be deprecated
 /*
 // atachers

@@ -64,7 +64,6 @@ class BaseMigration extends Migration
 
   public function catalog($blueprintTable){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
-    $blueprintTable->engine = 'InnoDB';
     $blueprintTable->bigIncrements('id');
     $blueprintTable->string('name');
     $blueprintTable->text('description')->nullable();
@@ -77,9 +76,16 @@ class BaseMigration extends Migration
     $blueprintTable->boolean('active')->default(true);
     $blueprintTable->timestamps();
     $this->userStamps($blueprintTable);
-    $blueprintTable->engine = 'InnoDB';
     $blueprintTable->index("active");
   }
+
+  public function defaultRelationColumns($blueprintTable){
+    $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
+    $blueprintTable->timestamps();
+    $this->userStamps($blueprintTable);
+    $blueprintTable->index("active");
+  }
+
 
   public function down()
   {

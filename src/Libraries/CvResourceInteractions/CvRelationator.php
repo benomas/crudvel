@@ -44,7 +44,7 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
   }
 
   public function cvSyncRelationateResource(){
-    return $this->CvSync();
+    return $this->cvSync();
   }
 
   public function CvDetacher(){
@@ -60,7 +60,7 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
     return $this;
   }
 
-  public function CvSync(){
+  public function cvSync(){
     $this->getRelatedResourceRelation()->sync($this->getToSync());
 
     return $this;
