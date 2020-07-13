@@ -7,6 +7,8 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
   protected $fields;
   protected $toSync;
   protected $pivotColumns;
+  protected $syncField;
+
   protected $stamps = [
     'created_at',
     'updated_at',
@@ -28,6 +30,9 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
 
     if(!$this->getRelatedResource())
       return null;
+
+    if(!$this->getSyncField())
+      $this->fixSyncField();
 
     if(!$this->getToSync())
       $this->fixToSync();
@@ -88,10 +93,6 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
     return $this;
   }
 
-  public function getSyncField(){
-    return cvCaseFixer('plural|snake',$this->getRelatedResource());
-  }
-
   public function getPivotColumns(){
     return $this->pivotColumns??null;
   }
@@ -135,5 +136,19 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
           $toSync[$position][$stamp] = $value;
 
     return $toSync;
+  }
+
+  public function getSyncField(){
+    return $this->syncField??null;
+  }
+
+  public function setSyncField($syncField=null){
+    $this->syncField = $syncField??null;
+
+    return $this;
+  }
+
+  public function fixSyncField(){
+    return $this->setSyncField(cvCaseFixer('plural|snake',$this->getRelatedResource()));
   }
 }
