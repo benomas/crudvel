@@ -63,16 +63,17 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
   }
 
   public function fixToSync(){
-    //$toSync                  = cvGetSomeKeysAsList($this->getData());
-    $toSync                  = cvGetSomeKeys($this->getData(),'id',...array_keys($this->getPivotColumns()));
-    pdd($toSync);
-    $toSyncWithPivoteColumns = [];
+    if($this->getPivotColumns()){
+      $toSync = cvGetSomeKeys($this->getData(),'id',...array_keys($this->getPivotColumns()));
 
-    if($this->getPivotColumns() && count($toSync)){
-      $toSyncWithPivoteColumns = $this->fixPivotColumns($toSync);
+      if(!$toSync)
+        return $this->setToSync($toSync);
 
-      return $this->setToSync($toSyncWithPivoteColumns);
+      $toSync = $this->fixPivotColumns($toSync);
+
+      return $this->setToSync($toSync);
     }
+    $toSync = cvGetSomeKeysAsList($this->getData());
 
     return $this->setToSync($toSync);
   }
@@ -128,11 +129,11 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
   }
 
   public function fixPivotColumns($toSync){
-    pdd($toSync);
-    foreach($this->getPivotColumns() as $pivotColumn){
+    foreach($this->getFixedStamps() as $stamp=>$value)
+      foreach($toSync AS $position=>$rowValue)
+        if(empty($toSync[$position][$stamp]))
+          $toSync[$position][$stamp] = $value;
 
-    }
-
-    return array_merge($this->getFixedStamps());
+    return $toSync;
   }
 }

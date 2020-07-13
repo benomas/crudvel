@@ -81,9 +81,9 @@ class BaseMigration extends Migration
 
   public function defaultRelationColumns($blueprintTable){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
-    $blueprintTable->timestamps();
-    $this->userStamps($blueprintTable);
-    $blueprintTable->index("active");
+    $blueprintTable->timestamp('created_at')->nullable();
+    $blueprintTable->bigInteger('created_by')->unsigned()->nullable();
+    $blueprintTable->index("created_by");
   }
 
 
