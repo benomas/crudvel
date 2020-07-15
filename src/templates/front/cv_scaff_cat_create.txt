@@ -17,6 +17,7 @@
       <div slot="cv-content-slot">
         <div class="row w-100">
           <cv-<##[plural|slug](resource)##>-skeleton
+            v-if="cActionReady"
             v-bind="mCustomBindins('cv-<##[plural|slug](resource)##>-skeleton')"
             v-on="mCustomOns('cv-<##[plural|slug](resource)##>-skeleton')"
             :cv-segment="'*'"
