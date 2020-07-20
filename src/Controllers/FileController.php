@@ -299,11 +299,12 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
   }
 
   protected function paths(){
-    //$fileName  = cvSlugCase($this->getModelCollectionInstance()->catFile()->first()->name)."-{$this->getModelCollectionInstance()->id}.{$this->getRequestInstance()->{$fileInput}->extension()}";
-    $filePath   = "uploads/{$this->getModelCollectionInstance()->catFile->resource}/{$this->getModelCollectionInstance()->resource_id}";
-    $fileInput  = $this->getModelCollectionInstance()->catFile->resource;
-    $uuid       = (string) \Illuminate\Support\Str::uuid();
-    $fileName  = "{$this->getModelCollectionInstance()->mixed_cv_search}-{$uuid}.{$this->getRequestInstance()->{$fileInput}->extension()}";
+    $filePath            = "uploads/{$this->getModelCollectionInstance()->catFile->resource}/{$this->getModelCollectionInstance()->resource_id}";
+    $fileInput           = $this->getModelCollectionInstance()->catFile->resource;
+    $uuid                = (string) \Illuminate\Support\Str::uuid();
+    $slugedMixedCvSearch = cvSlugCase($this->getModelCollectionInstance()->mixed_cv_search);
+    $fileName  = "{$slugedMixedCvSearch}-{$uuid}.{$this->getRequestInstance()->{$fileInput}->extension()}";
+
     return [
       $filePath,
       $fileInput,

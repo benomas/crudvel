@@ -224,7 +224,7 @@ class CvResource
     $this->getRootInstance()->beforeFlowControl($this->getCurrentAction());
 
     if(method_exists($this->getRootInstance(),$this->getCurrentAction().'BeforeFlowControl')){
-      $this->getRootInstance()->{$this->getCurrentAction().'BeforeFlowControl'}('asdasd');
+      $this->getRootInstance()->{$this->getCurrentAction().'BeforeFlowControl'}();
     }
 
     if(!$this->getSkipModelValidation() && !$this->getModelBuilderInstance())

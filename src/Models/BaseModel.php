@@ -25,7 +25,8 @@ class BaseModel extends Model implements CvCrudInterface
   protected $cacheBoots        = [];
   protected $modelMetaData     = null;
   protected $cvSearches        = [];
-  protected $appends           = ['cv_has_files'];
+  protected $appends           = ['cv_has_files','cv_has_code_hook'];
+  protected $codeHook          = false;
 
   public function __construct($attributes = array())
   {
@@ -45,6 +46,10 @@ class BaseModel extends Model implements CvCrudInterface
     $resource = cvCaseFixer('slug|plural',class_basename($this));
 
     return \App\Models\CatFile::resource($resource)->count();
+  }
+
+  public function getCvHasCodeHookAttribute(){
+    return $this->codeHook;
   }
 // [End Transformers]
 

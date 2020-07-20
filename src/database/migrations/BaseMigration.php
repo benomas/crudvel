@@ -67,6 +67,7 @@ class BaseMigration extends Migration
     $blueprintTable->bigIncrements('id');
     $blueprintTable->string('name');
     $blueprintTable->text('description')->nullable();
+    $blueprintTable->string('code_hook')->nullable();
     $this->defaultColumns($blueprintTable);
     $blueprintTable->index("name");
   }

@@ -1,28 +1,11 @@
 <?php
 
-return [
-  'fields' => [
-    'active'      => 'Activo',
-    'created_at'  => 'Creado en',
-    'created_by'  => 'Creado por',
-    'description' => 'Descripción',
-    'id'          => 'Identificador',
-		'cv_search'   => 'Representación',
-    'name'        => 'Nombre',
-    'updated_at'  => 'Actualizado en',
-    'updated_by'  => 'Actualizado por',
-  ],
-  'foreign_fields'=>[
-    'active'      => '<##[singular|title](resource)##> activo',
-    'created_at'  => '<##[singular|title](resource)##> creado en',
-    'created_by'  => '<##[singular|title](resource)##> creada por',
-    'description' => 'Descripción de <##[singular|lower](resource)##>',
-    'id'          => 'Identificador de <##[singular|lower](resource)##>',
-    'name'        => 'Nombre de <##[singular|lower](resource)##>',
-    'updated_at'  => '<##[singular|title](resource)##> actualizado en',
-    'updated_by'  => '<##[singular|title](resource)##> actualizada por',
-    ],
+include 'templates/cv-catalog.php';
+
+$resourceLangs = [
 	'row_label'  => '<##[singular|title](resource)##>',
 	'rows_label' => '<##[plural|title](resource)##>',
-	'actions'    => [],
+	'fields'     => array_merge($cvCatalog,[/* Add here local field langs*/]),
 ];
+
+return $resourceLangs;

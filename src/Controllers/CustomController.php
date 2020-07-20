@@ -348,6 +348,13 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
         return $callBack();
       }
 
+      //code_hook protection
+      if($this->getUserModelCollectionInstance()->isRoot() &&  $this->getModelCollectionInstance()->cvHasCodeHook()){
+        $this->getModelCollectionInstance()->code_hook = $fields['code_hook'] ?? $this->getModelCollectionInstance()->code_hook ?? null;
+        if(!$this->getModelCollectionInstance()->save())
+          return false;
+      }
+
       return true;
     });
     $this->transactionComplete();
