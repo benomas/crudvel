@@ -28,6 +28,7 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
 
   protected $appends=[
     'camel_resource',
+    'cv_has_code_hook',
   ];
 
 // [Relationships]

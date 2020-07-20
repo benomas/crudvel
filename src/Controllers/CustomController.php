@@ -329,6 +329,13 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     $this->testTransaction(function() use($callBack, $passLastSave){
       $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
       $fields = $this->getFields();
+
+      //code hook protection
+      if(!$this->getUserModelCollectionInstance()->isRoot()){
+        if(($fields['code_hook']??null))
+          unset($fields['code_hook']);
+      }
+
       $this->getModelCollectionInstance()->fill($fields);
 
       if(!empty($fields['created_by']))
@@ -346,13 +353,6 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       if($callBack && is_callable($callBack)){
         if($passLastSave) return $callBack($this->getModelCollectionInstance());
         return $callBack();
-      }
-
-      //code_hook protection
-      if($this->getUserModelCollectionInstance()->isRoot() &&  $this->getModelCollectionInstance()->cvHasCodeHook()){
-        $this->getModelCollectionInstance()->code_hook = $fields['code_hook'] ?? $this->getModelCollectionInstance()->code_hook ?? null;
-        if(!$this->getModelCollectionInstance()->save())
-          return false;
       }
 
       return true;
