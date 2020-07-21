@@ -1,17 +1,14 @@
+import cvCatalog from './templates/cv-catalog'
+
 export default {
   rowsLabel : '<##[plural|ucfirst|human](resource)##>',
   rowLabel  : '<##[singular|ucfirst|human](resource)##>',
 
-  fields    : {
-    active      : 'Active',
-    created_at  : 'Created at',
-    created_by  : 'Created by',
-    description : 'Description',
-    id          : 'Id',
-    name        : 'Name',
-    cv_search   : 'Representación',
-    updated_at  : 'Updated at',
-    updated_by  : 'Updated by'
+  fields: {
+    ...cvCatalog,
+    ...{
+      id: 'ID'
+    }
   },
 
   actions: {
@@ -21,6 +18,7 @@ export default {
 
     create: {
       label : 'Create <##[singular|lower|human](resource)##>',
+
       set   : {
         success : '<##[singular|ucfirst|human](resource)##> created',
         error   : 'Error creating <##[singular|lower|human](resource)##>',
@@ -32,6 +30,7 @@ export default {
       label     : '<##[singular|ucfirst|human](resource)##>',
       backLabel : 'Go back',
       nextLabel : null,
+
       set       : {
         success : null,
         error   : 'Error trying to access:<##[singular|lower|human](resource)##>',
@@ -41,6 +40,7 @@ export default {
 
     edit: {
       label : 'Edit <##[singular|lower|human](resource)##>',
+
       set   : {
         success : '<##[singular|ucfirst|human](resource)##> Edited Ok',
         error   : 'Error traying to edit <##[singular|lower|human](resource)##>',
@@ -51,6 +51,7 @@ export default {
     delete: {
       label     : 'Delete <##[singular|lower|human](resource)##>',
       nextLabel : 'Continue',
+
       set       : {
         success : '<##[singular|ucfirst|human](resource)##> deleted',
         error   : 'Error trying to delete <##[singular|lower|human](resource)##>',
@@ -60,6 +61,7 @@ export default {
 
     activate: {
       label : 'Activate <##[singular|lower|human](resource)##>',
+
       set   : {
         success : '<##[singular|ucfirst|human](resource)##> Activated ok',
         error   : 'Error traying to activate <##[singular|lower|human](resource)##>',
@@ -69,6 +71,7 @@ export default {
 
     deactivate: {
       label : 'Desactivate <##[singular|lower|human](resource)##>',
+
       set   : {
         success : '<##[singular|ucfirst|human](resource)##> Desactivated',
         error   : 'Error traying to desactivate th <##[singular|lower|human](resource)##>',
@@ -80,6 +83,7 @@ export default {
       label     : 'Export',
       backLabel : null,
       nextLabel : 'Export',
+
       set       : {
         success : 'file geretaed',
         error   : 'Error when try to make file',
