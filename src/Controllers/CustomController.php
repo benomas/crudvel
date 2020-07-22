@@ -331,7 +331,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       $fields = $this->getFields();
 
       //code hook protection
-      if(!$this->getUserModelCollectionInstance()->isRoot()){
+      if(!$this->specialAccess('code-hooks')){
         if(($fields['code_hook']??null))
           unset($fields['code_hook']);
       }

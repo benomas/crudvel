@@ -5,8 +5,7 @@ namespace Crudvel\Models\Traits;
 trait CvBaseScopeTrait
 {
 // [Scopes]
-  public function scopeInStatus($query, $status, $preFixed = true)
-  {
+  public function scopeInStatus($query, $status, $preFixed = true){
     if (is_array($status))
       $query->whereIn($this->preFixed('status', $preFixed), $status);
     else
@@ -15,8 +14,7 @@ trait CvBaseScopeTrait
     return $query;
   }
 
-  public function scopeNotInStatus($query, $status, $preFixed = true)
-  {
+  public function scopeNotInStatus($query, $status, $preFixed = true){
     if (is_array($status))
       $query->whereNotIn($this->preFixed('status', $preFixed), $status);
     else
@@ -25,151 +23,130 @@ trait CvBaseScopeTrait
     return $query;
   }
 
-  public function scopeStatus($query, $status, $preFixed = true)
-  {
+  public function scopeStatus($query, $status, $preFixed = true){
     return $query->where($this->preFixed('status', $preFixed), $status);
   }
 
-  public function scopeActives($query, $preFixed = true)
-  {
+  public function scopeActives($query, $preFixed = true){
     if ($query->getModel()->hasPropertyActive)
       $query->where($this->preFixed('active', $preFixed), 1);
 
     return $query;
   }
 
-  public function scopeNoFilters($query)
-  {
+  public function scopeNoFilters($query){
     return $query->whereRaw("1 = 1");
   }
 
-  public function scopeNullFilter($query, $preFixed = true)
-  {
+  public function scopeNullFilter($query, $preFixed = true){
     return $query->whereNull($this->preFixed($this->getKeyName(), $preFixed));
   }
 
-  public function scopeNotNull($query, $column, $preFixed = true)
-  {
+  public function scopeNotNull($query, $column, $preFixed = true){
     return $query->whereNotNull($this->preFixed($column, $preFixed));
   }
 
-  public function scopeId($query, $key, $preFixed = true)
-  {
+  public function scopeId($query, $key, $preFixed = true){
     return $query->where($this->preFixed($this->getKeyName(), $preFixed), $key);
   }
 
-  public function scopeIds($query, $keys, $preFixed = true)
-  {
+  public function scopeIds($query, $keys, $preFixed = true){
     return $query->whereIn($this->preFixed($this->getKeyName(), $preFixed), $keys);
   }
 
-  public function scopeNoIds($query, $keys, $preFixed = true)
-  {
+  public function scopeNoIds($query, $keys, $preFixed = true){
     return $query->whereNotIn($this->preFixed($this->getKeyName(), $preFixed), $keys);
   }
 
-  public function scopeKey($query, $key, $preFixed = true)
-  {
+  public function scopeKey($query, $key, $preFixed = true){
     return $query->where($this->preFixed($this->getKeyName(), $preFixed), $key);
   }
 
-  public function scopeNoKey($query, $key, $preFixed = true)
-  {
+  public function scopeNoKey($query, $key, $preFixed = true){
     return $query->where($this->preFixed($this->getKeyName(),'<>', $preFixed), $key);
   }
 
-  public function scopeKeyLessThan($query, $key, $preFixed = true)
-  {
+  public function scopeKeyLessThan($query, $key, $preFixed = true){
     return $query->where($this->preFixed($this->getKeyName(), $preFixed), '<', $key);
   }
 
-  public function scopeKeys($query, $keys, $preFixed = true)
-  {
+  public function scopeKeys($query, $keys, $preFixed = true){
     return $query->whereIn($this->preFixed($this->getKeyName(), $preFixed), $keys);
   }
 
-  public function scopeNoKeys($query, $keys, $preFixed = true)
-  {
+  public function scopeNoKeys($query, $keys, $preFixed = true){
     return $query->whereNotIn($this->preFixed($this->getKeyName(), $preFixed), $keys);
   }
 
-  public function scopeUuid($query, $uuid, $preFixed = true)
-  {
+  public function scopeUuid($query, $uuid, $preFixed = true){
     return $query->where($this->preFixed('uuid', $preFixed), $uuid);
   }
 
-  public function scopeUuids($query, $uuids, $preFixed = true)
-  {
+  public function scopeUuids($query, $uuids, $preFixed = true){
     return $query->whereIn($this->preFixed('uuid', $preFixed), $uuids);
   }
 
-  public function scopeNoUuids($query, $uuids, $preFixed = true)
-  {
+  public function scopeNoUuids($query, $uuids, $preFixed = true){
     return $query->whereNotIn($this->preFixed('uuid', $preFixed), $uuids);
   }
 
-  public function scopeUnActives($query, $preFixed = true)
-  {
+  public function scopeUnActives($query, $preFixed = true){
     return $query->where($this->preFixed('status', $preFixed), 0);
   }
 
-  public function scopeName($query, $name, $preFixed = true)
-  {
+  public function scopeName($query, $name, $preFixed = true){
     return $query->where($this->preFixed('name', $preFixed), $name);
   }
 
-  public function scopeNombre($query, $nombre, $preFixed = true)
-  {
+  public function scopeNombre($query, $nombre, $preFixed = true){
     return $query->where($this->preFixed('nombre', $preFixed), $nombre);
   }
 
-  public function scopeValue($query, $value, $preFixed = true)
-  {
+  public function scopeValue($query, $value, $preFixed = true){
     return $query->where($this->preFixed('value', $preFixed), $value);
   }
 
-  public function scopeSlugs($query, $slug, $preFixed = true)
-  {
-    return $query->whereIn($this->preFixed('slug', $preFixed), $slug);
+  public function scopeSlugs($query, $slugs, $preFixed = true){
+    return $query->whereIn($this->preFixed('slug', $preFixed), $slugs);
   }
 
-  public function scopeSlug($query, $slug, $preFixed = true)
-  {
+  public function scopeSlug($query, $slug, $preFixed = true){
     return $query->where($this->preFixed('slug', $preFixed), $slug);
   }
 
-  public function scopeOfLevel($query, $level_id, $preFixed = true)
-  {
+  public function scopeCodeHooks($query, $codeHooks, $preFixed = true){
+    return $query->whereIn($this->preFixed('code_hook', $preFixed), $codeHooks);
+  }
+
+  public function scopeCodeHook($query, $codeHook, $preFixed = true){
+    return $query->where($this->preFixed('code_hook', $preFixed), $codeHook);
+  }
+
+  public function scopeOfLevel($query, $level_id, $preFixed = true){
     return $query->where($this->preFixed('level_id', $preFixed), $level_id);
   }
 
-  public function scopeOfParent($query, $parent_id, $preFixed = true)
-  {
+  public function scopeOfParent($query, $parent_id, $preFixed = true){
     return $query->where($this->preFixed('parent_id', $preFixed), $parent_id);
   }
 
-  public function scopeOfSublevel($query, $sublevel_id, $preFixed = true)
-  {
+  public function scopeOfSublevel($query, $sublevel_id, $preFixed = true){
     return $query->where($this->preFixed('sublevel_id', $preFixed), $sublevel_id);
   }
 
-  public function scopeUpdatedBefore($query, $date, $preFixed = true)
-  {
+  public function scopeUpdatedBefore($query, $date, $preFixed = true){
     return $query->where($this->preFixed('updated_at', $preFixed), '>', $date);
   }
 
-  public function scopeUpdatedAfter($query, $date, $preFixed = true)
-  {
+  public function scopeUpdatedAfter($query, $date, $preFixed = true){
     return $query->where($this->preFixed('updated_at', $preFixed), '<', $date);
   }
 
-  public function scopeUpdatedBetween($query, $date, $preFixed = true)
-  {
+  public function scopeUpdatedBetween($query, $date, $preFixed = true){
     return $query->updatedBefore($date)->updatedAfter($date);
   }
 
-  public function scopeDistinctCount($query, $column, $preFixed = true)
-  {
+  public function scopeDistinctCount($query, $column, $preFixed = true){
     if (!in_array($column, $this->getTableColumns()))
       return 0;
 
@@ -182,47 +159,39 @@ trait CvBaseScopeTrait
    *
    *
    * */
-  public function scopeGroupByKey($query, $preFixed = true)
-  {
+  public function scopeGroupByKey($query, $preFixed = true){
     return $query->groupBy($this->preFixed($this->getKeyName(), $preFixed));
   }
 
-  public function scopeOrderByKey($query)
-  {
+  public function scopeOrderByKey($query){
     return $query->orderBy($this->getTable() . '.' . $this->getKeyName());
   }
 
-  public function scopeSelectKey($query)
-  {
+  public function scopeSelectKey($query){
     return $query->select($this->getTable() . '.' . $this->getKeyName());
   }
 
-  public function scopeSelectMinKey($query)
-  {
+  public function scopeSelectMinKey($query){
     return $query->min($this->getTable() . '.' . $this->getKeyName());
   }
 
-  public function scopeDuplicity($query)
-  {
+  public function scopeDuplicity($query){
     return $query->name($this->name);
   }
 
-  public function scopeInvoker($query, $related)
-  {
+  public function scopeInvoker($query, $related){
     $foreintColumn = \Str::snake(\Str::singular(($table = $this->getTable()))) . '_id';
 
     return $query->whereColumn($related::cvIam()->getTable().".$foreintColumn","$table.id")->limit(1);
   }
 
-  public function scopeInvokePosfix($query, $related, $posfix)
-  {
+  public function scopeInvokePosfix($query, $related, $posfix){
     $table = $this->getTable();
 
     return $query->invoker($related)->select("$table.$posfix as $table" . '_' . $posfix);
   }
 
-  public function scopeInvokeSearch($query, $related)
-  {
+  public function scopeInvokeSearch($query, $related){
     return $query->invoker($related)->select("{$this->getTable()}.name as cv_search");
   }
 
@@ -264,13 +233,17 @@ trait CvBaseScopeTrait
       ->limit(1)]);
   }
 
-  public function scopeGeneralOwner($query, $user=null)
-  {
+  public function scopeDefParticularOwner($query,$user,$relation){
+    return $query->whereHas($relation,function($query) use($user){
+      $query->particularOwner($user);
+    });
+  }
+
+  public function scopeGeneralOwner($query, $user=null){
     return $query;
   }
 
-  public function scopeParticularOwner($query, $user=null)
-  {
+  public function scopeParticularOwner($query, $user=null){
     return $query->key($user->id);
   }
 

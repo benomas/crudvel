@@ -73,11 +73,10 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
       return $query->noFilters();
 
     $validResources = [];
-
     foreach(self::groupBy('resource')->get() as $resource){
       if($user->permissions()->whereHas('catPermissionType',function($query){
         $query->specialType();
-      })->slug("$resource->resource.index-files")->count()){
+      })->slugs(["$resource->resource.index-files","$resource->resource.show-files","$resource->resource.update-files"])->count()){
         $validResources[] = $resource->resource;
       }
     }

@@ -74,9 +74,11 @@ class File extends \Customs\Crudvel\Models\BaseModel{
     if(!$user)
       return $query->noFilters();
 
+    return $query->defParticularOwner($user,'resourcer');/*
+
     return $query->whereHas('catFile',function($query){
       $query->cvOwner();
-    });
+    });*/
   }
 
   public function scopeAditionalParticularOwner($query, $userId=null){
