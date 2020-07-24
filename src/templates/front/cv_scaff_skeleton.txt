@@ -25,6 +25,12 @@
         :min-rows="7"
       />
     </div>
+
+    <div class="col-xs-12 q-pa-sm" v-cv-can-access="'special:code-hooks'">
+      <q-input
+        v-bind="mInputBinding('code_hook')"
+        v-on="mInputOns('code_hook')"/>
+    </div>
   </div>
 </template>
 <script>

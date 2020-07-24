@@ -9,7 +9,7 @@ class CvCreatorCatTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back
 {
   use \Crudvel\Traits\CvScaffCatTrait;
   protected $relatedTargetPath   = 'database/seeds/test/';
-  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_seeder.txt';
+  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_test_seeder.txt';
   public function __construct(){
     parent::__construct();
   }

@@ -18,6 +18,7 @@ $factory->define(App\Models\<##[singular|studly](resource)##>::class, function (
   return [
     'name'        => $faker->unique()->state,
     'description' => $faker->sentence(6,true),
+		'code_hook'   => $faker->unique()->state,
     'active'      => $faker->boolean(85),
   ];
 });
