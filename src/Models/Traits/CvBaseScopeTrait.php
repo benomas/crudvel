@@ -234,9 +234,15 @@ trait CvBaseScopeTrait
   }
 
   public function scopeDefParticularOwner($query,$user,$relation){
-    return $query->whereHas($relation,function($query) use($user){
-      $query->particularOwner($user);
-    });
+    try{
+      return $query->whereHas($relation,function($query) use($user){
+        $query->particularOwner($user);
+      });
+    }catch(\Exception $e){
+      return $query->whereHasMorph($relation,'*',function($query) use($user){
+        $query->particularOwner($user);
+      });
+    }
   }
 
   public function scopeGeneralOwner($query, $user=null){

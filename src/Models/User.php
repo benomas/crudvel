@@ -154,7 +154,6 @@ class User extends \Customs\Crudvel\Models\BaseModel{
     if(!$user)
       return $query->noFilters();
 
-    return $query->noFilters();
     return $query->hidden()->whereHas('roles',function($query) use($user){
       $query->keys($user->dominedRoles->pluck("id")->toArray());
     });
