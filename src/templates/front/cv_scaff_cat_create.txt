@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md cv-create">
+  <div class="cv-create" :class="{'q-pa-md':cGtxs,'q-pa-xs':cLtsm}">
     <cv-action-container
       v-if="cpStaGenAction"
       v-bind="mCustomBindins('cv-action-container')"
