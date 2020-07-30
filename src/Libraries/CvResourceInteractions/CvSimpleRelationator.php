@@ -43,12 +43,25 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
     return $this;
   }
 
+  public function cvDetacher(){
+    $this->getRelatedResourceRelation()->detach(array_keys($this->getToSync()));
+
+    return $this;
+  }
+
+  public function cvAttacher(){
+    $this->getRelatedResourceRelation()->detach(array_keys($this->getToSync()));
+    $this->getRelatedResourceRelation()->attach(array_keys($this->getToSync()));
+
+    return $this;
+  }
+
   public function getData(){
     return $this->getFields()[$this->getSyncField()]??[];
   }
 
   public function cvSyncRelationateResource(){
-    return $this->cvSync();
+    return $this->CvDetacher()->cvSync();
   }
 
   public function cvSync(){
