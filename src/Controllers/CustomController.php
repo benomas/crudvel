@@ -231,17 +231,20 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @author    Beni (benomas@gmail.com) 2016-12-20
    *
-   * @return  void
+   * @return  object
    */
   protected function transactionComplete($committer=null){
     if( isset($this->committer) &&  $this->committer && $this->committer !== $committer)
-      return false;
+      return $this;
+
     if($this->transStatus==='transaction-in-progress'){
       \DB::commit();
       $this->transStatus='transaction-completed';
     }
     else
       $this->transStatus='transaction-completed-with-error';
+
+    return $this;
   }
 
   /**
@@ -357,9 +360,8 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
       return true;
     });
-    $this->transactionComplete();
 
-    return $this->isTransactionCompleted();
+    return $this->transactionComplete()->isTransactionCompleted();
   }
 
   public function persistWithNoFillables($callBack=null, $noFillables=[], $passLastSave = false){
