@@ -89,6 +89,10 @@ class CatFile extends \Customs\Crudvel\Models\BaseModel{
 
     return $query->selectRaw("CONCAT($alias.name,' - ',$alias.resource_label)");
   }
+
+  public function scopeGroup($query,$group){
+    return $query->where($this->preFixed('group'),$group);
+  }
 // [End Scopes]
 
 // [Others]
