@@ -188,6 +188,8 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   protected function resetTransaction(){
     $this->committer   = null;
     $this->transStatus = null;
+
+    return $this;
   }
 
   /**
@@ -195,19 +197,23 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @author    Beni (benomas@gmail.com) 2016-12-20
    *
-   * @return  void
+   * @return  object
    */
   protected function startTranstaction($committer=null){
     if( isset($this->transStatus) && $this->transStatus)
-      return true;
+      return $this;
+
     if(!isset($this->committer) && !$this->committer){
       if($committer)
         $this->committer = $committer;
     }
     else
-      return true;
+      return $this;
+
     $this->transStatus='transaction-in-progress';
     \DB::beginTransaction();
+
+    return $this;
   }
 
   /**
@@ -220,8 +226,11 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   protected function transactionFail($cBFail=null){
     $this->transStatus='transaction-fail';
     \DB::rollBack();
+
     if($cBFail && is_callable($cBFail))
       $cBFail();
+
+    return $this;
   }
 
   /**
@@ -253,13 +262,13 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @author    Beni (benomas@gmail.com) 2016-12-20
    *
-   * @param    Anonymouse function    callBack    script to be excecuted has the main purpose of the transaction
+   * @param    Anonymous function    callBack    script to be excecuted has the main purpose of the transaction
    *
-   * @param    Anonymouse function    cBFail      script to be excecuted when the transaction fails
+   * @param    Anonymous function    cBFail      script to be excecuted when the transaction fails
    *
-   * @param    Anonymouse function    cBSuccess   script to be excecuted when the transaction success
+   * @param    Anonymous function    cBSuccess   script to be excecuted when the transaction success
    *
-   * @return  void
+   * @return  object
    */
   protected function testTransaction($callback,$errorCallBack=null,$tryCatch=true){
     $errorException=null;
@@ -267,20 +276,22 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       if($tryCatch && !$this->debugg){
         try{
           if(!$callback())
-            $this->transactionFail();
+            return $this->transactionFail();
         }
         catch(\Exception $e){
           $errorException=$e;
-          $this->transactionFail();
+          return $this->transactionFail();
         }
       }
       else{
         if(!$callback())
-          $this->transactionFail();
+          return $this->transactionFail();
       }
       if($this->transStatus==='transaction-fail' && is_callable($errorCallBack) && !$this->debugg)
         $errorCallBack($errorException);
     }
+
+    return $this;
   }
 
   /**
@@ -326,10 +337,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   }
 
   public function persist($callBack=null, $passLastSave = false){
-    $this->resetTransaction();
-    $this->startTranstaction();
-
-    $this->testTransaction(function() use($callBack, $passLastSave){
+    return $this->resetTransaction()->startTranstaction()->testTransaction(function() use($callBack, $passLastSave){
       $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
       $fields = $this->getFields();
 
@@ -359,17 +367,13 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       }
 
       return true;
-    });
-
-    return $this->transactionComplete()->isTransactionCompleted();
+    })->transactionComplete()->isTransactionCompleted();
   }
 
   public function persistWithNoFillables($callBack=null, $noFillables=[], $passLastSave = false){
     if(empty($noFillables)) return false;
-    $this->resetTransaction();
-    $this->startTranstaction();
 
-    $this->testTransaction(function() use($callBack, $passLastSave, $noFillables){
+    return $this->resetTransaction()->startTranstaction()->testTransaction(function() use($callBack, $passLastSave, $noFillables){
       $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
       $fields = $this->getFields();
       $this->getModelCollectionInstance()->fill($fields);
@@ -395,24 +399,25 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       }
 
       return true;
-    });
-    $this->transactionComplete();
-
-    return $this->isTransactionCompleted();
+    })->transactionComplete()->isTransactionCompleted();
   }
 
   public function activate($id)
   {
     $this->clearFields()->addField('id',$id)->addField('active',1)->setStamps()->removeField('created_by')->removeField('created_at');
+
     if($this->persist())
       return $this->actionResponse();
+
     return $this->apiFailResponse();
   }
 
   public function deactivate($id){
     $this->clearFields()->addField('id',$id)->addField('active',0)->setStamps()->removeField('created_by')->removeField('created_at');
+
     if($this->persist())
       return $this->actionResponse();
+
     return $this->apiFailResponse();
   }
 
