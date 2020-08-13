@@ -99,6 +99,12 @@ class File extends \Customs\Crudvel\Models\BaseModel{
 
     return $query->select("$alias.mixed_cv_search");
   }
+
+  public function scopeGroup($query,$group){
+    return $query->whereHas('catFile',function($query) use($group){
+      $query->group($group);
+    });
+  }
 // [End Scopes]
 
 // [Others]
@@ -124,6 +130,24 @@ class File extends \Customs\Crudvel\Models\BaseModel{
     $this->attributes['resource_cv_search'] = $resourceModelInstance->cv_search;
     $this->attributes['mixed_cv_search']    = $catFileInstance->cv_search . ' - '.$resourceModelInstance->cv_search;
     $this->attributes['resource']           = $resourceModel;
+  }
+
+  public static function safeCollection ($filesCollection){
+    if(($filesCollection = $filesCollection??null)){
+      $filesCollection = $filesCollection->map(function($row){
+        $row->catFile->makeHidden(['id','camel_resource','cv_has_code_hook']);
+        return $row;
+      })->makeHidden([
+        'id',
+        'camel_resource',
+        'cv_has_code_hook',
+        'cv_has_files',
+        'cat_file_id',
+        'resource_id',
+      ]);
+    }
+
+    return $filesCollection;
   }
 // [End Others]
 }
