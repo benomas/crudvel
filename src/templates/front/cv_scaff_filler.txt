@@ -1,5 +1,5 @@
 import {sample} from 'lodash'
-export default function () {
+export default async function (store = null) {
   return new Promise((resolve,reject) => {
     resolve({
       name        : sample(['name1','name2','name3','name4','name5']),

@@ -1,8 +1,6 @@
 <?php namespace Crudvel\Validations\Rules;
 
-
-class UniqueCombination extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface
-{
+class UniqueCombination extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
   protected $modelClass;
   protected $fields;
   protected $mainField;

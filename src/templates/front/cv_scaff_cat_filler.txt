@@ -1,6 +1,6 @@
 import  {booleanFiller,stringFiller,textFiller} from 'src/fillers/fillerFactory'
 
-export default function () {
+export default async function (store = null) {
   return new Promise((resolve,reject) => {
     resolve({
       'active'      : booleanFiller(),
