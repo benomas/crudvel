@@ -63,7 +63,7 @@ trait CvBaseScopeTrait
   }
 
   public function scopeNoKey($query, $key, $preFixed = true){
-    return $query->where($this->preFixed($this->getKeyName(),'<>', $preFixed), $key);
+    return $query->where($this->preFixed($this->getKeyName(), $preFixed),'<>', $key);
   }
 
   public function scopeKeyLessThan($query, $key, $preFixed = true){
@@ -303,6 +303,15 @@ trait CvBaseScopeTrait
 
   public function scopeWithUser($query, $userId){
     return $query->where($this->preFixed('user_id'), $userId);
+  }
+
+  public function scopeColumnCombination($query, $columns){
+    foreach($columns as $column=>$value){
+      if($value)
+        $query->where($this->preFixed($column), $value);
+    }
+
+    return $query;
   }
 // [End Scopes]
 }

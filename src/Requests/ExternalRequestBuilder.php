@@ -5,38 +5,9 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
   protected $selfRules       = [];
   protected $ExtraRules      = [];
   protected $childrenRequest = [];
-
+// [Specific Logic]
   public function __construct($rules = []){
     $this->setSelfRules($rules)->setMethod('externalPostStoreRules');
-  }
-
-  public function getSelfRules():array{
-    return $this->selfRules??[];
-  }
-
-  public function setSelfRules(array $selfRules=[]){
-    $this->selfRules = $selfRules??[];
-
-    return $this;
-  }
-
-  public function getExtraRules():array{
-    return $this->ExtraRules??[];
-  }
-
-  public function setExtraRules(array $ExtraRules=[]){
-    $this->ExtraRules = $ExtraRules??[];
-
-    return $this;
-  }
-
-  public function getChildrenRequest(){
-    return $this->childrenRequest??null;
-  }
-
-  public function setChildrenRequest($childrenRequest=null){
-    $this->childrenRequest = $childrenRequest??null;
-    return $this;
   }
 
   public function pushChildRequest($childRequest=null){
@@ -68,6 +39,7 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
   }
 
   public function fixRules(){
+    $this->launchParamLoader();
     $rules = [$this->getExtraRules()];
     foreach($this->getChildrenRequest() as $child){
       $rules[]= $child->fixRules();
@@ -81,4 +53,36 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
 
     return $this->setRules($rules)->getRules();
   }
+// [End Specific Logic]
+// [Getters]
+  public function getSelfRules():array{
+    return $this->selfRules??[];
+  }
+
+  public function getExtraRules():array{
+    return $this->ExtraRules??[];
+  }
+
+  public function getChildrenRequest(){
+    return $this->childrenRequest??null;
+  }
+// [End Getters]
+// [Setters]
+  public function setSelfRules(array $selfRules=[]){
+    $this->selfRules = $selfRules??[];
+
+    return $this;
+  }
+
+  public function setExtraRules(array $ExtraRules=[]){
+    $this->ExtraRules = $ExtraRules??[];
+
+    return $this;
+  }
+
+  public function setChildrenRequest($childrenRequest=null){
+    $this->childrenRequest = $childrenRequest??null;
+    return $this;
+  }
+// [End Setters]
 }
