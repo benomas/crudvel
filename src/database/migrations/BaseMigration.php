@@ -33,6 +33,8 @@ class BaseMigration extends Migration
       });
       Schema::enableForeignKeyConstraints();
     }
+
+    return $this;
   }
 
   public function makeStylesColumns($blueprintTable){
@@ -44,6 +46,7 @@ class BaseMigration extends Migration
     $blueprintTable->string('list_completed_style')->nullable()->default("");
     $blueprintTable->string('list_hover_style')->nullable()->default("");
     */
+    return $this;
   }
 
   public function userStamps($blueprintTable){
@@ -52,6 +55,8 @@ class BaseMigration extends Migration
     $blueprintTable->bigInteger('updated_by')->unsigned()->nullable();
     $blueprintTable->index("created_by");
     $blueprintTable->index("updated_by");
+
+    return $this;
   }
 
   public function userStampsDown($blueprintTable){
@@ -60,6 +65,8 @@ class BaseMigration extends Migration
     $blueprintTable->dropIndex('updated_by');
     $blueprintTable->dropColumn('created_by');
     $blueprintTable->dropColumn('updated_by');
+
+    return $this;
   }
 
   public function catalog($blueprintTable){
@@ -70,6 +77,8 @@ class BaseMigration extends Migration
     $blueprintTable->string('code_hook',100)->nullable();
     $this->defaultColumns($blueprintTable);
     $blueprintTable->index("name");
+
+    return $this;
   }
 
   public function defaultColumns($blueprintTable){
@@ -78,6 +87,8 @@ class BaseMigration extends Migration
     $blueprintTable->timestamps();
     $this->userStamps($blueprintTable);
     $blueprintTable->index("active");
+
+    return $this;
   }
 
   public function defaultRelationColumns($blueprintTable){
@@ -85,6 +96,8 @@ class BaseMigration extends Migration
     $blueprintTable->timestamp('created_at')->nullable();
     $blueprintTable->bigInteger('created_by')->unsigned()->nullable();
     $blueprintTable->index("created_by");
+
+    return $this;
   }
 
 
@@ -95,6 +108,8 @@ class BaseMigration extends Migration
       Schema::drop($this->getSchemaTable());
       Schema::enableForeignKeyConstraints();
     }
+
+    return $this;
   }
 
   public function change($callBack){
@@ -105,6 +120,8 @@ class BaseMigration extends Migration
       $callBack($blueprintTable);
       Schema::enableForeignKeyConstraints();
     });
+
+    return $this;
   }
 
   public function getTable(){
@@ -118,6 +135,7 @@ class BaseMigration extends Migration
   public function getSchemaTable(){
     if(empty($this->schema))
       return $this->mainTable;
+
     return $this->schema.'.'.$this->mainTable;
   }
 
@@ -136,6 +154,8 @@ class BaseMigration extends Migration
     catch(\Exception $e){
       customLog("error when try to create ".$this->mainTable." view");
     }
+
+    return $this;
   }
 
   public function sqlStatementDown($driver=null){
@@ -153,22 +173,30 @@ class BaseMigration extends Migration
     catch(\Exception $e){
       customLog("error when try to drop ".$this->mainTable." view");
     }
+
+    return $this;
   }
 
   public function makeForeing($prefix,$foreingTable,$columnKey='id',$blueprintTable=null){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
+
     if(!config('cv.enable_foreings'))
-      return ;
-    $blueprintTable->foreign($prefix.'_'.$columnKey)->references($columnKey)
-    ->on($foreingTable)->onUpdate('cascade')->onDelete('cascade');
+      return $this;
+
+    $blueprintTable->foreign($prefix.'_'.$columnKey)->references($columnKey)->on($foreingTable)->onUpdate('cascade')->onDelete('cascade');
+
+    return $this;
   }
 
   public function makeSafeForeing($prefix,$foreingTable,$columnKey='id',$blueprintTable=null){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
+
     if(!config('cv.enable_foreings'))
-      return ;
-    $blueprintTable->foreign($prefix.'_'.$columnKey)->references($columnKey)
-    ->on($foreingTable);
+      return $this;
+
+    $blueprintTable->foreign($prefix.'_'.$columnKey)->references($columnKey)->on($foreingTable);
+
+    return $this;
   }
 
   public function setBlueprintTable($blueprintTable=null){
@@ -182,12 +210,14 @@ class BaseMigration extends Migration
   public function getSetBlueprintTable($blueprintTable=null){
     if($blueprintTable)
       $this->blueprintTable = $blueprintTable;
+
     return $this->blueprintTable;
   }
 
   public function automaticStandarForeings(){
     $this->autoForeingModels = $this->autoForeingModels ?? [];
     Schema::disableForeignKeyConstraints();
+
     foreach($this->autoForeingModels as $autoForeingModel=>$foreingsConfig){
       $table = $autoForeingModel::cvIam()->getTable();
       foreach($foreingsConfig AS $foreingColumn=>$configForeing){
@@ -211,5 +241,7 @@ class BaseMigration extends Migration
       }
     }
     Schema::enableForeignKeyConstraints();
+
+    return $this;
   }
 }
