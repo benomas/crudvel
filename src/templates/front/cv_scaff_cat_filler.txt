@@ -1,11 +1,7 @@
-import  {booleanFiller,stringFiller,textFiller} from 'src/fillers/fillerFactory'
+import catalog  from 'src/fillers/catalog'
 
-export default async function (store = null) {
-  return new Promise((resolve,reject) => {
-    resolve({
-      'active'      : booleanFiller(),
-      'description' : textFiller(),
-      'name'        : stringFiller()
-    })
+export default function (store = null) {
+  return new Promise(async (resolve,reject) => {
+    resolve(await catalog())
   })
 }

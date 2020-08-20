@@ -1,10 +1,7 @@
-import {sample} from 'lodash'
-export default async function (store = null) {
-  return new Promise((resolve,reject) => {
-    resolve({
-      name        : sample(['name1','name2','name3','name4','name5']),
-      active      : sample([0,1]),
-      description : sample(['description1','description2','description3','description4','description5'])
-    })
+import catalog  from 'src/fillers/catalog'
+
+export default function (store = null) {
+  return new Promise(async (resolve,reject) => {
+    resolve(await catalog())
   })
 }
