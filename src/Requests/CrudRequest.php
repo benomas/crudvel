@@ -147,7 +147,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
       $segments = explode('.', $index);
       if (count($segments) === 1){
         $attribute = $segments[0];
-        $attributesLangs[$attribute] = $currentLangs[$localSegment][$attribute] ?? '';
+        $attributesLangs[$attribute] = $currentLangs[$localSegment][$attribute] ?? $attribute;
         continue;
       }
       if (count($segments) > 1){
@@ -170,7 +170,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
     $segment = $segment ?? $this->currentDepth;
 
-    $this->fixedAttributes[$segment.$field]  = __("crudvel/".$fixedLangSegment.".fields.$field");
+    $this->fixedAttributes[$segment.$field]  = __("crudvel/".$fixedLangSegment.".fields.$field") ?? $field;
   }
 
   public function simpleAttributesTranslator($fields){
