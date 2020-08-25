@@ -10,14 +10,14 @@ class <##[singular|studly](resource)##>Request extends \Customs\Crudvel\Requests
     $this->rules = self::externalPostStoreRules()->fixRules();
   }
 
-  public static function externalPostStoreRules(){
+  public static function externalPostStoreRules($fields=null,$request=null){
     return self::externalize([
       "name"   => "required|unique:<##[plural|snake](resource)##>,name",
       "active" => "boolean",
     ]);
   }
 
-  public static function externalPutUpdateRules(){
+  public static function externalPutUpdateRules($fields=null,$request=null){
     return self::externalize(self::externalPostStoreRules()->fixRules())->setExtraRules([
       'name' => "required|unique:<##[plural|snake](resource)##>,name,@<##[singular|camel](resource)##>Key@",
     ])->setMethod(__FUNCTION__);
