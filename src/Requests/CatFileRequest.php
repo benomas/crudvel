@@ -23,7 +23,7 @@ class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
   // [End Authorization]
 
   // [Rules]
-    public static function externalPostStoreRules(){
+    public static function externalPostStoreRules($fields=null,$request=null){
       return static::externalize([
         "active"      => "boolean",
         "description" => "",
@@ -38,7 +38,7 @@ class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
       ]);
     }
 
-    public static function externalPutUpdateRules(){
+    public static function externalPutUpdateRules($fields=null,$request=null){
       return static::externalize(static::externalPostStoreRules()->fixRules())->setExtraRules([
         'name' => 'required',
         'slug' => 'required|unique:cat_files,slug,@catFileKey@',

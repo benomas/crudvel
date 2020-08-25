@@ -330,11 +330,11 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     return new \Crudvel\Requests\ExternalRequestBuilder($rules);
   }
 /*
-  public static function externalPostStoreRules(){
+  public static function externalPostStoreRules($fields=null,$request=null){
     return [];
   }
 
-  public static function externalPutUpdateRules(){
+  public static function externalPutUpdateRules($fields=null,$request=null){
     return [];
   }
   */

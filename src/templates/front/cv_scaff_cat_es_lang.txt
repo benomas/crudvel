@@ -5,10 +5,7 @@ export default {
   rowLabel  : '<##[singular|ucfirst|human](resource)##>',
 
   fields: {
-    ...cvCatalog,
-    ...{
-      id: 'ID'
-    }
+    ...cvCatalog
   },
 
   actions: {
