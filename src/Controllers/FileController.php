@@ -303,7 +303,8 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     $fileInput           = $this->getModelCollectionInstance()->catFile->resource;
     $uuid                = (string) \Illuminate\Support\Str::uuid();
     $slugedMixedCvSearch = cvSlugCase($this->getModelCollectionInstance()->mixed_cv_search);
-    $fileName  = "{$slugedMixedCvSearch}-{$uuid}.{$this->getRequestInstance()->{$fileInput}->extension()}";
+    //$fileName  = "{$slugedMixedCvSearch}-{$uuid}.{$this->getRequestInstance()->{$fileInput}->extension()}";
+    $fileName  = "{$uuid}.{$this->getRequestInstance()->{$fileInput}->extension()}";
 
     return [
       $filePath,
