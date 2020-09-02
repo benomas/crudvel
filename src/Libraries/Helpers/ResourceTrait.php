@@ -9,8 +9,14 @@ trait ResourceTrait
     $actions = [];
     if($resource && ($controller = $this->cvControllers()[$this->cvCaseFixer('plural|slug',$resource)]??null)){
       $controllerActions = $this->getActions()[$this->cvCaseFixer('plural|slug',$resource)] ?? null;
-      if (!$controllerActions)
-        return (new $controller)->getActions();
+      if (!$controllerActions){
+        $newController = (new $controller);
+
+        if(!method_exists($newController,'getActions'))
+          return [];
+
+        return $newController->getActions();
+      }
       return $controllerActions;
     }
 
