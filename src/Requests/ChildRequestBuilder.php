@@ -8,7 +8,7 @@ class ChildRequestBuilder{
   protected $class        = '';
   protected $path         = '';
   protected $rules        = [];
-  protected $method       = null;
+  protected $method       = 'externalPostStoreRules';
   protected $params       = [];
   protected $paramLoader  = null;
 // [Specific Logic]

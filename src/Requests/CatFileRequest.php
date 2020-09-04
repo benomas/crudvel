@@ -46,7 +46,7 @@ class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
     }
 
     public function putUpdate(){
-      $this->rules = static::externalPutUpdateRules()->setParam('catFileKey',$this->getCurrentActionKey())->fixRules();
+      $this->rules = static::externalPutUpdateRules($this->getFields(),$this)->setParam('catFileKey',$this->getCurrentActionKey())->fixRules();
     }
   // [End Rules]
 }

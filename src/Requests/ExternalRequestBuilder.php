@@ -2,12 +2,12 @@
 
 
 class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
-  protected $selfRules       = [];
+  protected $selfStaticRules       = [];
   protected $ExtraRules      = [];
   protected $childrenRequest = [];
 // [Specific Logic]
   public function __construct($rules = []){
-    $this->setSelfRules($rules)->setMethod('externalPostStoreRules');
+    $this->setSelfStaticRules($rules);
   }
 
   public function pushChildRequest($childRequest=null){
@@ -41,22 +41,30 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
   public function fixRules(){
     $this->launchParamLoader();
     $rules = [$this->getExtraRules()];
+
     foreach($this->getChildrenRequest() as $child){
       $rules[]= $child->fixRules();
     }
 
-    $rules = array_merge($this->getSelfRules(),...$rules);
+    $rules = array_merge($this->getSelfStaticRules(),...$rules);
 
-    foreach($rules as $key=>$rule)
+    foreach($rules as $key=>$rule){
+      $newRule = $rule;
+      if(is_callable($rule))
+        $newRule = $rule();
+
+      $rules[$key] = $newRule;
+
       foreach($this->getParams() as $param=>$value)
         $rules[$key] = str_replace("@$param@",$value,$rules[$key]);
+    }
 
     return $this->setRules($rules)->getRules();
   }
 // [End Specific Logic]
 // [Getters]
-  public function getSelfRules():array{
-    return $this->selfRules??[];
+  public function getSelfStaticRules():array{
+    return $this->selfStaticRules??[];
   }
 
   public function getExtraRules():array{
@@ -68,8 +76,8 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
   }
 // [End Getters]
 // [Setters]
-  public function setSelfRules(array $selfRules=[]){
-    $this->selfRules = $selfRules??[];
+  public function setSelfStaticRules(array $selfStaticRules=[]){
+    $this->selfStaticRules = $selfStaticRules??[];
 
     return $this;
   }
