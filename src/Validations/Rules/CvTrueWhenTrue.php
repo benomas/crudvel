@@ -15,7 +15,7 @@ class CvTrueWhenTrue extends \Crudvel\Validations\Rules\BaseRule implements \Cru
     if(!$this->booleanValue($this->otherValue()))
       return true;
 
-    return $this->booleanValue($this->getValue()) === true;
+    return $this->booleanValue($this->getValue());
   }
 
   /**

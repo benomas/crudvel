@@ -15,7 +15,7 @@ class CvFalseWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \C
     if($this->booleanValue($this->otherValue()))
       return true;
 
-    return $this->booleanValue($this->getValue()) === true;
+    return $this->booleanValue($this->getValue());
   }
 
 

@@ -10,7 +10,7 @@ class CvFalse extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Va
     * @return bool
     */
   public function passes(){
-    return $this->booleanValue($this->getValue()) === false;
+    return !$this->booleanValue($this->getValue());
   }
 
   /**

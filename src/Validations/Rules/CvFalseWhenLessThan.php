@@ -16,7 +16,7 @@ class CvFalseWhenLessThan extends \Crudvel\Validations\Rules\BaseRule implements
     if(!$this->otherValue() || !is_numeric($this->otherValue()))
       return true;
 
-    return $this->otherValue() < $this->getLimit() && $this->booleanValue($this->getValue());
+      return $this->otherValue() < $this->getLimit() && !$this->booleanValue($this->getValue());
   }
 
   /**
