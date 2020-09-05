@@ -50,7 +50,8 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
 
     foreach($rules as $key=>$rule){
       $newRule = $rule;
-      if(is_callable($rule))
+
+      if(!is_string($rule) && is_callable($rule))
         $newRule = $rule();
 
       if($newRule)
