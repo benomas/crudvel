@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Validations\Rules;
 
-class UniqueCombination extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
+class True extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
 // [Specific Logic]
   /**
    * Determine if the validation rule passes.
