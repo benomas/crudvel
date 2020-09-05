@@ -547,7 +547,7 @@ private function getIgnore(&$parameters)
    * @param mixed parameters: Extra parameters for the validation
    * @return  boolean
    */
-
+//[Compositive Validation]
   function validateUniqueCombination(...$params){
     return $this->runValidation(__FUNCTION__,...$params);
   }
@@ -556,8 +556,23 @@ private function getIgnore(&$parameters)
     return $this->fixValidationLabels(__FUNCTION__,...$params);
   }
 
-  private function runValidation($ruleCaller,$attribute, $value, $parameters){
+  function validateCvTrue(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
 
+  function validateCvFalse(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function validateCvTrueWhenFalse(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function validateCvFalseWhenTrue(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+//[Compositive  Methods]
+  private function runValidation($ruleCaller,$attribute, $value, $parameters){
     if (substr($ruleCaller, 0, strlen('validate')) !== 'validate')
       throw new BadRuleNameException($ruleCaller);
 
@@ -582,4 +597,5 @@ private function getIgnore(&$parameters)
 
     return (new $replaceClass())->setRule($replaceCaller)->setAttribute($attribute)->setParameters($parameters)->setMessage($message)->prepare()->message();
   }
+//[End Compositive Validation]
 }
