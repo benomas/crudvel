@@ -17,4 +17,5 @@ class CvHelper{
   use CasesTrait;
   use ResourceTrait;
   use DbTrait;
+  use LangTrait;
 }

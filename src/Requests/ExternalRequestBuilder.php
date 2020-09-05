@@ -53,6 +53,9 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
       if(is_callable($rule))
         $newRule = $rule();
 
+      if($newRule)
+        $newRule = "bail|$newRule";
+
       $rules[$key] = $newRule;
 
       foreach($this->getParams() as $param=>$value)

@@ -10,7 +10,7 @@ class CvTrue extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Val
     * @return bool
     */
   public function passes(){
-    return in_array($this->getValue(),[1,'1',true]);
+    return $this->booleanValue($this->getValue()) === true;
   }
 
   /**

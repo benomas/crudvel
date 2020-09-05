@@ -2,6 +2,8 @@
 
 
 class BaseRule{
+  use \Crudvel\Libraries\Helpers\LangTrait;
+
   protected $message;
   protected $attribute;
   protected $rule;
@@ -10,13 +12,14 @@ class BaseRule{
   protected $parameterSeparator = ';';
   protected $tuplaSeparator     = '=>';
   protected $splittedParameters = [];
+  protected $validator = null;
   /**
    * Create a new rule instance.
    *
    * @return void
    */
-  public function __construct(){
-    //
+  public function __construct($validator = null){
+    $this->setValidator($validator);
   }
 
 // [Specific Logic]
@@ -71,6 +74,17 @@ class BaseRule{
   public function thirdParams() {
     return $this->getSplittedParameters()[2]??null;
   }
+
+  public function isBoolean($field=null){
+    return in_array($field,[0,'0',false,1,'1',true]);
+  }
+
+  public function booleanValue($field=null){
+    if(!$this->isBoolean($field))
+      return null;
+
+    return in_array($field,[1,'1',true]);
+  }
 // [End Specific Logic]
 // [Getters]
   public function getMessage(){
@@ -103,6 +117,10 @@ class BaseRule{
 
   public function getTuplaSeparator(){
     return $this->tuplaSeparator??'=>';
+  }
+
+  public function getValidator(){
+    return $this->validator??null;
   }
 // [End Getters]
 // [Setters]
@@ -151,6 +169,12 @@ class BaseRule{
 
   public function setTuplaSeparator($tuplaSeparator=null){
     $this->tuplaSeparator = $tuplaSeparator??'=>';
+
+    return $this;
+  }
+
+  public function setValidator($validator=null){
+    $this->validator = $validator??null;
 
     return $this;
   }

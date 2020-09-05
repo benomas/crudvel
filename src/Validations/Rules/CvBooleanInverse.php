@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Validations\Rules;
 
-class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
+class CvBooleanInverse extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
 // [Specific Logic]
   protected $resource   = '';
   protected $otherField = '';
@@ -12,11 +12,9 @@ class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Cr
     * @return bool
     */
   public function passes(){
-    if($this->booleanValue($this->otherValue()))
-      return true;
-
-    return $this->booleanValue($this->getValue()) === true;
+    return $this->booleanValue($this->otherValue()) !== $this->booleanValue($this->getValue());
   }
+
 
   /**
    * Get the validation error message.
@@ -24,7 +22,12 @@ class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Cr
     * @return string
     */
   public function message(){
-    return str_replace(':other', $this->cvFieldResourceLang($this->getResource(),$this->getOtherField()), $this->getMessage());
+    $trueText  = __("crudvel.api.true")??'True';
+    $falseText = __("crudvel.api.false")??'False';
+    $boolean2 = $this->booleanValue($this->otherValue())?$trueText:$falseText;
+    $boolean1 = $this->booleanValue($this->otherValue())?$falseText:$trueText;
+
+    return str_replace([':other',':boolean1',':boolean2'], [$this->cvFieldResourceLang($this->getResource(),$this->getOtherField()),$boolean1,$boolean2], $this->getMessage());
   }
 
   public function fixParameters(){

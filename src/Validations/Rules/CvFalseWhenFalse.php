@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Validations\Rules;
 
-class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
+class CvFalseWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
 // [Specific Logic]
   protected $resource   = '';
   protected $otherField = '';
@@ -17,6 +17,7 @@ class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Cr
 
     return $this->booleanValue($this->getValue()) === true;
   }
+
 
   /**
    * Get the validation error message.

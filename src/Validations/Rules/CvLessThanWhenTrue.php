@@ -1,9 +1,10 @@
 <?php namespace Crudvel\Validations\Rules;
 
-class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
+class CvLessThanWhenTrue extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
 // [Specific Logic]
   protected $resource   = '';
   protected $otherField = '';
+  protected $limit      = 0;
   /**
    * Determine if the validation rule passes.
     *
@@ -12,10 +13,10 @@ class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Cr
     * @return bool
     */
   public function passes(){
-    if($this->booleanValue($this->otherValue()))
+    if(!$this->booleanValue($this->otherValue()))
       return true;
 
-    return $this->booleanValue($this->getValue()) === true;
+    return $this->getValue() < $this->getLimit();
   }
 
   /**
@@ -24,17 +25,18 @@ class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Cr
     * @return string
     */
   public function message(){
-    return str_replace(':other', $this->cvFieldResourceLang($this->getResource(),$this->getOtherField()), $this->getMessage());
+    return str_replace([':other',':limit'], [$this->cvFieldResourceLang($this->getResource(),$this->getOtherField()),$this->getLimit()], $this->getMessage());
   }
 
   public function fixParameters(){
     $resource   = $this->firstParams()[0]??null;
     $otherField = $this->firstParams()[1]??null;
+    $limit      = $this->firstParams()[2]??null;
 
-    if(!$resource || !$otherField)
-      throw new \Exception("Validation {$this->getRule()} needs to have 2 parameters, resource and other field");
+    if(!$resource || !$otherField || $limit === null)
+      throw new \Exception("Validation {$this->getRule()} needs to have 3 parameters, resource and other field");
 
-    return $this->setResource($resource)->setOtherField($otherField);
+    return $this->setResource($resource)->setOtherField($otherField)->setLimit($limit);
   }
 
   public function otherValue(){
@@ -49,6 +51,10 @@ class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Cr
   public function getOtherField(){
     return $this->otherField??null;
   }
+
+  public function getLimit(){
+    return $this->limit??null;
+  }
 // [End Getters]
 // [Setters]
   public function setResource($resource=null){
@@ -59,6 +65,12 @@ class CvTrueWhenFalse extends \Crudvel\Validations\Rules\BaseRule implements \Cr
 
   public function setOtherField($otherField=null){
     $this->otherField = $otherField??null;
+
+    return $this;
+  }
+
+  public function setLimit($limit=null){
+    $this->limit = $limit??null;
 
     return $this;
   }

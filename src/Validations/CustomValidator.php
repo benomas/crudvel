@@ -4,6 +4,7 @@ use Illuminate\Validation\Validator;
 
 use DB;
 use Crudvel\Validations\{BadRuleNameException,RuleDoesntExistException};
+use Illuminate\Support\Arr;
 
 class CustomValidator extends Validator {
 
@@ -540,6 +541,10 @@ private function getIgnore(&$parameters)
     return false;
   }
 
+  public function getData(){
+    return $this->data;
+  }
+//[Compositive Validation]
   /**
    * runValidation invoker
    * @param string $attribute: Name of the field to validate
@@ -547,7 +552,6 @@ private function getIgnore(&$parameters)
    * @param mixed parameters: Extra parameters for the validation
    * @return  boolean
    */
-//[Compositive Validation]
   function validateUniqueCombination(...$params){
     return $this->runValidation(__FUNCTION__,...$params);
   }
@@ -556,20 +560,194 @@ private function getIgnore(&$parameters)
     return $this->fixValidationLabels(__FUNCTION__,...$params);
   }
 
+  //----------------------------------------------------------------------------------
+
   function validateCvTrue(...$params){
     return $this->runValidation(__FUNCTION__,...$params);
   }
+
+  function replaceCvTrue(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
 
   function validateCvFalse(...$params){
     return $this->runValidation(__FUNCTION__,...$params);
   }
 
+  function replaceCvFalse(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvGreaterThanWith(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvGreaterThanWith(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvLessThanWith(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvLessThanWith(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvBooleanInverse(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvBooleanInverse(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvBooleanEqual(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvBooleanEqual(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvTrueWhenTrue(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvTrueWhenTrue(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
   function validateCvTrueWhenFalse(...$params){
     return $this->runValidation(__FUNCTION__,...$params);
   }
 
+  function replaceCvTrueWhenFalse(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
   function validateCvFalseWhenTrue(...$params){
     return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvFalseWhenTrue(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvFalseWhenFalse(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvFalseWhenFalse(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvTrueWhenGreaterThan(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvTrueWhenGreaterThan(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvTrueWhenLessThan(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvTrueWhenLessThan(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvFalseWhenGreaterThan(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvFalseWhenGreaterThan(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvFalseWhenLessThan(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvFalseWhenLessThan(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateLessThanWhenCvTrue(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceLessThanWhenCvTrue(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateLessThanWhenCvFalse(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceLessThanWhenCvFalse(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateGreaterThanWhenCvTrue(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceGreaterThanWhenCvTrue(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateGreaterThanWhenCvFalse(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceGreaterThanWhenCvFalse(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvWildCard(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvWildCard(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
   }
 //[Compositive  Methods]
   private function runValidation($ruleCaller,$attribute, $value, $parameters){
@@ -582,7 +760,7 @@ private function getIgnore(&$parameters)
     if(!class_exists($ruleClass))
       throw new RuleDoesntExistException($ruleClass);
 
-    return (new $ruleClass())->setRule($ruleCaller)->setAttribute($attribute)->setValue($value)->setParameters($parameters)->prepare()->passes();
+    return (new $ruleClass($this))->setRule($ruleCaller)->setAttribute($attribute)->setValue($value)->setParameters($parameters)->prepare()->passes();
   }
 
   private function fixValidationLabels($replaceCaller,$message, $attribute, $rule, $parameters){
@@ -595,7 +773,7 @@ private function getIgnore(&$parameters)
     if(!class_exists($replaceClass))
       throw new RuleDoesntExistException($replaceClass);
 
-    return (new $replaceClass())->setRule($replaceCaller)->setAttribute($attribute)->setParameters($parameters)->setMessage($message)->prepare()->message();
+    return (new $replaceClass($this))->setRule($replaceCaller)->setAttribute($attribute)->setParameters($parameters)->setMessage($message)->prepare()->message();
   }
 //[End Compositive Validation]
 }

@@ -256,5 +256,7 @@ $cvApi = [
   'success'               => 'Acción completada',
   'incomplete'            => 'Acción incompleta',
   'bad_paginate_petition' => 'Parametros de paginación incorrectos, re responde con valores default',
-  'unproccesable'         => 'Información inconsistente'
+  'unproccesable'         => 'Información inconsistente',
+  'true'                  => 'Verdadero',
+  'false'                 => 'Falso',
 ];

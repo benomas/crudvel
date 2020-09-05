@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Validations\Rules;
 
-class CvTrue extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
+class CvFalse extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Validations\CvRuleInterface{
 // [Specific Logic]
   /**
    * Determine if the validation rule passes.
@@ -10,7 +10,7 @@ class CvTrue extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel\Val
     * @return bool
     */
   public function passes(){
-    return in_array($this->getValue(),[0,'0',false]);
+    return $this->booleanValue($this->getValue()) === false;
   }
 
   /**
