@@ -1,9 +1,9 @@
 import CvResourceMap  from 'src/customs/crudvuel/resource/CvResourceMap'
 import OwnService     from 'src/services/<##[singular|studly](resource)##>'
-import filler         from 'src/fillers/<##[singular|camel](resource)##>.js'
+import filler         from 'src/fillers/<##[singular|camel](resource)##>'
 
 let resourceName = '<##[plural|slug](resource)##>'
-//TODO: check for default icon
+
 export default function (store) {
   let resource = new CvResourceMap({
     name             : resourceName,
@@ -17,7 +17,7 @@ export default function (store) {
     filler           : () => filler(store)
   })
 
-  resource.setActions([
+  return resource.setActions([
     {
       name       : 'index',
       icon       : '',
@@ -90,6 +90,7 @@ export default function (store) {
       urlParams  : ['id'],
       component  : null
     },
+
     {
       name       : 'exportings',
       icon       : '',
@@ -99,7 +100,5 @@ export default function (store) {
       urlParams  : ['id'],
       component  : null
     }
-  ])
-  resource.resourcelangLoader()
-  return resource
+  ]).resourcelangLoader()
 }
