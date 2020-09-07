@@ -350,17 +350,11 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       }
 
       $this->getModelCollectionInstance()->fill($fields);
-
-      if(!empty($fields['created_by']))
-        $this->getModelCollectionInstance()->created_by=$fields['created_by'];
-
-      if(!empty($fields['updated_by']))
-        $this->getModelCollectionInstance()->updated_by=$fields['updated_by'];
-
+      $this->getModelCollectionInstance()->created_by=$fields['created_by']??$this->getModelCollectionInstance()->created_by??null;
+      $this->getModelCollectionInstance()->updated_by=$fields['updated_by']??$this->getModelCollectionInstance()->updated_by??null;
       $this->dirtyPropertys = $this->getModelCollectionInstance()->getDirty();
 
-      $lastSave = $this->getModelCollectionInstance()->save();
-      if(!$lastSave)
+      if(!$this->getModelCollectionInstance()->save())
         return false;
 
       if($callBack && is_callable($callBack)){

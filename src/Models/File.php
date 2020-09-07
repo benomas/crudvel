@@ -2,7 +2,7 @@
 
 use Customs\Crudvel\Models\BaseModel;
 
-class File extends \Customs\Crudvel\Models\BaseModel{
+class File extends \Crudvel\Models\BaseModel{
   use \Crudvel\Traits\Related;
   protected $hidden = ['resource'];
 

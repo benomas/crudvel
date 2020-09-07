@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Models;
 
-class CatPermissionType extends \Customs\Crudvel\Models\BaseModel{
+class CatPermissionType extends \Crudvel\Models\BaseModel{
 
   protected $fillable = [
     "name",
@@ -19,6 +19,9 @@ class CatPermissionType extends \Customs\Crudvel\Models\BaseModel{
 // [End Relationships]
 
 // [Transformers]
+  public function setSlugAttribute($value){
+    $this->attributes['slug'] = $this->cvSlugCase($value);
+  }
 // [End Transformers]
 
 // [Scopes]

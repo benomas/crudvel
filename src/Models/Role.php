@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Models;
 
-class Role extends \Customs\Crudvel\Models\BaseModel{
+class Role extends \Crudvel\Models\BaseModel{
   use \Staudenmeir\EloquentHasManyDeep\HasTableAlias;
 
   protected $fillable = [
@@ -56,6 +56,10 @@ class Role extends \Customs\Crudvel\Models\BaseModel{
 //End Non standar Relationships
 
 // [Transformers]
+  public function setSlugAttribute($value){
+    $this->attributes['slug'] = $this->cvSlugCase($value);
+  }
+// [End Transforme
 // [End Transformers]
 
 // [Scopes]

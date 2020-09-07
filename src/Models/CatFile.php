@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Builder;
 use DB;
 
-class CatFile extends \Customs\Crudvel\Models\BaseModel{
+class CatFile extends \Crudvel\Models\BaseModel{
 
   protected $fillable = [
     'name',

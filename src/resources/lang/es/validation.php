@@ -90,6 +90,7 @@ $cvValidations = [
 	'no_simultaneus'             => 'Los valores [:list1] en el campo [:attribute] no pueden coexistir con [:list2]',
 	'file_already_exist'         => 'Ya existe el archivo',
 	'file_resource'              => 'No tienes permisos para asociar este tipo de archivo',
+	'unique_combination'         => 'El campo [:attribute] en combinacion con :fields. debe ser unico',
 	'cv_true'                    => 'El campo [:attribute] debe tener un valor verdadero',
 	'cv_false'                   => 'El campo [:attribute] debe tener un valor falso',
 	'cv_boolean_inverse'         => 'El campo [:attribute] debe ser [:boolean1], cuando el campo [:other] es [:boolean2]',

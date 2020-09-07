@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Models;
 
-class Permission extends  \Customs\Crudvel\Models\BaseModel{
+class Permission extends \Crudvel\Models\BaseModel{
 
   public static $enablePermissionCheck    = true;
   protected $permissionTypeIdValue        = null;
@@ -36,7 +36,7 @@ class Permission extends  \Customs\Crudvel\Models\BaseModel{
 // [Transformers]
   public function setSlugAttribute($value)
   {
-    $this->slugValue = $this->attributes['slug'] = $value;
+    $this->slugValue = $this->attributes['slug'] = $this->cvLowerCase($value);
     $this->fixResource();
   }
 

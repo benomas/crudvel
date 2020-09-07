@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 
-class User extends \Customs\Crudvel\Models\BaseModel{
+class User extends \Crudvel\Models\BaseModel{
 
   protected $fillable = [
     "active",

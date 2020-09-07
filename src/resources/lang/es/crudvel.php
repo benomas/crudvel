@@ -1,9 +1,10 @@
 <?php
 
 $cvGlobalSpecials = [
-  'clientProsubastasPasswordGrantClient' => 'Cliente de autenticacion: pro_subastas Password Grant Client',
-  'clientWebApp'                         => 'Cliente de autenticacion: web-app',
-  'clientMobileApp'                      => 'Cliente de autenticacion: mobile-app',
+  'client-web-app'    => 'Permiso para solicitar token mediante cliente web-app',
+  'client-mobile-app' => 'Permiso para solicitar token mediante cliente mobile-app',
+  'code-hooks'        => 'Permiso para Manejo de anclajes en codigo',
+  'inactives'         => 'Permiso para Acceso a registros inactivos',
 ];
 
 $cvSections =  [
