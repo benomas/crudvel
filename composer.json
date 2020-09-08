@@ -10,8 +10,8 @@
       "role" : "Developer"
     }
   ],
-  "require": {
-    "stichoza/google-translate-php": "^4.0"
+  "require": {,
+    "benomas/crudvel-translate": "dev-master"
   },
   "autoload": {
     "classmap": [
