@@ -10,7 +10,7 @@
       "role" : "Developer"
     }
   ],
-  "require": {,
+  "require": {
     "benomas/crudvel-translate": "dev-master"
   },
   "autoload": {
