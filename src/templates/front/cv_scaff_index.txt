@@ -6,7 +6,7 @@
       v-on="mCustomOns('cv-action-container')"
       >
       <div slot="cv-title-slot" class="row action-label">
-        <div class="col-xs-10 col-sm-9 col-md-8  q-pb-md">
+        <div class="col-xs-10 col-sm-9 col-md-8 q-pb-md" :class="{'q-ml-sm':cLtmd}">
           <label>
             <span class="q-headline txt-secondary f-bold">
               {{cpStaGenAction.label}}
