@@ -1,6 +1,7 @@
 <?php
 
 namespace Crudvel\Libraries\CvResourceInteractions;
+use Carbon\Carbon;
 
 class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInteractionsCore
 {
@@ -10,16 +11,16 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
   protected $syncField;
 
   protected $stamps = [
-    'created_at',
-    'updated_at',
-    'created_by',
-    'updated_by',
+    'created_at'=>null,
+    'updated_at'=>null,
+    'created_by'=>null,
+    'updated_by'=>null,
   ];
 
   public function __construct(){
     parent::__construct();
   }
-
+// [Specific Logic]
   public function build(){
     if(!$this->getResource()){
       if(!$this->getModelCollectionInstance())
@@ -42,7 +43,6 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
 
     return $this;
   }
-
   public function cvDetacher(){
     $this->getRelatedResourceRelation()->detach(array_keys($this->getToSync()));
 
@@ -56,10 +56,6 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
     return $this;
   }
 
-  public function getData(){
-    return $this->getFields()[$this->getSyncField()]??[];
-  }
-
   public function cvSyncRelationateResource(){
     return $this->CvDetacher()->cvSync();
   }
@@ -70,22 +66,13 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
     return $this;
   }
 
-  public function getToSync(){
-      return $this->toSync??null;
-  }
-
-  public function setToSync($toSync=null){
-    $this->toSync = $toSync??null;
-
-    return $this;
-  }
-
   public function fixToSync(){
     if($this->getPivotColumns()){
-      $toSync = cvGetSomeKeys($this->getData(),'id',...array_keys($this->getPivotColumns()));
+      $toSync = cvGetSomeKeys($this->getData(),'id',...array_diff(array_keys($this->getPivotColumns()),$this->getStamps()));
 
       if(!$toSync)
         return $this->setToSync($toSync);
+
 
       $toSync = $this->fixPivotColumns($toSync);
 
@@ -96,8 +83,62 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
     return $this->setToSync($toSync);
   }
 
+  public function fixPivotColumns($toSync){
+    foreach($this->loadStamps()->getStamps() as $stamp=>$value){
+      if(!in_array($stamp,array_keys($this->getPivotColumns())))
+        continue;
+
+      foreach($toSync AS $position=>$rowValue)
+        $toSync[$position][$stamp] = $value;
+    }
+
+    return $toSync;
+  }
+
+  public function fixSyncField(){
+    return $this->setSyncField(cvCaseFixer('plural|snake',$this->getRelatedResource()));
+  }
+// [End Specific Logic]
+// [Getters]
+  public function getData(){
+    return $this->getFields()[$this->getSyncField()]??[];
+  }
+
+  public function getToSync(){
+    return $this->toSync??null;
+  }
+
   public function getFields(){
     return $this->fields??null;
+  }
+
+  public function getPivotColumns(){
+    return $this->pivotColumns??null;
+  }
+
+  public function getStamps(){
+    return $this->stamps??null;
+  }
+
+  public function loadStamps(){
+    $now = (new Carbon())->now();
+    return $this->setStamps([
+      'created_at'=>$now,
+      'updated_at'=>$now,
+      'created_by'=>$this->getUserModelCollectionInstance()->id??null,
+      'updated_by'=>$this->getUserModelCollectionInstance()->id??null,
+    ]);
+  }
+
+  public function getSyncField(){
+    return $this->syncField??null;
+  }
+// [End Getters]
+// [Setters]
+  public function setToSync($toSync=null){
+    $this->toSync = $toSync??null;
+
+    return $this;
   }
 
   public function setFields($fields=null){
@@ -106,18 +147,10 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
     return $this;
   }
 
-  public function getPivotColumns(){
-    return $this->pivotColumns??null;
-  }
-
   public function setPivotColumns($pivotColumns=null){
     $this->pivotColumns = $pivotColumns??null;
 
     return $this;
-  }
-
-  public function getStamps(){
-    return $this->stamps??null;
   }
 
   public function setStamps($stamps=null){
@@ -126,42 +159,16 @@ class CvSimpleRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvI
     return $this;
   }
 
-  public function getFixedStamps(){
-    if(!$this->getPivotColumns())
-      return $this;
-
-    $stamps = [];
-    foreach($this->getStamps() AS $stampColumn){
-      $hasStamp = $this->getPivotColumns()[$stampColumn] ?? null;
-
-      if($hasStamp)
-        $stamps[$stampColumn] = $this->getFields()[$stampColumn] ?? null;
-
-    }
-
-    return $stamps;
-  }
-
-  public function fixPivotColumns($toSync){
-    foreach($this->getFixedStamps() as $stamp=>$value)
-      foreach($toSync AS $position=>$rowValue)
-        if(empty($toSync[$position][$stamp]))
-          $toSync[$position][$stamp] = $value;
-
-    return $toSync;
-  }
-
-  public function getSyncField(){
-    return $this->syncField??null;
-  }
-
   public function setSyncField($syncField=null){
     $this->syncField = $syncField??null;
 
     return $this;
   }
 
-  public function fixSyncField(){
-    return $this->setSyncField(cvCaseFixer('plural|snake',$this->getRelatedResource()));
+  public function setFixedStamps($fixedStamps=null){
+    $this->fixedStamps = $fixedStamps??null;
+
+    return $this;
   }
+// [End Setters]
 }

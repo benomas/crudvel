@@ -43,7 +43,7 @@ class PathInspector implements PathInspectorInterface
     $this->scanDir();
   }
 
-  //getters
+//[getters]
   public function getType(){
     return $this->type;
   }
@@ -84,7 +84,7 @@ class PathInspector implements PathInspectorInterface
     return $this->pathRegex;
   }
 
-  //setters
+//[setters]
   public function setType($type=null){
     $this->type=$type;
   }
