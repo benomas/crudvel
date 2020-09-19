@@ -101,8 +101,9 @@ class ApiController extends CustomController{
    */
   public function store()
   {
-    $this->setStamps();
-    $this->removeField('updated_by');
+    $this->setStamps()
+      ->removeField('updated_by')
+      ->removeField('updated_at');
 
     if($this->persist()){
       $this->getModelBuilderInstance()->key($this->getModelCollectionInstance()->getKeyValue());
@@ -143,9 +144,10 @@ class ApiController extends CustomController{
    */
   public function update($id)
   {
-    $this->addField('id',$id);
-    $this->setStamps();
-    $this->removeField('created_by');
+    $this->addField('id',$id)
+      ->setStamps()
+      ->removeField('created_by')
+      ->removeField('created_at');
 
     if($this->persist())
       return $this->actionResponse();
