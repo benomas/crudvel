@@ -749,6 +749,16 @@ private function getIgnore(&$parameters)
   function replaceCvWildCard(...$params){
     return $this->fixValidationLabels(__FUNCTION__,...$params);
   }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvSlugged(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvSlugged(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
 //[Compositive  Methods]
   private function runValidation($ruleCaller,$attribute, $value, $parameters){
     if (substr($ruleCaller, 0, strlen('validate')) !== 'validate')
