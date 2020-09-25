@@ -115,6 +115,7 @@ class BaseMigration extends Migration
   public function change($callBack){
     if(!is_callable($callBack))
       return false;
+
     Schema::table($this->getSchemaTable(), function($blueprintTable) use($callBack){
       Schema::disableForeignKeyConstraints();
       $callBack($blueprintTable);

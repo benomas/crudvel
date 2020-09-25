@@ -20,12 +20,12 @@ class ForeingMaker{
 // [Specific Logic]
   public function build($to=null){
     $this->setTo($to);
-    
+
     try{
       Schema::table($this->getTable(), function($table){
         $table->foreign($this->getForeign()??cvCaseFixer('singular|snake',$this->getTo()).'_id')
           ->references($this->getReferences()??'id')
-          ->on($this->getOn()??cvCaseFixer('plural|snake',$this->getTo()))
+          ->on($this->getOn()??cvCaseFixer('snake',$this->getTo()))
           ->onUpdate($this->getOnUpdate()??'cascade')
           ->onDelete($this->getOnDelete()??'cascade');
       });
@@ -91,31 +91,31 @@ class ForeingMaker{
 
   public function setForeign($foreign = null){
     $this->foreign = $foreign??null;
-    
+
     return $this;
   }
 
   public function setReferences($references = null){
     $this->references = $references??null;
-    
+
     return $this;
   }
 
   public function setOn($on = null){
     $this->on = $on??null;
-    
+
     return $this;
   }
 
   public function setOnUpdate($onUpdate = null){
     $this->onUpdate = $onUpdate??null;
-    
+
     return $this;
   }
 
   public function setOnDelete($onDelete = null){
     $this->onDelete = $onDelete??null;
-    
+
     return $this;
   }
 // [End Setters]
