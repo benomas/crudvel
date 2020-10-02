@@ -98,8 +98,10 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     if($this->wantsJson()){
       if($this->getUserModelCollectionInstance() && $this->getUserModelCollectionInstance()->active)
         return $this->apiUnautorized();
+
       return $this->apiUnautenticated();
     }
+
     return $this->webUnauthorized();
   }
 
@@ -123,6 +125,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
           "lastAction"   =>$this->getCurrentAction(),
           "lastActionId" =>$this->getCurrentActionKey(),
         ]);
+
         Session::flash("error", trans("crudvel.web.validation_errors"));
       }
 
@@ -143,21 +146,27 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     $localSegment = $this->getSlugPluralName();
     $currentLangs[$localSegment] = __("crudvel/".$localSegment.".fields");
     $attributesLangs = [];
+
     foreach ($this->rules as $index=>$rule) {
       $segments = explode('.', $index);
+
       if (count($segments) === 1){
         $attribute = $segments[0];
         $attributesLangs[$attribute] = $currentLangs[$localSegment][$attribute] ?? $attribute;
         continue;
       }
+
       if (count($segments) > 1){
         $attribute          = $segments[count($segments)-1];
         $currentLangSegment = Str::plural(cvSlugCase($segments[count($segments)-2],'-'));
+
         if (empty($currentLangs[$currentLangSegment]))
           $currentLangs[$currentLangSegment] = __("crudvel/".$currentLangSegment.".fields");
+
         $attributesLangs[$index] = $currentLangs[$currentLangSegment][$attribute] ?? '';
       }
     }
+
     return $attributesLangs;
   }
 
@@ -195,9 +204,11 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     $this->defaultRules();
     $identifier = $this->slugedImporterRowIdentifier();
     $this->setCurrentAction('store');
+
     if($row->{$identifier}){
       $this->setCurrentAction('update');
       $this->setCurrentActionKey($row->{$identifier});
+
       if(method_exists($this,"putUpdate"))
         $this->putUpdate();
     }
@@ -212,6 +223,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
       [],
       $this->attributes()
     );
+
     return !$this->currentValidator->fails();
   }
 
@@ -221,6 +233,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
   public function importPropertyFixer($label,$row){
     $fixedLabel = Str::slug($label,"_");
+
     return (!empty($row->{$fixedLabel}))?$row->{$fixedLabel}:null;
   }
 
@@ -238,6 +251,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function changeImporter($status="success",$errors=null){
     if(empty($this->importResults[$this->importerCursor]))
       $this->importResults[$this->importerCursor]=[];
+
     $this->importResults[$this->importerCursor]["status"]          = $status;
     $this->importResults[$this->importerCursor]["errors"]          = $errors;
     $this->importResults[$this->importerCursor]["transactionType"] = trans("crudvel.actions.".snake_case($this->getCurrentAction()).".call_message");
@@ -258,6 +272,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public function langsToImport($properties){
     $key = trans("crudvel/".$this->getLangName().".fields.id");
     $this->exportImportProperties[$key] = "id";
+
     foreach ($properties as $property) {
       $key = trans("crudvel/".$this->getLangName().".fields.".$property);
       $this->exportImportProperties[$key] = $property;
@@ -278,22 +293,27 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     $routeNameSegments = explode('.', $this->route()->getName());
     $resourceKey       = null;
     $resource          = $this->getCamelSingularName();
+
     if (count ($routeNameSegments) > 1){
       $resource = cvCaseFixer('camel|singular',$routeNameSegments[count($routeNameSegments)-2]);
       $this->setCurrentAction(cvCamelCase($routeNameSegments[count($routeNameSegments)-1]));
     }
+
     if ($resourceKey === null)
       $resourceKey = $this->route($this->getSnakeSingularName());
+
     $this->setCurrentActionKey($resourceKey)->setResourceAlias($resource)->fixActionResource();
     $this->fixFlowControl();
   }
 
   public function setCurrentDepth($currentDepth=''){
     $this->currentDepth=$currentDepth;
+
     return $this;
   }
   public function setCurrentDinamicResource($currentDinamicResource=''){
     $this->currentDinamicResource=$currentDinamicResource;
+
     return $this;
   }
 
@@ -310,19 +330,24 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
   public static function staFixDepth($rules,$segment = null){
     $fixedRules = [];
+
     if (!$segment)
       return $fixedRules;
+
     foreach($rules as $rulesIndex => $rulesValue)
       $fixedRules[$segment.$rulesIndex]=$rulesValue;
+
     return $fixedRules;
   }
 
   public static function mixRules ($action = 'externalPostStoreRules',$localRules = [],$extraResources = []) {
     $moreRules = [];
+
     foreach ($extraResources as $index=>$value){
       $segment = !is_numeric($index) ? "$value." : cvSlugCase(Str::singular($value)).'.';
       $moreRules[] = static::staFixDepth(Str::singular(Str::studly($segment))::{$action}(),$segment);
     }
+
     return array_merge($localRules,$moreRules);
   }
 
