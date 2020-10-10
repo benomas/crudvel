@@ -2,6 +2,11 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class CrudvelServiceProvider extends \Benomas\Crudvel\CrudvelServiceProvider
+class CrudvelServiceProvider extends ServiceProvider
 {
+  public function boot(){
+  }
+
+  public function register(){
+  }
 }

@@ -21,6 +21,7 @@
   "extra": {
     "laravel": {
       "providers": [
+        "Benomas\\Crudvel\\CrudvelServiceProvider",
         "Customs\\Crudvel\\Providers\\CrudvelServiceProvider"
       ],
       "aliases": {
