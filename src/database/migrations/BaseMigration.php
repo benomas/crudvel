@@ -246,7 +246,7 @@ class BaseMigration extends Migration
     return $this;
   }
 
-  public function autoForeing($table, $to=''){
-    return (new \Crudvel\Database\Migrations\ForeingMaker($table,$to))->setMigration($this);
+  public function autoForeing($table, $foreingName=null){
+    return (new \Crudvel\Database\Migrations\ForeingMaker($table,$foreingName))->setMigration($this);
   }
 }

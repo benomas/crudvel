@@ -17,6 +17,7 @@ class CrudvelServiceProvider extends ServiceProvider
       __DIR__.'/resources/lang/en'=>base_path('resources/lang/en'),
       __DIR__.'/config'=>base_path('config/packages/benomas/crudvel'),
     ]);
+
     $this->publishes([__DIR__.'/customs/' => base_path('customs/crudvel/')], 'cv-customs');
 
     if ($this->app->runningInConsole()) {
@@ -40,13 +41,17 @@ class CrudvelServiceProvider extends ServiceProvider
         'Customs\Crudvel\Commands\CvScaffDeleteCatResource',
         'Customs\Crudvel\Commands\CvScaffList',
       ];
+
       foreach($commandClasses as $key=>$commandClass)
         if(!class_exists($commandClass))
           $commandClasses[$key] = str_replace('Customs\\','',$commandClass);
+
       $commandClasses[]='Crudvel\Commands\FixCustomExt';
+
       foreach($commandClasses as $key=>$commandClass)
         if(!class_exists($commandClass))
           unset($commandClasses[$key]);
+
       $this->commands($commandClasses);
     }
   }
