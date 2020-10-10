@@ -2,7 +2,6 @@
 
 use Illuminate\Support\ServiceProvider;
 
-
 class CrudvelServiceProvider extends ServiceProvider
 {
   /**
@@ -70,6 +69,10 @@ class CrudvelServiceProvider extends ServiceProvider
 
     $this->app->singleton('cvResource', function ($app) {
       return new \Crudvel\Libraries\CvResource\CvResource($app);
+    });
+
+    $this->app->bind('Crudvel\Libraries\CvSecurity\RegisterBuilderInterface', function ($app) {
+      return new \Crudvel\Libraries\CvSecurity\RegisterBuilder();
     });
   }
 }
