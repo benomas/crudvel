@@ -21,8 +21,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Benomas\\Crudvel\\CrudvelServiceProvider",
-        "Customs\\Crudvel\\Providers\\CrudvelServiceProvider"
+        "Benomas\\Crudvel\\CrudvelServiceProvider"
       ],
       "aliases": {
         "CvCache":"Crudvel\\Facades\\CvCache",
