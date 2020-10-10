@@ -73,12 +73,5 @@ class CrudvelServiceProvider extends ServiceProvider
     $this->app->singleton('cvResource', function ($app) {
       return new \Crudvel\Libraries\CvResource\CvResource($app);
     });
-
-    $this->app->booting(function() {
-      $loader =\Illuminate\Foundation\AliasLoader::getInstance();
-      $loader->alias('CvCache', \Crudvel\Facades\CvCache::class);
-      $loader->alias('CvHelper', \Crudvel\Facades\CvHelper::class);
-      $loader->alias('CvResource', \Crudvel\Facades\CvResource::class);
-    });
   }
 }
