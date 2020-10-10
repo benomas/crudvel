@@ -149,6 +149,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     $this->setCallActionMethod($method);
     $this->setCallActionParameters($parameters);
     $this->prepareResource();
+
     if(!$this->getCurrentAction())
       $this->setCurrentAction($method)->fixActionResource();
 
@@ -161,19 +162,27 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       !$this->specialAccess($this->getSlugPluralName().'.inactives')
     )
       $this->getModelBuilderInstance()->actives();
+
     if(!$this->getFields())
       $this->loadFields();
+
     $preactionResponse = $this->preAction($method,$parameters);
+
     if($preactionResponse)
       return $preactionResponse;
+
     if(in_array($method,$this->getRowActions())){
       if(empty($parameters))
         return $this->webNotFound();
+
       $this->setCurrentActionKey($parameters[$this->getSnakeSingularName()]);
+
       if(!$this->getModelBuilderInstance()->key($this->getCurrentActionKey())->count())
         return $this->webNotFound();
+
       $this->setModelCollectionInstance($this->getModelBuilderInstance()->first());
     }
+
     return parent::callAction($method,$parameters);
   }
 
@@ -274,6 +283,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    */
   protected function testTransaction($callback,$errorCallBack=null,$tryCatch=true){
     $errorException=null;
+
     if($this->transStatus === 'transaction-in-progress' && is_callable($callback)){
       if($tryCatch && !$this->debugg){
         try{
@@ -289,6 +299,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
         if(!$callback())
           return $this->transactionFail();
       }
+
       if($this->transStatus==='transaction-fail' && is_callable($errorCallBack) && !$this->debugg)
         $errorCallBack($errorException);
     }
@@ -310,6 +321,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   protected function isThisCommitter($committer=null){
     if( !isset($this->committer))
       return true;
+
     return $this->committer === $committer;
   }
 
@@ -359,7 +371,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
       if($callBack && is_callable($callBack)){
         if($passLastSave) return $callBack($this->getModelCollectionInstance());
-        return $callBack();
+          return $callBack();
       }
 
       return true;
@@ -367,7 +379,8 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   }
 
   public function persistWithNoFillables($callBack=null, $noFillables=[], $passLastSave = false){
-    if(empty($noFillables)) return false;
+    if(empty($noFillables))
+      return false;
 
     return $this->resetTransaction()->startTranstaction()->testTransaction(function() use($callBack, $passLastSave, $noFillables){
       $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
@@ -420,12 +433,14 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   public function export(){
     $data = [];
     $this->getRequestInstance()->langsToImport($this->modelInstanciator(true)->getFillable());
+
     if(($rows = $this->getModelBuilderInstance()->get()))
       foreach($rows as $key=>$row)
         foreach ($this->getRequestInstance()->exportImportProperties as $label=>$field)
           $data[$key][] = $this->getRequestInstance()->exportPropertyFixer($field,$row);
 
     array_unshift($data, array_keys($this->getRequestInstance()->exportImportProperties));
+
     Excel::create(trans("crudvel/".$this->getLangName().".rows_label")." ".intval(microtime(true)), function ($excel) use ($data) {
       $excel->sheet('Hoja1', function ($sheet) use ($data) {
         $sheet->fromArray($data, "", "A1", true, false);
@@ -459,12 +474,15 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       $this->getRequestInstance()->file('importation_file')->move(public_path() . "/upload/importing/", $filename);
       $reader = Excel::load($path)->get();
       $this->getRequestInstance()->inicializeImporter($this->modelInstanciator(true)->getFillable());
+
       $reader->each(function ($row){
         $this->resetTransaction();
         $this->startTranstaction();
+
         $this->testTransaction(function() use($row){
           $this->getRequestInstance()->firstImporterCall($row);
           $this->getRequestInstance()->fields = [];
+
           foreach ($this->getRequestInstance()->exportImportProperties as $label=>$field)
             if(($dataFiled = $this->getRequestInstance()->importPropertyFixer($label,$row))!==null)
               $this->getRequestInstance()->fields[$field] = $dataFiled;
@@ -475,6 +493,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
           }
 
           $this->getRequestInstance()->changeImporter();
+
           if(($model = (  $this->getRequestInstance()->currentAction==="store"?
                             $this->modelInstanciator(true):
                             $this->modelInstanciator()->key($row->{$this->getRequestInstance()->slugedImporterRowIdentifier()})->first()
@@ -482,15 +501,18 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
               )
           ){
               $model->fill($this->getRequestInstance()->fields);
+
               if(!$model->isDirty()){
                 $this->getRequestInstance()->changeTransactionType("Sin cambios");
                 return $this->importCallBack();
               }
+
               if($model->save())
                 return $this->importCallBack();
 
               $this->getRequestInstance()->changeImporter("validationErrors",'Error de transacción');
           }
+
           return false;
         });
         $this->transactionComplete();
@@ -529,18 +551,23 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function addViewActions(...$moreActions){
     $this->viewActions=array_merge($this->viewActions,$moreActions);
+
     return $this;
   }
 
   public function setSlugField(){
     if($this->slugField)
       return true;
+
     if(in_array("slug",(array) $this->getSelectables()))
       return $this->slugField = "slug";
+
     if(in_array("name",(array) $this->getSelectables()))
       return $this->slugField = "name";
+
     if(in_array("title",(array) $this->getSelectables()))
       return $this->slugField = "title";
+
     return false;
   }
 
@@ -688,63 +715,75 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function setCallActionMethod($callActionMethod=null){
     $this->callActionMethod = $callActionMethod??null;
+
     return $this;
   }
 
   public function setCallActionParameters($callActionParameters=null){
     $this->callActionParameters = $callActionParameters??null;
+
     return $this;
   }
 
   public function setPaginated($paginated=null){
     $this->paginated = $paginated??null;
+
     return $this;
   }
 
   public function setFilterables($filterables = []){
     $this->filterables = $filterables;
+
     return $this;
   }
 
   public function setOrderables($orderables = []){
     $this->orderables = $orderables;
+
     return $this;
   }
 
   public function setSelectables($selectables = []){
     $this->selectables = $selectables;
+
     return $this;
   }
 
   public function addFilterables(...$filterables){
     foreach($filterables as $filterable)
       $this->filterables[]=$filterable;
+
     return $this;
   }
 
   public function addOrderables(...$orderables){
     foreach($orderables as $orderable)
       $this->orderables[]=$orderable;
+
     return $this;
   }
 
   public function addSelectables(...$selectables){
     foreach($selectables as $selectable)
       $this->selectables[]=$selectable;
+
     return $this;
   }
 
   public static function externalSetStamps($enableCreateStamps = true){
     $rightNow = \Carbon\Carbon::now()->toDateTimeString();
     $user = \CvResource::assignUser()->getUserModelCollectionInstance();
+
     $stamps = [
       'updated_by'=>$user->id??null,
       'updated_at'=>$rightNow??null,
     ];
+
     if($enableCreateStamps){
       $stamps['created_by']=$user->id??null;
       $stamps['created_at']=$rightNow??null;
     }
+
     return $stamps;
   }
 
@@ -752,10 +791,12 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     $stamps = self::externalSetStamps();
     $this->addField('updated_at',$stamps['updated_at']);
     $this->addField('updated_by',$stamps['updated_by']);
+
     if($enableCreateStamps){
       $this->addField('created_by',$stamps['created_by']);
       $this->addField('created_at',$stamps['created_at']);
     }
+
     return $this;
   }
 }
