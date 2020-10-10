@@ -25,6 +25,9 @@
         "Customs\\Crudvel\\Providers\\CrudvelServiceProvider"
       ],
       "aliases": {
+        "CvCache":"Crudvel\\Facades\\CvCache",
+        "CvHelper":"Crudvel\\Facades\\CvHelper",
+        "CvResource":"Crudvel\\Facades\\CvResource"
       }
     }
   }
