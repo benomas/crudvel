@@ -2,20 +2,6 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class CrudvelServiceProvider extends ServiceProvider
+class CrudvelServiceProvider extends \Benomas\Crudvel\CrudvelServiceProvider
 {
-  /**
-   * Bootstrap the application services.
-   *
-   * @return void
-   */
-  public function boot(){
-  }
-  /**
-   * Register the application services.
-   *
-   * @return void
-   */
-  public function register(){
-  }
 }

@@ -10,8 +10,7 @@ class CrudvelServiceProvider extends ServiceProvider
    *
    * @return void
    */
-  public function boot()
-  {
+  public function boot(){
     $this->publishes([
       __DIR__.'/resources/lang/es'=>base_path('resources/lang/es'),
       __DIR__.'/resources/lang/en'=>base_path('resources/lang/en'),
@@ -60,8 +59,7 @@ class CrudvelServiceProvider extends ServiceProvider
    *
    * @return void
    */
-  public function register()
-  {
+  public function register(){
     $this->app->singleton('cvHelper', function () {
       return new  \Crudvel\Libraries\Helpers\CvHelper();
     });
