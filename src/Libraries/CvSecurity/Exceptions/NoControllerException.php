@@ -1,6 +1,6 @@
 <?php
 
-namespace Crudvel\Libraries\CvSecurity;
+namespace Crudvel\Libraries\CvSecurity\Exceptions;
 
 class NoControllerException extends \Exception{
   public function __construct($message = null, $code = 0, \Exception $previous = null){

@@ -71,8 +71,8 @@ class CrudvelServiceProvider extends ServiceProvider
       return new \Crudvel\Libraries\CvResource\CvResource($app);
     });
 
-    $this->app->bind('Crudvel\Libraries\CvSecurity\RegisterBuilderInterface', function ($app) {
-      return new \Crudvel\Libraries\CvSecurity\RegisterBuilder();
+    $this->app->bind('Crudvel\Libraries\CvSecurity\Interfaces\RegisterBuilderInterface', function ($app) {
+      return new \Crudvel\Libraries\CvSecurity\Builders\RegisterBuilder();
     });
   }
 }

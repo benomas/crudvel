@@ -1,9 +1,15 @@
 <?php
 
-namespace Crudvel\Libraries\CvSecurity;
+namespace Crudvel\Libraries\CvSecurity\Registers;
 
-use Crudvel\Controllers\ApiController;
-use Crudvel\Libraries\CvSecurity\{NoControllerException,RegisterInterface};
+use Crudvel\Libraries\CvSecurity\Interfaces\{
+  RegisterInterface,
+  RegisterInvokerInterface
+};
+
+use Crudvel\Libraries\CvSecurity\Exceptions\{
+  NoControllerException
+};
 
 class SimpleRegister implements RegisterInterface{
   protected $userControllerInstance;
@@ -13,8 +19,7 @@ class SimpleRegister implements RegisterInterface{
     if(!$this->getUserControllerInstance())
       throw new NoControllerException();
 
-    $this->setSuccessRegistration($this->getUserControllerInstance()->fixUserData()->persist(function(){
-      pdd('asdasd');
+    $this->setSuccessRegistration($this->getUserControllerInstance()->fixRegisterUserData()->persist(function(){
       return true;
     }));
 
@@ -23,12 +28,12 @@ class SimpleRegister implements RegisterInterface{
 
   public function response(){
     return $this->getSuccessRegistration()?
-      $this->getUserControllerInstance()->apiFailResponse():
-      $this->getUserControllerInstance()->apiSuccessResponse($this->getUserControllerInstance()->getModelCollectionInstance());
+    $this->getUserControllerInstance()->apiSuccessResponse($this->getUserControllerInstance()->getModelCollectionInstance()):
+      $this->getUserControllerInstance()->apiFailResponse();
   }
 // [End Specific Logic]
 // [Getters]
-  public function getUserControllerInstance():ApiController{
+  public function getUserControllerInstance():RegisterInvokerInterface{
     return $this->userControllerInstance;
   }
 

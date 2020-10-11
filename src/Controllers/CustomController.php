@@ -291,7 +291,8 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
             return $this->transactionFail();
         }
         catch(\Exception $e){
-          $errorException=$e;
+          cvConsoler(cvNegative($e->getMessage()));
+
           return $this->transactionFail();
         }
       }

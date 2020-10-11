@@ -1,19 +1,22 @@
 <?php
 
-namespace Crudvel\Libraries\CvSecurity;
+namespace Crudvel\Libraries\CvSecurity\Builders;
 
-use Crudvel\Controllers\ApiController;
-use Crudvel\Libraries\CvSecurity\{
+use Crudvel\Libraries\CvSecurity\Exceptions\{
   NoControllerException,
-  NoRegisterException,
+  NoRegisterException
+};
+
+use Crudvel\Libraries\CvSecurity\Interfaces\{
   RegisterInterface,
-  RegisterBuilderInterface
+  RegisterBuilderInterface,
+  RegisterInvokerInterface
 };
 
 class RegisterBuilder implements RegisterBuilderInterface{
   protected $userControllerInstance;
   protected $registers = [
-    'simple-register'=>\Crudvel\Libraries\CvSecurity\SimpleRegister::class
+    'simple-register'=>\Crudvel\Libraries\CvSecurity\Registers\SimpleRegister::class
   ];
 
   public function __construct(){
@@ -37,7 +40,7 @@ class RegisterBuilder implements RegisterBuilderInterface{
   }
 // [End Specific Logic]
 // [Getters]
-  public function getUserControllerInstance():ApiController{
+  public function getUserControllerInstance():RegisterInvokerInterface{
     return $this->userControllerInstance??null;
   }
 
@@ -46,7 +49,7 @@ class RegisterBuilder implements RegisterBuilderInterface{
   }
 // [End Getters]
 // [Setters]
-  public function setUserControllerInstance(ApiController $userControllerInstance=null):RegisterBuilderInterface{
+  public function setUserControllerInstance(RegisterInvokerInterface $userControllerInstance=null):RegisterBuilderInterface{
     $this->userControllerInstance = $userControllerInstance??null;
 
     return $this;
