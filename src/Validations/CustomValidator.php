@@ -7,7 +7,7 @@ use Crudvel\Validations\{BadRuleNameException,RuleDoesntExistException};
 use Illuminate\Support\Arr;
 
 class CustomValidator extends Validator {
-
+  public static $rulesPath = 'Crudvel\Validations\Rules';
 /**
  * Validate that an attribute contains only alpha-numeric characters and spaces.
  *
@@ -759,13 +759,15 @@ private function getIgnore(&$parameters)
   function replaceCvSlugged(...$params){
     return $this->fixValidationLabels(__FUNCTION__,...$params);
   }
+// [Specific Logic]
 //[Compositive  Methods]
-  private function runValidation($ruleCaller,$attribute, $value, $parameters){
+  protected function runValidation($ruleCaller,$attribute, $value, $parameters){
     if (substr($ruleCaller, 0, strlen('validate')) !== 'validate')
       throw new BadRuleNameException($ruleCaller);
 
     $ruleCaller = substr($ruleCaller, strlen('validate'));
-    $ruleClass  = "Crudvel\Validations\Rules\\$ruleCaller";
+    $rulesPath = self::$rulesPath;
+    $ruleClass  = "{$rulesPath}\\$ruleCaller";
 
     if(!class_exists($ruleClass))
       throw new RuleDoesntExistException($ruleClass);
@@ -773,12 +775,13 @@ private function getIgnore(&$parameters)
     return (new $ruleClass($this))->setRule($ruleCaller)->setAttribute($attribute)->setValue($value)->setParameters($parameters)->prepare()->passes();
   }
 
-  private function fixValidationLabels($replaceCaller,$message, $attribute, $rule, $parameters){
+  protected function fixValidationLabels($replaceCaller,$message, $attribute, $rule, $parameters){
     if (substr($replaceCaller, 0, strlen('replace')) !== 'replace')
       throw new BadRuleNameException($replaceCaller);
 
     $replaceCaller = substr($replaceCaller, strlen('replace'));
-    $replaceClass  = "Crudvel\Validations\Rules\\$replaceCaller";
+    $rulesPath = self::$rulesPath;
+    $replaceClass  = "{$rulesPath}\\$replaceCaller";
 
     if(!class_exists($replaceClass))
       throw new RuleDoesntExistException($replaceClass);
@@ -786,4 +789,9 @@ private function getIgnore(&$parameters)
     return (new $replaceClass($this))->setRule($replaceCaller)->setAttribute($attribute)->setParameters($parameters)->setMessage($message)->prepare()->message();
   }
 //[End Compositive Validation]
+// [End Specific Logic]
+// [Getters]
+// [End Getters]
+// [Setters]
+// [End Setters]
 }
