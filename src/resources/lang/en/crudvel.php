@@ -1,9 +1,10 @@
 <?php
 
 $cvGlobalSpecials = [
-  'clientProsubastasPasswordGrantClient' => 'Cliente de autenticacion: pro_subastas Password Grant Client',
-  'clientWebApp'                         => 'Cliente de autenticacion: web-app',
-  'clientMobileApp'                      => 'Cliente de autenticacion: mobile-app',
+  'client-web-app'    => 'Permiso para solicitar token mediante cliente web-app',
+  'client-mobile-app' => 'Permiso para solicitar token mediante cliente mobile-app',
+  'code-hooks'        => 'Permiso para Manejo de anclajes en codigo',
+  'inactives'         => 'Permiso para Acceso a registros inactivos',
 ];
 
 $cvSections =  [
@@ -205,7 +206,17 @@ $cvActions = [
 $cvSpecials=[
   'inactives'        => 'Inactivos',
   'general-owner'    => 'De propiedad general',
-  'particular-owner' => 'De propiedad particular'
+  'particular-owner' => 'De propiedad particular',
+  'files-settings'   => 'Configuración de archivos del recurso',
+  'index-files'      => 'Listar archivos del recurso',
+  'show-files'       => 'Ver archivos del recurso',
+  'create-files'     => 'Vista de creación de archivos del recurso',
+  'store-files'      => 'Crear archivos del recurso',
+  'edit-files'       => 'Vista de edición de archivos del recurso',
+  'update-files'     => 'Actualizar archivos del recurso',
+  'delete-files'     => 'Vista de eliminación de archivos del recurso',
+  'destroy-files'    => 'Eliminar archivos del recurso',
+  'code-hooks'       => 'Establecer Enganches de codigo',
 ];
 
 $cvActionsExtra = [

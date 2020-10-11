@@ -14,6 +14,7 @@ class SimpleRegister implements RegisterInterface{
       throw new NoControllerException();
 
     $this->setSuccessRegistration($this->getUserControllerInstance()->fixUserData()->persist(function(){
+      pdd('asdasd');
       return true;
     }));
 
