@@ -10,4 +10,5 @@ interface RegisterInvokerInterface{
   public function apiFailResponse();
   public function apiSuccessResponse();
   public function getModelCollectionInstance();
+  public function getFields();
 }

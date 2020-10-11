@@ -225,5 +225,12 @@ class User extends \Crudvel\Models\BaseModel{
   public function hasExternalRole(){
     return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->external()->count() > 0;
   }
+
+  public function disabledUser(){
+    if(!$this->active)
+      return true;
+
+    return $this->roles()->actives()->count() === 0;
+  }
 // [End Others]
 }

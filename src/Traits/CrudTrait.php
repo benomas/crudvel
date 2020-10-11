@@ -696,7 +696,7 @@ trait CrudTrait {
   }
 
   public function owner(){
-    if(!$this->getUserModelCollectionInstance())
+    if(!$this->getUserModelCollectionInstance() || $this->getUserModelCollectionInstance()->disabledUser())
       return false;
 
     if($this->getUserModelCollectionInstance()->isRoot())
