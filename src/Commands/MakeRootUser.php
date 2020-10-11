@@ -34,7 +34,6 @@ class MakeRootUser extends Command {
               "active"      => 1,
               'internal'    => 1,
               'external'    => 1,
-              'verified'    => 1,
             ])->save()
           )
           {
