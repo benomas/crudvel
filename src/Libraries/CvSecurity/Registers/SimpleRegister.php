@@ -20,6 +20,9 @@ class SimpleRegister implements RegisterInterface{
       throw new NoControllerException();
 
     $this->setSuccessRegistration($this->getUserControllerInstance()->fixRegisterUserData()->persist(function(){
+      $roleModelClass = get_class($this->getUserControllerInstance()->getModelCollectionInstance()->roles()->getRelated());
+      $this->getUserControllerInstance()->getModelCollectionInstance()->roles()->attach($roleModelClass::slug('min-role')->first()->id);
+
       return true;
     }));
 

@@ -1,8 +1,6 @@
 <?php namespace Customs\Crudvel\Validations;
-/**
- * modificable CustomValidator
- */
-class CustomValidator extends \Crudvel\Validations\CustomValidato {
+
+class RuleDoesntExistException extends \Crudvel\Validations\RuleDoesntExistException{
 // [Specific Logic]
 // [End Specific Logic]
 // [Getters]
