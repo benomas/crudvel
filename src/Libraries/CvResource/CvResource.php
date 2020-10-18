@@ -56,6 +56,7 @@ class CvResource
       return;
 
     $params = $this->setControllerInstance($controllerInstance)
+      ->setControllerClass(get_class($controllerInstance))
       ->getControllerInstance()
       ->setCvResourceInstance($this)
       ->getRootInstance()
