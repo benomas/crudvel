@@ -29,8 +29,8 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0)
       return ;
 
-    $this->setPreProcessedQueryBuilder(kageBunshinNoJutsu($this->getModelBuilderInstance()));
-    $this->tempQuery();
+    $this->setPreProcessedQueryBuilder(kageBunshinNoJutsu($this->getModelBuilderInstance()))
+      ->tempQuery();
     //if it is not a filter query defined
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
@@ -67,6 +67,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
 
       return ;
     }
+
     //if it is not a select query defined
     if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
@@ -77,8 +78,9 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       return ;
     }
 
-    $this->setPreProcessedQueryBuilder(kageBunshinNoJutsu($this->getModelBuilderInstance()));
-    $this->tempQuery();
+    $this->setPreProcessedQueryBuilder(kageBunshinNoJutsu($this->getModelBuilderInstance()))
+      ->tempQuery()
+      ->solveSpecialFilters();
     //if it is not a filter query defined
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
@@ -108,13 +110,16 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     if(!$this->getSearchObject()){
       $querySql = preg_replace('/^select \* from/','select *,1.0  as pt_order from',$this->getModelBuilderInstance()->toSql());
       $bindings = $this->getModelBuilderInstance()->getBindings();
+
       $this->getModelBuilderInstance()
         ->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}")))
         ->setBindings($bindings);
+
       return $this->getModelBuilderInstance();
     }
 
     $words      = (array) preg_split('/\s+/', $this->getSearchObject());
+
     if(count($words) > 10)
       $words = array_slice($words,0,10);
 
@@ -122,15 +127,18 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     //Search by individual column first
     foreach($words AS $key=>$word){
       $match = kageBunshinNoJutsu($this->getModelBuilderInstance())->where(DB::raw($this->getDbEngineContainer()->getFilterQueryString()), 'LIKE', "%{$word}%");
+
       if($match->count())
         $fixedWords[]=$word;
     }
 
     $this->setNumberOfWords(count($fixedWords));
+
     if($this->getNumberOfWords()>0){
       $this->permute($fixedWords);
       array_unshift($this->permutedWords,$fixedWords);
       $this->loadLike([$this->getSearchObject()],'a.1');
+
       foreach($this->permutedWords as $position=>$permutedWord){
         if(count($permutedWord) > 1){
           $fixWeight1 = 'b.'.((string)($this->getNumberOfWords() - count($permutedWord))).'.'.$position;
@@ -141,11 +149,13 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
           $this->loadLike($permutedWord,'c.'.$position);
         }
       }
+
       if(count($words) === $this->getNumberOfWords())
         array_unshift($this->permutedWords,[$this->getSearchObject()]);
     }
     else
       $this->loadLike([$this->getSearchObject()],0);
+
     $this->unions();
   }
 
@@ -183,6 +193,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
         'LIKE',
         "%{$this->makeLike($words)}%"
       );
+
     $querySql = preg_replace('/^select \* from/','select *,"'.($position).'" as pt_order from',$likeBuilder->toSql());
     $bindings = $likeBuilder->getBindings();
     $likeBuilder->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))->setBindings($bindings));
@@ -191,12 +202,14 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
 
   public function loadAndLike($words,$position){
     $likeBuilder = kageBunshinNoJutsu($this->getModelBuilderInstance());
+
     foreach($words as $work)
       $likeBuilder->where(
           DB::raw($this->getDbEngineContainer()->getFilterQueryString()),
           'LIKE',
           "%$work%"
       );
+
     $querySql = preg_replace('/^select \* from/','select *,"'.($position).'" as pt_order from',$likeBuilder->toSql());
     $bindings = $likeBuilder->getBindings();
     $likeBuilder->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))->setBindings($bindings));
@@ -204,9 +217,11 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
   }
   public function unions(){
     $allUnions = null;
+
     foreach((array) $this->combinatoryUnions as $partialUnion){
       if(!$partialUnion)
         continue;
+
       if(!$allUnions)
         $allUnions = $partialUnion;
       else
@@ -215,11 +230,13 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     //ident all unios as one select
 
     $bindings = $allUnions->getBindings();
+
     $allUnions
       ->setQuery(
         \DB::table(\DB::raw("({$allUnions->toSql()}) as {$this->getModelClass()::cvIam()->getTable()}"))
         ->setBindings($bindings)
       );
+
     $this->setModelBuilderInstance($allUnions);
   }
 
@@ -229,6 +246,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
 
   public function setDepthLimit($depthLimit=null){
     $this->depthLimit = $depthLimit;
+
     return $this;
   }
 
@@ -238,6 +256,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
 
   public function setNumberOfWords($numberOfWords=null){
     $this->numberOfWords = $numberOfWords;
+
     return $this;
   }
 
@@ -247,6 +266,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
 
   public function setPreProcessedQueryBuilder($preProcessedQueryBuilder=null){
     $this->preProcessedQueryBuilder = $preProcessedQueryBuilder;
+
     return $this;
   }
 

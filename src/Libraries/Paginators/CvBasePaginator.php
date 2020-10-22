@@ -21,6 +21,8 @@ class CvBasePaginator implements CvCrudInterface
   protected $byColumn;
   //query to be filtered, when byColumn is enabled, every column can have is own individual search
   protected $filterQuery;
+  //array of filter name, filter params to be executed with a prefix method defined in the controller instance, this filter will be applied after normal filters
+  protected $specialFilterQuery;
   //limit of records to be collected
   protected $limit;
   //name of the column to order
@@ -106,6 +108,7 @@ class CvBasePaginator implements CvCrudInterface
       return $this->setFilterQuery(false);
 
     $fixFilterQuery = [];
+
     foreach((array) $this->getFilterQuery() as $key=>$value)
       if(in_array($key,$this->fixedFilterables()))
         $fixFilterQuery[$key]=$value;
@@ -137,6 +140,8 @@ class CvBasePaginator implements CvCrudInterface
       ->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))
       ->setBindings($bindings)
     );
+
+    return $this;
   }
 
 
@@ -150,8 +155,10 @@ class CvBasePaginator implements CvCrudInterface
       ->setSearchObject($paginate["searchObject"]??'')
       ->setSelectQuery($paginate["selectQuery"]??null)
       ->setFilterQuery($paginate["filterQuery"]??null)
+      ->setSpecialFilterQuery($paginate["specialFilterQuery"]??null)
       ->setOrderBy($paginate["orderBy"]??null);
   }
+
   public function filter() {
   }
 
@@ -166,6 +173,7 @@ class CvBasePaginator implements CvCrudInterface
       jdd('invalid custom filter, require to define eOp property');
 
     $lop = $this->logicConnectors[$lop];
+
     if($eOp === 'like')
       $this->getModelBuilderInstance()->$lop($field,$eOp,'%'.$filter['value'].'%');
     else
@@ -203,6 +211,7 @@ class CvBasePaginator implements CvCrudInterface
   public function inyectAddeds(){
     foreach((array) $this->getUnsolvedColumns() as $key=>$unsolved){
       $subqueryTest = 'added'.\Str::studly($unsolved);
+
       if(method_exists($this->getRootInstance(),$subqueryTest)){
         $this->getModelBuilderInstance()->addSelect([$unsolved =>$this->getRootInstance()->{$subqueryTest}()]);
         $this->removeUnsolvedColumn($key);
@@ -223,12 +232,11 @@ class CvBasePaginator implements CvCrudInterface
       $this->fixSelectables();
 
     if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0){
-
       return ;
     }
 
-    $this->tempQuery();
-    //if it is not a filter quary defined
+    $this->tempQuery()->solveSpecialFilters();
+    //if it is not a filter query defined
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
 
@@ -259,7 +267,8 @@ class CvBasePaginator implements CvCrudInterface
 
       return ;
     }
-      //if it is not a select query defined
+
+    //if it is not a select query defined
     if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
 
@@ -269,8 +278,8 @@ class CvBasePaginator implements CvCrudInterface
       return ;
     }
 
-    $this->tempQuery();
-    //if it is not a filter quary defined
+    $this->tempQuery()->solveSpecialFilters();
+    //if it is not a filter query defined
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
 
@@ -292,6 +301,18 @@ class CvBasePaginator implements CvCrudInterface
     $this->getModelBuilderInstance()->select($this->getSelectQuery());
   }
 
+  public function solveSpecialFilters(){
+    if(!$this->getSpecialFilterQuery())
+      return $this;
+
+    foreach($this->getSpecialFilterQuery()??[] as $specialFilter=>$params){
+      if(method_exists($this->getControllerInstance(),cvCamelCase("special filter $specialFilter")))
+        $this->getControllerInstance()->{cvCamelCase("special filter $specialFilter")}($params);
+    }
+
+    return $this;
+  }
+
   public function paginateResponder(){
     // TODO: include this validation || !$this->getModelBuilderInstance()->count()
     if(!$this->getModelBuilderInstance())
@@ -311,6 +332,7 @@ class CvBasePaginator implements CvCrudInterface
       $keyed = $this->getModelBuilderInstance()->get()->keyBy(function ($item) {
         return cvSlugCase($item[$this->getRootInstance()->getSlugField()]);
       });
+
       $this->setPaginateData($keyed->all());
     }
 
@@ -337,8 +359,10 @@ class CvBasePaginator implements CvCrudInterface
     if($selectables && count($selectables)){
       $this->selectQuery = $selectables;
       $this->fixSelectables();
+
       if($this->getModelCollectionInstance() && $this->getModelCollectionInstance()->id)
         $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id);
+
       $response = $this->getModelBuilderInstance()->select($selectables)->first();
     }
 
@@ -362,60 +386,83 @@ class CvBasePaginator implements CvCrudInterface
   public function getPaginate(){
     return $this->paginate??null;
   }
+
   public function getFlexPaginable(){
     return $this->flexPaginable??null;
   }
+
   public function getSelectables(){
     return $this->getRootInstance()->getSelectables();
   }
+
   public function getJoinables(){
     return $this->joinables??null;
   }
+
   public function getLimit(){
     return $this->limit??null;
   }
+
   public function getPage(){
     return $this->page??null;
   }
+
   public function getAscending(){
     return $this->ascending??null;
   }
+
   public function getByColumn(){
     return $this->byColumn??null;
   }
+
   public function getSearchObject(){
     return $this->searchObject??null;
   }
+
   public function getFilterables(){
     return $this->getRootInstance()->getFilterables();
   }
+
   public function getOrderables(){
     return $this->getRootInstance()->getOrderables();
   }
+
   public function getFilterQuery(){
     return $this->filterQuery??null;
   }
+
+  public function getSpecialFilterQuery(){
+    return $this->specialFilterQuery??null;
+  }
+
   public function getOrderBy(){
     return $this->orderBy??null;
   }
+
   public function getSelectQuery(){
     return $this->selectQuery??null;
   }
+
   public function getComparators(){
     return $this->comparators??null;
   }
+
   public function getComparator(){
     return $this->comparator??null;
   }
+
   public function getPaginateCount(){
     return $this->paginateCount??null;
   }
+
   public function getPaginateData(){
     return $this->paginateData??null;
   }
+
   public function getUnsolvedColumns(){
     return $this->unsolvedColumns??null;
   }
+
   public function getDbEngineContainer(){
     return $this->dbEngineContainer??null;
   }
@@ -427,77 +474,98 @@ class CvBasePaginator implements CvCrudInterface
 
     return $this;
   }
+
   public function setPaginate($paginate=null){
     $this->paginate = $paginate??null;
 
     return $this;
   }
+
   public function setPaginateData($paginateData=null){
     $this->paginateData = $paginateData??null;
 
     return $this;
   }
+
   public function setFlexPaginable($flexPaginable=null){
     $this->flexPaginable = $flexPaginable??null;
 
     return $this;
   }
+
   public function setJoinables($joinables){
     $this->joinables = $joinables??null;
 
     return $this;
   }
+
   public function setLimit($limit=null){
     $this->limit = $limit??null;
 
     return $this;
   }
+
   public function setPage($page=null){
     $this->page = $page??null;
 
     return $this;
   }
+
   public function setAscending($ascending=null){
     $this->ascending = $ascending??null;
 
     return $this;
   }
+
   public function setByColumn($byColumn=null){
     $this->byColumn=$byColumn??null;
 
     return $this;
   }
+
   public function setSearchObject($searchObject=null){
     $this->searchObject=$searchObject??null;
 
     return $this;
   }
+
   public function setSelectQuery($selectQuery=null){
     //customLog($selectQuery);
     $this->selectQuery=$selectQuery??null;
 
     return $this;
   }
+
   public function setFilterQuery($filterQuery=null){
     $this->filterQuery=$filterQuery??null;
 
     return $this;
   }
+
+  public function setSpecialFilterQuery($specialFilterQuery=null){
+    $this->specialFilterQuery = $specialFilterQuery??null;
+
+    return $this;
+  }
+
   public function setOrderBy($orderBy=null){
     $this->orderBy=$orderBy??null;
 
     return $this;
   }
+
   public function setComparator($comparator=null){
     $this->comparator=$comparator??null;
 
     return $this;
   }
+
   public function setUnsolvedColumns($unsolvedColumns=null){
     $this->unsolvedColumns=$unsolvedColumns??null;
 
     return $this;
   }
+
   public function setDbEngineContainer($dbEngineContainer=null){
     $this->dbEngineContainer=$dbEngineContainer??null;
 

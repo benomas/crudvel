@@ -9,13 +9,16 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
   public function filter() {
     if(!$this->getSearchObject())
       $this->setSearchObject('');
+
     foreach ($this->getFilterQuery() as $field=>$filter){
       if(is_array($filter)){
         $filters = [];
+
         if(isAssociativeArray($filter))
           $filters[]=$filter;
         else
-        $filters = $filter;
+          $filters = $filter;
+
         foreach($filters as $fieldFilter)
           $this->applyCustomFilter($field,$fieldFilter);
 
