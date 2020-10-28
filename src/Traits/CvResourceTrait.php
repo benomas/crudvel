@@ -4,6 +4,9 @@ namespace Crudvel\Traits;
 
 trait CvResourceTrait
 {
+// [Specific Logic]
+// [End Specific Logic]
+
 // [Getters]
   public function getCamelPluralName(){
     return $this->camelPluralName??null;
@@ -451,20 +454,20 @@ trait CvResourceTrait
     return $this;
   }
 
-  public function setSpecialFilterInstance($specialFilters=null){
-    $this->specialFilters = $specialFilters??null;
+  public function setSpecialFilterInstance($specialFilterInstance=null){
+    $this->specialFilterInstance = $specialFilterInstance??null;
 
     return $this;
   }
 
-  public function setSpecialColumnInstance($specialColumns=null){
-    $this->specialColumns = $specialColumns??null;
+  public function setSpecialColumnInstance($specialColumnInstance=null){
+    $this->specialColumnInstance = $specialColumnInstance??null;
 
     return $this;
   }
 
-  public function setSafeCollectionInstance($safeCollections=null){
-    $this->safeCollections = $safeCollections??null;
+  public function setSafeCollectionInstance($safeCollectionInstance=null){
+    $this->safeCollectionInstance = $safeCollectionInstance??null;
 
     return $this;
   }

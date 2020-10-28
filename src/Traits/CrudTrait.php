@@ -9,6 +9,24 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 
 trait CrudTrait {
+// [Specific Logic]
+  public function solveBeforesPaginate(...$params){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+
+  public function generateAdderInstance(...$params){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+
+  public function generateSafeCollectionInstance(...$params){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+
+  public function solveSafeCollection(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+// [End Specific Logic]
+
 // [Getters]
   public function getCvResourceInstance(){
     return $this->cvResourceInstance??null;
@@ -584,6 +602,8 @@ trait CrudTrait {
   }
 
   public function apiSuccessResponse($data=null){
+    $data = $this->solveSafeCollection($data);
+
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.success")]
@@ -592,6 +612,8 @@ trait CrudTrait {
   }
 
   public function apiIncompleteResponse($data=null){
+    $data = $this->solveSafeCollection($data);
+
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.incomplete")]

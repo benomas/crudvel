@@ -187,6 +187,9 @@ class CvResource
     if(is_object($specialFilterInstance))
       return $this->setSpecialFilterInstance($specialFilterInstance);
 
+    if(is_object($this->getSpecialFilterInstance()))
+      return $this;
+
     if(!($controller = $this->getRootInstance()))
       return $this;
 
@@ -208,6 +211,9 @@ class CvResource
     if(is_object($specialColumnInstance))
       return $this->setSpecialFilterInstance($specialColumnInstance);
 
+    if(is_object($this->getSpecialColumnInstance()))
+      return $this;
+
     if(!($controller = $this->getRootInstance()))
       return $this;
 
@@ -227,7 +233,10 @@ class CvResource
 
   public function generateSafeCollectionInstance($safeCollectionInstance=null){
     if(is_object($safeCollectionInstance))
-      return $this->setSpecialFilterInstance($safeCollectionInstance);
+      return $this->setSafeCollectionInstance($safeCollectionInstance);
+
+    if(is_object($this->getSafeCollectionInstance()))
+      return $this;
 
     if(!($controller = $this->getRootInstance()))
       return $this;
@@ -250,6 +259,9 @@ class CvResource
     if(is_object($preFlowControlInstance))
       return $this->setPreFlowControlInstance($preFlowControlInstance);
 
+    if(is_object($this->getPreFlowControlInstance()))
+      return $this;
+
     if(!($controller = $this->getRootInstance()))
       return $this;
 
@@ -271,6 +283,9 @@ class CvResource
     if(is_object($prePaginatorInstance))
       return $this->setPrePaginatorInstance($prePaginatorInstance);
 
+    if(is_object($this->getPrePaginatorInstance()))
+      return $this;
+
     if(!($controller = $this->getRootInstance()))
       return $this;
 
@@ -291,6 +306,9 @@ class CvResource
   public function generateAdderInstance($adderInstance=null){
     if(is_object($adderInstance))
       return $this->setAdderInstance($adderInstance);
+
+    if(is_object($this->getAdderInstance()))
+      return $this;
 
     if(!($controller = $this->getRootInstance()))
       return $this;
@@ -372,6 +390,56 @@ class CvResource
 
     return $this;
   }
+
+  public function solveBeforesPaginate($method,$parameters){
+    $this->generatePrePaginatorInstance();
+
+    $this->getRootInstance()->beforePaginate($method,$parameters);
+
+    if($this->getPrePaginatorInstance() && method_exists($this->getPrePaginatorInstance(),'beforePaginate')){
+      $this->getPrePaginatorInstance()->beforePaginate($parameters);
+    }
+
+    if(method_exists($this->getRootInstance(),$this->getCurrentAction().'BeforePaginate')){
+      $this->getRootInstance()->{$this->getCurrentAction().'BeforePaginate'}($parameters);
+    }
+
+    if($this->getPrePaginatorInstance() && method_exists($this->getPrePaginatorInstance(),"{$this->getCurrentAction()}BeforePaginate")){
+      $this->getPrePaginatorInstance()->{"{$this->getCurrentAction()}BeforePaginate"}();
+    }
+
+    return $this;
+  }
+
+  public function solveSafeCollection($data=null){
+    if(!$data)
+      return $data;
+
+    if($data instanceof \Illuminate\Support\Collection){
+      $collection = $data;
+    }else{
+      $collection = $data['data'] ?? null;
+
+      if(!$collection || ! $collection instanceof \Illuminate\Support\Collection)
+        return $data;
+    }
+
+    $this->generateSafeCollectionInstance();
+    if($this->getSafeCollectionInstance() && method_exists($this->getSafeCollectionInstance(),"{$this->getCurrentAction()}SafeCollection")){
+      $this->getSafeCollectionInstance()->{"{$this->getCurrentAction()}SafeCollection"}($collection);
+
+      return $data;
+    }
+
+    if($this->getSafeCollectionInstance() && method_exists($this->getSafeCollectionInstance(),'safeCollection')){
+      $this->getSafeCollectionInstance()->safeCollection($collection);
+
+      return $data;
+    }
+
+    return $data;
+  }
+
 
   public function fixFlowControl(){
     $this->getRootInstance()->loadFields();

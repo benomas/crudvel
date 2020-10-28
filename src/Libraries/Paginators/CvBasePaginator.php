@@ -215,6 +215,12 @@ class CvBasePaginator implements CvCrudInterface
       if(method_exists($this->getRootInstance(),$subqueryTest)){
         $this->getModelBuilderInstance()->addSelect([$unsolved =>$this->getRootInstance()->{$subqueryTest}()]);
         $this->removeUnsolvedColumn($key);
+      }else{
+        $this->generateAdderInstance();
+        if($this->getAdderInstance() && method_exists($this->getAdderInstance(),$subqueryTest)){
+          $this->getModelBuilderInstance()->addSelect([$unsolved =>$this->getAdderInstance()->{$subqueryTest}()]);
+          $this->removeUnsolvedColumn($key);
+        }
       }
     }
   }
