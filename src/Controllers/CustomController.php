@@ -55,8 +55,9 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   //Acciones que se basan en un solo elemento
   protected $dirtyPropertys;
   protected $debugg = false;
-  protected $callActionMethod = null;
-  protected $callActionParameters = null;
+  protected $callActionMethod       = null;
+  protected $callActionParameters   = null;
+
   protected $actions         = [
     'index',
     'relatedIndex',

@@ -14,15 +14,18 @@ class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
   public function defaultRules()
   {
     $fields = $this->getFields();
+
     $this->rules=[
       'resource'    => 'required',
       'cat_file_id' => 'required|key_exist:cat_files,id,active,1',
     ];
+
     if(!empty($fields['resource']))
       $this->rules['resource_id'] = 'required|key_exist:'.\Str::slug($fields['resource'],'_').',id';
 
     $this->fileName = '';
     $this->catFile = CatFile::id($fields['cat_file_id']??null)->CvSearch()->first();
+
     if(!empty($fields['resource']) && $this->catFile){
       $this->fileName                         .= $fields['resource'];
       $this->fixedAttributes                  = [];

@@ -131,7 +131,8 @@ class File extends \Crudvel\Models\BaseModel{
   public static function safeCollection ($filesCollection){
     if(($filesCollection = $filesCollection??null)){
       $filesCollection = $filesCollection->map(function($row){
-        $row->catFile->makeHidden(['id','camel_resource','cv_has_code_hook']);
+        \App\Models\CatFile::safeCollection($row->catFile);
+
         return $row;
       })->makeHidden([
         'id',
@@ -140,6 +141,10 @@ class File extends \Crudvel\Models\BaseModel{
         'cv_has_files',
         'cat_file_id',
         'resource_id',
+        'created_at',
+        'updated_at',
+        'created_by',
+        'updated_by',
       ]);
     }
 

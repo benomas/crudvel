@@ -96,5 +96,30 @@ class CatFile extends \Crudvel\Models\BaseModel{
 // [End Scopes]
 
 // [Others]
+
+  public static function safeCollection ($catFilesCollection){
+    if(($catFilesCollection = $catFilesCollection??null)){
+      $catFilesCollection = $catFilesCollection->makeHidden([
+        'id',
+        'camel_resource',
+        'cv_has_code_hook',
+        'created_at',
+        'updated_at',
+        'created_by',
+        'updated_by',
+        'required',
+        'max_size',
+        'min_size',
+        'types',
+        'multiple',
+        'public_path',
+        'resource',
+        'resource_label',
+        'active',
+      ]);
+    }
+
+    return $catFilesCollection;
+  }
 // [End Others]
 }

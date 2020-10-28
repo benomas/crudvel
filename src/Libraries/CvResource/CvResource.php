@@ -48,6 +48,14 @@ class CvResource
   protected $rowsActions;
   protected $flowControl;
 
+  protected $specialFilterInstance  = null;
+  protected $specialColumnInstance  = null;
+  protected $safeCollectionInstance = null;
+  protected $preFlowControlInstance = null;
+  protected $prePaginatorInstance   = null;
+  protected $adderInstance          = null;
+
+// [Specific Logic]
   public function __construct(){
   }
 
@@ -175,6 +183,132 @@ class CvResource
     return $this->setPaginatorInstance(new $paginatorClass($this));
   }
 
+  public function generateSpecialFilterInstance($specialFilterInstance=null){
+    if(is_object($specialFilterInstance))
+      return $this->setSpecialFilterInstance($specialFilterInstance);
+
+    if(!($controller = $this->getRootInstance()))
+      return $this;
+
+    if($controller->getSpecialFilterInstance() && class_exists($controller->getSpecialFilterInstance()))
+      return $this;
+
+    if(!$studlySingularName = $this->getStudlySingularName())
+      return $this;
+
+    $specialFilterClass="App\Http\Auxiliars\SpecialFilters\\{$studlySingularName}SpecialFilter";
+
+    if(!class_exists($specialFilterClass))
+      return $this;
+
+    return $this->setSpecialFilterInstance(new $specialFilterClass());
+  }
+
+  public function generateSpecialColumnInstance($specialColumnInstance=null){
+    if(is_object($specialColumnInstance))
+      return $this->setSpecialFilterInstance($specialColumnInstance);
+
+    if(!($controller = $this->getRootInstance()))
+      return $this;
+
+    if($controller->getSpecialColumnInstance() && class_exists($controller->getSpecialColumnInstance()))
+      return $this;
+
+    if(!$studlySingularName = $this->getStudlySingularName())
+      return $this;
+
+    $specialColumnClass="App\Http\Auxiliars\SpecialColumns\\{$studlySingularName}SpecialColumn";
+
+    if(!class_exists($specialColumnClass))
+      return $this;
+
+    return $this->setSpecialColumnInstance(new $specialColumnClass());
+  }
+
+  public function generateSafeCollectionInstance($safeCollectionInstance=null){
+    if(is_object($safeCollectionInstance))
+      return $this->setSpecialFilterInstance($safeCollectionInstance);
+
+    if(!($controller = $this->getRootInstance()))
+      return $this;
+
+    if($controller->getSafeCollectionInstance() && class_exists($controller->getSafeCollectionInstance()))
+      return $this;
+
+    if(!$studlySingularName = $this->getStudlySingularName())
+      return $this;
+
+    $safeCollectionClass="App\Http\Auxiliars\SafeCollections\\{$studlySingularName}SafeCollection";
+
+    if(!class_exists($safeCollectionClass))
+      return $this;
+
+    return $this->setSafeCollectionInstance(new $safeCollectionClass());
+  }
+
+  public function generatePreFlowControlInstance($preFlowControlInstance=null){
+    if(is_object($preFlowControlInstance))
+      return $this->setPreFlowControlInstance($preFlowControlInstance);
+
+    if(!($controller = $this->getRootInstance()))
+      return $this;
+
+    if($controller->getPreFlowControlInstance() && class_exists($controller->getPreFlowControlInstance()))
+      return $this;
+
+    if(!$studlySingularName = $this->getStudlySingularName())
+      return $this;
+
+    $preFlowControlClass="App\Http\Auxiliars\PreFlowControls\\{$studlySingularName}PreFlowControl";
+
+    if(!class_exists($preFlowControlClass))
+      return $this;
+
+    return $this->setPreFlowControlInstance(new $preFlowControlClass());
+  }
+
+  public function generatePrePaginatorInstance($prePaginatorInstance=null){
+    if(is_object($prePaginatorInstance))
+      return $this->setPrePaginatorInstance($prePaginatorInstance);
+
+    if(!($controller = $this->getRootInstance()))
+      return $this;
+
+    if($controller->getPrePaginatorInstance() && class_exists($controller->getPrePaginatorInstance()))
+      return $this;
+
+    if(!$studlySingularName = $this->getStudlySingularName())
+      return $this;
+
+    $prePaginatorClass="App\Http\Auxiliars\PrePaginators\\{$studlySingularName}PrePaginator";
+
+    if(!class_exists($prePaginatorClass))
+      return $this;
+
+    return $this->setPrePaginatorInstance(new $prePaginatorClass());
+  }
+
+  public function generateAdderInstance($adderInstance=null){
+    if(is_object($adderInstance))
+      return $this->setAdderInstance($adderInstance);
+
+    if(!($controller = $this->getRootInstance()))
+      return $this;
+
+    if($controller->getAdderInstance() && class_exists($controller->getAdderInstance()))
+      return $this;
+
+    if(!$studlySingularName = $this->getStudlySingularName())
+      return $this;
+
+    $adderClass="App\Http\Auxiliars\Adders\\{$studlySingularName}Adder";
+
+    if(!class_exists($adderClass))
+      return $this;
+
+    return $this->setAdderInstance(new $adderClass());
+  }
+
   public function generateModel(){
     if(!($controller = $this->getRootInstance()))
       return $this;
@@ -219,15 +353,36 @@ class CvResource
     return $this;
   }
 
+  public function solveBeforesFlowControl(){
+    $this->generatePreFlowControlInstance();
+
+    $this->getRootInstance()->beforeFlowControl();
+
+    if($this->getPreFlowControlInstance() && method_exists($this->getPreFlowControlInstance(),'beforeFlowControl')){
+      $this->getPreFlowControlInstance()->beforeFlowControl();
+    }
+
+    if(method_exists($this->getRootInstance(),"{$this->getCurrentAction()}BeforeFlowControl")){
+      $this->getRootInstance()->{$this->getCurrentAction().'BeforeFlowControl'}();
+    }
+
+    if($this->getPreFlowControlInstance() && method_exists($this->getPreFlowControlInstance(),"{$this->getCurrentAction()}BeforeFlowControl")){
+      $this->getPreFlowControlInstance()->{"{$this->getCurrentAction()}BeforeFlowControl"}();
+    }
+
+    return $this;
+  }
+
   public function fixFlowControl(){
     $this->getRootInstance()->loadFields();
-
+    $this->solveBeforesFlowControl();
+/*
     $this->getRootInstance()->beforeFlowControl($this->getCurrentAction());
 
     if(method_exists($this->getRootInstance(),$this->getCurrentAction().'BeforeFlowControl')){
       $this->getRootInstance()->{$this->getCurrentAction().'BeforeFlowControl'}();
     }
-
+*/
     if(!$this->getSkipModelValidation() && !$this->getModelBuilderInstance())
       return $this->setFlowControl(function () {
         return $this->getRootInstance()->apiNotFound();
@@ -263,8 +418,8 @@ class CvResource
       });
 
     if( in_array($this->getCurrentAction(),$this->getRowsActions()) &&
-        $this->getModelBuilderInstance() &&
-        !$this->getModelBuilderInstance()->count()
+      $this->getModelBuilderInstance() &&
+      !$this->getModelBuilderInstance()->count()
     )
       return $this->setFlowControl(function(){
         return $this->getRootInstance()->apiSuccessResponse([
@@ -444,4 +599,5 @@ class CvResource
   public function extractPaginateFields(){
     return $this->setPaginateFields($this->fields['b64Query']['paginate'] ?? null);
   }
+// [End Specific Logic]
 }

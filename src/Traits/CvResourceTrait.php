@@ -4,7 +4,7 @@ namespace Crudvel\Traits;
 
 trait CvResourceTrait
 {
-  //Getters start
+// [Getters]
   public function getCamelPluralName(){
     return $this->camelPluralName??null;
   }
@@ -36,7 +36,7 @@ trait CvResourceTrait
   public function getStudlySingularName(){
     return $this->studlySingularName??null;
   }
-  //-----------
+
   public function getControllerClass(){
     return $this->controllerClass??null;
   }
@@ -100,7 +100,7 @@ trait CvResourceTrait
   public function getCvResourceInstance(){
     return $this;
   }
-  //-----------
+
   public function getRows(){
     return $this->rows??null;
   }
@@ -136,7 +136,6 @@ trait CvResourceTrait
   public function getActionResource(){
     return $this->actionResource??null;
   }
-  //-----------
   public function getActions(){
     return $this->getRootInstance()->getActions();
   }
@@ -186,9 +185,32 @@ trait CvResourceTrait
   public function getPaginated(){
     return $this->getRootInstance()->getPaginated();
   }
-  //Getters end
 
-  //Setters start
+  public function getSpecialFilterInstance(){
+    return $this->specialFilterInstance??null;
+  }
+
+  public function getSpecialColumnInstance(){
+    return $this->specialColumnInstance??null;
+  }
+
+  public function getSafeCollectionInstance(){
+    return $this->safeCollectionInstance??null;
+  }
+
+  public function getPreFlowControlInstance(){
+    return $this->preFlowControlInstance??null;
+  }
+
+  public function getPrePaginatorInstance(){
+    return $this->prePaginatorInstance??null;
+  }
+
+  public function getAdderInstance(){
+    return $this->adderInstance??null;
+  }
+// [End Getters]
+// [Setters]
   public function setCamelPluralName($camelPluralName=null){
     $this->camelPluralName = $camelPluralName;
 
@@ -236,7 +258,7 @@ trait CvResourceTrait
 
     return $this;
   }
-  //-----------
+
   public function setControllerClass($controllerClass=null){
     $this->controllerClass = $controllerClass;
 
@@ -374,7 +396,7 @@ trait CvResourceTrait
 
     return $this;
   }
-  //-----------
+
   public function setActions($actions=null){
     if($this->getRootInstance())
       $this->getRootInstance()->setActions($actions);
@@ -428,5 +450,41 @@ trait CvResourceTrait
 
     return $this;
   }
-  //Setters end
+
+  public function setSpecialFilterInstance($specialFilters=null){
+    $this->specialFilters = $specialFilters??null;
+
+    return $this;
+  }
+
+  public function setSpecialColumnInstance($specialColumns=null){
+    $this->specialColumns = $specialColumns??null;
+
+    return $this;
+  }
+
+  public function setSafeCollectionInstance($safeCollections=null){
+    $this->safeCollections = $safeCollections??null;
+
+    return $this;
+  }
+
+  public function setPrePaginatorInstance($prePaginatorInstance=null){
+    $this->prePaginatorInstance = $prePaginatorInstance??null;
+
+    return $this;
+  }
+
+  public function setPreFlowControlInstance($preFlowControlInstance=null){
+    $this->preFlowControlInstance = $preFlowControlInstance??null;
+
+    return $this;
+  }
+
+  public function setAdderInstance($adderInstance=null){
+    $this->adderInstance = $adderInstance??null;
+
+    return $this;
+  }
+// [End Setters]
 }

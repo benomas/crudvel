@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 
 trait CrudTrait {
-  //Getters start
+// [Getters]
   public function getCvResourceInstance(){
     return $this->cvResourceInstance??null;
   }
@@ -205,9 +205,33 @@ trait CrudTrait {
   public function getPaginated(...$params){
     return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
-  //Getters end
 
-  //Setters start
+  public function getSpecialFilterInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+
+  public function getSpecialColumnInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+
+  public function getSafeCollectionInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+
+  public function getPreFlowControlInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+
+  public function getPrePaginatorInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+
+  public function getAdderInstance(...$params){
+    return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
+  }
+// [End Getters]
+
+// [Setters]
   public function setCamelPluralName($camelPluralName=null){
     return $this->setCvResourceInstanceMethod(__FUNCTION__,$camelPluralName);
   }
@@ -375,7 +399,31 @@ trait CrudTrait {
   public function setPaginated($paginated=null){
     return $this->setCvResourceInstanceMethod(__FUNCTION__,$paginated);
   }
-  //Setters end
+
+  public function setSpecialFilterInstance($params=null){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$params);
+  }
+
+  public function setSpecialColumnInstance($params=null){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$params);
+  }
+
+  public function setSafeCollectionInstance($params=null){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$params);
+  }
+
+  public function setPrePaginatorInstance($params=null){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$params);
+  }
+
+  public function setPreFlowControlInstance($params=null){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$params);
+  }
+
+  public function setAdderInstance($params=null){
+    return $this->setCvResourceInstanceMethod(__FUNCTION__,$params);
+  }
+// [End Setters]
 //-----
   public function injectCvResource(){
     return $this->setCvResourceInstance($this->getCvResourceClass()::getCvResourceInstance());
