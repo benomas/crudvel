@@ -166,4 +166,8 @@ trait FunctionTrait
   public function cvGetSomeKeysAsList ($array,$key='id'){
     return collect($this->cvGetSomeKeys($array,null,$key))->pluck($key)->toArray();
   }
+
+  public function cvRandomSafeToken ($size){
+    return bin2hex(openssl_random_pseudo_bytes($size, $cstrong));
+  }
 }

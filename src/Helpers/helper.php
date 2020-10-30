@@ -1296,3 +1296,7 @@ if(!function_exists("cvDbBuilder")){
   function cvDbBuilder(...$params){return CvHelper::cvDbBuilder(...$params);}
 }
 
+if(!function_exists("cvRandomSafeToken")){
+  function cvRandomSafeToken(...$params){return CvHelper::cvRandomSafeToken(...$params);}
+}
+
