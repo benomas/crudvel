@@ -405,7 +405,7 @@ class CvResource
     }
 
     if($this->getPrePaginatorInstance() && method_exists($this->getPrePaginatorInstance(),"{$this->getCurrentAction()}BeforePaginate")){
-      $this->getPrePaginatorInstance()->{"{$this->getCurrentAction()}BeforePaginate"}();
+      $this->getPrePaginatorInstance()->{"{$this->getCurrentAction()}BeforePaginate"}($parameters);
     }
 
     return $this;
