@@ -302,9 +302,33 @@ trait CvBaseScopeTrait
   }
 
   public function scopeRelatedTo ($query,$relatedResource,$relatedKey) {
-    $query->whereHas(cvCaseFixer('plural|camel',$relatedResource),function($query) use ($relatedKey) {
+    $related           = cvCaseFixer('plural|camel',$relatedResource);
+    $selftTable        = $this->getTable();
+    $relatedKeyName    = cvCaseFixer('singular|snake',$related).'_id';
+    $selftTableKeyName = cvCaseFixer('singular|snake',$selftTable).'_id';
+    $reference = kageBunshinNoJutsu($query)->first();
+
+    if(!$reference)
+      return $query;
+
+    $intermediateTable =$reference->{$related}()->getTable();
+
+    return $query->whereHas($related,function($query) use ($relatedKey) {
       $query->key($relatedKey);
-    });
+    })->addSelect([
+      'related_order'=>\DB::table("$intermediateTable as ro")
+        ->whereColumn("ro.$selftTableKeyName","$selftTable.id")
+        ->where("ro.$relatedKeyName",$relatedKey)
+        ->selectRaw("(
+          SELECT
+            COUNT(ro2.id) + 1
+          FROM
+              $intermediateTable as ro2
+          WHERE
+            ro2.$relatedKeyName = $relatedKey AND ro2.id < ro.id
+          ) as relative_order")
+        ->limit(1)
+    ]);
   }
 
   public function scopeByResource($query,$resource,$resourceKey){

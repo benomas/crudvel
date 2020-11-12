@@ -220,6 +220,11 @@ class ApiController extends CustomController{
   public static function loadSimpleRelationator(){
     return new \Crudvel\Libraries\CvResourceInteractions\CvSimpleRelationator;
   }
+
+  public function relatedIndexBeforePaginate($params = []){
+    extract($params);
+    $this->getRootInstance()->addSelectables('related_order');
+  }
 //to be deprecated
 /*
 // atachers

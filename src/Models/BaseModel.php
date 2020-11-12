@@ -21,7 +21,7 @@ class BaseModel extends Model implements CvCrudInterface
   protected $cvResourceInstance;
   protected $schema;
   protected $hasPropertyActive = true;
-  protected $hidden            = ['pivot'];
+  //protected $hidden            = ['pivot'];
   protected $cacheBoots        = [];
   protected $modelMetaData     = null;
   protected $cvSearches        = [];

@@ -283,7 +283,6 @@ class CvBasePaginator implements CvCrudInterface
 
       return ;
     }
-
     $this->tempQuery()->solveSpecialFilters();
     //if it is not a filter query defined
     if(noEmptyArray($this->getFilterQuery()))
