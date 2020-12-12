@@ -7,10 +7,11 @@ interface DataCollectorInterface{
   public function getChuckSize();
   public function getOffSet();
   public function getCount();
-  public function setPage($page);
-  public function setCount($count);
+  public function setPage($page=1);
+  public function setCount($count=0);
+  public function setChuckSize($chuckSize=10);
+  public function loadContextData($contextData=null);
   public function counter();
-  public function setChuckSize($chuckSize);
   public function incresePage();
   public function init();
 }

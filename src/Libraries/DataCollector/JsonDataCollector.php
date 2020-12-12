@@ -13,85 +13,14 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
   public function __construct(JsonDataCallerInterface $dataCallerInstace){
     $this->setDataCallerInstace($dataCallerInstace);
   }
-
+  
+  public function loadContextData($contextData=null){
+    return $this->setJsonPath($contextData);
+  }
+// [Specific Logic]
   public function init(){
     $this->getDataCallerInstace()->loadJsonPath();
     $this->loadJsonFiles()->setCount($this->counter());
-  }
-
-  public function getChunkedCollection($chuckSize = 100, $pageNumber = 0):array {
-    $offset = $pageNumber * $chuckSize;
-
-    if ($offset >= $this->getCount())
-      return [];
-
-    return [];
-  }
-
-  public function getNextChunk($next=null):array {
-    if ($this->getOffSet() >= $this->getCount())
-      return [];
-
-    $arraySegment = $this->requestJsonPortion();
-
-    if(is_callable($next))
-      if(!$next($arraySegment))
-        throw new \Exception('next callback fail');
-
-    return $this->responseAndAdvace($this->getDataCallerInstace()->dataTransform($arraySegment));
-  }
-
-  public function getDataCallerInstace():JsonDataCallerInterface{
-    return $this->dataCallerInstace??null;
-  }
-
-  public function setDataCallerInstace(JsonDataCallerInterface $dataCallerInstace){
-    $this->dataCallerInstace = $dataCallerInstace??null;
-    return $this;
-  }
-
-  public function getJsonPath(){
-    return $this->jsonPath??null;
-  }
-
-  public function getJsonFilePaths(){
-    return $this->jsonFilePaths??null;
-  }
-
-  public function getJsonsCount(){
-    return count($this->jsonFilePaths);
-  }
-
-  public function getCurrentJsonPosition(){
-    return $this->currentJsonPosition??0;
-  }
-
-  public function getCurrentJsonContent(){
-    return $this->currentJsonContent??null;
-  }
-
-  public function setJsonPath($jsonPath=null){
-    $this->jsonPath = $jsonPath??null;
-
-    return $this;
-  }
-
-  public function setJsonFilePaths($jsonFilePaths=null){
-    $this->jsonFilePaths = $jsonFilePaths??null;
-
-    return $this;
-  }
-
-  public function setCurrentJsonPosition($currentJsonPosition=0){
-    $this->currentJsonPosition = $currentJsonPosition??0;
-
-    return $this;
-  }
-
-  public function setCurrentJsonContent($currentJsonContent=null){
-    $this->currentJsonContent = $currentJsonContent??null;
-
-    return $this;
   }
 
   public function loadJsonFiles(){
@@ -104,6 +33,7 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
     if ($files){
       foreach($files as $file){
         $pathInfo = pathinfo($file);
+
         if($pathInfo['extension'] === 'json')
           $jsonFiles[]=$this->getJsonPath().$file;
       }
@@ -129,6 +59,7 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
 
   protected function increseCurrentJsonPosition(){
     $this->currentJsonPosition++;
+    
     return $this;
   }
 
@@ -176,4 +107,84 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
 
     return $newJsonPortion;
   }
+// [End Specific Logic]
+
+// [Getters]
+  public function getChunkedCollection($chuckSize = 100, $pageNumber = 0):array {
+    $offset = $pageNumber * $chuckSize;
+
+    if ($offset >= $this->getCount())
+      return [];
+
+    return [];
+  }
+
+  public function getNextChunk($next=null):array {
+    if ($this->getOffSet() >= $this->getCount())
+      return [];
+
+    $arraySegment = $this->requestJsonPortion();
+
+    if(is_callable($next))
+      if(!$next($arraySegment))
+        throw new \Exception('next callback fail');
+
+    return $this->responseAndAdvace($this->getDataCallerInstace()->dataTransform($arraySegment));
+  }
+
+  public function getDataCallerInstace():JsonDataCallerInterface{
+    return $this->dataCallerInstace??null;
+  }
+
+  public function getJsonPath(){
+    return $this->jsonPath??null;
+  }
+
+  public function getJsonFilePaths(){
+    return $this->jsonFilePaths??null;
+  }
+
+  public function getJsonsCount(){
+    return count($this->jsonFilePaths);
+  }
+
+  public function getCurrentJsonPosition(){
+    return $this->currentJsonPosition??0;
+  }
+
+  public function getCurrentJsonContent(){
+    return $this->currentJsonContent??null;
+  }
+// [End Getters]
+
+// [Setters]
+  public function setDataCallerInstace(JsonDataCallerInterface $dataCallerInstace){
+    $this->dataCallerInstace = $dataCallerInstace??null;
+    return $this;
+  }
+
+  public function setJsonPath($jsonPath=null):JsonDataCollectorInterface{
+    $this->jsonPath = $jsonPath??null;
+
+    return $this;
+  }
+
+  public function setJsonFilePaths($jsonFilePaths=null){
+    $this->jsonFilePaths = $jsonFilePaths??null;
+
+    return $this;
+  }
+
+  public function setCurrentJsonPosition($currentJsonPosition=0){
+    $this->currentJsonPosition = $currentJsonPosition??0;
+
+    return $this;
+  }
+
+  public function setCurrentJsonContent($currentJsonContent=null){
+    $this->currentJsonContent = $currentJsonContent??null;
+
+    return $this;
+  }
+// [End Setters]
 }

@@ -470,10 +470,13 @@ trait CrudTrait {
 
   public function modelInstanciator($new=false){
     $model = $this->getModelClass();
+
     if(!class_exists($model))
       return null;
+      
     if($new)
       return new $model();
+
     return $model::noFilters();
   }
 

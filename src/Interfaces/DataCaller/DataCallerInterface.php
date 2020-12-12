@@ -5,6 +5,6 @@ use Crudvel\Interfaces\DataCollector\DataCollectorInterface;
 
 interface DataCallerInterface{
   public function getCurrentCollectorInstance():DataCollectorInterface;
-  public function setCurrentCollectorInstance(DataCollectorInterface $dataCollectorInterface);
+  public function setCurrentCollectorInstance(DataCollectorInterface $currentCollectorInstance=null);
   public function dataTransform(array $arraySegment):array;
 }

@@ -7,11 +7,29 @@ Class BaseDataCollector{
   protected $count             = 0;
   protected $dataCallerInstace = null;
 
+// [Specific Logic]
   protected function responseAndAdvace(Array $arraySegment):Array{
     $this->incresePage();
     return $arraySegment;
   }
 
+  public function incresePage(){
+    $this->page ++;
+
+    return $this;
+  }
+
+  public function nextSegment(){
+    $nextSegment  =  $this->getOffSet() + $this->getChuckSize();
+
+    if($nextSegment > $this->getCount())
+      return $this->getCount() - $this->getOffSet();
+
+    return $this->getChuckSize();
+  }
+// [End Specific Logic]
+
+// [Getters]
   public function getPage(){
     return $this->page??0;
   }
@@ -27,7 +45,9 @@ Class BaseDataCollector{
   public function getCount(){
     return $this->count??0;
   }
+// [End Getters]
 
+// [Setters]
   public function setPage($page=0){
     $this->page = $page??0;
 
@@ -45,19 +65,5 @@ Class BaseDataCollector{
 
     return $this;
   }
-
-  public function incresePage(){
-    $this->page ++;
-
-    return $this;
-  }
-
-  public function nextSegment(){
-    $nextSegment  =  $this->getOffSet() + $this->getChuckSize();
-
-    if($nextSegment > $this->getCount())
-      return $this->getCount() - $this->getOffSet();
-
-    return $this->getChuckSize();
-  }
+// [End Setters]
 }

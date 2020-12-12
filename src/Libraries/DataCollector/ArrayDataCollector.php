@@ -11,12 +11,23 @@ Class ArrayDataCollector extends BaseDataCollector implements DataCollectorInter
     $this->setDataCallerInstace($dataCallerInstace);
   }
 
+// [Specific Logic]
   //Open source and count total data
   public function init(){
     $this->getDataCallerInstace()->loadArrayData();
     $this->setCount($this->counter());
   }
 
+  public function counter(){
+    return count($this->getArrayData());
+  }
+  
+  public function loadContextData($contextData=null){
+    return $this->setArrayData($contextData);
+  }
+// [End Specific Logic]
+
+// [Getters]
   public function getChunkedCollection($chuckSize = 100, $pageNumber = 0):Array {
     $offset = $pageNumber * $chuckSize;
 
@@ -47,6 +58,10 @@ Class ArrayDataCollector extends BaseDataCollector implements DataCollectorInter
     return $this->dataCallerInstace??null;
   }
 
+// [End Getters]
+
+// [Setters]
+
   public function setArrayData($arrayData=[]){
     $this->arrayData = $arrayData??[];
 
@@ -58,8 +73,5 @@ Class ArrayDataCollector extends BaseDataCollector implements DataCollectorInter
 
     return $this;
   }
-
-  public function counter(){
-    return count($this->getArrayData());
-  }
+// [End Setters]
 }

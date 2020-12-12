@@ -5,65 +5,77 @@ use Crudvel\Interfaces\DataCollector\{DataCollectorInterface,ModelDataCollectorI
 use Crudvel\Interfaces\DataCaller\ModelDataCallerInterface;
 
 Class ModelDataCollector extends BaseDataCollector implements DataCollectorInterface,ModelDataCollectorInterface {
-  protected $modelData = [];
+  protected $modelBuilderInstance = [];
 
   public function __construct(ModelDataCallerInterface $dataCallerInstace){
     $this->setDataCallerInstace($dataCallerInstace);
   }
 
+// [Specific Logic]
   //Open source and count total data
   public function init(){
-    $this->getDataCallerInstace()->loadModelData();
+    $this->getDataCallerInstace()->loadModelSrc();
     $this->setCount($this->counter());
   }
 
+  public function counter(){
+    $modelBuilderInstance = $this->getModelBuilderInstance();
+
+    return $modelBuilderInstance ? $modelBuilderInstance->count(): 0;
+  }
+  
+  public function loadContextData($contextData=null){
+    if($contextData && class_exists($contextData))
+      return $this->setModelBuilderInstance($contextData::noFilters());
+
+    return $this->setModelBuilderInstance(null);
+  }
+// [End Specific Logic]
+
+// [Getters]
   // TODO : complete this implementation
   public function getChunkedCollection($chuckSize = 100, $pageNumber = 0):Array {
     $offset = $pageNumber * $chuckSize;
 
     if ($offset >= $this->getCount())
       return [];
-    return array_slice($this->getModelData(), $offset, $offset+$chuckSize);
+
+    return kageBunshinNoJutsu($this->getModelBuilderInstance())->offset($offset)->limit($chuckSize)->get()->toArray();
   }
 
   public function getNextChunk($next=null):Array {
-    if ($this->getOffSet() >= $this->getCount()){
+    if ($this->getOffSet() >= $this->getCount())
       return [];
-    }
 
-    $arraySegment = array_slice($this->getModelData(), $this->getOffSet(), $this->nextSegment());
+    $arraySegment = kageBunshinNoJutsu($this->getModelBuilderInstance())->offset($this->getOffSet())->limit($this->nextSegment())->get()->toArray();
 
     if(is_callable($next))
       if(!$next($arraySegment))
         throw new \Exception('next callback fail');
-    return $this->responseAndAdvace($this->getDataCallerInstace()->dataTransform($arraySegment));
-  }
 
-  public function getModelData(){
-    return $this->modelData??[];
+    return $this->responseAndAdvace($this->getDataCallerInstace()->dataTransform($arraySegment));
   }
 
   public function getDataCallerInstace():ModelDataCallerInterface{
     return $this->dataCallerInstace??null;
   }
 
-  public function setModelData($modelName=null){
-    if(!$modelName || !class_exists($modelName)){
-      $this->modelData = [];
-      return $this;
-    }
-
-    $model = new $modelName;
-    $this->modelData = $model::all()->toArray();
-    return $this;
+  public function getModelBuilderInstance(){
+    return $this->modelBuilderInstance??null;
   }
+// [End Getters]
 
+// [Setters]
   public function setDataCallerInstace(ModelDataCallerInterface $dataCallerInstace){
     $this->dataCallerInstace = $dataCallerInstace??null;
+
     return $this;
   }
 
-  public function counter(){
-    return count($this->modelData);
+  public function setModelBuilderInstance($modelBuilderInstance=null){
+    $this->modelBuilderInstance = $modelBuilderInstance??null;
+
+    return $this;
   }
+// [End Setters]
 }
