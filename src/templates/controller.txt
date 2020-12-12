@@ -6,10 +6,10 @@ use App\Http\Requests$ENTITYSEGMENTS$\$ENTITY$Request;
 
 class $ENTITY$Controller extends BaseController
 {
-    public function __construct($ENTITY$Repository $repository,$ENTITY$Request $request){
-        parent::__construct();
-        $this->repository = $repository;
-        $this->request    = $request;
-        $this->mainTableName='$MAINTABLE$';
-    }
+  public function __construct($ENTITY$Repository $repository,$ENTITY$Request $request){
+    parent::__construct();
+    $this->repository = $repository;
+    $this->request    = $request;
+    $this->mainTableName='$MAINTABLE$';
+  }
 }

@@ -1,24 +1,24 @@
 <?php namespace Database\Seeds;
 
 class <##[singular|studly](resource)##>TableSeeder extends \Customs\Crudvel\Database\Seeds\BaseSeeder{
-	protected $data =[
-		[
-			'name'        => '<##[singular|title](resource)##>1',
-			'description' => '<##[singular|title](resource)##>1, this is a default example',
-			'code_hook'   => '<##[singular|title](resource)##>1',
-			'active'      => 1,
-		],
-		[
-			'name'        => '<##[singular|title](resource)##>2',
-			'description' => '<##[singular|title](resource)##>2, this is a default example',
-			'code_hook'   => '<##[singular|title](resource)##>1',
-			'active'      => 1,
-		],
-		[
-			'name'        => '<##[singular|title](resource)##>3',
-			'description' => '<##[singular|title](resource)##>3, this is a default example',
-			'code_hook'   => '<##[singular|title](resource)##>1',
-			'active'      => 1,
-		],
-	];
+  protected $data =[
+    [
+      'name'        => '<##[singular|title](resource)##>1',
+      'description' => '<##[singular|title](resource)##>1, this is a default example',
+      'code_hook'   => '<##[singular|title](resource)##>1',
+      'active'      => 1,
+    ],
+    [
+      'name'        => '<##[singular|title](resource)##>2',
+      'description' => '<##[singular|title](resource)##>2, this is a default example',
+      'code_hook'   => '<##[singular|title](resource)##>1',
+      'active'      => 1,
+    ],
+    [
+      'name'        => '<##[singular|title](resource)##>3',
+      'description' => '<##[singular|title](resource)##>3, this is a default example',
+      'code_hook'   => '<##[singular|title](resource)##>1',
+      'active'      => 1,
+    ],
+  ];
 }
