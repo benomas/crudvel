@@ -4,9 +4,9 @@ use Illuminate\Database\Seeder;
 use DB;
 use Crudvel\Traits\CrudTrait;
 use Illuminate\Support\Facades\Schema;
-use Crudvel\Interfaces\DataCaller\{DataCallerInterface,ArrayDataCallerInterface,JsonDataCallerInterface,ModelDataCallerInterface};
+use Crudvel\Interfaces\DataCaller\{DataCallerInterface,ArrayDataCallerInterface,JsonDataCallerInterface,ModelDataCallerInterface,XlsxDataCallerInterface};
 use Crudvel\Interfaces\DataCollector\DataCollectorInterface;
-class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerInterface,JsonDataCallerInterface,ModelDataCallerInterface
+class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerInterface,JsonDataCallerInterface,ModelDataCallerInterface,XlsxDataCallerInterface
 {
   protected $baseClass;
   protected $modelClass;
@@ -22,7 +22,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
     'arrayCollector' => \Crudvel\Libraries\DataCollector\ArrayDataCollector::class,
     'jsonCollector'  => \Crudvel\Libraries\DataCollector\JsonDataCollector::class,
     'modelCollector' => \Crudvel\Libraries\DataCollector\ModelDataCollector::class,
-    'xlsxCollector'  => \Crudvel\Libraries\DataCollector\DataCollectorXLSX::class,
+    //'xlsxCollector'  => \Crudvel\Libraries\DataCollector\DataCollectorXLSX::class,//not completed yet
   ];
   use CrudTrait;
 

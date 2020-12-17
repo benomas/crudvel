@@ -4,57 +4,44 @@ namespace Crudvel\Libraries\DataCollector;
 use \Maatwebsite\Excel\Facades\Excel;
 use Crudvel\Interfaces\DataCollector\{DataCollectorInterface,XlsxDataCollectorInterface};
 use Crudvel\Interfaces\DataCaller\XlsxDataCallerInterface;
-
+use Crudvel\Imports\ModelImporterInterceptor;
 Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterface,XlsxDataCollectorInterface {
   protected $xlsxPath               = '';
-  protected $xlsxFilePaths          = [];
-  protected $currentXlsxPosition    = 0;
-  protected $currentXlsxContent     = [];
+  protected $xlsxFilePath           = null;
+  protected $importerInterceptor;
 
   public function __construct(XlsxDataCallerInterface $dataCallerInstace){
     $this->setDataCallerInstace($dataCallerInstace);
   }
   
   public function loadContextData($contextData=null){
-    return $this->setXlsxPath($contextData);
+    return $this->setXlsxPath($contextData)
+      ->setImporterInterceptor(new ModelImporterInterceptor('App\Models\CatInegiState'));
   }
 // [Specific Logic]
   public function init(){
     $this->getDataCallerInstace()->loadXlsxPath();
-    $this->loadXlsxFiles()->setCount($this->counter());
+    $this->loadXlsxFile()->setCount($this->counter());
   }
 
-  public function loadXlsxFiles(){
-    if(!file_exists($this->getXlsxPath()))
-      return $this->setXlsxFilePaths([]);
-
-    $files     = assetsMap($this->getXlsxPath());
-    $xlsxFiles = [];
-
-    if ($files){
-      foreach($files as $file){
-        $pathInfo = pathinfo($file);
-
-        if($pathInfo['extension'] === 'xlsx')
-          $xlsxFiles[]=$this->getXlsxPath().$file;
-      }
-    }
-
-    return $this->setXlsxFilePaths($xlsxFiles);
+  public function loadXlsxFile(){
+    return $this->setXlsxFilePath("{$this->getXlsxPath()}data.xlsx");
   }
 
   public function counter(){
     $count = 0;
 
-    foreach($this->getXlsxFilePaths() as $xlsxPath){
-      try{
-        $count = $count + count($this->loadXlsxContent($xlsxPath));
-      }catch(\Exception $e){
-        pdd($xlsxPath);
-        cvConsoleException($e,$xlsxPath);
-      }
-    }
+    if(!file_exists($this->getXlsxFilePath()))
+      return 0;
 
+    Excel::import($this->getImporterInterceptor(), $this->getXlsxFilePath());
+
+    $excel = Excel::getFacadeRoot();
+    $test=[];
+    customLog('Load 1');
+    $test[]=$excel->import($this->getImporterInterceptor(), $this->getXlsxFilePath());
+    customLog('Load 2');
+    pdd($test);
     return $count;
   }
 
@@ -69,10 +56,10 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
   }
 
   protected function nextFile(){
-    if(count($this->getXlsxFilePaths()) <= $this->getCurrentXlsxPosition())
+    if(count($this->getXlsxFilePath()) <= $this->getCurrentXlsxPosition())
       return null;
 
-    $nextFile = $this->getXlsxFilePaths()[$this->getCurrentXlsxPosition()];
+    $nextFile = $this->getXlsxFilePath()[$this->getCurrentXlsxPosition()];
     $this->increseCurrentXlsxPosition();
 
     return $nextFile;
@@ -141,12 +128,12 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
     return $this->xlsxPath??null;
   }
 
-  public function getXlsxFilePaths(){
-    return $this->xlsxFilePaths??null;
+  public function getXlsxFilePath(){
+    return $this->xlsxFilePath??null;
   }
 
   public function getXlsxsCount(){
-    return count($this->xlsxFilePaths);
+    return count($this->xlsxFilePath);
   }
 
   public function getCurrentXlsxPosition(){
@@ -155,6 +142,10 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
 
   public function getCurrentXlsxContent(){
     return $this->currentXlsxContent??null;
+  }
+
+  public function getImporterInterceptor(){
+    return $this->importerInterceptor??null;
   }
 // [End Getters]
 
@@ -170,8 +161,8 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
     return $this;
   }
 
-  public function setXlsxFilePaths($xlsxFilePaths=null){
-    $this->xlsxFilePaths = $xlsxFilePaths??null;
+  public function setXlsxFilePath($xlsxFilePath=null){
+    $this->xlsxFilePath = $xlsxFilePath??null;
 
     return $this;
   }
@@ -184,6 +175,12 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
 
   public function setCurrentXlsxContent($currentXlsxContent=null){
     $this->currentXlsxContent = $currentXlsxContent??null;
+
+    return $this;
+  }
+
+  public function setImporterInterceptor($importerInterceptor=null){
+    $this->importerInterceptor = $importerInterceptor??null;
 
     return $this;
   }
