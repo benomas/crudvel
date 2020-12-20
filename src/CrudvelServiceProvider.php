@@ -1,7 +1,6 @@
 <?php namespace Benomas\Crudvel;
 
 use Illuminate\Support\ServiceProvider;
-
 class CrudvelServiceProvider extends ServiceProvider
 {
   /**
