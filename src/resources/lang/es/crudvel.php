@@ -201,6 +201,27 @@ $cvActions = [
     'called_message' =>'Obteniendo archivos del recurso',
     'for'            =>'(api.cliente)',
   ],
+
+  'register' => [
+    'call_message'   =>'Registrar',
+    'called_message' =>'Registrando',
+    'success'        =>'Registrando',
+    'for'            =>'(back y front)',
+  ],
+
+  'recovery' => [
+    'call_message'   =>'Recuperar',
+    'called_message' =>'Recuperando',
+    'success'        =>'Recuperado',
+    'for'            =>'(back y front)',
+  ],
+
+  'storeUpdate'  => [
+    'call_message'   =>'Crear o editar',
+    'called_message' =>'Creando o editando',
+    'success'        =>'Se ha editado',
+    'for'            =>'(back)',
+  ],
 ];
 
 $cvSpecials=[

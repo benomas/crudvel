@@ -645,6 +645,40 @@ trait CrudTrait {
   public function autoResponder($respProp=[]){
 
     if(empty($respProp))
+      return Redirect::back()->withInput($this->getFields());
+      
+    Session::flash(
+      $respProp["status"] ?? "success",
+      $respProp["statusMessage"] ?? "Correcto"
+    );
+
+    Session::flash("statusMessage",$respProp["statusMessage"]??"Correcto");
+    
+    if(!empty($respProp["inputs"]))
+      $allInputs = empty($respProp["inputs"])?$this->getFields():$respProp["inputs"];
+
+    $allInputs["lastAction"]   = $this->getCurrentAction();
+    $allInputs["lastActionId"] = $this->getCurrentActionKey();
+
+    if(isset($respProp["withInput"])){
+      $redirector=$respProp["redirector"] ?? Redirect::back();
+      if($respProp["withInput"])
+        $redirector->withInput($allInputs);
+    }
+    else
+      $redirector=$respProp["redirector"] ?? Redirect::back();
+
+    $redirector->withInput($allInputs);
+
+    if(!empty($respProp["errors"]))
+      Session::flash($errors, $respProp["errors"]);
+
+    return $redirector;
+  }
+
+  public function autoResponderOld($respProp=[]){
+
+    if(empty($respProp))
     return Redirect::back()->withInput($this->getFields());
     Session::flash(
       $respProp["message"]?$respProp["status"]:"success",
