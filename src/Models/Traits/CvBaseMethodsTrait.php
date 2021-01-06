@@ -318,8 +318,13 @@ trait CvBaseMethodsTrait
     return $this->getModelLang()['rows_label'] ?? cvCaseFixer('plural|slug',class_basename(get_class($this)));
   }
 
-  public function safeField($alias,$field,$leftSeparator='',$rightSeparator=''){
+  public static function sSafeField($alias,$field,$leftSeparator='',$rightSeparator=''){
     return "IF($alias.$field IS NOT NULL,CONCAT('$leftSeparator',$alias.$field,'$rightSeparator'),'')";
+  }
+
+  public function safeField($alias,$field,$leftSeparator='',$rightSeparator=''){
+    return static::sSafeField($alias,$field,$leftSeparator,$rightSeparator);
+    //return "IF($alias.$field IS NOT NULL,CONCAT('$leftSeparator',$alias.$field,'$rightSeparator'),'')";
   }
 
   public function textIdentifierConcat($alias){
