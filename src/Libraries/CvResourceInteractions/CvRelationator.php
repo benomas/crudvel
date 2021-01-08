@@ -54,7 +54,16 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
   }
 
   public function cvAttacher(){
-    $this->getRelatedResourceRelation()->detach($this->getToAttach());
+    $toDetach = $this->getToAttach();
+    
+    foreach($this->getToAttach() as $pos=>$val){
+      if(is_array($val)){
+        $toDetach = array_keys($this->getToAttach());
+        break;
+      }
+    }
+
+    $this->getRelatedResourceRelation()->detach($toDetach);
     $this->getRelatedResourceRelation()->attach($this->getToAttach());
 
     return $this;

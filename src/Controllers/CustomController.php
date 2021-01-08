@@ -774,6 +774,12 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $this;
   }
 
+  public function removeSelectables(...$selectables){
+    $this->selectables = array_diff($this->selectables, $selectables);
+    
+    return $this;
+  }
+
   public static function externalSetStamps($enableCreateStamps = true){
     $rightNow = \Carbon\Carbon::now()->toDateTimeString();
     $user = \CvResource::assignUser()->getUserModelCollectionInstance();
