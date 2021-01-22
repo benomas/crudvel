@@ -49,7 +49,7 @@ class CvResource
   protected $flowControl;
 
   protected $specialFilterInstance  = null;
-  protected $specialColumnInstance  = null;
+  protected $specialColumnsInstance  = null;
   protected $safeCollectionInstance = null;
   protected $preFlowControlInstance = null;
   protected $prePaginatorInstance   = null;
@@ -207,28 +207,28 @@ class CvResource
     return $this->setSpecialFilterInstance(new $specialFilterClass());
   }
 
-  public function generateSpecialColumnInstance($specialColumnInstance=null){
-    if(is_object($specialColumnInstance))
-      return $this->setSpecialFilterInstance($specialColumnInstance);
+  public function generateSpecialColumnsInstance($specialColumnsInstance=null){
+    if(is_object($specialColumnsInstance))
+      return $this->setSpecialFilterInstance($specialColumnsInstance);
 
-    if(is_object($this->getSpecialColumnInstance()))
+    if(is_object($this->getSpecialColumnsInstance()))
       return $this;
 
     if(!($controller = $this->getRootInstance()))
       return $this;
 
-    if($controller->getSpecialColumnInstance() && class_exists($controller->getSpecialColumnInstance()))
+    if($controller->getSpecialColumnsInstance() && class_exists($controller->getSpecialColumnsInstance()))
       return $this;
 
     if(!$studlySingularName = $this->getStudlySingularName())
       return $this;
 
-    $specialColumnClass="App\Http\Auxiliars\SpecialColumns\\{$studlySingularName}SpecialColumn";
+    $specialColumnsClass="App\Http\Auxiliars\SpecialColumnss\\{$studlySingularName}SpecialColumns";
 
-    if(!class_exists($specialColumnClass))
+    if(!class_exists($specialColumnsClass))
       return $this;
 
-    return $this->setSpecialColumnInstance(new $specialColumnClass());
+    return $this->setSpecialColumnsInstance(new $specialColumnsClass());
   }
 
   public function generateSafeCollectionInstance($safeCollectionInstance=null){
@@ -427,14 +427,30 @@ class CvResource
     $this->generateSafeCollectionInstance();
     if($this->getSafeCollectionInstance() && method_exists($this->getSafeCollectionInstance(),"{$this->getCurrentAction()}SafeCollection")){
       $this->getSafeCollectionInstance()->{"{$this->getCurrentAction()}SafeCollection"}($collection);
-
-      return $data;
+    }else{
+      if($this->getSafeCollectionInstance() && method_exists($this->getSafeCollectionInstance(),'safeCollection')){
+        $this->getSafeCollectionInstance()->safeCollection($collection);
+      }
     }
 
-    if($this->getSafeCollectionInstance() && method_exists($this->getSafeCollectionInstance(),'safeCollection')){
-      $this->getSafeCollectionInstance()->safeCollection($collection);
+    if($collection && $this->getPaginatorInstance()){
+      $allColumns   = collect(array_keys($collection->first()->toArray()));
+      if(
+        $this->getPaginatorInstance()->getCollectionsIncludes() &&
+        $this->getPaginatorInstance()->getCollectionsIncludes()->count()
+      ){
+        $collection->makeHidden(
+          $allColumns->diff($this->getPaginatorInstance()->getCollectionsIncludes())->toArray()
+        );
 
-      return $data;
+        return $data;
+      }
+      
+      if(
+        $this->getPaginatorInstance()->getCollectionsExcludes() &&
+        $this->getPaginatorInstance()->getCollectionsExcludes()->count()
+      )
+        $collection->makeHidden($this->getPaginatorInstance()->getCollectionsExcludes()->toArray());
     }
 
     return $data;

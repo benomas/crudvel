@@ -41,6 +41,10 @@ class CvBasePaginator implements CvCrudInterface
   protected $searchObject      = '';
   protected $searchMode        = 'cv-simple-paginator';
   protected $dbEngineContainer = null;
+  //array of include columns
+  protected $collectionsIncludes= null;
+  //array of exclude columns
+  protected $collectionsExcludes= null;
   //valid conectors
   protected $logicConnectors  =[
     'and'=>'where'
@@ -148,6 +152,13 @@ class CvBasePaginator implements CvCrudInterface
   public function loadBasicPropertys(){
     $paginate = $this->getPaginateFields();
 
+    $collCallBack = function ($sourceArray = null) {
+      if($sourceArray === null || $sourceArray === 'null' || !is_array($sourceArray) || !count($sourceArray))
+        return null;
+        
+      return collect($sourceArray);
+    };
+    
     return $this->setLimit(fixedIsInt($paginate["limit"]??null)?$paginate["limit"]:null)
       ->setPage(fixedIsInt($paginate["page"]??null)?$paginate["page"]:null)
       ->setAscending($paginate["ascending"]??null)
@@ -156,7 +167,9 @@ class CvBasePaginator implements CvCrudInterface
       ->setSelectQuery($paginate["selectQuery"]??null)
       ->setFilterQuery($paginate["filterQuery"]??null)
       ->setSpecialFilterQuery($paginate["specialFilterQuery"]??null)
-      ->setOrderBy($paginate["orderBy"]??null);
+      ->setOrderBy($paginate["orderBy"]??null)
+      ->setCollectionsIncludes($collCallBack($paginate["collectionsIncludes"]??null))
+      ->setCollectionsExcludes($collCallBack($paginate["collectionsExcludes"]??null));
   }
 
   public function filter() {
@@ -310,9 +323,15 @@ class CvBasePaginator implements CvCrudInterface
     if(!$this->getSpecialFilterQuery())
       return $this;
 
+    $this->getCvResourceInstance()->generateSpecialFilterInstance();
+    
     foreach($this->getSpecialFilterQuery()??[] as $specialFilter=>$params){
       if(method_exists($this->getControllerInstance(),cvCamelCase("special filter $specialFilter")))
         $this->getControllerInstance()->{cvCamelCase("special filter $specialFilter")}($params);
+      else{
+        if(method_exists($this->getSpecialFilterInstance(),cvCamelCase("special filter $specialFilter")))
+          $this->getSpecialFilterInstance()->{cvCamelCase("special filter $specialFilter")}($params);
+      }
     }
 
     return $this;
@@ -471,8 +490,16 @@ class CvBasePaginator implements CvCrudInterface
   public function getDbEngineContainer(){
     return $this->dbEngineContainer??null;
   }
-  //Getters end
 
+  public function getCollectionsIncludes(){
+    return $this->collectionsIncludes??null;
+  }
+
+  public function getCollectionsExcludes(){
+    return $this->collectionsExcludes??null;
+  }
+  //Getters end
+  
   //Setters start
   public function setPaginateCount($paginateCount=null){
     $this->paginateCount = $paginateCount??null;
@@ -573,6 +600,18 @@ class CvBasePaginator implements CvCrudInterface
 
   public function setDbEngineContainer($dbEngineContainer=null){
     $this->dbEngineContainer=$dbEngineContainer??null;
+
+    return $this;
+  }
+
+  public function setCollectionsIncludes($collectionsIncludes=null){
+    $this->collectionsIncludes=$collectionsIncludes??null;
+
+    return $this;
+  }
+
+  public function setCollectionsExcludes($collectionsExcludes=null){
+    $this->collectionsExcludes=$collectionsExcludes??null;
 
     return $this;
   }
