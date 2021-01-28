@@ -433,7 +433,7 @@ class CvResource
       }
     }
 
-    if($collection && $this->getPaginatorInstance()){
+    if($collection && $collection->count() && $this->getPaginatorInstance()){
       $allColumns   = collect(array_keys($collection->first()->toArray()));
       if(
         $this->getPaginatorInstance()->getCollectionsIncludes() &&
