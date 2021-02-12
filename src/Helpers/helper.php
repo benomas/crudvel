@@ -416,7 +416,7 @@ if(!function_exists("kageBunshinNoJutsu")){
 		return clone $instance;
 	}
 }
-
+//to be deprecated
 if(!function_exists("actionAccess")){
 	/**
 	 * check user permission
@@ -434,34 +434,45 @@ if(!function_exists("actionAccess")){
 			unset($GLOBALS["userInstance"]);
 			unset($GLOBALS["isRoot"]);
 		}
+
 		if(!empty($GLOBALS[$actionResource]))
 			return $GLOBALS[$actionResource];
+
 		if(empty($userModel))
       return ($GLOBALS[$actionResource]=false);
-      if(!empty($GLOBALS["userInstance"]) && $GLOBALS["userInstance"])
-        $user = $GLOBALS["userInstance"];
-      else
-        $user = $GLOBALS["userInstance"] = $userModel->first();
+
+    if(!empty($GLOBALS["userInstance"]) && $GLOBALS["userInstance"])
+      $user = $GLOBALS["userInstance"];
+    else
+      $user = $GLOBALS["userInstance"] = $userModel->first();
+
 		if(!$user || !$user->active)
       return ($GLOBALS[$actionResource]=false);
+
     //if permission revision is disabled through the model
 		if(!\App\Models\Permission::$enablePermissionCheck)
       return ($GLOBALS[$actionResource]=true);
+
 		if(!empty($GLOBALS["isRoot"]) && $GLOBALS["isRoot"])
       return ($GLOBALS[$actionResource]=true);
+
 		if($user->isRoot()){
 			$GLOBALS["isRoot"] = true;
 			customLog($GLOBALS["isRoot"]);
       return ($GLOBALS[$actionResource]=true);
 		}
+
 		if(!\App\Models\Permission::action($actionResource)->count())
       return ($GLOBALS[$actionResource]=true);
-      if(kageBunshinNoJutsu($userModel)->actionPermission($actionResource)->count())
-        return ($GLOBALS[$actionResource]=true);
+
+    if(kageBunshinNoJutsu($userModel)->actionPermission($actionResource)->count())
+      return ($GLOBALS[$actionResource]=true);
+
 		return false;
 	}
 }
 
+//to be deprecated
 if(!function_exists("specialAccess")){
 	/**
 	 * check user permission
@@ -476,10 +487,13 @@ if(!function_exists("specialAccess")){
 	function specialAccess($userInstace,$special){
 		if(empty($userInstace) || !($user = $userInstace->first()))
       return false;
+      
 		if($user->isRoot())
       return true;
+
 		if(!\App\Models\Permission::special($special)->count())
       return true;
+      
 		return kageBunshinNoJutsu($userInstace)->specialPermission($special)->count()>0;
 	}
 }
@@ -1298,5 +1312,94 @@ if(!function_exists("cvDbBuilder")){
 
 if(!function_exists("cvRandomSafeToken")){
   function cvRandomSafeToken(...$params){return CvHelper::cvRandomSafeToken(...$params);}
+}
+
+if(!function_exists("hasActionAccess")){
+	/**
+	 * check user permission
+	 *
+	 * @param user model instance   userInstance
+	 * @param string 	resourceAction
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array
+	 */
+	function hasActionAccess($actionResource,$reset=false,$userModelBuilderInstance=null){
+		if($reset){
+			unset($GLOBALS[$actionResource]);
+			unset($GLOBALS["userInstance"]);
+			unset($GLOBALS["isRoot"]);
+		}
+
+		if(!empty($GLOBALS[$actionResource]))
+			return $GLOBALS[$actionResource];
+
+		if(!$userModelBuilderInstance){
+      if(!($userModelBuilderInstance = \Crudvel\Facades\CvResource::getUserModelBuilderInstance()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)))
+        return ($GLOBALS[$actionResource]=false);
+    }
+
+    if(!empty($GLOBALS["userInstance"]) && $GLOBALS["userInstance"])
+      $user = $GLOBALS["userInstance"];
+    else
+      $user = $GLOBALS["userInstance"] = $userModelBuilderInstance->first();
+
+		if(!$user || !$user->active)
+      return ($GLOBALS[$actionResource]=false);
+
+    //if permission revision is disabled through the model
+		if(!\App\Models\Permission::$enablePermissionCheck)
+      return ($GLOBALS[$actionResource]=true);
+
+		if(!empty($GLOBALS["isRoot"]) && $GLOBALS["isRoot"])
+      return ($GLOBALS[$actionResource]=true);
+
+		if($user->isRoot()){
+			$GLOBALS["isRoot"] = true;
+			customLog($GLOBALS["isRoot"]);
+      return ($GLOBALS[$actionResource]=true);
+		}
+
+		if(!\App\Models\Permission::action($actionResource)->count())
+      return ($GLOBALS[$actionResource]=true);
+
+    if(kageBunshinNoJutsu($userModelBuilderInstance)->actionPermission($actionResource)->count())
+      return ($GLOBALS[$actionResource]=true);
+
+		return false;
+	}
+}
+
+//to be deprecated
+if(!function_exists("hasSpecialAccess")){
+	/**
+	 * check user permission
+	 *
+	 * @param user model instance   userInstance
+	 * @param string 	resourceAction
+	 *
+	 * @author Benomas benomas@gmail.com
+	 * @date   2017-05-08
+	 * @return array
+	 */
+	function hasSpecialAccess($special,$userModelBuilderInstance = null){
+
+		if(!$userModelBuilderInstance){
+      if(!($userModelBuilderInstance = \Crudvel\Facades\CvResource::getUserModelBuilderInstance()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)))
+        return false;
+    }
+
+    if(!($user = $userModelBuilderInstance->first()))
+      return false;
+      
+		if($user->isRoot())
+      return true;
+
+		if(!\App\Models\Permission::special($special)->count())
+      return true;
+      
+		return kageBunshinNoJutsu($userModelBuilderInstance)->specialPermission($special)->count()>0;
+	}
 }
 
