@@ -36,7 +36,7 @@ class Permission extends \Crudvel\Models\BaseModel{
 // [Transformers]
   public function setSlugAttribute($value)
   {
-    $this->slugValue = $this->attributes['slug'] = $this->cvLowerCase($value);
+    $this->slugValue = $this->attributes['slug'] = $value;
     $this->fixResource();
   }
 
