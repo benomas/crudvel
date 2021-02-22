@@ -850,4 +850,44 @@ trait CrudTrait {
 
     return __("crudvel/$langRelPath");
   }
+
+	public function autoJoiner($resourceName = null,$relatedAlias=null,$builder = null, $selfAlias='self_alias'){
+    if(!$resourceName)
+      return;
+
+    if(!$relatedAlias)
+      $relatedAlias = cvPluralCase(cvSnakeCase($resourceName));
+      
+    if(!$builder)
+      $builder = $this->selfPreBuilder($selfAlias);
+
+    $resourceBase = cvSingularCase(cvStudlyCase($resourceName));
+    $modelKey     = cvSnakeCase($resourceBase)."_id";
+    $modelClass   = "App\Models\\$resourceBase";
+
+		return $builder
+      ->joinSub($modelClass::select('*')->cvSearch(), $relatedAlias,function ($join) use($selfAlias,$relatedAlias,$modelKey){
+        $join->on("$relatedAlias.id", '=', "$selfAlias.$modelKey");
+      });
+	}
+
+	public function autoLeftJoiner($resourceName = null,$relatedAlias=null,$builder = null, $selfAlias='self_alias'){
+    if(!$resourceName)
+      return;
+
+    if(!$relatedAlias)
+      $relatedAlias = cvPluralCase(cvSnakeCase($resourceName));
+      
+    if(!$builder)
+      $builder = $this->selfPreBuilder($selfAlias);
+
+    $resourceBase = cvSingularCase(cvStudlyCase($resourceName));
+    $modelKey     = cvSnakeCase($resourceBase)."_id";
+    $modelClass   = "App\Models\\$resourceBase";
+    
+		return $builder
+      ->leftJoinSub($modelClass::select('*')->cvSearch(), $relatedAlias,function ($join) use($selfAlias,$relatedAlias,$modelKey){
+        $join->on("$relatedAlias.id", '=', "$selfAlias.$modelKey");
+      });
+	}
 }

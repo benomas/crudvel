@@ -126,7 +126,8 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     $fixedWords = [];
     //Search by individual column first
     foreach($words AS $key=>$word){
-      $match = kageBunshinNoJutsu($this->getModelBuilderInstance())->where(DB::raw($this->getDbEngineContainer()->getFilterQueryString()), 'LIKE', "%{$word}%");
+      $match = kageBunshinNoJutsu($this->getModelBuilderInstance())->whereRaw("{$this->getDbEngineContainer()->getFilterQueryString()} LIKE ?", ["%{$word}%"]);
+      //$match = kageBunshinNoJutsu($this->getModelBuilderInstance())->where(DB::raw($this->getDbEngineContainer()->getFilterQueryString()), 'LIKE', "%{$word}%");
 
       if($match->count())
         $fixedWords[]=$word;
