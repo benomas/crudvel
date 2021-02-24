@@ -54,6 +54,8 @@ class KeyExistV2 extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel
         $tableExceptionBuilder->where("{$tableException}.{$property}",$propertyOrValue);
         $property = null;
       }
+      
+      $tableExceptionBuilder->where("{$tableException}.{$this->getAttribute()}",$this->getValue());
 
       return $tableExceptionBuilder->count();
     }
