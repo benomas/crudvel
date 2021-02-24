@@ -89,7 +89,8 @@ $cvValidations = [
 	'in_list'            => 'El valor [:attribute] no corresponde con los valores validos',
 	'no_simultaneus'     => 'Los valores [:list1] en el campo [:attribute] no pueden coexistir con [:list2]',
 	'file_already_exist' => 'Ya existe el archivo',
-  'file_resource'      => 'No tienes permisos para asociar este tipo de archivo',
+	'file_resource'      => 'No tienes permisos para asociar este tipo de archivo',
+	'key_exist_v2'               => 'El valor no corresponde con el recurso [:resource]',
   //crudvel acopled validations
 	'cv_key_exist'       => 'El valor no corresponde con el catalogo',
 

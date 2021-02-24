@@ -759,6 +759,15 @@ private function getIgnore(&$parameters)
   function replaceCvSlugged(...$params){
     return $this->fixValidationLabels(__FUNCTION__,...$params);
   }
+
+  //----------------------------------------------------------------------------------
+  function validateKeyExistV2(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceKeyExistV2(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
 // [Specific Logic]
 //[Compositive  Methods]
   protected function runValidation($ruleCaller,$attribute, $value, $parameters){
