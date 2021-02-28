@@ -155,10 +155,10 @@ class CvBasePaginator implements CvCrudInterface
     $collCallBack = function ($sourceArray = null) {
       if($sourceArray === null || $sourceArray === 'null' || !is_array($sourceArray) || !count($sourceArray))
         return null;
-        
+
       return collect($sourceArray);
     };
-    
+
     return $this->setLimit(fixedIsInt($paginate["limit"]??null)?$paginate["limit"]:null)
       ->setPage(fixedIsInt($paginate["page"]??null)?$paginate["page"]:null)
       ->setAscending($paginate["ascending"]??null)
@@ -195,7 +195,6 @@ class CvBasePaginator implements CvCrudInterface
 
   public function fixables($property){
     $simpleColumns=$this->$property;
-
     if($simpleColumns && count($simpleColumns)){
       $columns = $this->getRootInstance()->modelInstanciator(true)->getTableColumns();
 
@@ -324,7 +323,7 @@ class CvBasePaginator implements CvCrudInterface
       return $this;
 
     $this->getCvResourceInstance()->generateSpecialFilterInstance();
-    
+
     foreach($this->getSpecialFilterQuery()??[] as $specialFilter=>$params){
       if(method_exists($this->getControllerInstance(),cvCamelCase("special filter $specialFilter")))
         $this->getControllerInstance()->{cvCamelCase("special filter $specialFilter")}($params);
@@ -499,7 +498,7 @@ class CvBasePaginator implements CvCrudInterface
     return $this->collectionsExcludes??null;
   }
   //Getters end
-  
+
   //Setters start
   public function setPaginateCount($paginateCount=null){
     $this->paginateCount = $paginateCount??null;

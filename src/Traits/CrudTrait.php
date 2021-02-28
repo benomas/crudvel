@@ -473,7 +473,7 @@ trait CrudTrait {
 
     if(!class_exists($model))
       return null;
-      
+
     if($new)
       return new $model();
 
@@ -632,6 +632,25 @@ trait CrudTrait {
     );
   }
 
+  public static function sApiSuccessResponse($data=null){
+    return response()->json(
+      $data?
+        $data:
+        ["message"=>trans("crudvel.api.success")]
+      ,200
+    );
+  }
+
+  public static function sApiFailResponse($data=null){
+    return  response()->json(
+      $data?
+        $data:
+        ["message"=>trans("crudvel.api.transaction-error"),"error-message"=>trans("crudvel.api.operation_error")]
+      ,400
+    );
+  }
+
+
   /**
    * general function for response when no found action
    *
@@ -646,14 +665,14 @@ trait CrudTrait {
 
     if(empty($respProp))
       return Redirect::back()->withInput($this->getFields());
-      
+
     Session::flash(
       $respProp["status"] ?? "success",
       $respProp["statusMessage"] ?? "Correcto"
     );
 
     Session::flash("statusMessage",$respProp["statusMessage"]??"Correcto");
-    
+
     if(!empty($respProp["inputs"]))
       $allInputs = empty($respProp["inputs"])?$this->getFields():$respProp["inputs"];
 
@@ -857,7 +876,7 @@ trait CrudTrait {
 
     if(!$relatedAlias)
       $relatedAlias = cvPluralCase(cvSnakeCase($resourceName));
-      
+
     if(!$builder)
       $builder = $this->selfPreBuilder($selfAlias);
 
@@ -877,14 +896,14 @@ trait CrudTrait {
 
     if(!$relatedAlias)
       $relatedAlias = cvPluralCase(cvSnakeCase($resourceName));
-      
+
     if(!$builder)
       $builder = $this->selfPreBuilder($selfAlias);
 
     $resourceBase = cvSingularCase(cvStudlyCase($resourceName));
     $modelKey     = cvSnakeCase($resourceBase)."_id";
     $modelClass   = "App\Models\\$resourceBase";
-    
+
 		return $builder
       ->leftJoinSub($modelClass::select('*')->cvSearch(), $relatedAlias,function ($join) use($selfAlias,$relatedAlias,$modelKey){
         $join->on("$relatedAlias.id", '=', "$selfAlias.$modelKey");

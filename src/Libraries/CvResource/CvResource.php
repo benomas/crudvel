@@ -450,7 +450,7 @@ class CvResource
 
         return $data;
       }
-      
+
       if(
         $this->getPaginatorInstance()->getCollectionsExcludes() &&
         $this->getPaginatorInstance()->getCollectionsExcludes()->count()

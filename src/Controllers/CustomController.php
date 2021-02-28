@@ -776,7 +776,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function removeSelectables(...$selectables){
     $this->selectables = array_diff($this->selectables, $selectables);
-    
+
     return $this;
   }
 
