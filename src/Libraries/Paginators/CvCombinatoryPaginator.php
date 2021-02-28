@@ -102,8 +102,11 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       $this->getModelBuilderInstance()
       ->orderBy('pt_order',$this->getAscending()==1?"ASC":"DESC")
       ->orderBy($this->getOrderBy(),$this->getAscending()==1?"ASC":"DESC");
+
     if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->id))
       $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id,false);
+
+    $this->getModelBuilderInstance()->select($this->getSelectQuery());
   }
 
   public function filter() {
