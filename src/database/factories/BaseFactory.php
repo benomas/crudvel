@@ -39,4 +39,8 @@ class BaseFactory extends \Illuminate\Database\Eloquent\Factories\Factory
       ];
     });
   }
+
+  public function userBuilder(){
+    return \App\Models\User::noFilters();
+  }
 }

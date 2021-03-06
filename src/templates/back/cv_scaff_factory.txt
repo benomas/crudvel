@@ -1,24 +1,26 @@
-<?php
+<?php namespace Database\Factories;
 
-use Faker\Generator as Faker;
 use App\Models\{<##[singular|studly](resource)##>};
+class <##[singular|studly](resource)##>Factory extends \Customs\Crudvel\Database\Factories\BaseFactory
+{
+  /**
+   * The name of the factory's corresponding model.
+   *
+   * @var string
+   */
+  protected $model = <##[singular|studly](resource)##>::class;
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
-|
-*/
-
-$factory->define(App\Models\<##[singular|studly](resource)##>::class, function (Faker $faker) {
-  return [
-    'name'        => $faker->unique()->state,
-    'description' => $faker->sentence(6,true),
-		'code_hook'   => $faker->unique()->state,
-    'active'      => $faker->boolean(85),
-  ];
-});
+  /**
+   * Define the model's default state.
+   *
+   * @return array
+   */
+  public function definition()
+  {
+    return [
+      "name"        => $this->faker->unique()->state,
+      "description" => $this->faker->sentence(6,true),
+      "active"      => $this->faker->boolean(85),
+    ];
+  }
+}
