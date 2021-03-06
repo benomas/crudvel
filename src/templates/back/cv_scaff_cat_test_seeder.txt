@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use App\Models\{<##[singular|studly](resource)##>};
 use DB;
 
-class <##[singular|studly](resource)##>TableSeeder extends\Customs\Crudvel\Database\Seeds\BaseSeeder{
+class <##[singular|studly](resource)##>TableSeeder extends \Customs\Crudvel\Database\Seeds\BaseSeeder{
   protected $seedsToInsert = 10;
 
 	public function run(){
