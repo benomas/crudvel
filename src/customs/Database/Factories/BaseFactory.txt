@@ -1,0 +1,5 @@
+<?php namespace Customs\Crudvel\Database\Factories;
+
+class BaseFactory extends \Crudvel\Database\Factories\BaseFactory
+{
+}

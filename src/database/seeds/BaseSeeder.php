@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use DB;
-use Crudvel\Traits\CrudTrait;
 use Illuminate\Support\Facades\Schema;
 use Crudvel\Interfaces\DataCaller\{DataCallerInterface,ArrayDataCallerInterface,JsonDataCallerInterface,ModelDataCallerInterface,XlsxDataCallerInterface};
 use Crudvel\Interfaces\DataCollector\DataCollectorInterface;
@@ -24,7 +23,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
     'modelCollector' => \Crudvel\Libraries\DataCollector\ModelDataCollector::class,
     //'xlsxCollector'  => \Crudvel\Libraries\DataCollector\DataCollectorXLSX::class,//not completed yet
   ];
-  use CrudTrait;
+  use \Crudvel\Traits\CrudTrait;
 
 // [Specific Logic]
   public function chunkSize(){
@@ -103,7 +102,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
 
     if(!$this->getModelClass())
       $this->setModelClass('App\Models\\'.$this->getSrc());
-      
+
     return $this;
   }
 
@@ -149,7 +148,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
 
     if(!class_exists($modelClass))
       return null;
-      
+
     return $new ? (new $modelClass()) : $modelClass::noFilters();
   }
 // [End Specific Logic]
@@ -226,7 +225,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
 
   public function setSrc($src=null){
     $this->src = $src??null;
-    
+
     return $this;
   }
 // [End Setters]
