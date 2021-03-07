@@ -18,6 +18,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   protected $deleteBeforeInsert       = true;
   protected $currentCollectorInstance = null;
   protected $seedsToInsert            = 100;
+  protected $injectedSeedControl      = null;
   protected $collectors = [
     'arrayCollector' => \Crudvel\Libraries\DataCollector\ArrayDataCollector::class,
     'jsonCollector'  => \Crudvel\Libraries\DataCollector\JsonDataCollector::class,
@@ -191,6 +192,10 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
   public function getSeedsToInsert(){
     return $this->seedsToInsert??null;
   }
+
+  public function getInjectedSeedControl(){
+    return $this->injectedSeedControl??null;
+  }
 // [End Getters]
 
 // [Setters]
@@ -237,6 +242,12 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
 
   public function setSeedsToInsert($seedsToInsert=null){
     $this->seedsToInsert = $seedsToInsert??null;
+
+    return $this;
+  }
+
+  public function setInjectedSeedControl(\Crudvel\Interfaces\injectedSeedControl $injectedSeedControl):\Illuminate\Database\Seeder{
+    $this->injectedSeedControl = $injectedSeedControl??null;
 
     return $this;
   }
