@@ -1,15 +1,15 @@
 <?php namespace Database\Seeds\Test;
 
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use App\Models\{<##[singular|studly](resource)##>};
-use DB;
 
 class <##[singular|studly](resource)##>TableSeeder extends \Customs\Crudvel\Database\Seeds\BaseSeeder{
   protected $seedsToInsert = 10;
 
 	public function run(){
     Schema::disableForeignKeyConstraints();
-    DB::transaction(function() {
+    \Illuminate\Support\Facades\DB::transaction(function() {
       $<##[plural|camel](resource)##> = <##[singular|studly](resource)##>::factory()->count($this->getSeedsToInsert())->create();
     });
     Schema::enableForeignKeyConstraints();
