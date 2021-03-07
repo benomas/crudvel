@@ -509,7 +509,6 @@ class BaseConsole{
           $seedClass    = "Database\Seeds\{$studlyResource}TableSeeder";
           $seedInstance = $seedClass::cvIam();
           $seedInstance->run();
-          //Artisan::call("db:seed --class=Database\\\\Seeds\\\\{$studlyResource}TableSeeder");
         })->describe("seed $resourceName");
 
       if(class_exists("Database\\Seeds\\Test\\{$studlyResource}TableSeeder"))
@@ -521,7 +520,6 @@ class BaseConsole{
             $seedInstance->setSeedsToInsert($howMany);
 
           $seedInstance->run();
-          //Artisan::call("db:seed --class=Database\\\\Seeds\\\\Test\\\\{$studlyResource}TableSeeder");
         })->describe("test seed $resourceName");
     }
 
