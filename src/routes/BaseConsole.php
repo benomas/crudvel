@@ -506,7 +506,7 @@ class BaseConsole{
 
       if(class_exists("Database\\Seeds\\{$studlyResource}TableSeeder"))
         Artisan::command("single-$seedResource-seed", function () use($studlyResource){
-          $seedClass    = "Database\Seeds\{$studlyResource}TableSeeder";
+          $seedClass    = "Database\Seeds\\{$studlyResource}TableSeeder";
           $seedInstance = $seedClass::cvIam();
           $seedInstance->run();
         })->describe("seed $resourceName");

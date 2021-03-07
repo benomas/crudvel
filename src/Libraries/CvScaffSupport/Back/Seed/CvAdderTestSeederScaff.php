@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class CvAdderTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseAdderScaff implements CvScaffInterface
 {
   protected $relatedFilePath   = 'database/seeds/test/DatabaseSeeder.php';
-  protected $leftRegexGlobalRequiriment = 'call\(\[';
+  protected $leftRegexGlobalRequiriment = 'run\(\)\{';
   public function __construct(){
     parent::__construct();
   }
@@ -21,12 +21,12 @@ class CvAdderTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBa
 //[Stablishers]
 //[End Stablishers]
   protected function fixFile(){
-    $basePatern = '<slot>TableSeeder::class';
-    $resource   = 'Database\Seeds\Test\\'.Str::studly(Str::singular($this->getResource()));
+    $basePatern = '<slot>TableSeeder::class.*;';
+    $resource   = cvCaseFixer('studly|singular',$this->getResource());
     return $this->globalFileRegexAdder(
       $this->regexMaker($basePatern,'[^\s,]+'),
       $this->scapedRegexMaker($basePatern,$resource),
-      $resource.'TableSeeder::class'
+      $resource.'TableSeeder::class::cvIam()->run();'
     );
   }
 

@@ -22,11 +22,12 @@ class CvRemoverTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\Cv
   protected function fixFile(){
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
-        '<slot>TableSeeder::class',
-        'Database\Seeds\\'.Str::studly(Str::singular($this->getResource()))
+        '<slot>TableSeeder::class.*;',
+        Str::studly(Str::singular($this->getResource()))
       )
     );
   }
+
   protected function selfRepresentation(){
     return 'DatabaseSeeder';
   }
