@@ -500,17 +500,19 @@ class BaseConsole{
 
   public function loadSingleSeeds($callBack=null){
     //Autoload individual seeds and testSeeds
-    foreach (cvControllers() as $controllerResource => $controllerClass) {
-      $resourceName   = trans('crudvel/'.$controllerResource.'.rows_label');
-      $studlyResource = cvCaseFixer('singular|studly',$controllerResource);
+    foreach (cvSeeds() as $seedResource => $seedClass) {
+      $resourceName   = trans('crudvel/'.$seedResource.'.rows_label');
+      $studlyResource = cvCaseFixer('singular|studly',$seedResource);
 
-      Artisan::command("single-$controllerResource-seed", function () use($studlyResource){
-        Artisan::call("db:seed --class=Database\\\\Seeds\\\\{$studlyResource}TableSeeder");
-      })->describe("seed $resourceName");
+      if(class_exists("Database\\Seeds\\{$studlyResource}TableSeeder"))
+        Artisan::command("single-$seedResource-seed", function () use($studlyResource){
+          Artisan::call("db:seed --class=Database\\\\Seeds\\\\{$studlyResource}TableSeeder");
+        })->describe("seed $resourceName");
 
-      Artisan::command("single-$controllerResource-test-seed", function () use($studlyResource){
-        Artisan::call("db:seed --class=Database\\\\Seeds\\\\Test\\\\{$studlyResource}TableSeeder");
-      })->describe("test seed $resourceName");
+      if(class_exists("Database\\Seeds\\Test\\{$studlyResource}TableSeeder"))
+        Artisan::command("single-$seedResource-test-seed", function () use($studlyResource){
+          Artisan::call("db:seed --class=Database\\\\Seeds\\\\Test\\\\{$studlyResource}TableSeeder");
+        })->describe("test seed $resourceName");
     }
 
     return $this;

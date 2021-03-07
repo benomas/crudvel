@@ -5,6 +5,7 @@ use Illuminate\Support\Str;
 
 trait ResourceTrait
 {
+// [End Specific Logic]
   public function cvActions($resource = null) {
     $actions = [];
     if($resource && ($controller = $this->cvControllers()[$this->cvCaseFixer('plural|slug',$resource)]??null)){
@@ -50,36 +51,30 @@ trait ResourceTrait
     return $this->setControllers($controllers)->getControllers();
   }
 
+  public function cvSeeds() {
+    if ($this->getSeeds())
+      return $this->getSeeds();
+
+    $seedFiles = scandir(database_path('seeds'));
+    $seeds     = [];
+    $testSeeds = [];
+
+    foreach ($seedFiles as $seedKey => $seed) {
+      if($seed==='.' || $seed==='..' || $seed==='DatabaseSeeder.php')
+        continue;
+
+      $currentResource = $this->cvCaseFixer('singular|studly',str_replace('TableSeeder.php','',$seed));
+      $currentSeed     = "Database\Seeds\\{$this->cvStudlyCase($currentResource)}TableSeeder";
+
+      if(class_exists($currentSeed))
+        $seeds[$this->cvCaseFixer('plural|slug',$currentResource)] = $currentSeed;
+    }
+
+    return $this->setSeeds($seeds)->getSeeds();
+  }
+
   public function cvResources() {
     return array_keys($this->cvControllers());
-  }
-
-  protected function getControllers(){
-    return $this->controllers;
-  }
-
-  protected function setControllers($controllers){
-    $this->controllers = $controllers;
-    return $this;
-  }
-
-  protected function getActions(){
-    return $this->actions;
-  }
-
-  protected function setActions($actions){
-    $this->actions = $actions;
-    return $this;
-  }
-
-  protected function getCalculedActions(){
-    return $this->calculedActions??null;
-  }
-
-  protected function setCalculedActions($actions = null){
-    $this->calculedActions = $actions ?? null;
-
-    return $this;
   }
 
   protected function addActions($controllerResource=null,$actions=null){
@@ -110,4 +105,45 @@ trait ResourceTrait
 
     return $resources;
   }
+// [Getters]
+  protected function getControllers(){
+    return $this->controllers;
+  }
+
+  protected function getSeeds(){
+    return $this->seeds;
+  }
+
+  protected function getActions(){
+    return $this->actions;
+  }
+
+  protected function getCalculedActions(){
+    return $this->calculedActions??null;
+  }
+// [End Getters]
+// [Setters]
+  protected function setControllers($controllers){
+    $this->controllers = $controllers;
+
+    return $this;
+  }
+
+  protected function setSeeds($seeds){
+    $this->seeds = $seeds;
+
+    return $this;
+  }
+
+  protected function setActions($actions){
+    $this->actions = $actions;
+    return $this;
+  }
+
+  protected function setCalculedActions($actions = null){
+    $this->calculedActions = $actions ?? null;
+
+    return $this;
+  }
+// [End Setters]
 }

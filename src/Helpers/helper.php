@@ -28,7 +28,7 @@ if ( ! function_exists('array_fetch'))
 /*
 *custom helper, made by Beni at 2016-11-22, the principal porpouse is to bind DFP html from array.
 */
-if(!function_exists("requestToModel")){
+if(!function_exists('requestToModel')){
 	/**
 	 * load data only if exist, this function is necesary, because when request->field recibe an empty
 	 * data, and it is assigned to a numeric field, php change the value to 0. other ways if you need to save
@@ -58,7 +58,7 @@ if(!function_exists("requestToModel")){
 		return $data;
 	}
 }
-if(!function_exists("toModelWithRequest")){
+if(!function_exists('toModelWithRequest')){
 	/**
 	 * load data only if exist, this function is necesary, because when request->field recive an empty
 	 * data, and it is assigned to a numeric field, php change the value to 0. other ways if you need to save
@@ -88,7 +88,7 @@ if(!function_exists("toModelWithRequest")){
 		return $data;
 	}
 }
-if(!function_exists("factorial")){
+if(!function_exists('factorial')){
 	/**
 	 * calculate factorial of n
 	 *
@@ -105,7 +105,7 @@ if(!function_exists("factorial")){
 		return $n * factorial($n-1);
 	}
 }
-if(!function_exists("dateFormatSwitch")){
+if(!function_exists('dateFormatSwitch')){
 	/**
 	 * switch between date format
 	 *
@@ -133,7 +133,7 @@ if(!function_exists("dateFormatSwitch")){
  * @return boolean
  */
 /*
-if(!function_exists("inRoles")){
+if(!function_exists('inRoles')){
 	function inRoles(...$roles){
 		return !($user = \Cartalyst\Sentinel\Laravel\Facades\Sentinel::getUser())?
 			0:
@@ -141,19 +141,19 @@ if(!function_exists("inRoles")){
 	}
 }
 */
-if(!function_exists("ffDebugg")){
+if(!function_exists('ffDebugg')){
 	function ffDebugg(...$params){
 		dd($params);
 	}
 }
 //alias of ffDebugg for fast call
-if(!function_exists("audit")){
+if(!function_exists('audit')){
 	function audit(...$params){
 		dd($params);
 	}
 }
 //alias of ffDebugg for fast call
-if(!function_exists("capitalizeWithAccents")){
+if(!function_exists('capitalizeWithAccents')){
 	function capitalizeWithAccents($originalString){
 		if(!$originalString)
 			return null;
@@ -179,7 +179,7 @@ if(!function_exists("capitalizeWithAccents")){
 	}
 }
 
-if(!function_exists("renameValidationKey")){
+if(!function_exists('renameValidationKey')){
 	function renameValidationKey(&$rules, $oldKey,$newKey){
 		if(is_array($rules) && isset($rules[$oldKey]) && !isset($rules[$newKey])){
 			$rules[$newKey] =  $rules[$oldKey];
@@ -188,7 +188,7 @@ if(!function_exists("renameValidationKey")){
 	}
 }
 
-if(!function_exists("reloadFormValue")){
+if(!function_exists('reloadFormValue')){
 	function reloadFormValue($inputName,$model=null,$columnName=null,$otherValue=null){
 		if($otherValue)
 			return $otherValue;
@@ -204,7 +204,7 @@ if(!function_exists("reloadFormValue")){
 	}
 }
 
-if(!function_exists("noEmptyArray")){
+if(!function_exists('noEmptyArray')){
 	/**
 	 * Verifica si el parametro mandado es diferente de null, es un array, y tiene almenos un elemento
 	 *
@@ -219,7 +219,7 @@ if(!function_exists("noEmptyArray")){
 	}
 }
 
-if(!function_exists("arrayIntersect")){
+if(!function_exists('arrayIntersect')){
 	/**
 	 * Si los dos parametros pasados son noEmptyArrays, entonces
 	 * retorna un arreglo con solo los elementos que se repiten en ambos arreglos,
@@ -258,7 +258,7 @@ if(!function_exists("arrayIntersect")){
 	}
 }
 
-if(!function_exists("concatToArray")){
+if(!function_exists('concatToArray')){
 	/**
 	 * Concatena un prefijo a cada elemento del array
 	 *
@@ -276,7 +276,7 @@ if(!function_exists("concatToArray")){
 	}
 }
 
-if(!function_exists("versionedAsset")){
+if(!function_exists('versionedAsset')){
 	/**
 	 * Genera la ruta para un asset, agregando su fecha de creacion, lo que permite controlar la forma como el navegador maneja el cache
 	 *
@@ -291,7 +291,7 @@ if(!function_exists("versionedAsset")){
 	}
 }
 
-if(!function_exists("trueCount")){
+if(!function_exists('trueCount')){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
 	 *
@@ -311,7 +311,7 @@ if(!function_exists("trueCount")){
 	}
 }
 
-if(!function_exists("classTrans")){
+if(!function_exists('classTrans')){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
 	 *
@@ -365,7 +365,7 @@ if(!function_exists("classTrans")){
 	}
 }
 
-if(!function_exists("instanceTrans")){
+if(!function_exists('instanceTrans')){
 	/**
 	 * Cuenta los valores true al evaluar un array de expresiones
 	 *
@@ -411,13 +411,13 @@ if(!function_exists("instanceTrans")){
 	}
 }
 
-if(!function_exists("kageBunshinNoJutsu")){
+if(!function_exists('kageBunshinNoJutsu')){
 	function kageBunshinNoJutsu($instance){
 		return clone $instance;
 	}
 }
 //to be deprecated
-if(!function_exists("actionAccess")){
+if(!function_exists('actionAccess')){
 	/**
 	 * check user permission
 	 *
@@ -473,7 +473,7 @@ if(!function_exists("actionAccess")){
 }
 
 //to be deprecated
-if(!function_exists("specialAccess")){
+if(!function_exists('specialAccess')){
 	/**
 	 * check user permission
 	 *
@@ -487,38 +487,38 @@ if(!function_exists("specialAccess")){
 	function specialAccess($userInstace,$special){
 		if(empty($userInstace) || !($user = $userInstace->first()))
       return false;
-      
+
 		if($user->isRoot())
       return true;
 
 		if(!\App\Models\Permission::special($special)->count())
       return true;
-      
+
 		return kageBunshinNoJutsu($userInstace)->specialPermission($special)->count()>0;
 	}
 }
 
-if(!function_exists("errorClass")){
+if(!function_exists('errorClass')){
 	function errorClass($errors,$cField){
 		return $errors->first($cField)?'has-error':'';
 	}
 }
 
-if(!function_exists("validateGetActionResource")){
+if(!function_exists('validateGetActionResource')){
 	function validateGetActionResource($action,$only=[],$excludes=[]){
 		return ( empty($only["get"]) || !count($only["get"]) ||  in_array($action,$only["get"])) &&
 			(empty($excludes["get"]) || !in_array($action,$excludes["get"]));
 	}
 }
 
-if(!function_exists("validatePostActionResource")){
+if(!function_exists('validatePostActionResource')){
 	function validatePostActionResource($action,$only=[],$excludes=[]){
 		return ( empty($only["post"]) || !count($only["post"]) ||  in_array($action,$only["post"])) &&
 			(empty($excludes["post"]) || !in_array($action,$excludes["post"]));
 	}
 }
 
-if(!function_exists("crudvelResource")){
+if(!function_exists('crudvelResource')){
 	function crudvelResource($resource,$controller=null,$conditionals=[]){
 		if(empty($resource))
 			return false;
@@ -555,7 +555,7 @@ if(!function_exists("crudvelResource")){
 	}
 }
 
-if(!function_exists("crudvelResources")){
+if(!function_exists('crudvelResources')){
 	function crudvelResources($resources){
 		foreach ($resources as $resource) {
 			crudvelResource(...$resource);
@@ -563,7 +563,7 @@ if(!function_exists("crudvelResources")){
 	}
 }
 
-if(!function_exists("apiCrudvelResource")){
+if(!function_exists('apiCrudvelResource')){
 	function apiCrudvelResource($resource,$controller=null,$conditionals=[],$translator=[]){
 		if(empty($resource))
 			return false;
@@ -638,7 +638,7 @@ if(!function_exists("apiCrudvelResource")){
 	}
 }
 
-if(!function_exists("apiCrudvelResources")){
+if(!function_exists('apiCrudvelResources')){
 	function apiCrudvelResources($resources){
 		foreach ($resources as $resource) {
 			apiCrudvelResource(...$resource);
@@ -646,14 +646,14 @@ if(!function_exists("apiCrudvelResources")){
 	}
 }
 
-if(!function_exists("resourceByForeingKey")){
+if(!function_exists('resourceByForeingKey')){
 	function resourceByForeingKey($foreingKey){
 		$foreingKey = str_replace("_id","",$foreingKey);
 		return Illuminate\Support\Str::slug(str_plural($foreingKey));
 	}
 }
 
-if(!function_exists("propertyByPosition")){
+if(!function_exists('propertyByPosition')){
 	function propertyByPosition($object,$position)
 	{
 		$cellCount=1;
@@ -669,7 +669,7 @@ if(!function_exists("propertyByPosition")){
 	}
 }
 
-if(!function_exists("fixedIsInt")){
+if(!function_exists('fixedIsInt')){
 	function fixedIsInt($intTest){
     if ($intTest===null)
       return null;
@@ -677,7 +677,7 @@ if(!function_exists("fixedIsInt")){
 	}
 }
 
-if(!function_exists("deletePathContent")){
+if(!function_exists('deletePathContent')){
 	function deletePathContent($path,$subFolder=false) {
     foreach (($files = array_diff(scandir($path), array('.','..'))) as $file)
       (is_dir("$path/$file")) ? deletePathContent("$path/$file",true) : unlink("$path/$file");
@@ -686,7 +686,7 @@ if(!function_exists("deletePathContent")){
 	}
 }
 
-if(!function_exists("pushCrudvuelActions")){
+if(!function_exists('pushCrudvuelActions')){
   function pushCrudvuelActions($resource=null,&$targetArray,$actions=null,$excludes=[]) {
     if(!$resource)
       return;
@@ -703,7 +703,7 @@ if(!function_exists("pushCrudvuelActions")){
   }
 }
 
-if(!function_exists("recursiveSqlSrvDisableForeing")){
+if(!function_exists('recursiveSqlSrvDisableForeing')){
 	function recursiveSqlSrvDisableForeing() {
     if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
       foreach ($tables AS $table){
@@ -713,7 +713,7 @@ if(!function_exists("recursiveSqlSrvDisableForeing")){
   }
 }
 
-if(!function_exists("recursiveSqlSrvEnableForeing")){
+if(!function_exists('recursiveSqlSrvEnableForeing')){
 	function recursiveSqlSrvEnableForeing() {
     if($tables = DB::connection()->getDoctrineSchemaManager()->listTableNames())
       foreach ($tables AS $table){
@@ -722,7 +722,7 @@ if(!function_exists("recursiveSqlSrvEnableForeing")){
   }
 }
 
-if(!function_exists("disableForeignKeyConstraints")){
+if(!function_exists('disableForeignKeyConstraints')){
 	function disableForeignKeyConstraints($connection=null) {
     if(!config('cv.project_prevent_foreings_conflict') )
       return ;
@@ -751,7 +751,7 @@ if(!function_exists("disableForeignKeyConstraints")){
 	}
 }
 
-if(!function_exists("enableForeignKeyConstraints")){
+if(!function_exists('enableForeignKeyConstraints')){
 	function enableForeignKeyConstraints($connection=null) {
     if(!config('cv.project_prevent_foreings_conflict') )
       return ;
@@ -779,7 +779,7 @@ if(!function_exists("enableForeignKeyConstraints")){
 	}
 }
 
-if(!function_exists("columnList")){
+if(!function_exists('columnList')){
 	function columnList($connectionName='sqlsrv',$table) {
     //return 'database.connections.sqlsrv.driver';
     if(!$connection = config('database.connections.'.$connectionName))
@@ -804,7 +804,7 @@ if(!function_exists("columnList")){
 	}
 }
 
-if(!function_exists("sqliteColumnList")){
+if(!function_exists('sqliteColumnList')){
 	function sqliteColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
       return null;
@@ -878,7 +878,7 @@ if(!function_exists("sqliteColumnList")){
 	}
 }
 
-if(!function_exists("mysqlColumnList")){
+if(!function_exists('mysqlColumnList')){
 	function mysqlColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
       return null;
@@ -886,7 +886,7 @@ if(!function_exists("mysqlColumnList")){
 	}
 }
 
-if(!function_exists("pgsqlColumnList")){
+if(!function_exists('pgsqlColumnList')){
 	function pgsqlColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
       return null;
@@ -894,7 +894,7 @@ if(!function_exists("pgsqlColumnList")){
 	}
 }
 
-if(!function_exists("sqlsrvColumnList")){
+if(!function_exists('sqlsrvColumnList')){
 	function sqlsrvColumnList($connectionName=null,$table=null) {
     if(!$connectionName || !$table)
       return null;
@@ -937,7 +937,7 @@ if(!function_exists("sqlsrvColumnList")){
 	}
 }
 
-if(!function_exists("sqlsrvDataTypeTraductor")){
+if(!function_exists('sqlsrvDataTypeTraductor')){
 	function sqlsrvDataTypeTraductor($dataType) {
     switch(strtolower($dataType)){
       case 'bit':
@@ -984,7 +984,7 @@ if(!function_exists("sqlsrvDataTypeTraductor")){
   }
 }
 
-if(!function_exists("sqliteDataTypeTraductor")){
+if(!function_exists('sqliteDataTypeTraductor')){
 	function sqliteDataTypeTraductor($dataType) {
     switch(strtolower($dataType)){
       case 'bit':
@@ -1034,13 +1034,13 @@ if(!function_exists("sqliteDataTypeTraductor")){
   }
 }
 
-if(!function_exists("arrayTranspose")){
+if(!function_exists('arrayTranspose')){
 	function arrayTranspose($sourceArray) {
     return array_map(null, ...$sourceArray);
   }
 }
 
-if(!function_exists("assetsMap")){
+if(!function_exists('assetsMap')){
   function assetsMap($source_dir, $directory_depth = 0, $hidden = FALSE)
   {
     if ($fp = @opendir($source_dir))
@@ -1069,21 +1069,21 @@ if(!function_exists("assetsMap")){
   }
 }
 
-if(!function_exists("customExec")){
+if(!function_exists('customExec')){
   function customExec($command)
   {
     return exec('cd '.base_path().' && '.$command);
   }
 }
 
-if(!function_exists("facader")){
+if(!function_exists('facader')){
   function facader($className)
   {
     return (new $className);
   }
 }
 
-if(!function_exists("num2alpha")){
+if(!function_exists('num2alpha')){
   function num2alpha($n)
   {
     for($r = ""; $n >= 0; $n = intval($n / 26) - 1)
@@ -1092,39 +1092,39 @@ if(!function_exists("num2alpha")){
   }
 }
 
-if(!function_exists("pdd")){
+if(!function_exists('pdd')){
   function pdd(...$doDebugg){CvHelper::pdd(...$doDebugg);}
 }
 
-if(!function_exists("jdd")){
+if(!function_exists('jdd')){
   function jdd(...$doDebugg){CvHelper::jdd(...$doDebugg);}
 }
 
-if(!function_exists("customLog")){
+if(!function_exists('customLog')){
   function customLog(...$params){CvHelper::customLog(...$params);}
 }
 
-if(!function_exists("cvTest")){
+if(!function_exists('cvTest')){
   function cvTest($expresion=null){return CvHelper::cvTest($expresion);}
 }
 
-if(!function_exists("caller")){
+if(!function_exists('caller')){
   function cvCaller($depth=4,$property='function'){return CvHelper::caller($depth,$property);}
 }
 
-if(!function_exists("cvClassFile")){
+if(!function_exists('cvClassFile')){
   function cvClassFile($className){return CvHelper::classFile($className);}
 }
 
-if(!function_exists("cvBase64Src")){
+if(!function_exists('cvBase64Src')){
   function cvBase64Src($filePath){return CvHelper::base64Src($filePath);}
 }
 
-if(!function_exists("uCSort")){
+if(!function_exists('uCSort')){
   function uCSort($itemI,$nextItem){return CvHelper::uCSort($itemI,$nextItem);}
 }
 
-if(!function_exists("uCProp")){
+if(!function_exists('uCProp')){
   function uCProp($uCProp){return CvHelper::uCProp($uCProp);}
 }
 
@@ -1168,11 +1168,11 @@ if(!function_exists('cvConsoleException')){
   function cvConsoleException($message){return CvHelper::cvConsoleException($message);}
 }
 
-if(!function_exists("getCheckPoint")){
+if(!function_exists('getCheckPoint')){
   function getCheckPoint(){return CvHelper::getCheckPoint();}
 }
 
-if(!function_exists("getCheckPoint")){
+if(!function_exists('getCheckPoint')){
   function getCheckPoint(){return CvHelper::getCheckPoint();}
 }
 //color strategy
@@ -1200,121 +1200,125 @@ if(!function_exists('cvSecondary')){
   function cvSecondary($message){return CvHelper::cyanTC($message);}
 }
 
-if(!function_exists("ptPermutations")){
+if(!function_exists('ptPermutations')){
   function ptPermutations(...$params){return CvHelper::ptPermutations(...$params);}
 }
 
-if(!function_exists("varexport")){
+if(!function_exists('varexport')){
   function varexport(...$params){return CvHelper::varexport(...$params);}
 }
 
-if(!function_exists("fileBaseName")){
+if(!function_exists('fileBaseName')){
   function fileBaseName(...$params){return CvHelper::fileBaseName(...$params);}
 }
 
-if(!function_exists("getClassFromFile")){
+if(!function_exists('getClassFromFile')){
   function getClassFromFile(...$params){return CvHelper::getClassFromFile(...$params);}
 }
 
-if(!function_exists("composerDump")){
+if(!function_exists('composerDump')){
   function composerDump(...$params){return CvHelper::composerDump(...$params);}
 }
 
-if(!function_exists("isAssociativeArray")){
+if(!function_exists('isAssociativeArray')){
   function isAssociativeArray(...$params){return CvHelper::isAssociativeArray(...$params);}
 }
 
-if(!function_exists("cvGetSomeKeys")){
+if(!function_exists('cvGetSomeKeys')){
   function cvGetSomeKeys(...$params){return CvHelper::cvGetSomeKeys(...$params);}
 }
 
-if(!function_exists("cvGetSomeKeysAsList")){
+if(!function_exists('cvGetSomeKeysAsList')){
   function cvGetSomeKeysAsList(...$params){return CvHelper::cvGetSomeKeysAsList(...$params);}
 }
 
 //to be deprecated
-if(!function_exists("fixedSlug")){
+if(!function_exists('fixedSlug')){
   function fixedSlug(...$params){return CvHelper::cvSlugCase(...$params);}
 }
 
 //to be deprecated
-if(!function_exists("fixedSnake")){
+if(!function_exists('fixedSnake')){
   function fixedSnake(...$params){return CvHelper::cvSnakeCase(...$params);}
 }
 
-if(!function_exists("cvCamelCase")){
+if(!function_exists('cvCamelCase')){
   function cvCamelCase(...$params){return CvHelper::cvCamelCase(...$params);}
 }
 
-if(!function_exists("cvSlugCase")){
+if(!function_exists('cvSlugCase')){
   function cvSlugCase(...$params){return CvHelper::cvSlugCase(...$params);}
 }
 
-if(!function_exists("cvSnakeCase")){
+if(!function_exists('cvSnakeCase')){
   function cvSnakeCase(...$params){return CvHelper::cvSnakeCase(...$params);}
 }
 
-if(!function_exists("cvKebabCase")){
+if(!function_exists('cvKebabCase')){
   function cvKebabCase(...$params){return CvHelper::cvKebabCase(...$params);}
 }
 
-if(!function_exists("cvStudlyCase")){
+if(!function_exists('cvStudlyCase')){
   function cvStudlyCase(...$params){return CvHelper::cvStudlyCase(...$params);}
 }
 
-if(!function_exists("cvSingularCase")){
+if(!function_exists('cvSingularCase')){
   function cvSingularCase(...$params){return CvHelper::cvSingularCase(...$params);}
 }
 
-if(!function_exists("cvPluralCase")){
+if(!function_exists('cvPluralCase')){
   function cvPluralCase(...$params){return CvHelper::cvPluralCase(...$params);}
 }
 
-if(!function_exists("cvLowerCase")){
+if(!function_exists('cvLowerCase')){
   function cvLowerCase(...$params){return CvHelper::cvLowerCase(...$params);}
 }
 
-if(!function_exists("cvUpperCase")){
+if(!function_exists('cvUpperCase')){
   function cvUpperCase(...$params){return CvHelper::cvUpperCase(...$params);}
 }
 
-if(!function_exists("cvUcfirstCase")){
+if(!function_exists('cvUcfirstCase')){
   function cvUcfirstCase(...$params){return CvHelper::cvUcfirstCase(...$params);}
 }
 
-if(!function_exists("cvTitleCase")){
+if(!function_exists('cvTitleCase')){
   function cvTitleCase(...$params){return CvHelper::cvTitleCase(...$params);}
 }
 
-if(!function_exists("cvCaseFixer")){
+if(!function_exists('cvCaseFixer')){
   function cvCaseFixer(...$params){return CvHelper::cvCaseFixer(...$params);}
 }
 
-if(!function_exists("cvActions")){
+if(!function_exists('cvActions')){
   function cvActions(...$params){return CvHelper::cvActions(...$params);}
 }
 
-if(!function_exists("cvControllers")){
+if(!function_exists('cvControllers')){
   function cvControllers(...$params){return CvHelper::cvControllers(...$params);}
 }
 
-if(!function_exists("cvResources")){
+if(!function_exists('cvSeeds')){
+  function cvSeeds(...$params){return CvHelper::cvSeeds(...$params);}
+}
+
+if(!function_exists('cvResources')){
   function cvResources(...$params){return CvHelper::cvResources(...$params);}
 }
 
-if(!function_exists("cvResourcesCatalog")){
+if(!function_exists('cvResourcesCatalog')){
   function cvResourcesCatalog(...$params){return CvHelper::cvResourcesCatalog(...$params);}
 }
 
-if(!function_exists("cvDbBuilder")){
+if(!function_exists('cvDbBuilder')){
   function cvDbBuilder(...$params){return CvHelper::cvDbBuilder(...$params);}
 }
 
-if(!function_exists("cvRandomSafeToken")){
+if(!function_exists('cvRandomSafeToken')){
   function cvRandomSafeToken(...$params){return CvHelper::cvRandomSafeToken(...$params);}
 }
 
-if(!function_exists("hasActionAccess")){
+if(!function_exists('hasActionAccess')){
 	/**
 	 * check user permission
 	 *
@@ -1372,7 +1376,7 @@ if(!function_exists("hasActionAccess")){
 }
 
 //to be deprecated
-if(!function_exists("hasSpecialAccess")){
+if(!function_exists('hasSpecialAccess')){
 	/**
 	 * check user permission
 	 *
@@ -1392,13 +1396,13 @@ if(!function_exists("hasSpecialAccess")){
 
     if(!($user = $userModelBuilderInstance->first()))
       return false;
-      
+
 		if($user->isRoot())
       return true;
 
 		if(!\App\Models\Permission::special($special)->count())
       return true;
-      
+
 		return kageBunshinNoJutsu($userModelBuilderInstance)->specialPermission($special)->count()>0;
 	}
 }
