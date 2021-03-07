@@ -100,6 +100,12 @@ class CvScaffBackCreateCatResource extends \Crudvel\Commands\BaseCommand
       'target'   => 'cat-seeder',
       'resource' => $resource,
     ]);
+    $this->call('cv-scaff',[
+      'context'  => 'back',
+      'mode'     => 'adder',
+      'target'   => 'cat-test-seeder',
+      'resource' => $resource,
+    ]);
     $this->prepareApiEnv();
   }
 }

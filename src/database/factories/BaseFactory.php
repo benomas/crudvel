@@ -43,4 +43,16 @@ class BaseFactory extends \Illuminate\Database\Eloquent\Factories\Factory
   public function userBuilder(){
     return \App\Models\User::noFilters();
   }
+
+  public function randomOrCreate($modelBuilder = null){
+    if(!class_exists($modelBuilder))
+      return null;
+
+    if(!$model = $modelBuilder->inRandomOrder()->first()){
+      $model = $modelBuilder->getModel();
+      $model = $model::factory()->create();
+    }
+
+    return $model;
+  }
 }

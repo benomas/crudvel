@@ -21,12 +21,12 @@ class CvAdderTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBa
 //[Stablishers]
 //[End Stablishers]
   protected function fixFile(){
-    $basePatern = '<slot>TableSeeder::class.*;';
+    $basePatern = '<slot>TableSeeder::cvIam.*;';
     $resource   = cvCaseFixer('studly|singular',$this->getResource());
     return $this->globalFileRegexAdder(
       $this->regexMaker($basePatern,'[^\s,]+'),
       $this->scapedRegexMaker($basePatern,$resource),
-      $resource.'TableSeeder::class::cvIam()->run();'
+      $resource.'TableSeeder::cvIam()->setSeedsToInsert(10)->run();'
     );
   }
 

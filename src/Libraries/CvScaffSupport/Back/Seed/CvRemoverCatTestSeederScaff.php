@@ -21,13 +21,9 @@ class CvRemoverCatTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back
 //[Stablishers]
 //[End Stablishers]
   protected function fixFile(){
-    pdd(
-      '<slot>TableSeeder::class.*;',
-      Str::studly(Str::singular($this->getResource()))
-    );
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
-        '<slot>TableSeeder::class.*;',
+        '<slot>TableSeeder::cvIam.*;',
         Str::studly(Str::singular($this->getResource()))
       )
     );
