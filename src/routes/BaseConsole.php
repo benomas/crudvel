@@ -497,4 +497,22 @@ class BaseConsole{
 
     return $this;
   }
+
+  public function loadSingleSeeds($callBack=null){
+    //Autoload individual seeds and testSeeds
+    foreach (cvControllers() as $controllerResource => $controllerClass) {
+      $resourceName   = trans('crudvel/'.$controllerResource.'.rows_label');
+      $studlyResource = cvCaseFixer('singular|studly',$controllerResource);
+
+      Artisan::command("single-$controllerResource-seed", function () use($studlyResource){
+        Artisan::call("db:seed --class=Database\\\\Seeds\\\\{$studlyResource}TableSeeder");
+      })->describe("seed $resourceName");
+
+      Artisan::command("single-$controllerResource-test-seed", function () use($studlyResource){
+        Artisan::call("db:seed --class=Database\\\\Seeds\\\\Test\\\\{$studlyResource}TableSeeder");
+      })->describe("test seed $resourceName");
+    }
+
+    return $this;
+  }
 }
