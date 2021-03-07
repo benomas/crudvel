@@ -25,6 +25,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
     //'xlsxCollector'  => \Crudvel\Libraries\DataCollector\DataCollectorXLSX::class,//not completed yet
   ];
   use \Crudvel\Traits\CrudTrait;
+  use \Crudvel\Traits\CvPatronTrait;
 
 // [Specific Logic]
   public function chunkSize(){

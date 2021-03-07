@@ -506,12 +506,22 @@ class BaseConsole{
 
       if(class_exists("Database\\Seeds\\{$studlyResource}TableSeeder"))
         Artisan::command("single-$seedResource-seed", function () use($studlyResource){
-          Artisan::call("db:seed --class=Database\\\\Seeds\\\\{$studlyResource}TableSeeder");
+          $seedClass    = "Database\Seeds\{$studlyResource}TableSeeder";
+          $seedInstance = $seedClass::cvIam();
+          $seedInstance->run();
+          //Artisan::call("db:seed --class=Database\\\\Seeds\\\\{$studlyResource}TableSeeder");
         })->describe("seed $resourceName");
 
       if(class_exists("Database\\Seeds\\Test\\{$studlyResource}TableSeeder"))
-        Artisan::command("single-$seedResource-test-seed", function () use($studlyResource){
-          Artisan::call("db:seed --class=Database\\\\Seeds\\\\Test\\\\{$studlyResource}TableSeeder");
+        Artisan::command("single-$seedResource-test-seed {howMany?}", function ($howMany=null) use($studlyResource){
+          $seedClass= "Database\Seeds\Test\\{$studlyResource}TableSeeder";
+          $seedInstance = $seedClass::cvIam();
+
+          if($howMany || $howMany > 0)
+            $seedInstance->setSeedsToInsert($howMany);
+
+          $seedInstance->run();
+          //Artisan::call("db:seed --class=Database\\\\Seeds\\\\Test\\\\{$studlyResource}TableSeeder");
         })->describe("test seed $resourceName");
     }
 
