@@ -45,7 +45,7 @@ class BaseFactory extends \Illuminate\Database\Eloquent\Factories\Factory
   }
 
   public function randomOrCreate($modelBuilder = null){
-    if(!class_exists($modelBuilder))
+    if(!$modelBuilder instanceof \Illuminate\Database\Eloquent\Builder)
       return null;
 
     if(!$model = $modelBuilder->inRandomOrder()->first()){
