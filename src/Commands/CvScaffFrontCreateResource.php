@@ -124,8 +124,9 @@ class CvScaffFrontCreateResource extends \Crudvel\Commands\BaseCommand
       'target'   => 'layout',
       'resource' => $resource,
     ]);
+    $crudvelRootPath  = config('packages.benomas.crudvel.crudvel.crudvel_root_path');
     $crudvelFrontPath = config('packages.benomas.crudvel.crudvel.crudvel_front_path');
-    customExec("cd /var/www/$crudvelFrontPath && npm run fixlint");
+    customExec("cd {$crudvelRootPath}{$crudvelFrontPath} && npm run fixlint");
     cvConsoler("\n".cvPositive("fixlint completed")."\n");
   }
 }
