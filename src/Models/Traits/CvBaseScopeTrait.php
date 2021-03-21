@@ -349,5 +349,9 @@ trait CvBaseScopeTrait
 
     return $query;
   }
+
+  public function scopeCvResourceFilter($query, $routeParam, $preFixed = true){
+    return $query->key($routeParam,$preFixed);
+  }
 // [End Scopes]
 }

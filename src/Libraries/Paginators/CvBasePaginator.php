@@ -312,8 +312,8 @@ class CvBasePaginator implements CvCrudInterface
     if ($this->getOrderBy())
       $this->getModelBuilderInstance()->orderBy($this->getOrderBy(),$this->getAscending()==1?"ASC":"DESC");
 
-    if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->id))
-      $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id,false);
+    if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->getKeyValue()))
+      $this->getModelBuilderInstance()->key($this->getModelCollectionInstance()->getKeyValue(),false);
 
     $this->getModelBuilderInstance()->select($this->getSelectQuery());
   }

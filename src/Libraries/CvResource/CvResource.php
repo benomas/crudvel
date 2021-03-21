@@ -365,7 +365,8 @@ class CvResource
   public function generateModelCollectionInstance($key=null){
     if($key || in_array($this->getCurrentAction(),$this->getRowActions())){
       $key = $key ?? $this->getCurrentActionKey();
-      return $this->setModelCollectionInstance($this->getModelBuilderInstance()->key($key)->first());
+
+      return $this->setModelCollectionInstance($this->getModelBuilderInstance()->cvResourceFilter($key)->first());
     }
 
     return $this;
@@ -420,7 +421,13 @@ class CvResource
     }else{
       $collection = $data['data'] ?? null;
 
-      if(!$collection || ! $collection instanceof \Illuminate\Support\Collection)
+      if(
+        !$collection ||
+        (
+          !$collection instanceof \Illuminate\Support\Collection &&
+          !$collection instanceof \Illuminate\Database\Eloquent\Model
+        )
+      )
         return $data;
     }
 
