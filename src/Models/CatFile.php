@@ -93,6 +93,10 @@ class CatFile extends \Crudvel\Models\BaseModel{
   public function scopeGroup($query,$group){
     return $query->where($this->preFixed('group'),$group);
   }
+
+  public function scopeLikeGroup($query,$group){
+    return $query->where($this->preFixed('group'),'like',"%$group%");
+  }
 // [End Scopes]
 
 // [Others]
