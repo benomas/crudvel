@@ -58,5 +58,15 @@ class BaseModel extends Model implements CvCrudInterface
 // [End Scopes]
 
 // [Others]
+  public function fileZipOptPath($resource)
+  {
+    $DS = DIRECTORY_SEPARATOR;
+    return storage_path('app'.$DS.'public'.$DS) . $resource . '-' . $this->getKeyValue() . '-' . time() . '.zip';
+  }
+
+  public function fileZipOptDeleteFileAfterSend()
+  {
+    return true;
+  }
 // [End Others]
 }
