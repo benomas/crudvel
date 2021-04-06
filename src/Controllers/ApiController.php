@@ -7,6 +7,7 @@
  */
 
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 //Se extiende transactionController, para manejo de transacciones
 
 class ApiController extends CustomController{
@@ -177,6 +178,12 @@ class ApiController extends CustomController{
         $actionPermittions[$action]=false;
     }
     return $this->apiSuccessResponse($actionPermittions);
+  }
+
+  public function importing(){
+    Excel::import(new \Crudvel\Imports\BaseImport, $this->getRequestInstance()->toImport());
+
+    return $this->apiSuccessResponse([]);
   }
 // [End Actions]
 
