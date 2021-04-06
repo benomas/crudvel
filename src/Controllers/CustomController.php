@@ -199,7 +199,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   public function beforeFlowControl(){} //$this->model
   public function beforePaginate($method,$parameters){} //$this->model
 
-  protected function resetTransaction(){
+  public function resetTransaction(){
     $this->committer   = null;
     $this->transStatus = null;
 
@@ -213,7 +213,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  object
    */
-  protected function startTranstaction($committer=null){
+  public function startTranstaction($committer=null){
     if( isset($this->transStatus) && $this->transStatus)
       return $this;
 
@@ -237,7 +237,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  data type to return
    */
-  protected function transactionFail($cBFail=null){
+  public function transactionFail($cBFail=null){
     $this->transStatus='transaction-fail';
     \DB::rollBack();
 
@@ -256,7 +256,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  object
    */
-  protected function transactionComplete($committer=null){
+  public function transactionComplete($committer=null){
     if( isset($this->committer) &&  $this->committer && $this->committer !== $committer)
       return $this;
 
@@ -284,7 +284,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  object
    */
-  protected function testTransaction($callback,$errorCallBack=null,$tryCatch=true){
+  public function testTransaction($callback,$errorCallBack=null,$tryCatch=true){
     $errorException=null;
 
     if($this->transStatus === 'transaction-in-progress' && is_callable($callback)){
@@ -318,11 +318,11 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  boolean
    */
-  protected function isTransactionCompleted(){
+  public function isTransactionCompleted(){
     return $this->transStatus==='transaction-completed';
   }
 
-  protected function isThisCommitter($committer=null){
+  public function isThisCommitter($committer=null){
     if( !isset($this->committer))
       return true;
 

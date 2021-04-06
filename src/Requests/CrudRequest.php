@@ -354,6 +354,10 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
   public static function externalize($rules = []){
     return new \Crudvel\Requests\ExternalRequestBuilder($rules);
   }
+
+  public function toImport(){
+    return $this->{$this->getSlugPluralName()};
+  }
 /*
   public static function externalPostStoreRules($fields=null,$request=null){
     return [];

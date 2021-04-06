@@ -1,0 +1,4 @@
+<?php namespace Customs\Crudvel\Imports;
+
+class BaseImport extends \Crudvel\Imports\BaseImport {
+}
