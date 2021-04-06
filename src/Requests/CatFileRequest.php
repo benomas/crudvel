@@ -12,6 +12,9 @@ class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
   {
     $this->prepareRequest();
 
+    if(!$this->getUserModelCollectionInstance())
+      return true;
+
     if(!$this->getCurrentAction())
       return true;
 
