@@ -77,14 +77,38 @@ export default {
     },
 
     exportings: {
-      label     : 'Export',
+      label     : 'Export <##[plural|lower|human](resource)##>',
       backLabel : null,
       nextLabel : 'Export',
 
       set       : {
-        success : 'file geretaed',
+        success : 'File geretaed',
         error   : 'Error when try to make file',
         cancel  : 'File generation was calcel'
+      }
+    },
+
+    import: {
+      label     : 'Import <##[plural|lower|human](resource)##>',
+      nextLabel : null,
+      backLabel : 'Back',
+
+      set: {
+        success : 'File imported',
+        error   : 'Error when try to make file',
+        cancel  : 'File importation was calcel'
+      }
+    },
+
+    importing: {
+      label     : 'Importing <##[plural|lower|human](resource)##>',
+      nextLabel : null,
+      backLabel : 'Back',
+
+      set: {
+        success : 'File imported',
+        error   : 'Error when try to importe the file',
+        cancel  : 'File importation was calcel'
       }
     }
   }

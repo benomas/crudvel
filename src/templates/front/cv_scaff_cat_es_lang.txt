@@ -77,7 +77,7 @@ export default {
     },
 
     exportings: {
-      label     : 'Exportar',
+      label     : 'Exportar <##[plural|lower|human](resource)##>',
       backLabel : null,
       nextLabel : 'Exportar',
 
@@ -85,6 +85,30 @@ export default {
         success : 'Archivo generado',
         error   : 'Error al intentar generar archivo',
         cancel  : 'Se ha cancelado la obtención del archivo'
+      }
+    },
+
+    import: {
+      label     : 'Importar <##[plural|lower|human](resource)##>',
+      nextLabel : null,
+      backLabel : 'Regresar',
+
+      set: {
+        success : 'Archivo importado',
+        error   : 'Error al intentar importar archivo',
+        cancel  : 'Se ha cancelado la importación del archivo'
+      }
+    },
+
+    importing: {
+      label     : 'Importando <##[plural|lower|human](resource)##>',
+      nextLabel : null,
+      backLabel : 'Regresar',
+
+      set: {
+        success : 'Archivo importado',
+        error   : 'Error al intentar importar archivo',
+        cancel  : 'Se ha cancelado la importación del archivo'
       }
     }
   }
