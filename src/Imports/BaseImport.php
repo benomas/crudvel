@@ -14,8 +14,10 @@ class BaseImport implements WithMultipleSheets{
   }
 
   public function sheets(): array{
+    $fixedFirstSheetClass = $this->fixedFirstSheetClass();
+
     return [
-      new $this->fixedFirstSheetClass()()
+      new $fixedFirstSheetClass()
     ];
   }
 
