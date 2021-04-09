@@ -97,6 +97,12 @@ class CvScaffFrontCreateResource extends \Crudvel\Commands\BaseCommand
     $this->call('cv-scaff',[
       'context'  => 'front',
       'mode'     => 'creator',
+      'target'   => 'import',
+      'resource' => $resource,
+    ]);
+    $this->call('cv-scaff',[
+      'context'  => 'front',
+      'mode'     => 'creator',
       'target'   => 'service',
       'resource' => $resource,
     ]);

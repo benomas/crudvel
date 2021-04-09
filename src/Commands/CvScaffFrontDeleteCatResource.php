@@ -97,6 +97,12 @@ class CvScaffFrontDeleteCatResource extends \Crudvel\Commands\BaseCommand
     $this->call('cv-scaff',[
       'context'  => 'front',
       'mode'     => 'deleter',
+      'target'   => 'cat-import',
+      'resource' => $resource,
+    ]);
+    $this->call('cv-scaff',[
+      'context'  => 'front',
+      'mode'     => 'deleter',
       'target'   => 'cat-service',
       'resource' => $resource,
     ]);
