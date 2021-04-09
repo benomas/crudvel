@@ -18,7 +18,7 @@ class <##[singular|studly](resource)##>Factory extends \Customs\Crudvel\Database
   public function definition()
   {
     return [
-      "name"        => $this->faker->unique()->state,
+      "name"        => $this->faker->name,
       "description" => $this->faker->sentence(6,true),
       "active"      => $this->faker->boolean(85),
     ];

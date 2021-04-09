@@ -217,6 +217,9 @@
             },
             "import": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorImportScaff"
+            },
+            "import-skeleton": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorImportSkeletonScaff"
             }
         },
         "adder": {
@@ -346,6 +349,9 @@
             },
             "import": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterImportScaff"
+            },
+            "import-skeleton": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterImportSkeletonScaff"
             }
         }
     },
