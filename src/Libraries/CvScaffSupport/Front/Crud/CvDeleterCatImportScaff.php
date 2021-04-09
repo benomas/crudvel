@@ -5,7 +5,7 @@ namespace Crudvel\Libraries\CvScaffSupport\Front\Crud;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvDeleterImportScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseDeleterScaff implements CvScaffInterface
+class CvDeleterCatImportScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseDeleterScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCatTrait;
   protected $fileExtension       = '.vue';

@@ -214,6 +214,9 @@
             },
             "cat-filler": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Filler\\CvCreatorCatFillerScaff"
+            },
+            "import": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorImportScaff"
             }
         },
         "adder": {
@@ -340,6 +343,9 @@
             },
             "cat-filler": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Filler\\CvDeleterCatFillerScaff"
+            },
+            "import": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterImportScaff"
             }
         }
     },
