@@ -572,6 +572,14 @@ trait CrudTrait {
     );
   }
 
+  public function apiUnauthenticated($data=null){
+    return response()->json($data?
+      $data:
+      ["message"=>trans("crudvel.api.unauthorized")]
+      ,401
+    );
+  }
+
   public function apiLoggetOut($data=null){
     return response()->json($data?
       $data:
@@ -584,6 +592,14 @@ trait CrudTrait {
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.unautorized")]
+      ,403
+    );
+  }
+
+  public function apiUnauthorized($data=null){
+    return response()->json($data?
+      $data:
+      ["message"=>trans("crudvel.api.unauthorized")]
       ,403
     );
   }

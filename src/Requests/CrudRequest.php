@@ -108,9 +108,20 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
     return $this->webUnauthorized();
   }
 
+  public function unauthorizedRedirect(){
+    if($this->wantsJson()){
+      if($this->getUserModelCollectionInstance() && $this->getUserModelCollectionInstance()->active)
+        return $this->apiUnauthorized();
+
+      return $this->apiUnauthenticated();
+    }
+
+    return $this->webUnauthorized();
+  }
+
   public function failedAuthorization(){
     $unauthorizedException = new AuthorizationException('This action is unauthorized.');
-    $unauthorizedException->redirect   = $this->unautorizedRedirect();
+    $unauthorizedException->redirect   = $this->unauthorizedRedirect();
     $unauthorizedException->dontFlash  = $this->dontFlash;
     throw $unauthorizedException;
   }

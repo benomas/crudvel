@@ -468,56 +468,23 @@ class CvResource
     return $data;
   }
 
-
   public function fixFlowControl(){
     $this->getRootInstance()->loadFields();
-    $this->solveBeforesFlowControl();
 
-    if(!$this->getSkipModelValidation() && !$this->getModelBuilderInstance())
-      return $this->setFlowControl(function () {
-        return $this->getRootInstance()->apiNotFound();
-      });
-
-    if(!in_array($this->getCurrentAction(),$this->getActions()))
-      return $this->setFlowControl(function () {
-        return $this->getRootInstance()->apiNotFound();
-      });
-
-    if(
-      $this->getSkipModelValidation() &&
-      !$this->specialAccess('inactives') &&
-      !$this->specialAccess($this->getSlugPluralName().'.inactives')
-    )
-      $this->getModelBuilderInstance()->actives();
-
-    if(
-      ($preactionResponse = $this->getRootInstance()->preAction(
+    $this->solveBeforesFlowControl()
+      ->getRootInstance()
+      ->emptyModelBuilderException()
+      ->invalidActionException()
+      ->disableInactiveRows()
+      ->preAction(
         $this->getCallActionParameters(),
         $this->getSnakeSingularName()
-      ))
-    )
-      return $this->setFlowControl(function () use($preactionResponse){
-        return $preactionResponse;
-      });
+      );
 
-    $this->generateModelCollectionInstance();
-
-    if( in_array($this->getCurrentAction(),$this->getRowActions()) && !$this->getModelCollectionInstance() && !$this->getSkipCollectionValidation())
-      return $this->setFlowControl(function(){
-        return $this->getRootInstance()->apiUnautorized();
-      });
-
-    if( in_array($this->getCurrentAction(),$this->getRowsActions()) &&
-      $this->getModelBuilderInstance() &&
-      !$this->getModelBuilderInstance()->count()
-    )
-      return $this->setFlowControl(function(){
-        return $this->getRootInstance()->apiSuccessResponse([
-          "data"    => [],
-          "count"   => 0,
-          "message" => trans("crudvel.api.success")
-        ]);
-      });
+    $this->generateModelCollectionInstance()
+      ->getRootInstance()
+      ->emptyRowActionException()
+      ->emptyRowsActionException();
 
     return $this;
   }

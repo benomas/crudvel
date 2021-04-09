@@ -131,12 +131,6 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   */
   public function callActionJump($method,$parameters=[]){
     $this->solveBeforesPaginate($method,$parameters);
-    /*
-    $this->beforePaginate($method,$parameters);
-
-    if(method_exists($this,$this->getCurrentAction().'BeforePaginate')){
-      $this->{$this->getCurrentAction().'BeforePaginate'}($parameters);
-    }*/
 
     if(
       $this->getRootInstance() &&
@@ -157,7 +151,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       $this->setCurrentAction($method)->fixActionResource();
 
     if(!in_array($this->getCurrentAction(),$this->getActions()))
-      return $this->webNotFound();
+      throw new \Crudvel\Exceptions\NotFound();
 
     if(
       $this->getSkipModelValidation() &&
@@ -169,19 +163,16 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     if(!$this->getFields())
       $this->loadFields();
 
-    $preactionResponse = $this->preAction($method,$parameters);
-
-    if($preactionResponse)
-      return $preactionResponse;
+    $this->preAction($method,$parameters);
 
     if(in_array($method,$this->getRowActions())){
       if(empty($parameters))
-        return $this->webNotFound();
+        throw new \Crudvel\Exceptions\NotFound();
 
       $this->setCurrentActionKey($parameters[$this->getSnakeSingularName()]);
 
       if(!$this->getModelBuilderInstance()->key($this->getCurrentActionKey())->count())
-        return $this->webNotFound();
+        throw new \Crudvel\Exceptions\NotFound();
 
       $this->setModelCollectionInstance($this->getModelBuilderInstance()->first());
     }
@@ -189,7 +180,10 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return parent::callAction($method,$parameters);
   }
 
-  public function preAction($method,$parameters){} //customize actions before normal ejecution
+  public function preAction($method,$parameters){
+    //throw (new \Crudvel\Exceptions\PreactionResponse())->setPrematureResponse(!put here your response!, this will abort the flowControl);
+    return $this;
+  } //customize actions before normal ejecution
 
   public function postAction($next){ //customize actions after normal ejecution
     return $next;
@@ -199,7 +193,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   public function beforeFlowControl(){} //$this->model
   public function beforePaginate($method,$parameters){} //$this->model
 
-  public function resetTransaction(){
+  protected function resetTransaction(){
     $this->committer   = null;
     $this->transStatus = null;
 
@@ -213,7 +207,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  object
    */
-  public function startTranstaction($committer=null){
+  protected function startTranstaction($committer=null){
     if( isset($this->transStatus) && $this->transStatus)
       return $this;
 
@@ -237,7 +231,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  data type to return
    */
-  public function transactionFail($cBFail=null){
+  protected function transactionFail($cBFail=null){
     $this->transStatus='transaction-fail';
     \DB::rollBack();
 
@@ -256,7 +250,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  object
    */
-  public function transactionComplete($committer=null){
+  protected function transactionComplete($committer=null){
     if( isset($this->committer) &&  $this->committer && $this->committer !== $committer)
       return $this;
 
@@ -284,7 +278,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  object
    */
-  public function testTransaction($callback,$errorCallBack=null,$tryCatch=true){
+  protected function testTransaction($callback,$errorCallBack=null,$tryCatch=true){
     $errorException=null;
 
     if($this->transStatus === 'transaction-in-progress' && is_callable($callback)){
@@ -318,11 +312,11 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
    *
    * @return  boolean
    */
-  public function isTransactionCompleted(){
+  protected function isTransactionCompleted(){
     return $this->transStatus==='transaction-completed';
   }
 
-  public function isThisCommitter($committer=null){
+  protected function isThisCommitter($committer=null){
     if( !isset($this->committer))
       return true;
 
@@ -806,6 +800,50 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       $this->addField('created_by',$stamps['created_by']);
       $this->addField('created_at',$stamps['created_at']);
     }
+
+    return $this;
+  }
+
+  public function disableInactiveRows(){
+    if(
+      $this->getSkipModelValidation() &&
+      !$this->specialAccess('inactives') &&
+      !$this->specialAccess($this->getSlugPluralName().'.inactives')
+    )
+      $this->getModelBuilderInstance()->actives();
+
+    return $this;
+  }
+
+  public function emptyModelBuilderException() {
+    if(!$this->getSkipModelValidation() && !$this->getModelBuilderInstance())
+      throw new \Crudvel\Exceptions\NotFound();
+
+    return $this;
+  }
+
+  public function invalidActionException() {
+    if(!in_array($this->getCurrentAction(),$this->getActions()))
+      throw new \Crudvel\Exceptions\NotFound();
+
+    return $this;
+  }
+
+  public function emptyRowActionException() {
+    if( in_array($this->getCurrentAction(),$this->getRowActions()) && !$this->getModelCollectionInstance() && !$this->getSkipCollectionValidation())
+      throw new \Crudvel\Exceptions\Unauthorized();
+
+    return $this;
+  }
+
+  public function emptyRowsActionException() {
+    if(
+      $this->getCurrentAction() !== 'importing' &&
+      in_array($this->getCurrentAction(),$this->getRowsActions()) &&
+      $this->getModelBuilderInstance() &&
+      !$this->getModelBuilderInstance()->count()
+    )
+      throw new \Crudvel\Exceptions\EmptyCollection();
 
     return $this;
   }
