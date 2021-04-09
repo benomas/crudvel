@@ -1,0 +1,11 @@
+<script>
+import CvSkeleton               from 'cq-crudvuel/resource/CvSkeleton'
+import CvImportSkeleton         from 'cq-crudvuel/resource/CvImportSkeleton'
+
+export default {
+  mixins: [
+    CvImportSkeleton,
+    CvSkeleton
+  ]
+}
+</script>

@@ -126,7 +126,9 @@ $cvValidations = [
 	*/
 
 	'custom'                   => [
+    "There was an error on row :row. :message" => "Hubo un error en la fila :row. :message",
 		'attribute-name'           => [
+      "There was an error on row :row. :message" => "Hubo un error en la fila :row. :message",
 			'rule-name'                => 'custom-message',
 		],
 	],
@@ -145,6 +147,7 @@ $cvValidations = [
 	'attributes'               => [
 	],
 	'message'=>'Se han encontrado errores en la información enviada',
+  "There was an error on row :row. :message" => "Hubo un error en la fila :row. :message",
 ];
 
 return $cvValidations;

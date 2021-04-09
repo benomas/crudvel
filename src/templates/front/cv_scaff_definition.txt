@@ -99,6 +99,16 @@ export default function (store) {
       path       : `${resource.path}/:id/exportings`,
       urlParams  : ['id'],
       component  : null
-    }
+    }/*,
+
+    {
+      name       : 'import',
+      icon       : 'fas fa-file-import',
+      setService : resource.loadService('import'),
+      resource   : resource,
+      path       : `${resource.path}/import`,
+      component  : () => import('src/components/resources/<##[plural|slug](resource)##>/CvImport'),
+      type       : 'rows'
+    }*/
   ]).resourcelangLoader()
 }

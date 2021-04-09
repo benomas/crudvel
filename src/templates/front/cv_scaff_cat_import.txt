@@ -1,0 +1,62 @@
+<template>
+  <div class="cv-create" :class="{'q-pa-md':cGtxs,'q-pa-xs':cLtsm}">
+    <cv-action-container
+      v-if="cpStaGenAction"
+      v-bind="mCustomBindins('cv-action-container')"
+      v-on="mCustomOns('cv-action-container')">
+      <div slot="cv-title-slot" class="row action-label">
+        <div class="col-xs-10 col-sm-9 col-md-8  q-pb-md">
+          <label>
+            <span class="q-headline txt-secondary f-bold">
+              {{cpStaGenAction.label}}
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div slot="cv-content-slot">
+        <div class="row w-100">
+          <cv-<##[plural|slug](resource)##>-import-skeleton
+            v-bind="mCustomBindins('cv-<##[plural|slug](resource)##>-import-skeleton')"
+            v-on="mCustomOns('cv-<##[plural|slug](resource)##>-import-skeleton')"
+            :cv-segment="'*'"
+            >
+          </cv-<##[plural|slug](resource)##>-import-skeleton>
+        </div>
+      </div>
+
+      <div slot="cv-buttons-slot">
+        <div class="col-xs-12 ">
+          <cv-action-buttons
+            v-bind="mCustomBindins('cv-action-buttons')"
+            v-on="mCustomOns('cv-action-buttons')"
+            :cv-sta-ins-action="cpStaGenAction"
+            >
+          </cv-action-buttons>
+        </div>
+      </div>
+    </cv-action-container>
+  </div>
+</template>
+<script>
+import VueMirroring             from 'crudvuel/mirroring/VueMirroring'
+import CvImport                 from 'cq-crudvuel/resource/CvImport'
+import CvSkeletonController     from 'cq-crudvuel/resource/CvSkeletonController'
+import Cv<##[plural|studly](resource)##>ImportSkeleton from 'components/resources/<##[plural|slug](resource)##>/Cv<##[plural|studly](resource)##>ImportSkeleton'
+
+let vueMirroring = new VueMirroring('Import').enableRoot()
+
+export default {
+  mixins: [
+    CvImport,
+    vueMirroring.restoreBindins(CvImport).assimilate(
+      {Cv<##[plural|studly](resource)##>ImportSkeleton}
+    ),
+    CvSkeletonController
+  ],
+
+  components: {
+    Cv<##[plural|studly](resource)##>ImportSkeleton
+  }
+}
+</script>
