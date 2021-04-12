@@ -14,12 +14,12 @@ trait StringRegexTrait
   }
   // Find a string 'null' and return a real null
   function convertRealNull($string){
-    if(is_null($string) || trim(strtolower($string) === 'null')) return null;
+    if($string ===null || trim(strtolower($string) === 'null')) return null;
     return trim($string);
   }
   // Replace a null for something
   function replaceNull($something, $string){
-    if(is_null($string) || trim(strtolower($string) === 'null')) return $something;
+    if($string ===null || trim(strtolower($string) === 'null')) return $something;
   }
   // Replace string if it has not alphanumeric
   function replaceIfNotAlphaNum($string, $replace){
