@@ -72,11 +72,8 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
 
-    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0){
-      $this->getModelBuilderInstance()->select($this->getSelectQuery());
-
-      return ;
-    }
+    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0)
+      throw new \Crudvel\Exceptions\EmptyCollection();
 
     $this->setPreProcessedQueryBuilder(kageBunshinNoJutsu($this->getModelBuilderInstance()))
       ->tempQuery()

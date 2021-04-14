@@ -290,11 +290,9 @@ class CvBasePaginator implements CvCrudInterface
     if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
 
-    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0){
-      $this->getModelBuilderInstance()->select($this->getSelectQuery());
+    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0)
+      throw new \Crudvel\Exceptions\EmptyCollection();
 
-      return ;
-    }
     $this->tempQuery()->solveSpecialFilters();
     //if it is not a filter query defined
     if(noEmptyArray($this->getFilterQuery()))
