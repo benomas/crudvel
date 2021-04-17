@@ -57,6 +57,8 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     $resourceModel = null;
 
     foreach ($catFiles as $catFile){
+      $count  = 1;
+      $prefix = '';
       foreach ($catFile->files??[] as $file){
         if (!$zip){
           $resourceModel = $file->resourcer;
@@ -66,7 +68,12 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
 
         $path     = storage_path("app{$this->cvDs()}public{$this->cvDs()}{$file->path}");
         $fileInfo = pathinfo($path);
-        $zip->addFile($path, "{$file->catFile->name}.{$fileInfo['extension']}");
+
+        if ($catFile->multiple)
+          $prefix = "-$count";
+
+        $zip->addFile($path, "{$file->catFile->name}{$prefix}.{$fileInfo['extension']}");
+        $count++;
       }
     }
 
