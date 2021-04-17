@@ -925,4 +925,8 @@ trait CrudTrait {
         $join->on("$relatedAlias.id", '=', "$selfAlias.$modelKey");
       });
 	}
+
+  public function cvDs() {
+    return DIRECTORY_SEPARATOR;
+  }
 }

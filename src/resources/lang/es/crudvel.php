@@ -292,4 +292,5 @@ $cvApi = [
   'unproccesable'         => 'Información inconsistente',
   'true'                  => 'Verdadero',
   'false'                 => 'Falso',
+  'no_files_to_zip'       => 'No hay archivos para el recurso.',
 ];

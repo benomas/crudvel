@@ -8,6 +8,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     'description',
     'multiple',
     'group',
+    'cv_group',
     'id',
     'max_size',
     'min_size',
@@ -46,7 +47,20 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
   // [End Actions]
 
   // [Methods]
+  public function addedCvGroup(){
+    return $this->selfPreBuilder('cf')->selectRaw('cf.group');
+  }
+
   public function resourcerBeforeFlowControl(){
+    $this->getModelBuilderInstance()->resource($this->getCallActionParameters()['resource'])->with(['files'=>function($query) {
+      $query->resourceKey($this->getCallActionParameters()['key']);
+    }]);
+  }
+
+  public function zippedResourceFilesBeforeFlowControl(){
+    $paginate = $this->getFields()['paginate'] ?? [];
+    $paginate['limit'] = null;
+    $this->addField('paginate', $paginate);
     $this->getModelBuilderInstance()->resource($this->getCallActionParameters()['resource'])->with(['files'=>function($query) {
       $query->resourceKey($this->getCallActionParameters()['key']);
     }]);
