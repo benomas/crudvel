@@ -293,4 +293,5 @@ $cvApi = [
   'true'                  => 'Verdadero',
   'false'                 => 'Falso',
   'no_files_to_zip'       => 'No hay archivos para el recurso.',
+  'no_cache_property'     => 'No se ha podido acceder a una propiedad',
 ];

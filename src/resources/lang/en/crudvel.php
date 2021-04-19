@@ -297,4 +297,5 @@ $cvApi = [
   'unproccesable'         => 'Información inconsistente',
   'true'                  => 'Verdadero',
   'false'                 => 'Falso',
+  'no_cache_property'     => 'No se ha podido acceder a una propiedad',
 ];

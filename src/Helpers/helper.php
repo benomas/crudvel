@@ -1431,6 +1431,10 @@ if(!function_exists('cvRandomSafeToken')){
   function cvRandomSafeToken(...$params){return CvHelper::cvRandomSafeToken(...$params);}
 }
 
+if(!function_exists('cvSafeCacheGet')){
+  function cvSafeCacheGet(...$params){return CvHelper::cvSafeCacheGet(...$params);}
+}
+
 if(!function_exists('hasActionAccess')){
 	/**
 	 * check user permission

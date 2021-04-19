@@ -19,4 +19,5 @@ class CvHelper{
   use ResourceTrait;
   use DbTrait;
   use LangTrait;
+  use CacheTrait;
 }
