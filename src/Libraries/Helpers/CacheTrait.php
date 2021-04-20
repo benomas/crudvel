@@ -27,8 +27,9 @@ trait CacheTrait{
           $lockCout++;
         }
 
-        if($lockCout > 1000){
+        if($lockCout > 100){
           cvConsoler("\n Dead lock detected".cvRedTC(" $lockCout intentos for "));
+          \Illuminate\Support\Facades\Cache::forget($semaphone);
         }
       }while(!$continueFlag);
     }
