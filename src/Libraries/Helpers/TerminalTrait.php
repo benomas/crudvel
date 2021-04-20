@@ -6,6 +6,8 @@ trait TerminalTrait
   public function cvConsoler($message){
     if(strpos(php_sapi_name(), 'cli') !== false)
       echo $message;
+    else
+      customLog(preg_replace('/(\e\[\d\dm)/i', '', $message));
   }
 
   public function blackColorCode(){

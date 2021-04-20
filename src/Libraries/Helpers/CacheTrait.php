@@ -8,6 +8,7 @@ trait CacheTrait{
     if (!\Illuminate\Support\Facades\Cache::has($property)) {
       $continueFlag = false;
       $lockCout     = 0;
+
       do{
         if(!\Illuminate\Support\Facades\Cache::has($semaphone)){
           \Illuminate\Support\Facades\Cache::put($semaphone, true);
@@ -16,6 +17,7 @@ trait CacheTrait{
             $value = \Illuminate\Support\Facades\Cache::remember($property, $rememberTime, function () use($callBack){
               return $callBack();
             });
+
             \Illuminate\Support\Facades\Cache::forget($semaphone);
             $continueFlag = true;
           }else{
@@ -28,7 +30,7 @@ trait CacheTrait{
         }
 
         if($lockCout > 100){
-          cvConsoler("\n Dead lock detected".cvRedTC(" $lockCout intentos for "));
+          cvConsoler("\n Dead lock detected".cvRedTC(" $lockCout tries for get cache property {$property}"));
           \Illuminate\Support\Facades\Cache::forget($semaphone);
         }
       }while(!$continueFlag);
