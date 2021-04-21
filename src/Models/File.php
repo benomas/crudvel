@@ -62,6 +62,12 @@ class File extends \Crudvel\Models\BaseModel{
     });
   }
 
+  public function scopeCatFileSlugs($query,$catFileSlugs){
+    return $query->whereHas('catFile',function($query) use($catFileSlugs) {
+      $query->whereIn('cat_files.slug',$catFileSlugs);
+    });
+  }
+
   public function scopeResourceId($query,$resourceId){
     return $query->where($this->preFixed('resource_id'),$resourceId);
   }
