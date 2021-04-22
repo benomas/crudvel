@@ -201,7 +201,9 @@ class BaseMigration extends Migration
   }
 
   public function setBlueprintTable($blueprintTable=null){
-    $this->blueprintTable=$blueprintTable;
+    $this->blueprintTable = $blueprintTable;
+
+    return $this;
   }
 
   public function getBlueprintTable(){
@@ -221,14 +223,18 @@ class BaseMigration extends Migration
 
     foreach($this->autoForeingModels as $autoForeingModel=>$foreingsConfig){
       $table = $autoForeingModel::cvIam()->getTable();
+
       foreach($foreingsConfig AS $foreingColumn=>$configForeing){
         try{
           Schema::table($table, function($table) use($foreingColumn,$configForeing){
             $foreingModel  = $configForeing['model']??null;
+
             if(!class_exists($foreingModel))
               return true;
+
             $referencedColumn = $configForeing['referenced']??$configForeing['model']::cvIam()->getKeyName();
             $referencedTable = $configForeing['model']::cvIam()->getTable();
+
             $table->foreign($foreingColumn)
             ->references($referencedColumn)
             ->on($referencedTable)
@@ -241,6 +247,7 @@ class BaseMigration extends Migration
         }
       }
     }
+
     Schema::enableForeignKeyConstraints();
 
     return $this;
@@ -248,5 +255,11 @@ class BaseMigration extends Migration
 
   public function autoForeing($table, $foreingName=null){
     return (new \Crudvel\Database\Migrations\ForeingMaker($table,$foreingName))->setMigration($this);
+  }
+
+  public function cvDropIndex($column) {
+    $this->getSetBlueprintTable()->dropIndex("{$this->getSchemaTable()}_{$column}_index");
+
+    return $this;
   }
 }
