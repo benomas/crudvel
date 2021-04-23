@@ -65,7 +65,7 @@ trait ExportSpreadSheetTrait
 
   public function exportings()
   {
-    $this->processPaginatedResponses();
+    $this->processPaginatedResponse();
 
     $resourceFieldList = __("crudvel/{$this->getSlugPluralName()}.fields");
     $this->headers     = [];
@@ -79,7 +79,7 @@ trait ExportSpreadSheetTrait
     return $this->exportsSpreadSheet();
   }
 
-  public function processPaginatedResponses()
+  public function processPaginatedResponse()
   {
     $this->getModelBuilderInstance()->solveSearches();
 
