@@ -248,11 +248,21 @@ trait CvBaseScopeTrait
   public function scopeMorphedDefParticularOwner($query,$user,$relation){
     try{
       return $query->whereHasMorph($relation,'*',function($query) use($user){
-        $query->particularOwner($user);
+        $generalOnwerSlug = cvCaseFixer('slug|plural',$query->getModel()->getTable()).'.general-owner';
+
+        if($user->specialPermissions()->slug($generalOnwerSlug)->count())
+          $query->generalOwner($user);
+        else
+          $query->particularOwner($user);
       });
     }catch(\Exception $e){
       return $query->whereHas($relation,function($query) use($user){
-        $query->particularOwner($user);
+        $generalOnwerSlug = cvCaseFixer('slug|plural',$query->getModel()->getTable()).'.general-owner';
+
+        if($user->specialPermissions()->slug($generalOnwerSlug)->count())
+          $query->generalOwner($user);
+        else
+          $query->particularOwner($user);
       });
     }
   }
