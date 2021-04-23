@@ -54,8 +54,8 @@ trait ExportSpreadSheetTrait
   public function exportingsBeforeFlowControl()
   {
     $paginate = $this->getFields()['paginate'] ?? [];
-    $paginate = $this->filterExportingColumns($paginate);
-    $this->addField('paginate', $paginate);
+
+    $this->addField('paginate', $this->filterExportingColumns($paginate));
   }
 
   public function exportsSpreadSheet()
@@ -65,26 +65,27 @@ trait ExportSpreadSheetTrait
 
   public function exportings()
   {
+    $this->processPaginatedResponses();
+
     $resourceFieldList = __("crudvel/{$this->getSlugPluralName()}.fields");
     $this->headers     = [];
-    $this->processPaginatedResponse();
+
     foreach (kageBunshinNoJutsu($this->getModelBuilderInstance())->first()->getAttributes() as $key => $value)
-      $this->headers[] = $resourceFieldList[$key] ?? 'no registrado.' . $key;
-    $this->query = $this->getModelBuilderInstance();
-    // $this->query = $this->query->getQuery();
-    $this->query = $this->query->toBase();
+      $this->headers[] = $resourceFieldList[$key] ?? "no registrado.{$key}";
+
+    $this->query                = $this->getModelBuilderInstance()->toBase();
     $this->query->exportHeaders = $this->headers;
 
     return $this->exportsSpreadSheet();
   }
 
-  public function processPaginatedResponse()
+  public function processPaginatedResponses()
   {
     $this->getModelBuilderInstance()->solveSearches();
-    $this->getPaginated();
-    $this->getPaginatorInstance()->extractPaginate();
-    $this->getPaginatorInstance()->processPaginated();
-    $this->getModelBuilderInstance()->select($this->getPaginatorInstance()->getSelectQuery());
+
+    if($this->getPaginated())
+      $this->getPaginatorInstance()->processPaginatedResponse();
+
     return $this;
   }
 }

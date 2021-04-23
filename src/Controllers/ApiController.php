@@ -26,6 +26,8 @@ class ApiController extends CustomController{
   }
 
   public function actionResponse(){
+    $this->getModelBuilderInstance()->solveSearches();
+
     return $this->getPaginated()?
       $this->getPaginatorInstance()->paginatedResponse():
       $this->apiSuccessResponse($this->getModelBuilderInstance()->get());

@@ -280,11 +280,8 @@ class CvBasePaginator implements CvCrudInterface
    */
   public function processPaginatedResponse() {
     //if no model builder instance defined
-    if($this->getModelBuilderInstance()===null){
-      $this->getModelBuilderInstance()->select($this->getSelectQuery());
-
-      return ;
-    }
+    if($this->getModelBuilderInstance()===null)
+      throw new \Crudvel\Exceptions\EmptyCollection();
 
     //if it is not a select query defined
     if(noEmptyArray($this->getSelectQuery()))
