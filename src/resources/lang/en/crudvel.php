@@ -8,14 +8,14 @@ $cvGlobalSpecials = [
 ];
 
 $cvSections =  [
-  'top'         => 'Superior',
-  'security'    => 'Seguridad',
-  'settings'    => 'Ajustes',
-  'catalogs'    => 'Catalogos',
   'additionals' => 'Adicionales',
+  'catalogs'    => 'Catalogos',
+  'dashboard'   => 'Superior',
+  'files'       => 'Archivos',
   'main'        => 'Principal',
   'profile'     => 'Perfil',
-  'files'       => 'Archivos',
+  'security'    => 'Seguridad',
+  'settings'    => 'Ajustes',
 ];
 
 $cvActions = [
