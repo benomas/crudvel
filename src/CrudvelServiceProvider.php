@@ -58,9 +58,7 @@ class CrudvelServiceProvider extends ServiceProvider
    * @return void
    */
   public function register(){
-    $this->mergeConfigFrom(
-      __DIR__.'/config',base_path('config/packages/benomas/crudvel')
-    );
+    $this->mergeCrudvelConfigs();
 
     $this->app->singleton('cvHelper', function () {
       return new  \Crudvel\Libraries\Helpers\CvHelper();
@@ -77,5 +75,10 @@ class CrudvelServiceProvider extends ServiceProvider
     $this->app->bind('Crudvel\Libraries\CvSecurity\Interfaces\RegisterBuilderInterface', function ($app) {
       return new \Crudvel\Libraries\CvSecurity\Builders\RegisterBuilder();
     });
+  }
+
+  public function mergeCrudvelConfigs () {
+    $config = $this->app['config']->get('packages.benomas.crudvel.crudvel', []);
+    $this->app['config']->set('packages.benomas.crudvel.crudvel', array_merge(require __DIR__.'/config/crudvel.php', $config));
   }
 }
