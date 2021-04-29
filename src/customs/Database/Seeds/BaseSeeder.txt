@@ -3,5 +3,4 @@
  * modificable BaseMigration
  */
 class BaseSeeder extends \Crudvel\Database\Seeds\BaseSeeder{
-
 }
