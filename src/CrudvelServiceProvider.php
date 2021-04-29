@@ -58,6 +58,10 @@ class CrudvelServiceProvider extends ServiceProvider
    * @return void
    */
   public function register(){
+    $this->mergeConfigFrom(
+      __DIR__.'/config',base_path('config/packages/benomas/crudvel')
+    );
+
     $this->app->singleton('cvHelper', function () {
       return new  \Crudvel\Libraries\Helpers\CvHelper();
     });
