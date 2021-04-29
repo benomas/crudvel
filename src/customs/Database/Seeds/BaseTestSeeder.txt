@@ -3,5 +3,4 @@
  * modificable BaseTestSeeder
  */
 class BaseTestSeeder extends \Crudvel\Database\Seeds\BaseTestSeeder{
-
 }
