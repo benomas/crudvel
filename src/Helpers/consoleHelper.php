@@ -433,14 +433,15 @@ if ( ! function_exists('consoleMigrateGroup'))
   {
     Artisan::command("migrate-group {lastSegment?}", function ($lastSegment='') {
       $paths = assetsMap(database_path("migrations/$lastSegment"),1);
+
       if(!is_array($paths))
         return ;
+
       sort($paths);
+
       foreach ($paths as $key=>$path)
         if(!is_dir(database_path("migrations/$lastSegment/$path")) && $path!=='BaseMigration.php' && !preg_match('/^Custom+/', $path, $matches, PREG_OFFSET_CAPTURE)){
-          $shellEcho = customExec($command="php artisan migrate --path=/database/migrations/$lastSegment/$path");
-          $this->info("$shellEcho\n");
-          $this->info($command.' procesado');
+          $this->call('migrate', ['--path'=>"/database/migrations/$lastSegment/$path"]);
         }
     })->describe('run migration group');
   }
