@@ -42,6 +42,7 @@ class CvScaff extends \Crudvel\Commands\BaseCommand
 
     if(($this->propertyReload('force'))===null)
       $this->cvCacheSetProperty('force',false);
+
     if($this->propertyReload('force'))
       $cvScaffBuilder->force();
 

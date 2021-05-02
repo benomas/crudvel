@@ -8,6 +8,6 @@ return [
     'crudvel_default_user_email'      => env('CRUDVEL_DEFAULT_USER_EMAIL','root@root.com'),
     'crudvel_default_user_passsword'  => env('CRUDVEL_DEFAULT_USER_PASSSWORD','root@root.com')
   ],
-  'crudvel_root_path'           => env('CRUDVEL_ROOT_PATH','/var/www/') ,
-  'crudvel_front_path'          => env('CRUDVEL_FRONT_PATH',null),
+  'crudvel_root_path'  => env('CRUDVEL_ROOT_PATH','/var/www/'),
+  'crudvel_front_path' => env('CRUDVEL_FRONT_PATH',null),
 ];

@@ -12,6 +12,11 @@ abstract class CvBaseAdderScaff extends \Crudvel\Libraries\CvScaffSupport\CvBase
   protected $relatedFilePath;
   protected $absolutFilePath;
   protected $file;
+  protected $leftRegexElementAdder;
+  protected $rightRegexElementAdder;
+  protected $leftRegexElementRemover;
+  protected $rightRegexElementRemover;
+
   public function __construct(...$propertyRewriter){
     parent::__construct(...$propertyRewriter);
   }
@@ -26,6 +31,7 @@ abstract class CvBaseAdderScaff extends \Crudvel\Libraries\CvScaffSupport\CvBase
 //[End Stablishers]
   protected function loadFile(){
     $absolutFilePath = $this->getAbsolutFilePath();
+
     if(!file_exists($absolutFilePath))
       throw new \Exception("file $absolutFilePath doesnt exist");
 

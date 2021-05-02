@@ -9,8 +9,10 @@ class CvBuilder extends \Crudvel\Libraries\CvBuilder
   public function __construct(Command $consoleInstance=null,$cvBuildClass=null){
     parent::__construct();
     $cvBuildClass = $cvBuildClass ?? 'Crudvel\Libraries\CvScaffSupport\CvScaff';
+
     if(!class_exists($cvBuildClass))
       throw new \Exception("Error, class $cvBuildClass doesnt exist");
+
     $this->setCvBuildClass($cvBuildClass)
       ->setCvBuildedInstance(new $cvBuildClass($consoleInstance))
       ->stablishFinalScaffTree();
