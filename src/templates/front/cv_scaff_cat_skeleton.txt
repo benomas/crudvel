@@ -6,7 +6,7 @@
         v-on="mInputOns('name')"/>
     </div>
 
-    <div class="row col-xs-12 col-sm-3 col-md-2 my-auto q-px-sm">
+    <div class="row col-xs-12 col-sm-3 col-md-2 my-auto q-pa-sm">
       <div class="row w-100" v-bind="mToogleTittleBinding('active')">
         <span class="col-xs-8 m-auto q-pl-sm" >{{mfLang('active')}}</span>
 
