@@ -791,7 +791,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $stamps;
   }
 
-  protected function setStamps($enableCreateStamps = true){
+  public function setStamps($enableCreateStamps = true){
     $stamps = self::externalSetStamps();
     $this->addField('updated_at',$stamps['updated_at']);
     $this->addField('updated_by',$stamps['updated_by']);
