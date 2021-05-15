@@ -215,11 +215,17 @@
             "cat-filler": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Filler\\CvCreatorCatFillerScaff"
             },
+            "cat-import": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCatImportScaff"
+            },
             "import": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorImportScaff"
             },
             "import-skeleton": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorImportSkeletonScaff"
+            },
+            "cat-import-skeleton": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCatImportSkeletonScaff"
             }
         },
         "adder": {
@@ -350,8 +356,11 @@
             "import": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterImportScaff"
             },
-            "import-skeleton": {
-                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterImportSkeletonScaff"
+            "cat-import": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatImportScaff"
+            },
+            "cat-import-skeleton": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatImportSkeletonScaff"
             }
         }
     },

@@ -240,7 +240,7 @@ class CvScaff
       throw new \Exception("Error, scaff tree havent targets defined in $mode branch");
 
     while(($modeSubTree[$target]??null)===null)
-      $target = $this->select('target is not correctly defined, set it again',$targets,$targets[0]);
+      $target = $this->select("target [{$target}]is not correctly defined, set it again",$targets,$targets[0]);
 
     $this->propertyDefiner('target',$target);
     return $this->setTarget($target);
