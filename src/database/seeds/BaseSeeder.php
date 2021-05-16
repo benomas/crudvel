@@ -47,6 +47,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
         }
       }
     }
+
     return $this;
   }
 

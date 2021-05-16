@@ -532,10 +532,10 @@ class CvResource
     if($this->getUserModelCollectionInstance()->isRoot())
       return true;
 
-    if(!\App\Models\Permission::special($special)->count())
+    if(!$this->getPermissionModelClass()::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->special($special)->count())
       return true;
 
-    return kageBunshinNoJutsu($this->getUserModelBuilderInstance())->specialPermission($special)->count()>0;
+    return kageBunshinNoJutsu($this->getUserModelBuilderInstance())->specialPermission($special)->count() > 0;
   }
 
   public function actionAccess($actionResource = null){
@@ -555,7 +555,7 @@ class CvResource
     if($this->getUserModelCollectionInstance()->isRoot())
       return $this->actionsAccess[$actionResource] = true;
 
-    if(!$this->getPermissionModelClass()::action($actionResource)->count())
+    if(!$this->getPermissionModelClass()::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->action($actionResource)->count())
       return $this->actionsAccess[$actionResource] = true;
 
     if(kageBunshinNoJutsu($this->getUserModelBuilderInstance())->actionPermission($actionResource)->count())

@@ -153,12 +153,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     if(!in_array($this->getCurrentAction(),$this->getActions()))
       throw new \Crudvel\Exceptions\NotFound();
 
-    if(
-      $this->getSkipModelValidation() &&
-      !$this->specialAccess('inactives') &&
-      !$this->specialAccess($this->getSlugPluralName().'.inactives')
-    )
-      $this->getModelBuilderInstance()->actives();
+    $this->disableInactiveRows();
 
     if(!$this->getFields())
       $this->loadFields();
@@ -806,7 +801,6 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function disableInactiveRows(){
     if(
-      $this->getSkipModelValidation() &&
       !$this->specialAccess('inactives') &&
       !$this->specialAccess($this->getSlugPluralName().'.inactives')
     )
