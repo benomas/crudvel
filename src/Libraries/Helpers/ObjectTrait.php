@@ -10,4 +10,11 @@ trait ObjectTrait
   public function classFile ($className){
     return (new \ReflectionClass($className))->getFileName();
   }
+
+  public static function fakerProp ($property,$value = null) {
+    $fakeStdClassProp            = new \StdClass;
+    $fakeStdClassProp->$property = $value;
+
+    return $fakeStdClassProp;
+  }
 }

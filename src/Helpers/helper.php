@@ -1524,3 +1524,6 @@ if(!function_exists('hasSpecialAccess')){
 	}
 }
 
+if(!function_exists('fakerProp')){
+  function fakerProp(...$params){return CvHelper::fakerProp(...$params);}
+}
