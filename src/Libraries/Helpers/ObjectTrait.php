@@ -11,7 +11,7 @@ trait ObjectTrait
     return (new \ReflectionClass($className))->getFileName();
   }
 
-  public static function fakerProp ($property,$value = null) {
+  public static function fkP ($property,$value = null) {
     $fakeStdClassProp            = new \StdClass;
     $fakeStdClassProp->$property = $value;
 
