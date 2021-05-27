@@ -512,7 +512,7 @@ class CvResource
     if(!($user = \Auth::user()))
       return $this;
 
-    $this->setUserModelBuilderInstance($this->getUserModelClass()::disableRestricction()->key($user->id));
+    $this->setUserModelBuilderInstance($this->getUserModelClass()::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->key($user->id));
 
     $this->setUserModelCollectionInstance($this->getUserModelBuilderInstance()->first());
 
@@ -532,7 +532,7 @@ class CvResource
     if($this->getUserModelCollectionInstance()->isRoot())
       return true;
 
-    if(!$this->getPermissionModelClass()::disableRestricction()->special($special)->count())
+    if(!$this->getPermissionModelClass()::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->special($special)->count())
       return true;
 
     return kageBunshinNoJutsu($this->getUserModelBuilderInstance())->specialPermission($special)->count() > 0;
@@ -555,7 +555,7 @@ class CvResource
     if($this->getUserModelCollectionInstance()->isRoot())
       return $this->actionsAccess[$actionResource] = true;
 
-    if(!$this->getPermissionModelClass()::disableRestricction()->action($actionResource)->count())
+    if(!$this->getPermissionModelClass()::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->action($actionResource)->count())
       return $this->actionsAccess[$actionResource] = true;
 
     if(kageBunshinNoJutsu($this->getUserModelBuilderInstance())->actionPermission($actionResource)->count())

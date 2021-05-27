@@ -21,6 +21,13 @@ class CatFileRequest extends \Customs\Crudvel\Requests\CrudRequest{
     if($this->owner() && in_array($this->getCurrentAction(),['index','show','resourcer']))
       return true;
 
+    if ($this->getCurrentAction() === 'zippedResource'){
+      $resource = $this->route('resource');
+
+      if($resource)
+        return $this->specialAccess("{$resource}.zippedResource-files");
+    }
+
     return $this->actionAccess();
   }
   // [End Authorization]
