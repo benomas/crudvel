@@ -26,7 +26,7 @@
 
           <q-expansion-item
             v-if="cpDinGenKeyValue && cdRow && cdRow.cv_has_files"
-            v-cv-can-access="`special:${cResourceName}-index-files`"
+            v-cv-can-access="`special:${cResourceName}.index-files`"
             class="w-100 ba-1px border-black-l-72 q-ma-sm rounded-borders"
             :header-class="'w-100 txt-secondary'"
             icon="fas fa-filter"

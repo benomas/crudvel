@@ -25,19 +25,19 @@ class User extends \Crudvel\Models\BaseModel{
 
 // [Relationships]
   public function roles(){
-    return $this->belongsToMany("App\Models\Role")->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class);
+    return $this->belongsToMany("App\Models\Role")->disableRestricction();
   }
 
   public function permissions(){
-    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->permissions())->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class);
+    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->permissions())->disableRestricction();
   }
 
   public function domineeringRoles () {
-    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->domineeringRoles())->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class);
+    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->domineeringRoles())->disableRestricction();
   }
 
   public function dominedRoles(){
-    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->dominedRoles())->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class);
+    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->dominedRoles())->disableRestricction();
   }
 // [End Relationships]
 
@@ -207,23 +207,23 @@ class User extends \Crudvel\Models\BaseModel{
     return $loginTest;
   }
   public function isRoot(){
-    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->withRoot()->count();
+    return $this->roles()->disableRestricction()->withRoot()->count();
   }
 
   public function isAdmin(){
-    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->withAdmin()->count();
+    return $this->roles()->disableRestricction()->withAdmin()->count();
   }
 
   public function inRoles(...$roles){
-    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->inRoles($roles)->count();
+    return $this->roles()->disableRestricction()->inRoles($roles)->count();
   }
 
   public function hasInternalRole(){
-    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->internal()->count() > 0;
+    return $this->roles()->disableRestricction()->internal()->count() > 0;
   }
 
   public function hasExternalRole(){
-    return $this->roles()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->external()->count() > 0;
+    return $this->roles()->disableRestricction()->external()->count() > 0;
   }
 
   public function disabledUser(){

@@ -292,7 +292,7 @@ trait CvBaseScopeTrait
 
     $resource = cvCaseFixer('slug|plural',class_basename($this));
 
-    $ownerPermissions = $user->permissions()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->specialPermissions();
+    $ownerPermissions = $user->permissions()->disableRestricction()->specialPermissions();
 
     if(kageBunshinNoJutsu($ownerPermissions)->slug("$resource.general-owner")->count()){
       $GLOBALS['disablePermissionsScope'] =  false;
@@ -362,6 +362,10 @@ trait CvBaseScopeTrait
 
   public function scopeCvResourceFilter($query, $routeParam, $preFixed = true){
     return $query->key($routeParam,$preFixed);
+  }
+
+  public function scopeDisableRestricction($query){
+    return $query->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class);
   }
 // [End Scopes]
 }

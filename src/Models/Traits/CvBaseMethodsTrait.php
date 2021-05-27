@@ -259,7 +259,7 @@ trait CvBaseMethodsTrait
     }
 
     if(!$userInstace || $userInstace->getKeyValue() !== $userKey)
-      if(!($userInstace = \App\Models\User::withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)->key($userKey)->first()))
+      if(!($userInstace = \App\Models\User::disableRestricction()->key($userKey)->first()))
         return null;
 
     return $userInstace;

@@ -11,6 +11,24 @@ class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
    *
    * @return array
    */
+  public function authorize(){
+    $this->prepareRequest();
+
+    if(!$this->getUserModelCollectionInstance())
+      return true;
+
+    if(!$this->getCurrentAction())
+      return true;
+
+    if(($this->getFields()['resource']??null))
+      return $this->specialAccess("{$this->getFields()['resource']}.{$this->getCurrentAction()}-files");
+
+    if($this->owner() && in_array($this->getCurrentAction(),['index','show']))
+      return true;
+
+    return $this->actionAccess();
+  }
+
   public function defaultRules()
   {
     $fields = $this->getFields();

@@ -1457,7 +1457,7 @@ if(!function_exists('hasActionAccess')){
 			return $GLOBALS[$actionResource];
 
 		if(!$userModelBuilderInstance){
-      if(!($userModelBuilderInstance = \Crudvel\Facades\CvResource::getUserModelBuilderInstance()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)))
+      if(!($userModelBuilderInstance = \Crudvel\Facades\CvResource::getUserModelBuilderInstance()->disableRestricction()))
         return ($GLOBALS[$actionResource]=false);
     }
 
@@ -1507,7 +1507,7 @@ if(!function_exists('hasSpecialAccess')){
 	function hasSpecialAccess($special,$userModelBuilderInstance = null){
 
 		if(!$userModelBuilderInstance){
-      if(!($userModelBuilderInstance = \Crudvel\Facades\CvResource::getUserModelBuilderInstance()->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class)))
+      if(!($userModelBuilderInstance = \Crudvel\Facades\CvResource::getUserModelBuilderInstance()->disableRestricction()))
         return false;
     }
 
