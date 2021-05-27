@@ -24,7 +24,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
 
   public function __construct(){
     parent::__construct();
-    $this->addAction('resources','resourcer','zippedResourceFiles')->addRowActions('resources')->addRowsActions('resourcer','zippedResourceFiles');
+    $this->addAction('resources','resourcer','zippedResource')->addRowActions('resources')->addRowsActions('resourcer','zippedResource');
   }
 
   public function callAction($method,$parameters=[]){
@@ -45,7 +45,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     return $this->actionResponse();
   }
 
-  public function zippedResourceFiles($resource, $key){
+  public function zippedResource($resource, $key){
     if($this->getPaginated())
       $this->getPaginatorInstance()->processPaginatedResponse();
 
@@ -97,7 +97,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     }]);
   }
 
-  public function zippedResourceFilesBeforeFlowControl(){
+  public function zippedResourceBeforeFlowControl(){
     $paginate = $this->getFields()['paginate'] ?? [];
     $paginate['limit'] = null;
     $this->addField('paginate', $paginate);

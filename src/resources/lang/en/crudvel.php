@@ -229,28 +229,29 @@ $cvActions = [
     'for'            =>'(back)',
   ],
 
-  'zippedResourceFiles' => [
-    'call_message'   => 'Comprimir archivos',
-    'called_message' => 'Comprimir archivos',
-    'success'        => 'Se han comprimido los archivos',
-    'for'            => '(back)',
+  'zippedResource' => [
+    'call_message'   => 'Descargar archivos comprimidos',
+    'called_message' => 'Descargando archivos comprimidos',
+    'success'        => 'Se han descargado los archivos comprimidos',
+    'for'            => '(back y front)',
   ],
 ];
 
 $cvSpecials=[
-  'inactives'        => 'Inactivos',
-  'general-owner'    => 'De propiedad general',
-  'particular-owner' => 'De propiedad particular',
-  'files-settings'   => 'Configuración de archivos del recurso',
-  'index-files'      => 'Listar archivos del recurso',
-  'show-files'       => 'Ver archivos del recurso',
-  'create-files'     => 'Vista de creación de archivos del recurso',
-  'store-files'      => 'Crear archivos del recurso',
-  'edit-files'       => 'Vista de edición de archivos del recurso',
-  'update-files'     => 'Actualizar archivos del recurso',
-  'delete-files'     => 'Vista de eliminación de archivos del recurso',
-  'destroy-files'    => 'Eliminar archivos del recurso',
-  'code-hooks'       => 'Establecer Enganches de codigo',
+  'inactives'            => 'Inactivos',
+  'general-owner'        => 'De propiedad general',
+  'particular-owner'     => 'De propiedad particular',
+  'files-settings'       => 'Configuración de archivos del recurso',
+  'index-files'          => 'Listar archivos del recurso',
+  'show-files'           => 'Ver archivos del recurso',
+  'create-files'         => 'Vista de creación de archivos del recurso',
+  'store-files'          => 'Crear archivos del recurso',
+  'edit-files'           => 'Vista de edición de archivos del recurso',
+  'update-files'         => 'Actualizar archivos del recurso',
+  'delete-files'         => 'Vista de eliminación de archivos del recurso',
+  'destroy-files'        => 'Eliminar archivos del recurso',
+  'zippedResource-files' => 'Descargar archivos comprimidos',
+  'code-hooks'           => 'Establecer Enganches de codigo',
 ];
 
 $cvActionsExtra = [
