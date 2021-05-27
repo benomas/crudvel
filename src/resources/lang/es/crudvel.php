@@ -222,6 +222,13 @@ $cvActions = [
     'success'        =>'Se ha editado',
     'for'            =>'(back)',
   ],
+
+  'zippedResourceFiles' => [
+    'call_message'   => 'Comprimir archivos',
+    'called_message' => 'Comprimiendo archivos',
+    'success'        => 'Se han comprimido los archivos',
+    'for'            => '(back y front)',
+  ],
 ];
 
 $cvSpecials=[
