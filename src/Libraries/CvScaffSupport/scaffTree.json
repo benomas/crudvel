@@ -359,6 +359,9 @@
             "cat-import": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatImportScaff"
             },
+            "import-skeleton": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterImportSkeletonScaff"
+            },
             "cat-import-skeleton": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatImportSkeletonScaff"
             }
