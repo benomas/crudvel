@@ -5,6 +5,6 @@ use Illuminate\Support\Facades\Cache;
 
 class NotFound extends Exception{
   public function render($request){
-    return \CvResource::getRootInstance()->apiNotFoundapiNotFound();
+    return \CvResource::getRootInstance()->apiNotFound();
   }
 }
