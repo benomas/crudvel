@@ -172,12 +172,18 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
       if (count($segments) > 1){
         $attribute          = $segments[count($segments)-1];
-        $currentLangSegment = Str::plural(cvSlugCase($segments[count($segments)-2],'-'));
+        $currentLangSegment = $segments[count($segments)-2] ?? null;
 
-        if (empty($currentLangs[$currentLangSegment]))
-          $currentLangs[$currentLangSegment] = __("crudvel/".$currentLangSegment.".fields");
+        if(!is_numeric($currentLangSegment)){
+          $currentLangSegment = Str::plural(cvSlugCase($segments[count($segments)-2],'-'));
 
-        $attributesLangs[$index] = $currentLangs[$currentLangSegment][$attribute] ?? '';
+          if (empty($currentLangs[$currentLangSegment]))
+            $currentLangs[$currentLangSegment] = __("crudvel/".$currentLangSegment.".fields");
+
+          $attributesLangs[$index] = $currentLangs[$currentLangSegment][$attribute] ?? '';
+        }else{
+          $attributesLangs[$index] = "[{$currentLangSegment}]{$currentLangs[$localSegment][$attribute]}" ?? '';
+        }
       }
     }
 
