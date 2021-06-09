@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Cache;
 class PreactionResponse extends Exception{
   protected $prematureResponse;
 
+  public function report(){
+  }
+
   public function render($request){
     return $this->getPrematureResponse();
   }
