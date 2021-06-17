@@ -56,6 +56,7 @@ class TableCompatibility
     foreach($this->leftColumns as $leftColumn){
       foreach($this->rightColumns as $rightColumn){
         $compatibility = new ColumnCompatibility($this->leftModel , $this->rightModel ,$leftColumn,$rightColumn);
+
         if(($compatibilityTest = $compatibility->check())['kindOfCompatibility']===static::UNPROBABLE_COMPATIBILITY)
           continue;
         $modelKind                 = preg_match('/Catalogos/',$this->destLeftModel, $matches)?'Catalogos':"Tbls";

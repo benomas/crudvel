@@ -25,8 +25,8 @@ class ColumnCompatibility
   public function __construct(String $leftModel, String $rightModel, String $leftColumn, String $rightColumn, Int $rightMargin=null){
     $this->leftModel          = $leftModel;
     $this->rightModel         = $rightModel;
-    $this->leftModelInstance  = new $this->leftModel();
-    $this->rightModelInstance = new $this->rightModel();
+    $this->leftModelInstance  = new $this->leftModel;
+    $this->rightModelInstance = new $this->rightModel;
     $this->leftColumn         = $leftColumn;
     $this->rightColumn        = $rightColumn;
     $this->leftFixedColumn    = $this->leftModelInstance->fixColumnName($leftColumn);
@@ -39,6 +39,7 @@ class ColumnCompatibility
     $rightCheck = $this->rightBuilder();
     $lCount     = $this->lCount($leftCheck);
     $rCount     = $this->rCount($rightCheck);
+
     $lastMargin = $this->rightMargin ??
       ($this->compatibilityTolerance + (int) (max($lCount,1) * .005));
     if($lCount > $rCount + $lastMargin || $lCount===0)
@@ -108,15 +109,14 @@ class ColumnCompatibility
   }
 
   private function leftBuilder(){
-    return $this->leftModel::select($this->leftFixedColumn)->notNull($this->leftColumn)->selfFilter();
+    return $this->leftModel::disableGlobalScopeForVirtalKeys()->select($this->leftFixedColumn)->notNull($this->leftColumn)->selfFilter();
   }
 
   private function rightBuilder(){
-    return $this->rightModel::select($this->rightFixedColumn)->selfFilter();
+    return $this->rightModel::disableGlobalScopeForVirtalKeys()->select($this->rightFixedColumn)->selfFilter();
   }
 
   public function lCount($q){
-    //return $q->distinctCount($this->leftColumn);
     try{
       return $q->distinctCount($this->leftColumn);
     }
