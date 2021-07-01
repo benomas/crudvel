@@ -109,6 +109,8 @@ $cvValidations = [
 	'cv_less_than_when_false'    => 'El campo [:attribute] debe tener un valor menor que [:limit], cuando el campo [:other] es falso',
 	'cv_greater_than_with'       => 'El campo [:attribute] debe tener un valor mayor que [:limit], cuando el campo [:other] existe',
 	'cv_less_than_with'          => 'El campo [:attribute] debe tener un valor menor que [:limit], cuando el campo [:other] existe',
+	'cv_greater_than'            => 'El campo [:attribute] debe tener un valor mayor que [:limit]',
+	'cv_less_than'               => 'El campo [:attribute] debe tener un valor menor que [:limit]',
 	'cv_slugged'                 => 'El campo [:attribute] debe tener un formato de slug',
 	'key_exist_v2'               => 'El valor no corresponde con el recurso [:resource]',
   //crudvel acopled validations

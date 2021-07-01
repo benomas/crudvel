@@ -768,6 +768,26 @@ private function getIgnore(&$parameters)
   function replaceKeyExistV2(...$params){
     return $this->fixValidationLabels(__FUNCTION__,...$params);
   }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvGreaterThan(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvGreaterThan(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
+
+  //----------------------------------------------------------------------------------
+
+  function validateCvLessThan(...$params){
+    return $this->runValidation(__FUNCTION__,...$params);
+  }
+
+  function replaceCvLessThan(...$params){
+    return $this->fixValidationLabels(__FUNCTION__,...$params);
+  }
 // [Specific Logic]
 //[Compositive  Methods]
   protected function runValidation($ruleCaller,$attribute, $value, $parameters){
