@@ -22,13 +22,13 @@ $cvActions = [
   'index'  => [
     'call_message'   =>'Listar',
     'called_message' =>'Listado',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'show'   => [
     'call_message'   =>'Ver',
     'called_message' =>'Vista',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'create' => [
@@ -36,61 +36,61 @@ $cvActions = [
     'called_message' =>'Creando',
     'next_message'   =>'Guardar',
     'success'        =>'Se ha Creado',
-    'for'            =>'(front)',
+    'for'            =>'(cliente)',
   ],
 
   'add' => [
     'call_message'   =>'Agregar',
     'called_message' =>'Agregando',
     'success'        =>'Se ha Agregado',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'store'  => [
     'call_message'   =>'Crear',
     'called_message' =>'Creando',
     'success'        =>'Se ha Creado',
-    'for'            =>'(back)',
+    'for'            =>'(api)',
   ],
 
   'edit'   => [
     'call_message'   =>'Vista de edición',
     'called_message' =>'Editando',
     'next_message'   =>'Actualizar',
-    'for'            =>'(front)',
+    'for'            =>'(cliente)',
   ],
 
   'update' => [
     'call_message'   =>'Actualizar',
     'called_message' =>'Actualizando',
     'success'        =>'Se ha Actualizado',
-    'for'            =>'(back)',
+    'for'            =>'(api)',
   ],
 
   'delete' => [
     'call_message'       =>'Vista de eliminación',
     'success'            =>'Eliminado',
     'confirmation_alert' =>'El registro sera eliminado',
-    'for'                =>'(front)',
+    'for'                =>'(cliente)',
   ],
 
   'destroy' => [
     'call_message'       =>'Eliminar',
     'success'            =>'Eliminado',
     'confirmation_alert' =>'El registro sera eliminado',
-    'for'                =>'(back)',
+    'for'                =>'(api)',
   ],
 
   'activate' => [
     'call_message' =>'Activar',
     'success'      =>'Se ha Activado',
-    'for'          =>'(back y front)',
+    'for'          =>'(api y cliente)',
   ],
 
   'deactivate' => [
     'call_message' =>'Desactivar',
     'success'      =>'Se ha Desactivado',
-    'for'          =>'(back y front)',
+    'for'          =>'(api y cliente)',
   ],
 
   'import' => [
@@ -98,13 +98,13 @@ $cvActions = [
     'called_message' =>'Importando',
     'main_label'     =>'Archivo a Importar (Excel)',
     'next_message'   =>'Importar',
-    'for'            =>'(front)',
+    'for'            =>'(cliente)',
   ],
 
   'importing' => [
     'call_message'   =>'Importar',
     'success'        =>'Se han Importado',
-    'for'            =>'(back)',
+    'for'            =>'(api)',
   ],
 
   'export' => [
@@ -112,7 +112,7 @@ $cvActions = [
     'called_message' =>'Exportando',
     'next_message'   =>'Generar excel de exportación',
     'success'        =>'Se han Exportado',
-    'for'            =>'(front)',
+    'for'            =>'(cliente)',
   ],
 
   'exporting' => [
@@ -120,7 +120,7 @@ $cvActions = [
     'called_message' =>'Exportando',
     'next_message'   =>'Generar excel de exportación',
     'success'        =>'Se han Exportado',
-    'for'            =>'(back)',
+    'for'            =>'(api)',
   ],
 
   'exportings' => [
@@ -136,36 +136,36 @@ $cvActions = [
     'called_message' =>'Relacinando',
     'next_message'   =>'Guardar relacionados',
     'success'        =>'Registros relacionados',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'sluged' => [
     'call_message'   =>'Listado organizado por slugs',
     'called_message' =>'Obteniendo listado por slugs',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
   'unauthorized' => [
     'call_message'   =>'Cargar restricciones de permisos',
     'called_message' =>'Cargarndo restricciones de permisos',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'permissions' => [
     'call_message'   =>'Cargar permisos por rol',
     'called_message' =>'Cargarndo permisos por rol',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'roles' => [
     'call_message'   =>'Cargar roles por usuario',
     'called_message' =>'Cargarndo roles por usuario',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'profile' => [
     'call_message'   =>'Cargar información de usuario',
     'called_message' =>'Cargarndo información de usuario',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'logout' => [
@@ -173,7 +173,7 @@ $cvActions = [
     'called_message' =>'Cerrando sesión',
     'next_message'   =>'Cerrar sesión',
     'success'        =>'Sesión cerrada',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'updateProfile' => [
@@ -181,13 +181,13 @@ $cvActions = [
     'called_message' =>'Actualizando información de usuario',
     'next_message'   =>'Actualizar información de usuario',
     'success'        =>'Información de usuario actualizada',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'dashboardInfo' => [
     'call_message'   =>'Cargar información administrativa',
     'called_message' =>'Cargarndo información administrativa',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'resources' => [
@@ -212,28 +212,28 @@ $cvActions = [
     'call_message'   =>'Registrar',
     'called_message' =>'Registrando',
     'success'        =>'Registrando',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'recovery' => [
     'call_message'   =>'Recuperar',
     'called_message' =>'Recuperando',
     'success'        =>'Recuperado',
-    'for'            =>'(back y front)',
+    'for'            =>'(api y cliente)',
   ],
 
   'storeUpdate'  => [
     'call_message'   =>'Crear o editar',
     'called_message' =>'Creando o editando',
     'success'        =>'Se ha editado',
-    'for'            =>'(back)',
+    'for'            =>'(api)',
   ],
 
   'zippedResource' => [
     'call_message'   => 'Descargar archivos comprimidos',
     'called_message' => 'Descargando archivos comprimidos',
     'success'        => 'Se han descargado los archivos comprimidos',
-    'for'            => '(back y front)',
+    'for'            => '(api y cliente)',
   ],
 ];
 
