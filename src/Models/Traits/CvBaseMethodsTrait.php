@@ -331,5 +331,13 @@ trait CvBaseMethodsTrait
     return $this->safeField($alias,'text_identifier','(',')');
     //return "IF($alias.text_identifier IS NOT NULL,CONCAT('(',$alias.text_identifier,')'),'')";
   }
+
+  public function userAutoStamp(){
+    $user = \CvResource::assignUser()->getUserModelCollectionInstance();
+    $this->created_by=$user->id??null;
+    $this->updated_by=$user->id??null;
+
+    return $this->save();
+  }
 // [End Others]
 }

@@ -367,5 +367,13 @@ trait CvBaseScopeTrait
   public function scopeDisableRestricction($query){
     return $query->withoutGlobalScope(\Crudvel\Scopes\PermissionsScope::class);
   }
+
+  public function scopeCreatedUntilYear($query,$year){
+    return $query->whereYear('created_at','<=',$year);
+  }
+
+  public function scopeCreatedUntilMonth($query,$month){
+    return $query->whereMonth('created_at','<=',$month);
+  }
 // [End Scopes]
 }
