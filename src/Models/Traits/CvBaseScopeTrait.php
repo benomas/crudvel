@@ -275,10 +275,10 @@ trait CvBaseScopeTrait
     return $query->key($user->id);
   }
 
-  public function scopeCvOwner($query, $userKey=null){
+  public function scopeCvOwner($query, $user=null){
     $GLOBALS['disablePermissionsScope'] =  true;
 
-    if(!($user = $this->fixUser($userKey))){
+    if(!($user = $this->fixUser($user))){
       $GLOBALS['disablePermissionsScope'] =  false;
 
       return $query->noFilters();

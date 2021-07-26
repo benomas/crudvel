@@ -247,7 +247,12 @@ trait CvBaseMethodsTrait
     return $randomWord();
   }
 
-  public function fixUser($userKey = null){
+  public function fixUser($user = null){
+    if($user && is_object($user))
+      return $user;
+
+    $userKey = $user;
+
     $userInstace = null;
     $userInstace = \CvResource::assignUser()->getUserModelCollectionInstance();
 
