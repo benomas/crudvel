@@ -470,7 +470,6 @@ class CvResource
 
   public function fixFlowControl(){
     $this->getRootInstance()->loadFields();
-
     $this->solveBeforesFlowControl()
       ->getRootInstance()
       ->emptyModelBuilderException()

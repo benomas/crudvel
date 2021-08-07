@@ -319,6 +319,10 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
       $this->setCurrentAction(cvCamelCase($routeNameSegments[count($routeNameSegments)-1]));
     }
 
+
+    if ($resourceKey === null)
+      $resourceKey = $this->route($this->getCamelSingularName());
+
     if ($resourceKey === null)
       $resourceKey = $this->route($this->getSnakeSingularName());
 
