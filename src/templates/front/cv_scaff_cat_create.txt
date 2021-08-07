@@ -37,7 +37,8 @@
                 :cv-resourcer="cResource"
                 :cv-file-count="cdRow.cv_has_files"
                 :cv-resourcer-action="cpStaGenAction"
-                :cv-resourcer-key="cpDinGenKeyValue">
+                :cv-resourcer-key="cpDinGenKeyValue"
+                @cv-file-change="mCvFileChange">
               </cv-index-resoucer>
             </div>
           </q-expansion-item>
