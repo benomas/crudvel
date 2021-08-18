@@ -123,7 +123,7 @@ trait CvBaseScopeTrait
   }
 
   public function scopeNoCodeHook($query, $codeHook, $preFixed = true){
-    return $query->where($this->preFixed('code_hook','<>', $preFixed), $codeHook);
+    return $query->where($this->preFixed('code_hook', $preFixed),'<>', $codeHook);
   }
 
   public function scopeOfLevel($query, $level_id, $preFixed = true){
