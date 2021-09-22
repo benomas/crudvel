@@ -52,6 +52,32 @@ class BaseModel extends Model implements CvCrudInterface
   public function getCvHasCodeHookAttribute(){
     return $this->codeHook;
   }
+
+  public function setSlugAttribute($value){
+    $value = $value ?? null;
+
+    if(empty($value)){
+      $value = $this->name??null;
+
+      if(empty($value))
+        $value = (string) \Illuminate\Support\Str::uuid();
+    }
+
+    $this->attributes['slug'] = str_replace(' ', '-', strtolower(preg_replace('/\.|,/', '', trim($value))));
+  }
+
+  public function setCodeHookAttribute($value){
+    $value = $value ?? null;
+
+    if(empty($value)){
+      $value = $this->name??null;
+
+      if(empty($value))
+        $value = (string) \Illuminate\Support\Str::uuid();
+    }
+
+    $this->attributes['code_hook'] = str_replace(' ', '-', strtolower(preg_replace('/\.|,/', '', trim($value))));
+  }
 // [End Transformers]
 
 // [Scopes]
