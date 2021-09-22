@@ -72,9 +72,9 @@ class BaseMigration extends Migration
   public function catalog($blueprintTable){
     $blueprintTable = $this->getSetBlueprintTable($blueprintTable);
     $blueprintTable->bigIncrements('id');
-    $blueprintTable->string('name');
+    $blueprintTable->string('name')->unique();
     $blueprintTable->text('description')->nullable();
-    $blueprintTable->string('code_hook',100)->nullable();
+    $blueprintTable->string('code_hook',100)->unique()->nullable();
     $this->defaultColumns($blueprintTable);
     $blueprintTable->index("name");
 
