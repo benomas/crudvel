@@ -866,7 +866,8 @@ if(!function_exists("sqlsrvColumnList")){
         FROM
           INFORMATION_SCHEMA.COLUMNS
         WHERE
-          CONCAT(TABLE_SCHEMA,'.',TABLE_NAME)= '".$table."'
+          CONCAT(TABLE_SCHEMA,'.',TABLE_NAME)= '{$table}'
+          OR  TABLE_NAME = '{$table}'
       ");
     $response=[];
     foreach ($columnsDefinitions as $key => $columnDefinition){
