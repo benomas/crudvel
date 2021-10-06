@@ -171,6 +171,15 @@ trait CvBaseScopeTrait
     return $query->orderBy($this->getTable() . '.' . $this->getKeyName());
   }
 
+  public function scopeOrderByKeyDesc($query){
+    return $query->orderBy($this->getTable() . '.' . $this->getKeyName(),'DESC');
+  }
+
+  public function scopeOrderByKeyAsc($query){
+    return $query->orderBy($this->getTable() . '.' . $this->getKeyName(),'ASC');
+  }
+
+
   public function scopeSelectKey($query){
     return $query->select($this->getTable() . '.' . $this->getKeyName());
   }
