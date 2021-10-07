@@ -17,7 +17,8 @@ abstract class ValidationException extends Exception{
 
   public function render($request){
     return \Crudvel\Controllers\ApiController::sApiFailResponse([
-      "message"   => __("crudvel/{$this->getResourceLang()}.exceptions.{$this->getErrorType()}"),
+      "message"   => __("crudvel/{$this->getResourceLang()}.exceptions.{$this->getErrorType()}").
+      " {$this->getMessage()} ",
       "errorType" => $this->getErrorType()
     ]);
   }
