@@ -73,8 +73,10 @@ class CvHttpClient
     $response = Http::withHeaders($headers)
       ->put("{$this->getCvApiUrl()}/{$apiPath}", $body);
 
-    if($response->status() !== 200)
+    if($response->status() !== 200){
+      pdd($response->body());
       throw new \Crudvel\Exceptions\CvHttpClientExceptions\UnableToProcessRequest();
+    }
 
     return $response->json();
   }
