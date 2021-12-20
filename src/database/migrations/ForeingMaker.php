@@ -27,15 +27,20 @@ class ForeingMaker{
         $table->foreign($this->getForeign()??cvCaseFixer('singular|snake',$this->getTo()).'_id',$this->getForeingName())
           ->references($this->getReferences()??'id')
           ->on($this->getOn()??cvCaseFixer('snake',$this->getTo()))
-          ->onUpdate($this->getOnUpdate()??'cascade')
-          ->onDelete($this->getOnDelete()??'cascade');
+          ->onUpdate($this->getOnUpdate()??$this->getMigration()->getForeingOnUpdate()??'cascade')
+          ->onDelete($this->getOnDelete()??$this->getMigration()->getForeingOnDelete()??'cascade');
       });
     }
     catch(\Exception $e){
       cvConsoler(cvNegative("error when try to alter {$this->getTable()} table").cvWarning(' '.$e->getMessage())."\n");
     }
 
-    return $this;
+    return $this->setForeign(null)->setForeingName(null);
+  }
+
+  public function userStampForeings () {
+    return $this->setForeign('created_by')->build('users')
+      ->setForeign('updated_by')->build('users');
   }
 // [End Specific Logic]
 // [Getters]

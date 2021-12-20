@@ -10,7 +10,10 @@ class BaseMigration extends Migration
   protected $schema;
   protected $mainTable;
   protected $autoForeingModels;
-  public $blueprintTable=null;
+  public    $blueprintTable  = null;
+  protected $foreingOnUpdate = 'cascade';
+  protected $foreingOnDelete = 'cascade';
+
   public function __construct(){
     if(empty($this->mainTable)){
       preg_match('/(?:reate|lter)(.+?)Table/',get_class($this),$matches);
@@ -18,6 +21,7 @@ class BaseMigration extends Migration
     }
   }
 
+// [Specific Logic]
   /**
    * Run the migrations.
    *
@@ -125,21 +129,6 @@ class BaseMigration extends Migration
     return $this;
   }
 
-  public function getTable(){
-    return $this->mainTable;
-  }
-
-  public function getSchema(){
-    return $this->schema;
-  }
-
-  public function getSchemaTable(){
-    if(empty($this->schema))
-      return $this->mainTable;
-
-    return $this->schema.'.'.$this->mainTable;
-  }
-
   public function sqlStatementUp($driver=null){
     if(!$driver){
       $default = config('database.default');
@@ -200,23 +189,6 @@ class BaseMigration extends Migration
     return $this;
   }
 
-  public function setBlueprintTable($blueprintTable=null){
-    $this->blueprintTable = $blueprintTable;
-
-    return $this;
-  }
-
-  public function getBlueprintTable(){
-    return $this->blueprintTable;
-  }
-
-  public function getSetBlueprintTable($blueprintTable=null){
-    if($blueprintTable)
-      $this->blueprintTable = $blueprintTable;
-
-    return $this->blueprintTable;
-  }
-
   public function automaticStandarForeings(){
     $this->autoForeingModels = $this->autoForeingModels ?? [];
     Schema::disableForeignKeyConstraints();
@@ -262,4 +234,60 @@ class BaseMigration extends Migration
 
     return $this;
   }
+// [End Specific Logic]
+// [Getters]
+  public function getTable(){
+    return $this->mainTable;
+  }
+
+  public function getSchema(){
+    return $this->schema;
+  }
+
+  public function getSchemaTable(){
+    if(empty($this->schema))
+      return $this->mainTable;
+
+    return $this->schema.'.'.$this->mainTable;
+  }
+
+  public function getBlueprintTable(){
+    return $this->blueprintTable;
+  }
+
+  public function getSetBlueprintTable($blueprintTable=null){
+    if($blueprintTable)
+      $this->blueprintTable = $blueprintTable;
+
+    return $this->blueprintTable;
+  }
+
+  public function getForeingOnUpdate(){
+    return $this->foreingOnUpdate??null;
+  }
+
+  public function getForeingOnDelete(){
+    return $this->foreingOnDelete??null;
+  }
+// [End Getters]
+// [Setters]
+
+  public function setBlueprintTable($blueprintTable=null){
+    $this->blueprintTable = $blueprintTable;
+
+    return $this;
+  }
+
+  public function setForeingOnUpdate($foreingOnUpdate=null){
+    $this->foreingOnUpdate = $foreingOnUpdate??null;
+
+    return $this;
+  }
+
+  public function setForeingOnDelete($foreingOnDelete=null){
+    $this->foreingOnDelete = $foreingOnDelete??null;
+
+    return $this;
+  }
+// [End Setters]
 }
