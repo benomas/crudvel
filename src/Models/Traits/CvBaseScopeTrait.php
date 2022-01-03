@@ -2,6 +2,8 @@
 
 namespace Crudvel\Models\Traits;
 
+use stdClass;
+
 trait CvBaseScopeTrait
 {
 // [Scopes]
@@ -235,15 +237,26 @@ trait CvBaseScopeTrait
     return $query->cvSearch();
   }
 
-  public function scopeCvSearch($query,$alias=null){
-    $alias      = $this->alias($alias);
+  public function selfAddSelectPrebuilder($alias=null){
     $table      = $this->cvIam()->getTable();
     $modelClass = get_class($this->cvIam());
 
-    return $query->addSelect(['cv_search' => $modelClass::withoutGlobalScopes()->from("$table as $alias")
-      ->selectCvSearch($alias)
-      ->whereColumn("$alias.id", "$table.id")
-      ->limit(1)]);
+    $selfBuilder = new stdClass;
+    $selfBuilder->alias = $this->alias($alias);
+
+    $selfBuilder->queryBuilder = $modelClass::withoutGlobalScopes()->from("$table as {$selfBuilder->alias}")
+      ->whereColumn("{$selfBuilder->alias}.id", "$table.id")
+      ->limit(1);
+
+    return $selfBuilder;
+  }
+
+  public function scopeCvSearch($query,$alias=null){
+    $selfAddSelectPrebuilder = $this->selfAddSelectPrebuilder($alias);
+
+    return $query->addSelect([
+      'cv_search' => $selfAddSelectPrebuilder->queryBuilder->selectCvSearch($selfAddSelectPrebuilder->alias)
+    ]);
   }
 
   public function scopeDefParticularOwner($query,$user,$relation){

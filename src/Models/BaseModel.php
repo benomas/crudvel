@@ -95,5 +95,9 @@ class BaseModel extends Model implements CvCrudInterface
   public function fileZipOptDeleteFileAfterSend(){
     return true;
   }
+
+  public function newCollection(array $models = []){
+    return new \Crudvel\Collection\BaseCollection($models);
+  }
 // [End Others]
 }
