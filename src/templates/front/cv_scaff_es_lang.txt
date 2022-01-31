@@ -39,7 +39,7 @@ export default {
       label : 'Editar <##[singular|lower|human](resource)##>',
 
       set   : {
-        success : 'Se ha editado correctament <##[singular|lower|human](resource)##>',
+        success : 'Se ha editado correctamente <##[singular|lower|human](resource)##>',
         error   : 'Error al intentar editar <##[singular|lower|human](resource)##>',
         cancel  : 'Se ha cancelado la edición de <##[singular|lower|human](resource)##>'
       }
