@@ -555,7 +555,16 @@ trait CrudTrait {
     return $this->getCvResourceInstanceMethod(__FUNCTION__,...$params);
   }
 
+  public static function sApiComplementData($data=null,$extraData){
+    if($data && is_array($data) && is_array($extraData))
+      return array_merge($extraData,$data);
+
+    return $data;
+  }
+
   public function apiAlreadyExist($data=null){
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.already_exist")]);
+
     return response()->json(
       $data?
         $data:
@@ -565,6 +574,8 @@ trait CrudTrait {
   }
 
   public function apiUnautenticated($data=null){
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.unautorized")]);
+
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.unautorized")]
@@ -573,6 +584,8 @@ trait CrudTrait {
   }
 
   public function apiUnauthenticated($data=null){
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.unauthorized")]);
+
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.unauthorized")]
@@ -581,6 +594,8 @@ trait CrudTrait {
   }
 
   public function apiLoggetOut($data=null){
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.logget_out")]);
+
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.logget_out")]
@@ -589,6 +604,8 @@ trait CrudTrait {
   }
 
   public function apiUnautorized($data=null){
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.unautorized")]);
+
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.unautorized")]
@@ -597,6 +614,8 @@ trait CrudTrait {
   }
 
   public function apiUnauthorized($data=null){
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.unauthorized")]);
+
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.unauthorized")]
@@ -605,6 +624,8 @@ trait CrudTrait {
   }
 
   public function apiNotFound($data=null){
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.not_found")]);
+
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.not_found")]
@@ -613,6 +634,8 @@ trait CrudTrait {
   }
 
   public function apiUnproccesable($data=null){
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.unproccesable")]);
+
     return response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.unproccesable")]
@@ -621,7 +644,10 @@ trait CrudTrait {
   }
 
   public function apiSuccessResponse($data=null){
-    $data = $this->solveSafeCollection($data);
+    $data = static::sApiComplementData(
+      $this->solveSafeCollection($data),
+      ["message"=>trans("crudvel.api.success")]
+    );
 
     return response()->json($data?
       $data:
@@ -631,7 +657,10 @@ trait CrudTrait {
   }
 
   public function apiIncompleteResponse($data=null){
-    $data = $this->solveSafeCollection($data);
+    $data = static::sApiComplementData(
+      $this->solveSafeCollection($data),
+      ["message"=>trans("crudvel.api.incomplete")]
+    );
 
     return response()->json($data?
       $data:
@@ -641,6 +670,13 @@ trait CrudTrait {
   }
 
   public function apiFailResponse($data=null){
+    $data = static::sApiComplementData(
+      $data,[
+        "message"=>trans("crudvel.api.transaction-error"),
+        "error-message"=>trans("crudvel.api.operation_error")
+      ]
+    );
+
     return  response()->json($data?
       $data:
       ["message"=>trans("crudvel.api.transaction-error"),"error-message"=>trans("crudvel.api.operation_error")]
@@ -649,6 +685,12 @@ trait CrudTrait {
   }
 
   public static function sApiSuccessResponse($data=null){
+    $data = static::sApiComplementData(
+      $data,[
+        ["message"=>trans("crudvel.api.success")]
+      ]
+    );
+
     return response()->json(
       $data?
         $data:
@@ -658,6 +700,13 @@ trait CrudTrait {
   }
 
   public static function sApiFailResponse($data=null){
+    $data = static::sApiComplementData(
+      $data,[
+        trans("crudvel.api.transaction-error"),
+        "error-message"=>trans("crudvel.api.operation_error")
+      ]
+    );
+
     return  response()->json(
       $data?
         $data:
