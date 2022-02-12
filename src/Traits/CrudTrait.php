@@ -672,8 +672,8 @@ trait CrudTrait {
   public function apiFailResponse($data=null){
     $data = static::sApiComplementData(
       $data,[
-        "message"=>trans("crudvel.api.transaction-error"),
-        "error-message"=>trans("crudvel.api.operation_error")
+        "message"       => trans("crudvel.api.transaction-error"),
+        "error-message" => trans("crudvel.api.operation_error")
       ]
     );
 
