@@ -234,6 +234,25 @@ class ApiController extends CustomController{
     extract($params);
     $this->getRootInstance()->addSelectables('related_order');
   }
+
+  public function userStampBuilder ($foreinKey = 'created_by') {
+    $userCvSearch = \App\Models\User::sSafeField('u','cv_search');
+    $cTable = $this->getModelClass()::cvIam()->getTable();
+    $cTable .= $this->getModelClass()::cvIam()->alias();
+
+    return $this->selfPreBuilder($cTable)
+      ->leftJoinSub(\App\Models\User::select('*')->disableRestricction()->cvSearch(), 'u',function ($join) use($cTable,$foreinKey){
+        $join->on('u.id', '=', "{$cTable}.{$foreinKey}");
+      })->selectRaw($userCvSearch);
+  }
+
+  public function addedCreatedByUser(){
+    return $this->userStampBuilder('created_by');
+  }
+
+  public function addedUpdatedByUser(){
+    return $this->userStampBuilder('updated_by');
+  }
 //to be deprecated
 /*
 // atachers

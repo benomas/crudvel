@@ -546,21 +546,27 @@ if(!function_exists('crudvelResource')){
       Route::post("{$resource}/import", "{$controller}@importing");
       Route::post("{$resource}/export", "{$controller}@exporting");
       Route::put("{$resource}/{{$rowName}}/activate", "{$controller}@activate");
+      Route::patch("{$resource}/{{$rowName}}/activate", "{$controller}@activate");
       Route::put("{$resource}/{{$rowName}}/deactivate", "{$controller}@deactivate");
+      Route::patch("{$resource}/{{$rowName}}/deactivate", "{$controller}@deactivate");
       Route::resource($resource, $controller);
     }
     else{
       $only     = empty($conditionals["only"])?[]:$conditionals["only"];
       $excludes = empty($conditionals["excludes"])?[]:$conditionals["excludes"];
 
-      if(validateGetActionResource("activate",$only,$excludes))
-        Route::get("{$resource}/{{$rowName}}/activate", "{$controller}@activate");
+      if(validateGetActionResource("activate",$only,$excludes)){
+        Route::put("{$resource}/{{$rowName}}/activate", "{$controller}@activate");
+        Route::patch("{$resource}/{{$rowName}}/activate", "{$controller}@activate");
+      }
 
       if(validateGetActionResource("create",$only,$excludes))
         Route::get("{$resource}/create", "{$controller}@create");
 
-      if(validateGetActionResource("deactivate",$only,$excludes))
-        Route::get("{$resource}/{{$rowName}}/deactivate", "{$controller}@deactivate");
+      if(validateGetActionResource("deactivate",$only,$excludes)){
+        Route::put("{$resource}/{{$rowName}}/deactivate", "{$controller}@deactivate");
+        Route::patch("{$resource}/{{$rowName}}/deactivate", "{$controller}@deactivate");
+      }
 
       if(validateGetActionResource("edit",$only,$excludes))
         Route::get("{$resource}/{{$rowName}}/edit", "{$controller}@edit");
@@ -637,7 +643,9 @@ if(!function_exists('apiCrudvelResource')){
       Route::post("{$prefixRoute}/resource-permissions", "{$controller}@resourcePermissions")->name("{$resource}.resource-permissions");
       Route::post("{$prefixRoute}/select", "{$controller}@select")->name("{$resource}.select");
       Route::put("{$prefixRoute}/{{$rowName}}/activate", "{$controller}@activate")->name("{$resource}.activate");
+      Route::patch("{$prefixRoute}/{{$rowName}}/activate", "{$controller}@activate")->name("{$resource}.activate");
       Route::put("{$prefixRoute}/{{$rowName}}/deactivate", "{$controller}@deactivate")->name("{$resource}.deactivate");
+      Route::patch("{$prefixRoute}/{{$rowName}}/deactivate", "{$controller}@deactivate")->name("{$resource}.deactivate");
       Route::get($prefixRoute, "{$controller}@index")->name("{$resource}.index");
       Route::get("{$prefixRoute}/{{$rowName}}", "{$controller}@show")->name("{$resource}.show");
       Route::post($prefixRoute, "{$controller}@store")->name("{$resource}.store");
@@ -669,11 +677,15 @@ if(!function_exists('apiCrudvelResource')){
       if(in_array("exporting",$conditionals))
         Route::get("{$resource}/{{$rowName}}/exporting", "{$controller}@exporting")->name("{$resource}.row.exporting");
 
-      if(in_array("activate",$conditionals))
+      if(in_array("activate",$conditionals)){
         Route::put("{$resource}/{{$rowName}}/activate", "{$controller}@activate")->name("{$resource}.activate");
+        Route::patch("{$resource}/{{$rowName}}/activate", "{$controller}@activate")->name("{$resource}.activate");
+      }
 
-      if(in_array("deactivate",$conditionals))
+      if(in_array("deactivate",$conditionals)){
         Route::put("{$resource}/{{$rowName}}/deactivate", "{$controller}@deactivate")->name("{$resource}.deactivate");
+        Route::patch("{$resource}/{{$rowName}}/deactivate", "{$controller}@deactivate")->name("{$resource}.deactivate");
+      }
 
       if(in_array("index",$conditionals))
         Route::get($resource, "{$controller}@index")->name("{$resource}.index");
