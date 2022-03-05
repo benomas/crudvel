@@ -4,7 +4,7 @@ namespace Crudvel\Models\Traits;
 
 use stdClass;
 
-trait CvCodeHooTrait
+trait CvCodeHookTrait
 {
   protected static function boot(){
     parent::boot();
