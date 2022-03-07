@@ -271,7 +271,7 @@ $cvCrudvel = [
 ];
 
 $cvWeb = [
-  'unautorized'         => 'No tienes permisos para utilizar esta acción',
+  'unauthorized'         => 'No tienes permisos para utilizar esta acción',
   'has_no_permsissions' => 'No tienes permisos para utilizar esta acción',
   'operation_error'     => 'No se ha podido realizar la operación, intenta mas tarde',
   'transaction-error'   => 'Ocurrió un error al realizar la transacción',
@@ -284,7 +284,7 @@ $cvWeb = [
 ];
 
 $cvApi = [
-  'unautorized'           => 'No tienes permisos para utilizar esta acción',
+  'unauthorized'           => 'No tienes permisos para utilizar esta acción',
   'has_no_permsissions'   => 'No tienes permisos para utilizar esta acción',
   'operation_error'       => 'No se ha podido realizar la operación, intenta mas tarde',
   'transaction-error'     => 'Ocurrió un error al realizar la transacción',

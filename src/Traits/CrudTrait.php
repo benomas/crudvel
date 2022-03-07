@@ -574,11 +574,11 @@ trait CrudTrait {
   }
 
   public function apiUnautenticated($data=null){
-    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.unautorized")]);
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.unauthorized")]);
 
     return response()->json($data?
       $data:
-      ["message"=>trans("crudvel.api.unautorized")]
+      ["message"=>trans("crudvel.api.unauthorized")]
       ,401
     );
   }
@@ -604,11 +604,11 @@ trait CrudTrait {
   }
 
   public function apiUnautorized($data=null){
-    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.unautorized")]);
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.unauthorized")]);
 
     return response()->json($data?
       $data:
-      ["message"=>trans("crudvel.api.unautorized")]
+      ["message"=>trans("crudvel.api.unauthorized")]
       ,403
     );
   }
@@ -803,7 +803,7 @@ trait CrudTrait {
    */
   public function webUnauthorized($respProp=[]){
     $respProp["status"]        = !empty($respProp["status"])?$respProp["status"]:"danger";
-    $respProp["statusMessage"] = $this->messageResolver($respProp,"unautorized");
+    $respProp["statusMessage"] = $this->messageResolver($respProp,"unauthorized");
     $respProp["redirector"]    = !empty($respProp["redirector"])?$respProp["redirector"]:null;
     $respProp["errors"]        = !empty($respProp["errors"])?$respProp["errors"]:[];
     return $this->autoResponder($respProp);
@@ -874,7 +874,7 @@ trait CrudTrait {
     if(!empty($respProp["statusMessage"]))
     return $respProp["statusMessage"];
 
-    if(in_array($status,["unautorized","not_found","transaction-error"]))
+    if(in_array($status,["unauthorized","not_found","transaction-error"]))
     return trans("crudvel.web.".$status);
 
     if($status==="success"){
