@@ -147,7 +147,17 @@ class User extends \Crudvel\Models\BaseModel{
 
   public function scopeSelectCvSearch($query, $alias = null){
     $alias = $this->alias($alias);
-    return $query->selectRaw("CONCAT($alias.first_name, ' ',$alias.last_name)");
+
+    $defaultCvSearch = "CONCAT(
+      {$this->safeField($alias,'first_name')},
+      {$this->safeField($alias,'last_name')}
+    )";
+
+    $fallBackCvSearch = "{$this->safeField($alias,'email')}";
+
+    $query->selectRaw("
+      IF({$defaultCvSearch} = '',{$fallBackCvSearch},{$defaultCvSearch})
+    ");
   }
 
   public function scopeGeneralOwner($query,$user=null){
