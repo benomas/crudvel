@@ -170,4 +170,11 @@ trait FunctionTrait
   public function cvRandomSafeToken ($size){
     return bin2hex(openssl_random_pseudo_bytes($size, $cstrong));
   }
+
+  public function extraSpaceCleaner ($text = '') {
+    if($text === null)
+      return null;
+
+    return preg_replace('/\h\h+/', ' ', $text);
+  }
 }

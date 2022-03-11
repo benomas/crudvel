@@ -1539,3 +1539,7 @@ if(!function_exists('hasSpecialAccess')){
 if(!function_exists('fkP')){
   function fkP(...$params){return CvHelper::fkP(...$params);}
 }
+
+if(!function_exists('extraSpaceCleaner')){
+  function extraSpaceCleaner(...$params){return CvHelper::extraSpaceCleaner(...$params);}
+}
