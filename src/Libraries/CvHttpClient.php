@@ -59,6 +59,25 @@ class CvHttpClient
     return $response->json();
   }
 
+  public function genericIndex($apiPath='',$body=[],$headers=[]){
+    $headers = array_merge([
+        'Accept' => 'application/json, text/plain, */*'
+      ],
+      $headers
+    );
+
+    if($this->getBearerToken())
+      $headers['Authorization'] = "Bearer {$this->getBearerToken()}";
+
+    $response = Http::withHeaders($headers)
+      ->get("{$this->getCvApiUrl()}/{$apiPath}");
+
+    if($response->status() !== 200)
+      throw new \Crudvel\Exceptions\CvHttpClientExceptions\UnableToProcessRequest();
+
+    return $response->json();
+  }
+
   /** @test */
   public function genericUpdate($apiPath='',$body=[],$headers=[]){
     $headers = array_merge([
@@ -101,7 +120,7 @@ class CvHttpClient
     return $response->json();
   }
 
-  private function oauthLogin() {
+  protected function oauthLogin() {
     $oauthClientId     = config('cv.api_client');
     $oauthClientSecret = config('cv.api_secret');
     $username          = config("packages.benomas.crudvel.crudvel.default_user.crudvel_default_user_email");
@@ -125,7 +144,7 @@ class CvHttpClient
     return $response->json();
   }
 
-  private function bearerToken($oauthRequestResponse = null) {
+  protected function bearerToken($oauthRequestResponse = null) {
     if(!$oauthRequestResponse)
       $oauthRequestResponse = $this->oauthLogin();
 
