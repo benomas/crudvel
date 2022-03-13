@@ -175,6 +175,6 @@ trait FunctionTrait
     if($text === null)
       return null;
 
-    return preg_replace('/\h\h+/', ' ', $text);
+    return trim(preg_replace('/\h\h+/', ' ', $text));
   }
 }
