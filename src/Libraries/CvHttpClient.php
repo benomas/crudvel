@@ -157,7 +157,6 @@ class CvHttpClient
   private function oauthLoginToken() {
     return $this->bearerToken($this->oauthLogin());
   }
-
 // [End Specific Logic]
 
 // [Getters]
