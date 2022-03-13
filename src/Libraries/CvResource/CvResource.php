@@ -100,14 +100,14 @@ class CvResource
 
   public function cvSlugCaseSingularName($name = null){
     if($name)
-      return $this->cvCaseFixer('slug|kebab',$name);
+      return $this->cvCaseFixer('kebab|slug',$name);
 
     return $this->getRootInstance()->getSlugSingularName();
   }
 
   public function cvSlugCasePluralName($name = null){
     if($name)
-      return $this->cvCaseFixer('plural|slug|kebab',$name);
+      return $this->cvCaseFixer('kebab|slug|plural',$name);
 
     return $this->cvPluralCase(($this->getRootInstance()->getSlugSingularName()));
   }
@@ -121,11 +121,11 @@ class CvResource
   }
 
   public function cvSnakeCaseSingularName($name = null){
-    return $this->cvCaseFixer('snake|camel',$name??$this->getRootInstance()->getSlugSingularName());
+    return $this->cvCaseFixer('camel|snake',$name??$this->getRootInstance()->getSlugSingularName());
   }
 
   public function cvSnakeCasePluralName($name = null){
-    return $this->cvCaseFixer('plural|snake|camel',$name??$this->getRootInstance()->getSlugSingularName());
+    return $this->cvCaseFixer('plural|camel|snake',$name??$this->getRootInstance()->getSlugSingularName());
   }
 
   public function fixedStudlySingularName($name = null){

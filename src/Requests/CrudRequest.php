@@ -37,7 +37,6 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
    */
   public function authorize(){
     $this->prepareRequest();
-
     if(!$this->getUserModelCollectionInstance())
       return true;
 
@@ -324,7 +323,6 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
 
     if ($resourceKey === null)
       $resourceKey = $this->route($this->getSnakeSingularName());
-
 
     $this->setCurrentActionKey($resourceKey)->setResourceAlias($resource)->fixActionResource();
     $this->fixFlowControl();

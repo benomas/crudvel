@@ -50,7 +50,7 @@ trait CasesTrait
   }
 
   public function cvCaseFixer($path,$text) {
-    foreach(array_reverse(explode('|',$path)) as $case)
+    foreach(explode('|',$path) as $case)
       if(method_exists($this,$this->cvCamelCase("cv $case Case")))
         $text = $this->{$this->cvCamelCase("cv $case Case")}($text);
 

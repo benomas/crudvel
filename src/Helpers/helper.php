@@ -536,7 +536,6 @@ if(!function_exists('crudvelResource')){
 
 		$urlSegments = explode("/",$resource);
 		$rowName     = cvSlugCase(cvSingularCase(end($urlSegments)),"_");
-
 		if(!$controller)
 			$controller=cvStudlyCase($rowName)."Controller";
 
