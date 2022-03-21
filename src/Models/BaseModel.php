@@ -103,7 +103,7 @@ class BaseModel extends Model implements CvCrudInterface
         return;
 
       $rightNow         = \Carbon\Carbon::now()->toDateTimeString();
-      $model->created_at = $rightNow??null;
+      $model->updated_at = $rightNow??null;
 
       if(class_exists(\CvResource::class)){
         $user = \CvResource::assignUser()->getUserModelCollectionInstance();
