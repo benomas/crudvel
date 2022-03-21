@@ -14,11 +14,7 @@ class File extends \Crudvel\Models\BaseModel{
     'path',
     'absolute_path',
     'cat_file_id',
-    'resource_id',
-    'created_at',
-    'created_by',
-    'updated_at',
-    'updated_by',
+    'resource_id'
   ];
 
   protected $cvSearches = [

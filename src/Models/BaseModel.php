@@ -22,12 +22,13 @@ class BaseModel extends Model implements CvCrudInterface
   protected $cvResourceInstance;
   protected $schema;
   protected $hasPropertyActive = true;
-  //protected $hidden            = ['pivot'];
   protected $cacheBoots        = [];
   protected $modelMetaData     = null;
   protected $cvSearches        = [];
   protected $appends           = ['cv_has_files','cv_has_code_hook'];
   protected $codeHook          = false;
+  public    $cvStamps          = true;
+  //protected $hidden            = ['pivot'];
 
   public function __construct($attributes = array())
   {
@@ -81,10 +82,42 @@ class BaseModel extends Model implements CvCrudInterface
 // [End Transformers]
 
 // [Scopes]
+  protected static function boot(){
+    parent::boot();
+
+    self::creating(function($model){
+      if(!$model->cvStamps)
+        return;
+
+      $rightNow         = \Carbon\Carbon::now()->toDateTimeString();
+      $model->created_at = $rightNow??null;
+
+      if(class_exists(\CvResource::class)){
+        $user = \CvResource::assignUser()->getUserModelCollectionInstance();
+
+        if($user)
+          $model->created_by = $user->id??null;
+      }
+    });
+
+    self::updating(function($model){
+      if(!$model->cvStamps)
+        return;
+
+      $rightNow         = \Carbon\Carbon::now()->toDateTimeString();
+      $model->created_at = $rightNow??null;
+
+      if(class_exists(\CvResource::class)){
+        $user = \CvResource::assignUser()->getUserModelCollectionInstance();
+
+        if($user)
+          $model->updated_by = $user->id??null;
+      }
+    });
+  }
 // [End Scopes]
 
 // [Others]
-
   public function fileZipOptPath($resource){
     $DS   = DIRECTORY_SEPARATOR;
     $time = time();

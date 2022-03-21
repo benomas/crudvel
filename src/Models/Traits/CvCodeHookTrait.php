@@ -10,6 +10,9 @@ trait CvCodeHookTrait
     parent::boot();
 
     self::creating(function($model){
+      if(!$model->codeHook)
+        return;
+
       if(!empty($model->code_hook))
         return;
 
@@ -33,7 +36,6 @@ trait CvCodeHookTrait
           break;
         }
       }
-
     });
   }
 }

@@ -17,11 +17,7 @@ class CatFile extends \Crudvel\Models\BaseModel{
     'multiple',
     'public_path',
     'resource',
-    'active',
-    'created_at',
-    'created_by',
-    'updated_at',
-    'updated_by',
+    'active'
   ];
 
   //this model has a dinamic column resource_label, it is solved with resource lang
