@@ -27,6 +27,7 @@ class BaseModel extends Model implements CvCrudInterface
   protected $cvSearches        = [];
   protected $appends           = ['cv_has_files','cv_has_code_hook'];
   protected $codeHook          = false;
+  public    $timestamps        = false;
   public    $cvStamps          = true;
   //protected $hidden            = ['pivot'];
 
