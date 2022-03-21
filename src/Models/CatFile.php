@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Builder;
 use DB;
 
 class CatFile extends \Crudvel\Models\BaseModel{
+  use \Crudvel\Models\Traits\CvCodeHookTrait;
 
   protected $fillable = [
     'name',
@@ -17,7 +18,8 @@ class CatFile extends \Crudvel\Models\BaseModel{
     'multiple',
     'public_path',
     'resource',
-    'active'
+    'active',
+    'code_hook',
   ];
 
   //this model has a dinamic column resource_label, it is solved with resource lang
@@ -26,6 +28,7 @@ class CatFile extends \Crudvel\Models\BaseModel{
     'camel_resource',
     'cv_has_code_hook',
   ];
+  protected $codeHook = true;
 
 // [Relationships]
   public function files(){

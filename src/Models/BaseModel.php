@@ -67,7 +67,7 @@ class BaseModel extends Model implements CvCrudInterface
 
     $this->attributes['slug'] = str_replace(' ', '-', strtolower(preg_replace('/\.|,/', '', trim($value))));
   }
-
+/*
   public function setCodeHookAttribute($value){
     $value = $value ?? null;
 
@@ -79,7 +79,7 @@ class BaseModel extends Model implements CvCrudInterface
     }
 
     $this->attributes['code_hook'] = str_replace(' ', '-', strtolower(preg_replace('/\.|,/', '', trim($value))));
-  }
+  }*/
 // [End Transformers]
 
 // [Scopes]

@@ -487,6 +487,18 @@ trait CrudTrait {
   public function loadFields(){
     if($this->getCvResourceInstance() && $this->getCvResourceInstance()->getRequestInstance()){
       $this->setFields($this->getCvResourceInstance()->getRequestInstance()->all());
+
+      if($this->getModelClass()::cvIam()->cvHasCodeHook){
+        $codeHook = $this->getFields()['code_hook'] ?? null;
+
+        if($codeHook === null)
+          $this->removeField('code_hook');
+
+        if(!$this->specialAccess('code-hooks')){
+          $this->removeField('code_hook');
+        }
+      }
+
       $b64Query = $this->getFields()['b64Query'] ?? null;
       if($b64Query)
         $this->addField('b64Query',json_decode(base64_decode($b64Query),true))->extractPaginateFields();

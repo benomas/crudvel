@@ -1,13 +1,16 @@
 <?php namespace Crudvel\Models;
 
 class CatPermissionType extends \Crudvel\Models\BaseModel{
+  use \Crudvel\Models\Traits\CvCodeHookTrait;
 
   protected $fillable = [
     "name",
     "slug",
     "description",
-    "active"
+    "active",
+    'code_hook',
   ];
+  protected $codeHook = true;
 
   public function __construct($attributes = array())  {
     parent::__construct($attributes);
