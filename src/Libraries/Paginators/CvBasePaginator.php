@@ -139,7 +139,6 @@ class CvBasePaginator implements CvCrudInterface
   public function tempQuery(){
     $querySql = $this->getModelBuilderInstance()->toSql();
     $bindings = $this->getModelBuilderInstance()->getBindings();
-
     $this->getModelBuilderInstance()
       ->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))
       ->setBindings($bindings)
@@ -253,7 +252,7 @@ class CvBasePaginator implements CvCrudInterface
       return ;
     }
 
-    $this->tempQuery()->solveSpecialFilters();
+    $this->solveSpecialFilters()->tempQuery();
     //if it is not a filter query defined
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
@@ -290,7 +289,7 @@ class CvBasePaginator implements CvCrudInterface
     if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0)
       throw new \Crudvel\Exceptions\EmptyCollection();
 
-    $this->tempQuery()->solveSpecialFilters();
+    $this->solveSpecialFilters()->tempQuery();
     //if it is not a filter query defined
     if(noEmptyArray($this->getFilterQuery()))
       $this->filter();
