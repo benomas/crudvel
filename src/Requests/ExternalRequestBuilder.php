@@ -3,7 +3,7 @@
 
 class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
   protected $selfStaticRules       = [];
-  protected $ExtraRules      = [];
+  protected $extraRules      = [];
   protected $childrenRequest = [];
 // [Specific Logic]
   public function __construct($rules = []){
@@ -72,7 +72,7 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
   }
 
   public function getExtraRules():array{
-    return $this->ExtraRules??[];
+    return $this->extraRules??[];
   }
 
   public function getChildrenRequest(){
@@ -86,8 +86,8 @@ class ExternalRequestBuilder extends \Crudvel\Requests\ChildRequestBuilder{
     return $this;
   }
 
-  public function setExtraRules(array $ExtraRules=[]){
-    $this->ExtraRules = $ExtraRules??[];
+  public function setExtraRules(array $extraRules=[]){
+    $this->extraRules = $extraRules??[];
 
     return $this;
   }

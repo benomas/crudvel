@@ -18,7 +18,7 @@ class KeyExistV2 extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel
   public function passes(){
     try{
       $tableBuilder = \Illuminate\Support\Facades\DB::table($this->getTable())->where("{$this->getTable()}.{$this->getTableKey()}",$this->getValue());
-        
+
       $property=null;
 
       foreach($this->getExtraConditions()??[] as $propertyOrValue){
@@ -30,7 +30,7 @@ class KeyExistV2 extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel
         $tableBuilder->where("{$this->getTable()}.{$property}",$propertyOrValue);
         $property = null;
       }
-      
+
       if($tableBuilder->count())
         return true;
 
@@ -42,7 +42,7 @@ class KeyExistV2 extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel
       unset($exceptions[0]);
 
       $tableExceptionBuilder = \Illuminate\Support\Facades\DB::table($tableException);
-      
+
 
       $property=null;
       foreach($exceptions??[] as $propertyOrValue){
@@ -54,7 +54,7 @@ class KeyExistV2 extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel
         $tableExceptionBuilder->where("{$tableException}.{$property}",$propertyOrValue);
         $property = null;
       }
-      
+
       $tableExceptionBuilder->where("{$tableException}.{$this->getAttribute()}",$this->getValue());
 
       return $tableExceptionBuilder->count();
@@ -81,7 +81,7 @@ class KeyExistV2 extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel
       ->setTableKey($this->firstParams()[1]??null)
       ->setExtraConditions($this->secondParams())
       ->setExceptions($this->thirdParams());
-      
+
     if(!$this->getTable() || !$this->getTableKey())
       throw new \Exception("Validation {$this->getRule()} needs to have 2 parameters, table and other tableKey");
 
@@ -132,7 +132,7 @@ class KeyExistV2 extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel
 
   public function setTable($table=null){
     $this->table = $table??null;
-    
+
     return $this;
   }
 
@@ -144,13 +144,13 @@ class KeyExistV2 extends \Crudvel\Validations\Rules\BaseRule implements \Crudvel
 
   public function setExtraConditions($extraConditions=null){
     $this->extraConditions = $extraConditions??null;
-    
+
     return $this;
   }
 
   public function setExceptions($exceptions=null){
     $this->exceptions = $exceptions??null;
-    
+
     return $this;
   }
 // [End Setters]
