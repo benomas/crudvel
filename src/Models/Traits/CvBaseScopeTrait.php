@@ -140,16 +140,40 @@ trait CvBaseScopeTrait
     return $query->where($this->preFixed('sublevel_id', $preFixed), $sublevel_id);
   }
 
+  public function scopeColumnStampBefore($query, $column, $date, $preFixed = true){
+    return $query->where($this->preFixed($column, $preFixed), '>', $date);
+  }
+
+  public function scopeColumnStampAfter($query, $column, $date, $preFixed = true){
+    return $query->where($this->preFixed($column, $preFixed), '<', $date);
+  }
+
+  public function scopeColumnStampBetween($query, $column, $date1, $date2, $preFixed = true){
+    return $query->columnStampBefore($column,$date1)->columnStampAfter($column,$date2);
+  }
+
   public function scopeUpdatedBefore($query, $date, $preFixed = true){
-    return $query->where($this->preFixed('updated_at', $preFixed), '>', $date);
+    return $query->columnStampBefore('updated_at',$date);
   }
 
   public function scopeUpdatedAfter($query, $date, $preFixed = true){
-    return $query->where($this->preFixed('updated_at', $preFixed), '<', $date);
+    return $query->columnStampAfter('updated_at',$date);
   }
 
-  public function scopeUpdatedBetween($query, $date, $preFixed = true){
-    return $query->updatedBefore($date)->updatedAfter($date);
+  public function scopeUpdatedBetween($query, $date1, $date2, $preFixed = true){
+    return $query->updatedBefore($date1)->updatedAfter($date2);
+  }
+
+  public function scopeCreatedBefore($query, $date, $preFixed = true){
+    return $query->columnStampBefore('created_at',$date);
+  }
+
+  public function scopeCreatedAfter($query, $date, $preFixed = true){
+    return $query->columnStampAfter('created_at',$date);
+  }
+
+  public function scopeCreatedBetween($query, $date1, $date2, $preFixed = true){
+    return $query->createdBefore($date1)->createdAfter($date2);
   }
 
   public function scopeDistinctCount($query, $column, $preFixed = true){
