@@ -16,7 +16,7 @@
       <div v-cv-error="{field:'active'}"></div>
     </div>
 
-    <div class="col-xs-12 q-pa-xs">
+    <div class="col-xs-12 q-pa-sm">
       <q-input
         v-bind="mInputBinding('description')"
         v-on="mInputOns('description')"
