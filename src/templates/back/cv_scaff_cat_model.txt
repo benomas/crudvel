@@ -11,7 +11,12 @@ class <##[singular|studly](resource)##> extends \Customs\Crudvel\Models\Catalog1
 // [Scopes]
   public function scopeSelectCvSearch($query,$alias=null){
     $alias = $this->alias($alias);
-    return $query->select("$alias.name");
+
+    return $query->selectRaw("CONCAT(
+      'scopeSelectCvSearch needs to be customized at App\Models<##[singular|studly](resource)##> scopeSelectCvSearch',
+      {$this->safeField($alias,'name',' for ',' - ')},
+      {$this->safeField($alias,'id',' with id: ','')},
+    )");
   }
 // [End Scopes]
 
