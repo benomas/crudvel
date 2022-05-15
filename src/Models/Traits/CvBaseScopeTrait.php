@@ -326,17 +326,11 @@ trait CvBaseScopeTrait
   }
 
   public function scopeCvOwner($query, $user=null){
-    $GLOBALS['disablePermissionsScope'] =  true;
-
     if(!($user = $this->fixUser($user))){
-      $GLOBALS['disablePermissionsScope'] =  false;
-
       return $query->noFilters();
     }
 
     if($user->isRoot()){
-      $GLOBALS['disablePermissionsScope'] =  false;
-
       return $query;
     }
 
@@ -345,18 +339,12 @@ trait CvBaseScopeTrait
     $ownerPermissions = $user->permissions()->disableRestricction()->specialPermissions();
 
     if(kageBunshinNoJutsu($ownerPermissions)->slug("$resource.general-owner")->count()){
-      $GLOBALS['disablePermissionsScope'] =  false;
-
       return $query->generalOwner($user);
     }
 
     if($ownerPermissions->slug("$resource.particular-owner")->count()){
-      $GLOBALS['disablePermissionsScope'] =  false;
-
       return $query->particularOwner($user);
     }
-
-    $GLOBALS['disablePermissionsScope'] =  false;
 
     return $query->nullFilter();
   }
