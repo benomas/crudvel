@@ -292,26 +292,47 @@ trait CvBaseMethodsTrait
     if(!($GLOBALS['disablePermissionsScope']??false))
       static::addGlobalScope(new \Crudvel\Scopes\PermissionsScope);
 
-    self::updated(function($model){
-      $GLOBALS['disablePermissionsScope'] = true;
-
-      if(!($relatedFiles = $model->relatedFiles())){
-        $GLOBALS['disablePermissionsScope'] = false;
+    self::creating(function($model){
+      if(!$model->cvStamps)
         return;
+
+      $rightNow         = \Carbon\Carbon::now()->toDateTimeString();
+      $model->created_at = $rightNow??null;
+
+      if(class_exists(\CvResource::class)){
+        $user = \CvResource::assignUser()->getUserModelCollectionInstance();
+
+        if($user)
+          $model->created_by = $user->id??null;
+      }
+    });
+
+    self::updated(function($model){
+      if(($relatedFiles = $model->relatedFiles()->disableRestricction())){
+
+        $relatedFiles = $relatedFiles->solveSearches()->get();
+
+        foreach($relatedFiles as $relatedFile){
+          $catFile = $relatedFile->catFile()->disableRestricction()->first();
+          $catFile->resource = $relatedFile->catFile->resource;
+          $catFile->save();
+          $relatedFile->cat_file_id = $relatedFile->catFile->id;
+          $relatedFile->resource_id = $model->id;
+          $relatedFile->save();
+        }
       }
 
-      $relatedFiles = $relatedFiles->solveSearches()->get();
+      if($model->cvStamps){
+        $rightNow         = \Carbon\Carbon::now()->toDateTimeString();
+        $model->updated_at = $rightNow??null;
 
-      foreach($relatedFiles as $relatedFile){
-        $catFile = $relatedFile->catFile;
-        $catFile->resource = $relatedFile->catFile->resource;
-        $catFile->save();
-        $relatedFile->cat_file_id = $relatedFile->catFile->id;
-        $relatedFile->resource_id = $model->id;
-        $relatedFile->save();
+        if(class_exists(\CvResource::class)){
+          $user = \CvResource::assignUser()->getUserModelCollectionInstance();
+
+          if($user)
+            $model->updated_by = $user->id??null;
+        }
       }
-
-      $GLOBALS['disablePermissionsScope'] = false;
     });
   }
 

@@ -80,7 +80,8 @@ class BaseModel extends Model implements CvCrudInterface
 // [End Transformers]
 
 // [Scopes]
-  protected static function boot(){
+  //deprecated, cant cooexist with trait boot
+  protected static function bootDisabled(){
     parent::boot();
 
     self::creating(function($model){
@@ -104,9 +105,6 @@ class BaseModel extends Model implements CvCrudInterface
 
       $rightNow         = \Carbon\Carbon::now()->toDateTimeString();
       $model->updated_at = $rightNow??null;
-
-      if(get_class($model) === 'App\Models\CatServiceClient')
-        pdd($model);
 
       if(class_exists(\CvResource::class)){
         $user = \CvResource::assignUser()->getUserModelCollectionInstance();
