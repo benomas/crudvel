@@ -26,7 +26,7 @@
             >
             <template v-if="1" slot="headers-slot">
                 <!-- cv-grid-customization-->
-              <th v-cv-page-opt="'id'" class="cv-orderable cv-filterable cv-selectable t-left t-bottom w-8" >
+              <th v-cv-page-opt="'id'" class="cv-orderable cv-filterable cv-selectable t-left t-bottom w-5 mnw-40px" >
                 {{ mfLang('id') }}
                 <cv-order-icons cv-sta-ins-row-field="id" v-bind="mCustomBindins('cv-order-icons')">
                 </cv-order-icons>
