@@ -502,8 +502,8 @@ if(!function_exists('specialAccess')){
 		if($user->isRoot())
       return true;
 
-		if(!\App\Models\Permission::special($special)->count())
-      return true;
+		if(!\App\Models\Permission::special($special)->disableRestricction()->count())
+      throw new Crudvel\Exceptions\PermissionDoesntExist($special);
 
 		return kageBunshinNoJutsu($userInstace)->specialPermission($special)->count()>0;
 	}
@@ -1493,7 +1493,7 @@ if(!function_exists('hasActionAccess')){
       return ($GLOBALS[$actionResource]=true);
 		}
 
-		if(!\App\Models\Permission::action($actionResource)->count())
+		if(!\App\Models\Permission::action($actionResource)->disableRestricction()->count())
       return ($GLOBALS[$actionResource]=true);
 
     if(kageBunshinNoJutsu($userModelBuilderInstance)->actionPermission($actionResource)->count())
@@ -1528,8 +1528,8 @@ if(!function_exists('hasSpecialAccess')){
 		if($user->isRoot())
       return true;
 
-		if(!\App\Models\Permission::special($special)->count())
-      return true;
+		if(\App\Models\Permission::special($special)->disableRestricction()->count() === 0)
+      throw new Crudvel\Exceptions\PermissionDoesntExist($special);
 
 		return kageBunshinNoJutsu($userModelBuilderInstance)->specialPermission($special)->count()>0;
 	}
