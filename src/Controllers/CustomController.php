@@ -830,7 +830,10 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
   }
 
   public function emptyRowActionException() {
-    if( in_array($this->getCurrentAction(),$this->getRowActions()) && !$this->getModelCollectionInstance() && !$this->getSkipCollectionValidation())
+    if(
+      in_array($this->getCurrentAction(),$this->getRowActions()) && !$this->getModelCollectionInstance() &&
+      !$this->getSkipCollectionValidation()
+    )
       throw new \Crudvel\Exceptions\Unauthorized();
 
     return $this;

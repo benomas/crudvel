@@ -25,11 +25,11 @@ class Role extends \Crudvel\Models\BaseModel{
   }
 
   public function domineeringRoles(){
-    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domined_role_id', 'domineering_role_id');
+    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domined_role_id', 'domineering_role_id')->disableRestricction();;
   }
 
   public function dominedRoles(){
-    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domineering_role_id', 'domined_role_id');
+    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domineering_role_id', 'domined_role_id')->disableRestricction();;
   }
 // [End Relationships]
 
@@ -142,6 +142,18 @@ class Role extends \Crudvel\Models\BaseModel{
 
   public function scopeExternal($query){
     return $query->where($this->preFixed('external'),1);
+  }
+
+  public function scopeDominedByUserRol($query,$user){
+    return $query->whereHas('domineeringRoles',function($query) use($user){
+      $query->relatedToUser($user->id);
+    });
+  }
+
+  public function scopeDomineeringByUserRol($query,$user){
+    return $query->whereHas('dominedRoles',function($query) use($user){
+      $query->relatedToUser($user->id);
+    });
   }
 // [End Scopes]
 
