@@ -52,9 +52,9 @@ class User extends \Crudvel\Models\BaseModel{
     return $this->permissions()->resourcePermissions();
   }
 
-  public function actionePermissions()
+  public function actionPermissions()
   {
-    return $this->permissions()->actionePermissions();
+    return $this->permissions()->actionPermissions();
   }
 
   public function fieldPermissions()
@@ -80,42 +80,32 @@ class User extends \Crudvel\Models\BaseModel{
   }
 
   public function scopeSectionPermission($query,$section){
-    $query->whereHas('roles',function($query) use($section){
-      $query->whereHas("permissions",function($query) use($section){
-        $query->section($section);
-      });
+    $query->whereHas("permissions",function($query) use($section){
+      $query->section($section);
     });
   }
 
   public function scopeResourcePermission($query,$resource){
-    $query->whereHas('roles',function($query) use($resource){
-      $query->whereHas("permissions",function($query) use($resource){
-        $query->resource($resource);
-      });
+    $query->whereHas("permissions",function($query) use($resource){
+      $query->resource($resource);
     });
   }
 
   public function scopeActionPermission($query,$action){
-    $query->whereHas('roles',function($query) use($action){
-      $query->whereHas("permissions",function($query) use($action){
-        $query->action($action);
-      });
+    $query->whereHas("permissions",function($query) use($action){
+      $query->action($action);
     });
   }
 
   public function scopeFieldPermission($query,$field){
-    $query->whereHas('roles',function($query) use($field){
-      $query->whereHas("permissions",function($query) use($field){
-        $query->field($field);
-      });
+    $query->whereHas("permissions",function($query) use($field){
+      $query->field($field);
     });
   }
 
   public function scopeSpecialPermission($query,$special){
-    $query->whereHas('roles',function($query) use($special){
-      $query->whereHas("permissions",function($query) use($special){
-        $query->special($special);
-      });
+    $query->whereHas("permissions",function($query) use($special){
+      $query->special($special);
     });
   }
 

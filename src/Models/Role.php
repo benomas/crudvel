@@ -42,7 +42,7 @@ class Role extends \Crudvel\Models\BaseModel{
     return $this->belsongsToMany("App\Models\Permission", "permission_role")->resourcePermissions();
   }
 
-  public function actionePermissions(){
+  public function actionPermissions(){
     return $this->belongsToMany("App\Models\Permission", "permission_role")->actionPermissions();
   }
 
