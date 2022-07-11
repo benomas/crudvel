@@ -45,6 +45,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     return $this->actionResponse();
   }
 
+
   public function zippedResource($resource, $key){
     if($this->getPaginated())
       $this->getPaginatorInstance()->processPaginatedResponse();
@@ -55,6 +56,7 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
     $catFiles      = $this->getModelBuilderInstance()->get();
     $zip           = null;
     $resourceModel = null;
+    $zipFilePath = null;
 
     foreach ($catFiles as $catFile){
       $count  = 1;
@@ -63,7 +65,8 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
         if (!$zip){
           $resourceModel = $file->resourcer;
           $zip           = new \ZipArchive();
-          $zip->open($resourceModel->fileZipOptPath($resource), \ZipArchive::CREATE);
+          $zipFilePath = $resourceModel->fileZipOptPath($resource);
+          $zip->open($zipFilePath, \ZipArchive::CREATE);
         }
 
         $path     = storage_path("app{$this->cvDs()}public{$this->cvDs()}{$file->path}");
@@ -79,9 +82,8 @@ class CatFileController extends \Customs\Crudvel\Controllers\ApiController{
 
     if (!$resourceModel)
       return $this->apiFailResponse(['message'=> 'error', 'errorMessage'=>trans("crudvel.api.no_files_to_zip")]);
-
     $zip->close();
-    return response()->download($resourceModel->fileZipOptPath($resource))
+    return response()->download($zipFilePath)
       ->deleteFileAfterSend($resourceModel->fileZipOptDeleteFileAfterSend());
   }
   // [End Actions]
