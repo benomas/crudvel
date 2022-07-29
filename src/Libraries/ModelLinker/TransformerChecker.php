@@ -194,8 +194,15 @@ class TransformerChecker
     $attributes = [];
     $attributesCode = [];
     foreach($methods as $key=>$method){
-      if(preg_match('/get(.+)Attribute$/',$method,$match) && $match[1]??null)
-        $attributes[] = snake_case($match[1]);
+      if(preg_match('/get(.+)Attribute$/',$method,$match) && $match[1]??null){
+        $attributes[] = $accesor = snake_case($match[1]);
+
+        //duplicate accesors with different numeric representation to prevent camel-snake conversion errors
+        if(preg_match('/\d+/',$accesor,$match2)){
+          $extraAccesor = preg_replace('/\d+/i', "_$0", $accesor);
+          $attributes[] = $extraAccesor;
+        }
+      }
     }
     // iter over attribs to get the code of the accessor
     if(count($attributes) > 0){
