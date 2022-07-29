@@ -29,15 +29,18 @@ class TableCompatibility
       $this->leftModelInstance      = new $this->leftModel();
       $this->leftColumns            = $this->filterColumns($this->leftModelInstance->columnDefinitions());
     }
+
     if($rightModel!=''){
       $this->rightModel             = $rightModel;
       $this->rightModelInstance     = new $this->rightModel();
       $this->rightColumns           = $this->filterColumns($this->rightModelInstance->columnDefinitions());
     }
+
     if($destLeftModel !== ''){
       $this->destLeftModel          = $destLeftModel;
       $this->leftDestModelInstance  = new $this->destLeftModel();
     }
+
     if($destRightModel !== ''){
       $this->destRightModel         = $destRightModel;
       $this->rightDestModelInstance = new $this->destRightModel();
