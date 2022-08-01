@@ -364,16 +364,72 @@ trait CvBaseScopeTrait
     return $query->whereHas($related,function($query) use ($relatedKey) {
       $query->key($relatedKey);
     })->addSelect([
-      'related_order'=>\DB::table("$intermediateTable as ro")
-        ->whereColumn("ro.$selftTableKeyName","$selftTable.id")
-        ->where("ro.$relatedKeyName",$relatedKey)
+      'related_order'=>\DB::table("{$intermediateTable} as ro")
+        ->whereColumn("ro.{$selftTableKeyName}","{$selftTable}.id")
+        ->where("ro.{$relatedKeyName}",$relatedKey)
         ->selectRaw("(
           SELECT
             COUNT(ro2.id) + 1
           FROM
-              $intermediateTable as ro2
+              {$intermediateTable} as ro2
           WHERE
-            ro2.$relatedKeyName = $relatedKey AND ro2.id < ro.id
+            ro2.{$relatedKeyName} = {$relatedKey} AND ro2.id < ro.id
+          ) as relative_order")
+        ->limit(1)
+    ]);
+  }
+
+  public function scopeOwnedBy ($query,$ownerResource,$ownerKey) {
+    $ownedRelated      = cvCaseFixer('plural|camel',"cvOwner {$ownerResource}");
+    $ownedTable        = $this->getTable();
+    $ownerKeyName      = 'owner_id';
+    $ownedTableKeyName = 'owned_id';
+
+    $intermediateTable = cvCaseFixer('singular|snake',$ownedTable)
+      ."_owned_by_"
+      .cvCaseFixer('singular|snake',$ownerResource);
+
+    return $query->whereHas($ownedRelated,function($query) use ($ownerKey) {
+      $query->key($ownerKey);
+    })->addSelect([
+      'related_order'=>\DB::table("$intermediateTable")
+        ->whereColumn("{$intermediateTable}.{$ownedTableKeyName}","{$ownedTable}.id")
+        ->where("{$intermediateTable}.{$ownerKeyName}",$ownerKey)
+        ->selectRaw("(
+          SELECT
+            COUNT({$intermediateTable}2.id) + 1
+          FROM
+            {$intermediateTable} as {$intermediateTable}2
+          WHERE
+            {$intermediateTable}2.{$ownerKeyName} = {$ownerKey} AND {$intermediateTable}2.id < {$intermediateTable}.id
+          ) as relative_order")
+        ->limit(1)
+    ]);
+  }
+
+  public function scopeOwnerOf ($query,$ownedResource,$owneddKey) {
+    $ownedRelated      = cvCaseFixer('plural|camel',"cvOwned {$ownedResource}");
+    $ownerTable        = $this->getTable();
+    $ownedKeyName      = 'owned_id';
+    $ownerTableKeyName = 'owner_id';
+
+    $intermediateTable = cvCaseFixer('singular|snake',$ownedResource)
+      ."_owned_by_"
+      .cvCaseFixer('singular|snake',$ownerTable);
+
+    return $query->whereHas($ownedRelated,function($query) use ($owneddKey) {
+      $query->key($owneddKey);
+    })->addSelect([
+      'related_order'=>\DB::table("$intermediateTable")
+        ->whereColumn("{$intermediateTable}.{$ownerTableKeyName}","{$ownerTable}.id")
+        ->where("{$intermediateTable}.{$ownedKeyName}",$owneddKey)
+        ->selectRaw("(
+          SELECT
+            COUNT({$intermediateTable}2.id) + 1
+          FROM
+            {$intermediateTable} as ro2
+          WHERE
+            {$intermediateTable}2.{$ownedKeyName} = {$owneddKey} AND {$intermediateTable}2.id < {$intermediateTable}.id
           ) as relative_order")
         ->limit(1)
     ]);

@@ -55,7 +55,7 @@ class CvRelationator extends \Crudvel\Libraries\CvResourceInteractions\CvInterac
 
   public function cvAttacher(){
     $toDetach = $this->getToAttach();
-    
+
     foreach($this->getToAttach() as $pos=>$val){
       if(is_array($val)){
         $toDetach = array_keys($this->getToAttach());

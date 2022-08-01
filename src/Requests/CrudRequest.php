@@ -37,6 +37,7 @@ class CrudRequest extends FormRequest implements CvCrudInterface{
    */
   public function authorize(){
     $this->prepareRequest();
+
     if(!$this->getUserModelCollectionInstance())
       return true;
 

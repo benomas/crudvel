@@ -632,6 +632,7 @@ if(!function_exists('apiCrudvelResource')){
         $prefixRoute = $resource;
 
       Route::get("{$prefixRoute}/related-to/{resource}/{key}", "{$controller}@relatedIndex")->name("{$resource}.related-index");
+      Route::get("{$prefixRoute}/owned-by/{resource}/{key}", "{$controller}@indexOwnedBy")->name("{$resource}.index-owned-by");
       Route::get("{$prefixRoute}/sluged", "{$controller}@sluged")->name("{$resource}.sluged");
       Route::get("{$prefixRoute}/import", "{$controller}@import")->name("{$resource}.import");
       Route::get("{$prefixRoute}/export", "{$controller}@export")->name("{$resource}.export");
@@ -654,6 +655,9 @@ if(!function_exists('apiCrudvelResource')){
     else{
       if(in_array("relatedIndex",$conditionals))
         Route::get("{$resource}/related-to/{resource}/{key}", "{$controller}@relatedIndex")->name("{$resource}.related-index");
+
+      if(in_array("indexOwnedBy",$conditionals))
+        Route::get("{$prefixRoute}/owned-by/{resource}/{key}", "{$controller}@indexOwnedBy")->name("{$resource}.index-owned-by");
 
       if(in_array("sluged",$conditionals))
         Route::get("{$resource}/sluged", "{$controller}@sluged")->name("{$resource}.sluged");

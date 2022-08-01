@@ -655,6 +655,16 @@ trait CrudTrait {
     );
   }
 
+  public function apiMissConfiguration($data=null){
+    $data = static::sApiComplementData($data,["message"=>trans("crudvel.api.miss_configuration")]);
+
+    return response()->json($data?
+      $data:
+      ["message"=>trans("crudvel.api.miss_configuration")]
+      ,422
+    );
+  }
+
   public function apiSuccessResponse($data=null){
     $data = static::sApiComplementData(
       $this->solveSafeCollection($data),

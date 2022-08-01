@@ -139,6 +139,14 @@ $cvActions = [
     'for'            =>'(api y cliente)',
   ],
 
+  'indexOwnedBy' => [
+    'call_message'   =>'Dueño de los registros',
+    'called_message' =>'Relacinando',
+    'next_message'   =>'Guardar relacionados',
+    'success'        =>'Registros relacionados',
+    'for'            =>'(api y cliente)',
+  ],
+
   'sluged' => [
     'call_message'   =>'Listado organizado por slugs',
     'called_message' =>'Obteniendo listado por slugs',
@@ -303,6 +311,7 @@ $cvApi = [
   'incomplete'            => 'Acción incompleta',
   'bad_paginate_petition' => 'Parametros de paginación incorrectos, re responde con valores default',
   'unproccesable'         => 'Información inconsistente',
+  'miss_configuration'    => 'Miss configured endpoint',
   'true'                  => 'Verdadero',
   'false'                 => 'Falso',
   'no_cache_property'     => 'No se ha podido acceder a una propiedad',

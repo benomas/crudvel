@@ -73,6 +73,36 @@ class ApiController extends CustomController{
       "message" => trans("crudvel.api.success")
     ]);
   }
+
+  /**
+   * Display a listing of the resource related to another resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function indexOwnedBy($resource=null,$key=null) {
+    try{
+      if ($key === null || $key === 'null')
+        return $this->apiSuccessResponse([]);
+
+      if (method_exists($this->getModelBuilderInstance(),'ownedBy'.cvCaseFixer('stydly|singular',$resource)))
+        $this->getModelBuilderInstance()->{'ownedBy'.cvCaseFixer('stydly|singular',$resource)}($key);
+      else
+        $this->getModelBuilderInstance()->ownedBy($resource,$key);
+
+      if(!$this->getModelBuilderInstance()->count())
+        return $this->apiSuccessResponse([]);
+
+      return $this->actionResponse();
+    }catch(\Exception $e) {
+      pdd($e->getMessage());
+    }
+
+    return $this->apiSuccessResponse([
+      "data"    => [],
+      "count"   => 0,
+      "message" => trans("crudvel.api.success")
+    ]);
+  }
   //web routes
   /**
    * Display a listing of the resource.
@@ -224,6 +254,11 @@ class ApiController extends CustomController{
   }
 
   public function relatedIndexBeforePaginate($params = []){
+    extract($params);
+    $this->getRootInstance()->addSelectables('related_order');
+  }
+
+  public function indexOwnedByBeforePaginate($params = []){
     extract($params);
     $this->getRootInstance()->addSelectables('related_order');
   }
