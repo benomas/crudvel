@@ -17,7 +17,7 @@ class Role extends \Crudvel\Models\BaseModel{
   }
 // [Relationships]
   public function users(){
-    return $this->belongsToMany("App\Models\User", "role_user");
+    return $this->belongsToMany("App\Models\User", "role_user")->disableRestricction();
   }
 
   public function permissions(){
@@ -25,11 +25,11 @@ class Role extends \Crudvel\Models\BaseModel{
   }
 
   public function domineeringRoles(){
-    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domined_role_id', 'domineering_role_id')->disableRestricction();;
+    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domined_role_id', 'domineering_role_id')->disableRestricction();
   }
 
   public function dominedRoles(){
-    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domineering_role_id', 'domined_role_id')->disableRestricction();;
+    return $this->belongsToMany("App\Models\Role", 'domineering_role_domined_role', 'domineering_role_id', 'domined_role_id')->disableRestricction();
   }
 // [End Relationships]
 
