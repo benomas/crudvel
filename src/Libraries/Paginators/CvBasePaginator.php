@@ -32,7 +32,7 @@ class CvBasePaginator implements CvCrudInterface
   //list of columns to be selected
   protected $selectQuery;
   //valir comparator operators
-  protected $comparators       = ["=","<",">","<>","<=",">=","like"];
+  protected $comparators       = ["=","<",">","<>","<=",">=","like","not like"];
   protected $comparator        = null;
   protected $paginateCount     = 0;
   protected $paginateData      = null;
@@ -187,9 +187,12 @@ class CvBasePaginator implements CvCrudInterface
     $lop = $this->logicConnectors[$lop];
 
     if($eOp === 'like')
-      $this->getModelBuilderInstance()->$lop($field,$eOp,'%'.$filter['value'].'%');
-    else
-      $this->getModelBuilderInstance()->$lop($field,$eOp,$filter['value']);
+      return $this->getModelBuilderInstance()->$lop($field,$eOp,'%'.$filter['value'].'%');
+
+    if($eOp === 'not like')
+      return $this->getModelBuilderInstance()->$lop($field,$eOp,'%'.$filter['value'].'%');
+
+    return $this->getModelBuilderInstance()->$lop($field,$eOp,$filter['value']);
   }
 
   public function fixables($property){
