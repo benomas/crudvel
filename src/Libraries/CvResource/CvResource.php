@@ -554,8 +554,15 @@ class CvResource
     if($this->getUserModelCollectionInstance()->isRoot())
       return $this->actionsAccess[$actionResource] = true;
 
-    if(!$this->getPermissionModelClass()::disableRestricction()->action($actionResource)->count())
-      return $this->actionsAccess[$actionResource] = true;
+    if(!$this->getPermissionModelClass()::disableRestricction()->action($actionResource)->count()){
+      $segments = explode('.', $actionResource);
+      $resource = $segments[0]??'###';
+      $action   = cvCamelCase($segments[1]??'###');
+      if(!$this->getPermissionModelClass()::disableRestricction()->action("{$resource}.{$action}")->count()){
+        return $this->actionsAccess[$actionResource] = true;
+      }
+      $actionResource = "{$resource}.{$action}";
+    }
 
     if(kageBunshinNoJutsu($this->getUserModelBuilderInstance())->actionPermission($actionResource)->count())
       return $this->actionsAccess[$actionResource] = true;
