@@ -286,8 +286,14 @@ trait CvBaseMethodsTrait
     return $resourcesCatalog;
   }
 
+  //empty boot, default implementation
+  public static function customBootCallBack () {
+    return  function (\Illuminate\Database\Eloquent\Builder $builder) {};
+  }
+
   protected static function boot(){
     parent::boot();
+    static::addGlobalScope('custom_boot', static::customBootCallBack());
 
     if(!($GLOBALS['disablePermissionsScope']??false))
       static::addGlobalScope(new \Crudvel\Scopes\PermissionsScope);

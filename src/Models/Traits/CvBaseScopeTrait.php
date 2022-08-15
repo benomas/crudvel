@@ -261,14 +261,19 @@ trait CvBaseScopeTrait
     return $query->cvSearch();
   }
 
+  public function dinamicFrom (){
+    return static::cvIam()->getTable();
+  }
+
   public function selfAddSelectPrebuilder($alias=null){
-    $table      = $this->cvIam()->getTable();
-    $modelClass = get_class($this->cvIam());
+    $table       = static::cvIam()->getTable();
+    $dinamicFrom = static::cvIam()->dinamicFrom();
+    $modelClass  = get_class($this->cvIam());
 
     $selfBuilder = new stdClass;
     $selfBuilder->alias = $this->alias($alias);
 
-    $selfBuilder->queryBuilder = $modelClass::withoutGlobalScopes()->from("$table as {$selfBuilder->alias}")
+    $selfBuilder->queryBuilder = $modelClass::withoutGlobalScopes()->fromRaw("$dinamicFrom as {$selfBuilder->alias}")
       ->whereColumn("{$selfBuilder->alias}.id", "$table.id")
       ->limit(1);
 

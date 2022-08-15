@@ -131,5 +131,9 @@ class BaseModel extends Model implements CvCrudInterface
   public function newCollection(array $models = []){
     return new \Crudvel\Collection\BaseCollection($models);
   }
+
+  public function fixedPaginatorTable(){
+    return $this->getTable();
+  }
 // [End Others]
 }

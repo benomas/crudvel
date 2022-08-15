@@ -139,14 +139,15 @@ class CvBasePaginator implements CvCrudInterface
   public function tempQuery(){
     $querySql = $this->getModelBuilderInstance()->toSql();
     $bindings = $this->getModelBuilderInstance()->getBindings();
+    //Old bugg detected, global scopes are stacking because when call toSql
     $this->getModelBuilderInstance()
-      ->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))
-      ->setBindings($bindings)
-    );
+      ->setQuery(
+        \DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))
+        ->setBindings($bindings)
+    )->disableRestricction();
 
     return $this;
   }
-
 
   public function loadBasicPropertys(){
     $paginate = $this->getPaginateFields();
