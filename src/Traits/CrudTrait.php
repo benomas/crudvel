@@ -516,6 +516,21 @@ trait CrudTrait {
   public function addField($field=null,$value=null){
     if($this->getCvResourceInstance() && $this->getCvResourceInstance()->getRequestInstance())
       $this->getCvResourceInstance()->addField($field,$value);
+
+    return $this;
+  }
+
+  public function removeFields(array $fields){
+    if($this->getCvResourceInstance() && $this->getCvResourceInstance()->getRequestInstance())
+      $this->getCvResourceInstance()->removeFields($fields);
+
+    return $this;
+  }
+
+  public function safeFields(array $fields){
+    if($this->getCvResourceInstance() && $this->getCvResourceInstance()->getRequestInstance())
+      $this->getCvResourceInstance()->safeFields($fields);
+
     return $this;
   }
 

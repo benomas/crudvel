@@ -662,5 +662,24 @@ class CvResource
   public function extractPaginateFields(){
     return $this->setPaginateFields($this->fields['b64Query']['paginate'] ?? null);
   }
+
+  public function removeFields(array $fields){
+    foreach ($fields as $field)
+      $this->removeField($field);
+
+    pdd('temadasdas',$this->getFields());
+    return $this;
+  }
+
+  public function safeFields(array $fields){
+    $flippedArray = array_flip($fields);
+
+    foreach (array_keys($this->getFields()) as $field){
+      if(!isset($flippedArray[$field]))
+        $this->removeField($field);
+    }
+
+    return $this;
+  }
 // [End Specific Logic]
 }
