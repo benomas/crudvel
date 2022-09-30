@@ -23,19 +23,19 @@ trait StringRegexTrait
   }
   // Replace string if it has not alphanumeric
   function replaceIfNotAlphaNum($string, $replace){
-    if(!preg_match('/[\pL|0-9]+/u', $string)) return $replace;
+    if(!preg_match('/(\pL|0-9)+/u', $string)) return $replace;
     return trim($string);
   }
   // Replace string if it has not alpha
   function replaceIfNotAlpha($string, $replace){
-    if(!preg_match('/[\pL]+/u', $string)) return $replace;
+    if(!preg_match('/(\pL)+/u', $string)) return $replace;
     return trim($string);
   }
   function hasAlphaNum($string){
-    return preg_match('/[\pL|0-9]+/u', $string);
+    return preg_match('/(\pL|0-9)+/u', $string);
   }
   function hasAlpha($string){
-    return preg_match('/[\pL]+/u', $string);
+    return preg_match('/(\pL)+/u', $string);
   }
   function removeNewLinesAndSpaces($string){
     return trim(preg_replace('/\s[\s]+|\t+|\s+/', ' ', $string));
