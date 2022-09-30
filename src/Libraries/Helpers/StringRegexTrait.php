@@ -23,7 +23,7 @@ trait StringRegexTrait
   }
   // Replace string if it has not alphanumeric
   function replaceIfNotAlphaNum($string, $replace){
-    if(!preg_match('/(\pL|0-9)+/u', $string)) return $replace;
+    if(!preg_match('/(\pL|[0-9])+/u', $string)) return $replace;
     return trim($string);
   }
   // Replace string if it has not alpha
@@ -32,7 +32,7 @@ trait StringRegexTrait
     return trim($string);
   }
   function hasAlphaNum($string){
-    return preg_match('/(\pL|0-9)+/u', $string);
+    return preg_match('/(\pL|[0-9])+/u', $string);
   }
   function hasAlpha($string){
     return preg_match('/(\pL)+/u', $string);
