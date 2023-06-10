@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Facades\Excel;
     so the options is to doing it manually, but it is a lot of code, and it is always the same, to i get that code and put it togheter as methods, so now with the support of
     the anonymous functions, all this code can be reused, saving a lot of time.
 */
-class CustomController extends \Illuminate\Routing\Controller implements CvCrudInterface,CvPaginateInterface{
+class CustomController extends \Illuminate\Routing\Controller implements CvCrudInterface,CvPaginateInterface {
   //preparing refactoring
   protected $cvResourceClass='CvResource';
   protected $cvResourceInstance;

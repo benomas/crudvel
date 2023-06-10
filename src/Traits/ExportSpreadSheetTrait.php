@@ -8,45 +8,25 @@ use \Maatwebsite\Excel\Facades\Excel;
 
 trait ExportSpreadSheetTrait
 {
+  private function filterExportingColumns($defaultColumns)
+  {
+    $fixedRowColumns = $defaultColumns;
+
+    if (count($this->whiteListExportingColumns()))
+      $fixedRowColumns = $this->whiteListExportingColumns();
+
+
+    if (count($this->blackListExportingColumns()))
+      $fixedRowColumns = array_diff($fixedRowColumns, $this->blackListExportingColumns());
+
+    return $fixedRowColumns;
+  }
 
   /* Function to filter pagination cols */
-  public function filterExportingColumns($paginate)
+  public function fixPagination($paginate)
   {
     $paginate['limit'] = null;
-    $blackList = $this->blackListExportingColumns();
-    $whiteList = $this->whiteListExportingColumns();
-    $blackListCount = count($blackList);
-    $whiteListCount = count($whiteList);
-    $paginate['selectQuery'] = $this->selectables;
 
-    // check for programmer error defining white and blacklist in the same controller
-    if ($whiteListCount > 0  && $blackListCount > 0)
-      pdd("You cant define simultaneously white and black list for exporting cols");
-
-    // check to export all cols bu default without white and black list
-    if ($whiteListCount <= 0  && $blackListCount <= 0) {
-      // $paginate['selectQuery'] = null;
-      $paginate['selectQuery'] = $this->selectables;
-      return $paginate;
-    }
-
-    // check if it has a black list
-    if ($blackListCount > 0) {
-      foreach ($blackList as $col) {
-        $find = array_search($col, $paginate['selectQuery']);
-        if ($find) {
-          unset($paginate['selectQuery'][$find]);
-        }
-      }
-    }
-
-    // check if it has a white list
-    if ($whiteListCount > 0) {
-      $paginate['selectQuery'] = [];
-      foreach ($whiteList as $col) {
-        $paginate['selectQuery'][] = $col;
-      }
-    }
     return $paginate;
   }
 
@@ -55,28 +35,29 @@ trait ExportSpreadSheetTrait
   {
     $paginate = $this->getFields()['paginate'] ?? [];
 
-    $this->addField('paginate', $this->filterExportingColumns($paginate));
-  }
-
-  public function exportsSpreadSheet()
-  {
-    return (new \Crudvel\Exports\CvQueryBuilderInterceptor($this->query))->download($this->getSlugPluralName() . '.xlsx');
+    $this->addField('paginate', $this->fixPagination($paginate));
   }
 
   public function exportings()
   {
     $this->processPaginatedResponse();
 
-    $resourceFieldList = __("crudvel/{$this->getSlugPluralName()}.fields");
-    $this->headers     = [];
+    $prefilteredHeaders = $this->filterExportingColumns(
+      array_keys(kageBunshinNoJutsu($this->getModelBuilderInstance())->first()->getAttributes())
+    );
 
-    foreach (kageBunshinNoJutsu($this->getModelBuilderInstance())->first()->getAttributes() as $key => $value)
-      $this->headers[] = $resourceFieldList[$key] ?? "no registrado.{$key}";
+    $resourceFieldList  = __("crudvel/{$this->getSlugPluralName()}.fields");
+    $exportHeaders      = [];
 
-    $this->query                = $this->getModelBuilderInstance()->toBase();
-    $this->query->exportHeaders = $this->headers;
+    foreach ($prefilteredHeaders as $value){
+      $exportHeaders[$value] = $resourceFieldList[$value] ?? "no registrado.{$value}";
+    }
 
-    return $this->exportsSpreadSheet();
+    return (new \Crudvel\Exports\CvExcelFromQueryBuilder)
+      ->setQueryProvider($this)
+      ->setExportHeaders($exportHeaders)
+      ->defineExportColumns()
+      ->download($this->getSlugPluralName() . '.xlsx');
   }
 
   public function processPaginatedResponse()

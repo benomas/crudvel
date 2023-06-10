@@ -8,9 +8,10 @@
 
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Crudvel\Interfaces\ExcelFromQueryInterface;
 //Se extiende transactionController, para manejo de transacciones
 
-class ApiController extends CustomController{
+class ApiController extends CustomController implements ExcelFromQueryInterface {
   use \Crudvel\Traits\ExportSpreadSheetTrait;
 
   public function __construct(...$propertyRewriter){
