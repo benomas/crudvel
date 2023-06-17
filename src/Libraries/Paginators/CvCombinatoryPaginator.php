@@ -192,7 +192,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
         "%{$this->makeLike($words)}%"
       );
 
-    $querySql = preg_replace('/^select \* from/','select *,"'.($position).'" as pt_order from',$likeBuilder->toSql());
+    $querySql = preg_replace('/^select \* from/',"select *,'{$position}' as pt_order from",$likeBuilder->toSql());
     $bindings = $likeBuilder->getBindings();
     $likeBuilder->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))->setBindings($bindings));
     $this->combinatoryUnions[] = $likeBuilder;
@@ -208,7 +208,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
           "%$work%"
       );
 
-    $querySql = preg_replace('/^select \* from/','select *,"'.($position).'" as pt_order from',$likeBuilder->toSql());
+    $querySql = preg_replace('/^select \* from/',"select *,'{$position}' as pt_order from",$likeBuilder->toSql());
     $bindings = $likeBuilder->getBindings();
     $likeBuilder->setQuery(\DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))->setBindings($bindings));
     $this->combinatoryUnions[] = $likeBuilder;

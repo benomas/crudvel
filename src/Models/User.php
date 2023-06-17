@@ -145,9 +145,7 @@ class User extends \Crudvel\Models\BaseModel{
 
     $fallBackCvSearch = "{$this->safeField($alias,'email')}";
 
-    $query->selectRaw("
-      IF({$defaultCvSearch} = '',{$fallBackCvSearch},{$defaultCvSearch})
-    ");
+    $query->selectRaw(static::sSafeIf("{$defaultCvSearch} = ''",$fallBackCvSearch,$defaultCvSearch));
   }
 
   public function scopeGeneralOwner($query,$user=null){

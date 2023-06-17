@@ -350,18 +350,69 @@ trait CvBaseMethodsTrait
     return $this->getModelLang()['rows_label'] ?? cvCaseFixer('plural|slug',class_basename(get_class($this)));
   }
 
+  public static function sGroupConcat($column,$source=null){
+    if ($source === null || !$source instanceof \Crudvel\Models\BaseModel){
+      $source = static::cvIam();
+    }
+
+    if (!$source instanceof \Crudvel\Models\BaseModel)
+      return "group_concat({$column})";
+
+    $specialCase = ['pgsql'=>true,'sqlsrv'=>true][$source->getConnection()->getDriverName()] ?? null;
+
+    if ($specialCase)
+      return "STRING_AGG({$column},'')";
+
+    return "group_concat({$column})";
+  }
+
+  public static function sSafeIf($text1,$text2,$text3,$source=null){
+    if ($source === null || !$source instanceof \Crudvel\Models\BaseModel){
+      $source = static::cvIam();
+    }
+
+    if (!$source instanceof \Crudvel\Models\BaseModel)
+      return "IF({$text1},{$text2},{$text3})";
+
+    $specialCase = ['pgsql'=>true,'sqlsrv'=>true][$source->getConnection()->getDriverName()] ?? null;
+
+    if ($specialCase)
+      return "
+        CASE
+          WHEN {$text1} THEN {$text2}
+          ELSE {$text3}
+        END
+      ";
+
+    return "IF({$text1},{$text2},{$text3})";
+  }
+
   public static function sSafeField($alias,$field,$leftSeparator='',$rightSeparator=''){
-    return "IF($alias.$field IS NOT NULL,CONCAT('$leftSeparator',$alias.$field,'$rightSeparator'),'')";
+    return static::sSafeIf(
+      "{$alias}.{$field} IS NOT NULL",
+      "CONCAT('{$leftSeparator}',{$alias}.{$field},'{$rightSeparator}')",
+      "''"
+    );
+    /*
+    $specialCase = ['pgsql'=>true,'sqlsrv'=>true][static::cvIam()->getConnection()->getDriverName()] ?? null;
+
+    if ($specialCase)
+      return "
+        CASE
+          WHEN {$alias}.{$field} IS NOT NULL THEN CONCAT('{$leftSeparator}',{$alias}.{$field},'{$rightSeparator}')
+          ELSE ''
+        END
+      ";
+
+    return "IF({$alias}.{$field} IS NOT NULL,CONCAT('{$leftSeparator}',{$alias}.{$field},'{$rightSeparator}')";*/
   }
 
   public function safeField($alias,$field,$leftSeparator='',$rightSeparator=''){
     return static::sSafeField($alias,$field,$leftSeparator,$rightSeparator);
-    //return "IF($alias.$field IS NOT NULL,CONCAT('$leftSeparator',$alias.$field,'$rightSeparator'),'')";
   }
 
   public function textIdentifierConcat($alias){
     return $this->safeField($alias,'text_identifier','(',')');
-    //return "IF($alias.text_identifier IS NOT NULL,CONCAT('(',$alias.text_identifier,')'),'')";
   }
 
   public function userAutoStamp(){
