@@ -83,7 +83,18 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       $this->getModelBuilderInstance()->distinctCount($this->getModelReference()->getKeyName(),false)
     );
 
-    $this->getModelBuilderInstance()->groupBy($this->getModelReference()->getKeyName());
+    $orderDirection = $this->getAscending()==1?"ASC":"DESC";
+
+    $this->getModelBuilderInstance()->groupBy($this->getSelectQuery());
+    $this->getModelBuilderInstance()->select($this->getSelectQuery());
+    if ($this->getOrderBy()){
+      $this->getModelBuilderInstance()
+        ->orderByRaw("MIN(pt_order) ASC, {$this->getOrderBy()} {$orderDirection}");
+    }else{
+      $this->getModelBuilderInstance()
+        ->orderByRaw("MIN(pt_order) ASC");
+    }
+
     //if limit for que query is defined
     if($this->getLimit()){
       $this->getModelBuilderInstance()->limit($this->getLimit());
@@ -91,11 +102,6 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       if($this->getPage() && $this->getPaginateCount() >= $this->getLimit() * ($this->getPage()-1))
         $this->getModelBuilderInstance()->skip($this->getLimit() * ($this->getPage()-1));
     }
-
-    if ($this->getOrderBy())
-      $this->getModelBuilderInstance()
-      ->orderBy('pt_order',$this->getAscending()==1?"ASC":"DESC")
-      ->orderBy($this->getOrderBy(),$this->getAscending()==1?"ASC":"DESC");
 
     if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->getKeyValue()))
       $this->getModelBuilderInstance()->key($this->getModelCollectionInstance()->getKeyValue(),false);
@@ -123,7 +129,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     $fixedWords = [];
     //Search by individual column first
     foreach($words AS $key=>$word){
-      $match = kageBunshinNoJutsu($this->getModelBuilderInstance())->whereRaw("{$this->getDbEngineContainer()->getFilterQueryString()} LIKE ?", ["%{$word}%"]);
+      $match = kageBunshinNoJutsu($this->getModelBuilderInstance())->whereRaw("{$this->getDbEngineContainer()->getFilterQueryString()} {$this->getDbEngineContainer()->getLikeCommand()} ?", ["%{$word}%"]);
       //$match = kageBunshinNoJutsu($this->getModelBuilderInstance())->where(DB::raw($this->getDbEngineContainer()->getFilterQueryString()), 'LIKE', "%{$word}%");
 
       if($match->count())
@@ -188,7 +194,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     $likeBuilder = kageBunshinNoJutsu($this->getModelBuilderInstance())
       ->where(
         DB::raw($this->getDbEngineContainer()->getFilterQueryString()),
-        'LIKE',
+        $this->getDbEngineContainer()->getLikeCommand(),
         "%{$this->makeLike($words)}%"
       );
 
@@ -204,7 +210,7 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
     foreach($words as $work)
       $likeBuilder->where(
           DB::raw($this->getDbEngineContainer()->getFilterQueryString()),
-          'LIKE',
+          $this->getDbEngineContainer()->getLikeCommand(),
           "%$work%"
       );
 
@@ -267,5 +273,4 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
 
     return $this;
   }
-
 }

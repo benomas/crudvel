@@ -14,4 +14,8 @@ class MariaDbEngine extends MySqlDbEngine implements EngineInterface
   public function getFilterQueryString(){
     return parent::getFilterQueryString();
   }
+
+  public function getLikeCommand(){
+    return 'LIKE';
+  }
 }

@@ -7,4 +7,6 @@ interface EngineInterface
   public function setFilterQueryString();
 
   public function getFilterQueryString();
+
+  public function getLikeCommand();
 }

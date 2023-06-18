@@ -44,4 +44,8 @@ class EngineContainer Implements EngineInterface
     return $this->getDbEngine()->getFilterQueryString();
   }
 
+  public function getLikeCommand(){
+    return $this->getDbEngine()->getLikeCommand();
+  }
+
 }

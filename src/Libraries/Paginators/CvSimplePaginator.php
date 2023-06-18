@@ -7,6 +7,7 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
 {
   protected $comparator  = "like";
   public function filter() {
+    $this->setComparator($this->getDbEngineContainer()->getLikeCommand());
     if(!$this->getSearchObject())
       $this->setSearchObject('');
 

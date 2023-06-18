@@ -575,10 +575,6 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
     return $this->committer??null;
   }
 
-  public function getMainTableName(){
-    return $this->mainTableName??null;
-  }
-
   public function getSlugField(){
     return $this->slugField??null;
   }

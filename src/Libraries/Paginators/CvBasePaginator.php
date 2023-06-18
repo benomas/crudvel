@@ -197,16 +197,13 @@ class CvBasePaginator implements CvCrudInterface
   }
 
   public function fixables($property){
-    $simpleColumns=$this->$property;
-    if($simpleColumns && count($simpleColumns)){
-      $columns = $this->getRootInstance()->modelInstanciator(true)->getTableColumns();
+    if($this->$property && count($this->$property)){
+      $columns = array_flip($this->getRootInstance()->modelInstanciator(true)->getTableColumns());
 
-      foreach ($simpleColumns as $simpleColumnKey => $simpleColumnValue){
-        if (in_array($simpleColumnValue,$columns))
-          $this->$property[$simpleColumnKey] = $this->getRootInstance()->getMainTableName().$simpleColumnValue." AS ".$simpleColumnValue;
-        else
-          $this->addUnsolvedColumn($simpleColumnValue);
-      }
+      foreach(array_filter($this->$property,function($column) use($columns) {
+        return !isset($columns[$column]);
+      }) as $unsolved)
+        $this->addUnsolvedColumn($unsolved);
     }
   }
 
@@ -217,10 +214,6 @@ class CvBasePaginator implements CvCrudInterface
 
   public function fixFilterables(){
     $this->fixables('filterQuery');
-  }
-
-  public function fixOrderBy(){
-    $this->orderBy = $this->mainTableName.$this->orderBy;
   }
 
   public function inyectAddeds(){

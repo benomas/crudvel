@@ -15,11 +15,15 @@ class MySqlEngine extends BaseDbEngine implements EngineInterface
       $this->filterQueryString.="COALESCE($filter,''),";
 
     $this->filterQueryString = rtrim($this->filterQueryString, ',').')';
-    
+
     return $this;
   }
 
   public function getFilterQueryString(){
     return parent::getFilterQueryString();
+  }
+
+  public function getLikeCommand(){
+    return 'LIKE';
   }
 }

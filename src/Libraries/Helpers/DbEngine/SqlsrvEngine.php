@@ -21,4 +21,8 @@ class SqlsrvEngine extends BaseDbEngine implements EngineInterface
   public function getFilterQueryString(){
     return parent::getFilterQueryString();
   }
+
+  public function getLikeCommand(){
+    return 'LIKE';
+  }
 }
