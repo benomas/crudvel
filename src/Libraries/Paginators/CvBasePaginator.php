@@ -266,8 +266,8 @@ class CvBasePaginator implements CvCrudInterface
     if ($this->getOrderBy())
       $this->getModelBuilderInstance()->orderBy($this->getOrderBy(),$this->getAscending()==1?"ASC":"DESC");
 
-    if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->id))
-      $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id,false);
+    if($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->getKeyValue()))
+      $this->getModelBuilderInstance()->key($this->getModelCollectionInstance()->getKeyValue(),false);
 
   }
 
@@ -335,7 +335,10 @@ class CvBasePaginator implements CvCrudInterface
         "message" =>trans("crudvel.api.success")
       ]);
 
-    if(!empty($this->getModelCollectionInstance()->id) || $this->getRootInstance()->getForceSingleItemPagination())
+    if(
+      ($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->getKeyValue())) ||
+      $this->getRootInstance()->getForceSingleItemPagination()
+    )
       $this->setPaginateData($this->getModelBuilderInstance()->first());
 
     if(!$this->getPaginateData() && !$this->getRootInstance()->getSlugedResponse())
@@ -373,8 +376,8 @@ class CvBasePaginator implements CvCrudInterface
       $this->selectQuery = $selectables;
       $this->fixSelectables();
 
-      if($this->getModelCollectionInstance() && $this->getModelCollectionInstance()->id)
-        $this->getModelBuilderInstance()->id($this->getModelCollectionInstance()->id);
+      if($this->getModelCollectionInstance() && $this->getModelCollectionInstance()->getKeyValue())
+        $this->getModelBuilderInstance()->key($this->getModelCollectionInstance()->getKeyValue());
 
       $response = $this->getModelBuilderInstance()->select($selectables)->first();
     }

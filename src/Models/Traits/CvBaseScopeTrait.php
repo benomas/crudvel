@@ -247,13 +247,13 @@ trait CvBaseScopeTrait
 
   public function scopeSelectCvSearch($query,$alias=null){
     $alias = $this->alias($alias);
+    $keyName = static::cvIam()->getKeyName();
 
-    return $query->selectRaw("CONCAT('scopeSelectCvSearch needs to be customized at ".get_class($this)." scopeSelectCvSearch ',$alias.id)");
+    return $query->selectRaw("CONCAT('scopeSelectCvSearch needs to be customized at ".get_class($this)." scopeSelectCvSearch ',{$alias}.{$keyName})");
   }
 
   public function scopeSolveSearches($query){
     //$modelClass = get_class($this->cvIam());
-
     foreach($this->getCvSearches() as $searchColumn=>$relatedModel){
       $query->addSelect([$searchColumn => $relatedModel::withoutGlobalScopes()->externalCvSearch($searchColumn)]);
     }

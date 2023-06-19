@@ -393,18 +393,6 @@ trait CvBaseMethodsTrait
       "CONCAT('{$leftSeparator}',{$alias}.{$field},'{$rightSeparator}')",
       "''"
     );
-    /*
-    $specialCase = ['pgsql'=>true,'sqlsrv'=>true][static::cvIam()->getConnection()->getDriverName()] ?? null;
-
-    if ($specialCase)
-      return "
-        CASE
-          WHEN {$alias}.{$field} IS NOT NULL THEN CONCAT('{$leftSeparator}',{$alias}.{$field},'{$rightSeparator}')
-          ELSE ''
-        END
-      ";
-
-    return "IF({$alias}.{$field} IS NOT NULL,CONCAT('{$leftSeparator}',{$alias}.{$field},'{$rightSeparator}')";*/
   }
 
   public function safeField($alias,$field,$leftSeparator='',$rightSeparator=''){
