@@ -388,9 +388,11 @@ trait CvBaseMethodsTrait
   }
 
   public static function sSafeField($alias,$field,$leftSeparator='',$rightSeparator=''){
+    $aliasFix = empty($alias) ? '': "{$alias}.";
+
     return static::sSafeIf(
-      "{$alias}.{$field} IS NOT NULL",
-      "CONCAT('{$leftSeparator}',{$alias}.{$field},'{$rightSeparator}')",
+      "{$aliasFix}{$field} IS NOT NULL",
+      "CONCAT('{$leftSeparator}',{$aliasFix}{$field},'{$rightSeparator}')",
       "''"
     );
   }
