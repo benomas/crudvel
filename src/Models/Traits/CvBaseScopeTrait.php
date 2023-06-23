@@ -241,7 +241,7 @@ trait CvBaseScopeTrait
 
     return $query
       ->from("{$this->getTable()} as $alias")
-      ->whereColumn("$localPrefix$foreintColumn", "$alias.id")
+      ->whereColumn("{$localPrefix}{$foreintColumn}", "$alias.{$this->getKeyName()}")
       ->limit(1)->selectCvSearch($alias);
   }
 
