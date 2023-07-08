@@ -135,5 +135,43 @@ class BaseModel extends Model implements CvCrudInterface
   public function fixedPaginatorTable(){
     return $this->getTable();
   }
+
+  public static function postgresCallStatments ($sqlScript,$silenceMode=false) {
+    $separator = null;
+    $allOk     = true;
+
+    if ($separator){
+      $statments = explode($separator, $sqlScript);
+    }else{
+      $statments = [$sqlScript];
+    }
+
+    foreach($statments as $singleStatment){
+      $checkForBrokenStatments = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $singleStatment);
+
+      if(empty($checkForBrokenStatments))
+        continue;
+
+      try{
+        \DB::unprepared($singleStatment);
+      }catch(\Exception $e){
+        if(!$silenceMode){
+          cvConsoler("\n".cvRedTC("transaction faild: [{$singleStatment}]"));
+          cvConsoler("\n".cvRedTC("transaction faild message: {$e->getMessage()}"));
+        }
+
+        $allOk = false;
+      }
+    }
+
+    if ($allOk){
+      if(!$silenceMode)
+        cvConsoler("\n".cvPositive('all transaction completed'));
+    }else{
+      cvConsoler("\n".cvInfo('not all transaction completed'));
+    }
+
+    return true;
+  }
 // [End Others]
 }
