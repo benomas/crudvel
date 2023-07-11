@@ -187,11 +187,13 @@ class CvBasePaginator implements CvCrudInterface
 
     $lop = $this->logicConnectors[$lop];
 
-    if($eOp === 'like')
-      return $this->getModelBuilderInstance()->$lop($field,$eOp,'%'.$filter['value'].'%');
+    if($eOp === 'like'){
+      return $this->getModelBuilderInstance()->$lop($field,$this->getDbEngineContainer()->getLikeCommand(),'%'.$filter['value'].'%');
+    }
 
-    if($eOp === 'not like')
-      return $this->getModelBuilderInstance()->$lop($field,$eOp,'%'.$filter['value'].'%');
+    if($eOp === 'not like'){
+      return $this->getModelBuilderInstance()->$lop($field,$this->getDbEngineContainer()->getNotLikeCommand(),'%'.$filter['value'].'%');
+    }
 
     return $this->getModelBuilderInstance()->$lop($field,$eOp,$filter['value']);
   }

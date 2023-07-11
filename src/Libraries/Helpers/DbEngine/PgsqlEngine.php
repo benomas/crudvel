@@ -28,4 +28,8 @@ class PgsqlEngine extends BaseDbEngine implements EngineInterface
   public function getLikeCommand(){
     return 'ILIKE';
   }
+
+  public function getNotLikeCommand(){
+    return 'NOT ILIKE';
+  }
 }
