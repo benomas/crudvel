@@ -136,8 +136,7 @@ class BaseModel extends Model implements CvCrudInterface
     return $this->getTable();
   }
 
-  public static function postgresCallStatments ($sqlScript,$silenceMode=false) {
-    $separator = null;
+  public static function postgresCallStatments ($sqlScript,$silenceMode=false,$separator = null) {
     $allOk     = true;
 
     if ($separator){

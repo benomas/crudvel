@@ -42,6 +42,7 @@ class ApiController extends CustomController implements ExcelFromQueryInterface 
    */
   public function index()
   {
+    customLog('from index');
     return $this->actionResponse();
   }
 

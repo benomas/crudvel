@@ -201,7 +201,6 @@ class CvBasePaginator implements CvCrudInterface
   public function fixables($property){
     if($this->$property && count($this->$property)){
       $columns = array_flip($this->getRootInstance()->modelInstanciator(true)->getTableColumns());
-
       foreach(array_filter($this->$property,function($column) use($columns) {
         return !isset($columns[$column]);
       }) as $unsolved)
@@ -285,7 +284,8 @@ class CvBasePaginator implements CvCrudInterface
     if(noEmptyArray($this->getSelectQuery()))
       $this->fixSelectables();
 
-    if($this->getModelBuilderInstance()===null || $this->getModelBuilderInstance()->count() === 0)
+    //"first" can be faster than "count", and we just want to validate there is still available records after security fiters
+    if($this->getModelBuilderInstance() === null || kageBunshinNoJutsu($this->getModelBuilderInstance())->first() === null)
       throw new \Crudvel\Exceptions\EmptyCollection();
 
     $this->solveSpecialFilters()->tempQuery();
