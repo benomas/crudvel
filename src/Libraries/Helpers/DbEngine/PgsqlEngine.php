@@ -21,10 +21,6 @@ class PgsqlEngine extends BaseDbEngine implements EngineInterface
     return $this;
   }
 
-  public function getFilterQueryString(){
-    return parent::getFilterQueryString();
-  }
-
   public function getLikeCommand(){
     return 'ILIKE';
   }

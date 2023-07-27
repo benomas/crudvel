@@ -25,4 +25,8 @@ class SqliteEngine extends BaseDbEngine implements EngineInterface
   public function getLikeCommand(){
     return 'LIKE';
   }
+
+  public function getNotLikeCommand(){
+    return 'NOT LIKE';
+  }
 }

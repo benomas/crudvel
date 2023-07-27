@@ -18,4 +18,8 @@ class MariaDbEngine extends MySqlDbEngine implements EngineInterface
   public function getLikeCommand(){
     return 'LIKE';
   }
+
+  public function getNotLikeCommand(){
+    return 'NOT LIKE';
+  }
 }

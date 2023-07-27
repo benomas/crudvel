@@ -48,4 +48,7 @@ class EngineContainer Implements EngineInterface
     return $this->getDbEngine()->getLikeCommand();
   }
 
+  public function getNotLikeCommand(){
+    return $this->getDbEngine()->getNotLikeCommand();
+  }
 }
