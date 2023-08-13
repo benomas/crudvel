@@ -8,8 +8,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Support\Facades\Schema;
 
 class InstallCommand extends Command {
-  protected $signature   = 'install:crudvel';
-  protected $description = 'Instala paquete';
+  use \Crudvel\Libraries\Helpers\TerminalTrait;
+  protected $signature   = 'install:crudvel {mode?}';
+  protected $description = 'Instalar paquete modo main default u opcional, en modo opcional no se tocaran modelos, migracions y seeders del projecto';
   protected $name    = "install:crudvel";
   protected $migrationPath;
 
@@ -20,58 +21,62 @@ class InstallCommand extends Command {
 
   public function handle()
   {
-    cvConsoler("\n".cvBlueTC('Crudvel Installation Process Start')."\n");
-    try{
-      $this->migrationsPath = base_path("database/migrations");
-      if(!file_exists($this->migrationsPath))
-        mkdir($this->migrationsPath);
-      $migrations =[];
+    $this->cvConsoler("\n".$this->blueTC('Crudvel Installation Process Start')."\n");
+    $mode = $this->argument('mode') ?? 'main';
 
-      $this->cloneFileData("User.php",base_path("vendor/benomas/crudvel/src/templates/user.txt"),base_path("app/Models"));
+    if ($mode === 'main') {
+      try{
+        $this->migrationsPath = base_path("database/migrations");
+        if(!file_exists($this->migrationsPath))
+          mkdir($this->migrationsPath);
+        $migrations =[];
 
-      if(!count(glob(database_path()."/migrations/*alter_users_table*.php")))
-        $migrations[]= "alter_users_table";
+        $this->cloneFileData("User.php",base_path("vendor/benomas/crudvel/src/templates/user.txt"),base_path("app/Models"));
 
-      if(!count(glob(database_path()."/migrations/*create_roles_table*.php"))){
-        $migrations[]= "create_roles_table";
-        $this->cloneFileData("Role.php",base_path("vendor/benomas/crudvel/src/templates/role.txt"),base_path("app/Models"));
+        if(!count(glob(database_path()."/migrations/*alter_users_table*.php")))
+          $migrations[]= "alter_users_table";
+
+        if(!count(glob(database_path()."/migrations/*create_roles_table*.php"))){
+          $migrations[]= "create_roles_table";
+          $this->cloneFileData("Role.php",base_path("vendor/benomas/crudvel/src/templates/role.txt"),base_path("app/Models"));
+        }
+
+        if(!count(glob(database_path()."/migrations/*create_domineering_role_domined_role_table*.php")))
+          $migrations[]= "create_domineering_role_domined_role_table";
+
+        if(!count(glob(database_path()."/migrations/*create_role_user_table*.php")))
+          $migrations[]= "create_role_user_table";
+
+        if(!count(glob(database_path()."/migrations/*create_cat_permission_types_table*.php"))){
+          $migrations[]= "create_cat_permission_types_table";
+          $this->cloneFileData("CatPermissionType.php",base_path("vendor/benomas/crudvel/src/templates/cat_permission_type.txt"),base_path("app/Models"));
+        }
+
+        if(!count(glob(database_path()."/migrations/*create_permissions_table*.php"))){
+          $migrations[]= "create_permissions_table";
+          $this->cloneFileData("Permission.php",base_path("vendor/benomas/crudvel/src/templates/permission.txt"),base_path("app/Models"));
+        }
+
+        if(!count(glob(database_path()."/migrations/*create_permission_role_table*.php")))
+          $migrations[]= "create_permission_role_table";
+
+        if(!count(glob(database_path()."/migrations/*create_cat_files_table*.php"))){
+          $migrations[]= "create_cat_files_table";
+          $this->cloneFileData("CatFile.php",base_path("vendor/benomas/crudvel/src/templates/cat_file.txt"),base_path("app/Models"));
+        }
+
+        if(!count(glob(database_path()."/migrations/*create_files_table*.php"))){
+          $migrations[]= "create_files_table";
+          $this->cloneFileData("File.php",base_path("vendor/benomas/crudvel/src/templates/file.txt"),base_path("app/Models"));
+        }
+
+        foreach ($migrations  as $baseName)
+          $this->publishMigration($baseName);
       }
+      catch(\Exception $e){
 
-      if(!count(glob(database_path()."/migrations/*create_domineering_role_domined_role_table*.php")))
-        $migrations[]= "create_domineering_role_domined_role_table";
-
-      if(!count(glob(database_path()."/migrations/*create_role_user_table*.php")))
-        $migrations[]= "create_role_user_table";
-
-      if(!count(glob(database_path()."/migrations/*create_cat_permission_types_table*.php"))){
-        $migrations[]= "create_cat_permission_types_table";
-        $this->cloneFileData("CatPermissionType.php",base_path("vendor/benomas/crudvel/src/templates/cat_permission_type.txt"),base_path("app/Models"));
+        return $this->cvConsoler("\n".$this->cvRedTC('Exception, the proccess fail. '.$e->getMessage()));
       }
-
-      if(!count(glob(database_path()."/migrations/*create_permissions_table*.php"))){
-        $migrations[]= "create_permissions_table";
-        $this->cloneFileData("Permission.php",base_path("vendor/benomas/crudvel/src/templates/permission.txt"),base_path("app/Models"));
-      }
-
-      if(!count(glob(database_path()."/migrations/*create_permission_role_table*.php")))
-        $migrations[]= "create_permission_role_table";
-
-      if(!count(glob(database_path()."/migrations/*create_cat_files_table*.php"))){
-        $migrations[]= "create_cat_files_table";
-        $this->cloneFileData("CatFile.php",base_path("vendor/benomas/crudvel/src/templates/cat_file.txt"),base_path("app/Models"));
-      }
-
-      if(!count(glob(database_path()."/migrations/*create_files_table*.php"))){
-        $migrations[]= "create_files_table";
-        $this->cloneFileData("File.php",base_path("vendor/benomas/crudvel/src/templates/file.txt"),base_path("app/Models"));
-      }
-
-      foreach ($migrations  as $baseName)
-        $this->publishMigration($baseName);
-    }
-    catch(\Exception $e){
-
-      return cvConsoler("\n".cvRedTC('Exception, the proccess fail. '.$e->getMessage()));
     }
 
     $myFile = json_decode(file_get_contents(base_path('').'/composer.json'));
@@ -93,9 +98,9 @@ class InstallCommand extends Command {
       file_put_contents(base_path('').'/composer.json', json_encode($myFile, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
 
     Artisan::call('vendor:publish',['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider']);
-    cvConsoler("\n".cvGreenTC(customExec('composer dump-autoload')));
-    cvConsoler("\n".cvGreenTC('Crudvel Installation Process Completed')."\n");
-    cvConsoler("\n".cvGreenTC('Dont forget to includes Customs\\Crudvel\\Providers\\CrudvelServiceProvider in you app.serviceProviders for rewrite crudvel provider binding/singletons')."\n");
+    $this->cvConsoler("\n".$this->greenTC($this->customExec('composer dump-autoload')));
+    $this->cvConsoler("\n".$this->greenTC('Crudvel Installation Process Completed')."\n");
+    $this->cvConsoler("\n".$this->greenTC('Dont forget to includes Customs\\Crudvel\\Providers\\CrudvelServiceProvider in you app.serviceProviders for rewrite crudvel provider binding/singletons')."\n");
 
 
   }
@@ -120,7 +125,7 @@ class InstallCommand extends Command {
 
     if(!file_exists(($fileName=$this->migrationsPath."/".($leftNow)."_".$baseName."_".$rightNow.".php")))
       file_put_contents($fileName, $migration);
-    cvConsoler("\n".cvGreenTC(customExec('composer dump-autoload')));
+    $this->cvConsoler("\n".$this->greenTC($this->customExec('composer dump-autoload')));
   }
 
   function cloneFileData($file,$source,$targetFolder){

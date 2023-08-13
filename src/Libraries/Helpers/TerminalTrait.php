@@ -121,4 +121,8 @@ trait TerminalTrait
         .cvInfo(json_encode($extraParam))
       );
   }
+
+  function customExec($command){
+    return exec('cd '.base_path().' && '.$command);
+  }
 }

@@ -1200,9 +1200,7 @@ if(!function_exists('assetsMap')){
 }
 
 if(!function_exists('customExec')){
-  function customExec($command){
-    return exec('cd '.base_path().' && '.$command);
-  }
+  function customExec(...$params){CvHelper::customExec(...$params);}
 }
 
 if(!function_exists('facader')){
