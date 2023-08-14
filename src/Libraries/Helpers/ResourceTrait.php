@@ -52,7 +52,7 @@ trait ResourceTrait
   }
 
   public function cvSeeds() {
-    if ($this->getSeeds())
+    if (is_callable($this,'getSeeds') && $this->getSeeds())
       return $this->getSeeds();
 
     $seedFiles = scandir(database_path('seeds'));

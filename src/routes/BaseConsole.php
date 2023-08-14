@@ -4,10 +4,14 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use \Crudvel\Traits\{CacheTrait,CvPatronTrait};
+use \Crudvel\Libraries\Helpers\{ResourceTrait,CasesTrait};
 
 class BaseConsole{
-  use \Crudvel\Traits\CacheTrait;
-  use \Crudvel\Traits\CvPatronTrait;
+  use CacheTrait;
+  use CvPatronTrait;
+  use ResourceTrait;
+  use CasesTrait;
   private $workspace;
 
   public function __construct(){
@@ -500,9 +504,9 @@ class BaseConsole{
 
   public function loadSingleSeeds($callBack=null){
     //Autoload individual seeds and testSeeds
-    foreach (cvSeeds() as $seedResource => $seedClass) {
+    foreach ($this->cvSeeds() as $seedResource => $seedClass) {
       $resourceName   = trans('crudvel/'.$seedResource.'.rows_label');
-      $studlyResource = cvCaseFixer('singular|studly',$seedResource);
+      $studlyResource = $this->cvCaseFixer('singular|studly',$seedResource);
 
       if(class_exists("Database\\Seeds\\{$studlyResource}TableSeeder"))
         Artisan::command("single-$seedResource-seed", function () use($studlyResource){
