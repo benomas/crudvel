@@ -1,4 +1,4 @@
-<?php namespace Crudvel\Database\Seeds;
+<?php namespace Crudvel\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use DB;

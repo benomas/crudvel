@@ -55,8 +55,9 @@ trait ResourceTrait
     if (is_callable($this,'getSeeds') && $this->getSeeds())
       return $this->getSeeds();
 
-    $seedFiles = scandir(database_path('seeds'));
-    $seeds     = [];
+    return [];
+    $seedFiles = scandir(database_path('seeders'));
+    $seeders     = [];
     $testSeeds = [];
 
     foreach ($seedFiles as $seedKey => $seed) {
@@ -64,13 +65,13 @@ trait ResourceTrait
         continue;
 
       $currentResource = $this->cvCaseFixer('singular|studly',str_replace('TableSeeder.php','',$seed));
-      $currentSeed     = "Database\Seeds\\{$this->cvStudlyCase($currentResource)}TableSeeder";
+      $currentSeed     = "Database\Seeders\\{$this->cvStudlyCase($currentResource)}TableSeeder";
 
       if(class_exists($currentSeed))
-        $seeds[$this->cvCaseFixer('plural|slug',$currentResource)] = $currentSeed;
+        $seeders[$this->cvCaseFixer('plural|slug',$currentResource)] = $currentSeed;
     }
 
-    return $this->setSeeds($seeds)->getSeeds();
+    return $this->setSeeds($seeders)->getSeeds();
   }
 
   public function cvResources() {
@@ -111,7 +112,7 @@ trait ResourceTrait
   }
 
   protected function getSeeds(){
-    return $this->seeds;
+    return $this->seeders;
   }
 
   protected function getActions(){
@@ -129,8 +130,8 @@ trait ResourceTrait
     return $this;
   }
 
-  protected function setSeeds($seeds){
-    $this->seeds = $seeds;
+  protected function setSeeds($seeders){
+    $this->seeders = $seeders;
 
     return $this;
   }

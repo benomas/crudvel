@@ -1,0 +1,6 @@
+<?php namespace Customs\Crudvel\Database\Seeders;
+/**
+ * modificable BaseTestSeeder
+ */
+class BaseTestSeeder extends \Crudvel\Database\Seeders\BaseTestSeeder{
+}

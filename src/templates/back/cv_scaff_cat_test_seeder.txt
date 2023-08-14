@@ -1,5 +1,5 @@
-<?php namespace Database\Seeds\Test;
+<?php namespace Database\Seeders\Test;
 
-class <##[singular|studly](resource)##>TableSeeder extends \Customs\Crudvel\Database\Seeds\BaseTestSeeder {
+class <##[singular|studly](resource)##>TableSeeder extends \Customs\Crudvel\Database\Seeders\BaseTestSeeder {
   protected $seedsToInsert = 10;
 }

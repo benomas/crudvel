@@ -1,10 +1,10 @@
-<?php namespace Crudvel\Database\Seeds;
+<?php namespace Crudvel\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use DB;
 use Illuminate\Support\Facades\Schema;
 
-class BaseTestSeeder extends \Crudvel\Database\Seeds\BaseSeeder {
+class BaseTestSeeder extends \Crudvel\Database\Seeders\BaseSeeder {
   protected $deleteBeforeInsert = false;
 
 // [Specific Logic]

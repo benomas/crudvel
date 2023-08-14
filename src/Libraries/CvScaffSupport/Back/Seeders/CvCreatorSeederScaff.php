@@ -5,9 +5,10 @@ namespace Crudvel\Libraries\CvScaffSupport\Back\Seed;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvDeleterTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseDeleterScaff implements CvScaffInterface
+class CvCreatorSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
-  protected $relatedFilePath   = 'database/seeds/test/';
+  protected $relatedTargetPath   = 'database/seeders/';
+  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_seeder.txt';
   public function __construct(){
     parent::__construct();
   }

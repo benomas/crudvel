@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class CvCreatorTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
-  protected $relatedTargetPath   = 'database/seeds/test/';
+  protected $relatedTargetPath   = 'database/seeders/test/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_test_seeder.txt';
   public function __construct(){
     parent::__construct();

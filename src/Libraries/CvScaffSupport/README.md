@@ -23,7 +23,7 @@
 	-Edit     			App/Http/Requests/<resource(singular,StydlyCase)>
 	-Edit     			App/Http/Controllers/Api/<resource(singular,StydlyCase)>
 	-Edit				database/migrations/<datetime+create+resource+table+datetime(plural,snake_case)>
-	-Create(optional)	database/seeds/<resource+table_seeder(singular,StydlyCase)>
+	-Create(optional)	database/seeders/<resource+table_seeder(singular,StydlyCase)>
 	-Edit       		routes/api
 
 you can create new templates self running cv-scaff-cv-scaff (new templete) -c

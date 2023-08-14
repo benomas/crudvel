@@ -5,9 +5,9 @@ namespace Crudvel\Libraries\CvScaffSupport\Back\Seed;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvRemoverSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseRemoverScaff implements CvScaffInterface
+class CvRemoverTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseRemoverScaff implements CvScaffInterface
 {
-  protected $relatedFilePath   = 'database/seeds/DatabaseSeeder.php';
+  protected $relatedFilePath   = 'database/seeders/test/DatabaseSeeder.php';
   public function __construct(){
     parent::__construct();
   }
@@ -22,11 +22,12 @@ class CvRemoverSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
   protected function fixFile(){
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
-        '<slot>TableSeeder::class',
-        'Database\Seeds\\'.Str::studly(Str::singular($this->getResource()))
+        '<slot>TableSeeder::cvIam.*;',
+        Str::studly(Str::singular($this->getResource()))
       )
     );
   }
+
   protected function selfRepresentation(){
     return 'DatabaseSeeder';
   }

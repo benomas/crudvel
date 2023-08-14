@@ -188,7 +188,7 @@ class BaseConsole{
 
   public function loadTestSeed($callBack=null){
     $callBack = $callBack ?? function (){
-      \Crudvel\Routes\BaseConsole::cvIam()->caller(['command'=>'db:seed','params'=>['--class'=>'Database\Seeds\Test\DatabaseSeeder']]);
+      \Crudvel\Routes\BaseConsole::cvIam()->caller(['command'=>'db:seed','params'=>['--class'=>'Database\Seeders\Test\DatabaseSeeder']]);
     };
 
     Artisan::command('test:seed',$callBack)->describe('Run test seeders');
@@ -503,21 +503,21 @@ class BaseConsole{
   }
 
   public function loadSingleSeeds($callBack=null){
-    //Autoload individual seeds and testSeeds
+    //Autoload individual seeders and testSeeds
     foreach ($this->cvSeeds() as $seedResource => $seedClass) {
       $resourceName   = trans('crudvel/'.$seedResource.'.rows_label');
       $studlyResource = $this->cvCaseFixer('singular|studly',$seedResource);
 
-      if(class_exists("Database\\Seeds\\{$studlyResource}TableSeeder"))
+      if(class_exists("Database\\Seeders\\{$studlyResource}TableSeeder"))
         Artisan::command("single-$seedResource-seed", function () use($studlyResource){
-          $seedClass    = "Database\Seeds\\{$studlyResource}TableSeeder";
+          $seedClass    = "Database\Seeders\\{$studlyResource}TableSeeder";
           $seedInstance = $seedClass::cvIam();
           $seedInstance->run();
         })->describe("seed $resourceName");
 
-      if(class_exists("Database\\Seeds\\Test\\{$studlyResource}TableSeeder"))
+      if(class_exists("Database\\Seeders\\Test\\{$studlyResource}TableSeeder"))
         Artisan::command("single-$seedResource-test-seed {howMany?}", function ($howMany=null) use($studlyResource){
-          $seedClass= "Database\Seeds\Test\\{$studlyResource}TableSeeder";
+          $seedClass= "Database\Seeders\Test\\{$studlyResource}TableSeeder";
           $seedInstance = $seedClass::cvIam();
 
           if($howMany || $howMany > 0)

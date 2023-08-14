@@ -1,6 +1,0 @@
-<?php namespace Customs\Crudvel\Database\Seeds;
-/**
- * modificable BaseMigration
- */
-class BaseSeeder extends \Crudvel\Database\Seeds\BaseSeeder{
-}
