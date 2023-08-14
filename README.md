@@ -74,7 +74,7 @@ After you create a resource with crudvel scaffolding, you require to complete th
 
 ## to enable this package as auxiliar on your project
 ```
-  -composer require benomas/crudvel:v0.4.x-dev
+  -composer require benomas/crudvel:vx.x.x-dev
   -php artisan install:crudvel auxiliar
   -php artisan fix-cv-ext
   -add Benomas\Crudvel\CrudvelServiceProvider::class into config.app.providers
