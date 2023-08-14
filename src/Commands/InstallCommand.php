@@ -100,7 +100,7 @@ class InstallCommand extends Command {
     Artisan::call('vendor:publish',['--provider'=>'Benomas\Crudvel\CrudvelServiceProvider']);
     $this->cvConsoler("\n".$this->greenTC($this->customExec('composer dump-autoload')));
     $this->cvConsoler("\n".$this->greenTC('Crudvel Installation Process Completed')."\n");
-    $this->cvConsoler("\n".$this->greenTC('Dont forget to includes Customs\\Crudvel\\Providers\\CrudvelServiceProvider in you app.serviceProviders for rewrite crudvel provider binding/singletons')."\n");
+    $this->cvConsoler("\n".$this->greenTC('Dont forget to include Customs\\Crudvel\\Providers\\CrudvelServiceProvider in you app.serviceProviders for rewrite crudvel provider binding/singletons')."\n");
 
 
   }

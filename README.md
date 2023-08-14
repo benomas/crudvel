@@ -19,7 +19,7 @@ When you include this package as dependency in your laravel proyect, firts at al
 
 ``` php artisan vendor:publish --provider='Benomas\Crudvel\CrudvelServiceProvider' ```
 
-After that you will get access to scaffolding commands 
+After that you will get access to scaffolding commands
 
 ## scaffold {modo} {classes} {entity} {entity_segments} {api_segments} {web_segments}
 
@@ -49,11 +49,11 @@ Example of calls
 ```
   up
     php artisan scaffold create api_controller,request,model,migration test "" "\Api" ""
-  down 
+  down
     php artisan scaffold delete api_controller,request,model,migration test "" "\Api" ""
 ```
 
-This package is based in oop, For give you access to change de base logic, without touch core files. 
+This package is based in oop, For give you access to change de base logic, without touch core files.
 You will have a folder name crudvel/customs in the root of your proyect, here you can change de behavior of crudvel clases in a global way for your proyect.
 
 After you create a resource with crudvel scaffolding, you require to complete the next steps in the order in the order that they are listed
@@ -71,3 +71,11 @@ After you create a resource with crudvel scaffolding, you require to complete th
 
 ## Current working branch is 4code-crudvel
   https://github.com/benomas/crudvel/tree/4code-crudvel
+
+## to enable this package as auxiliar on your project
+  -composer require benomas/crudvel:v0.4.x-dev
+  -php artisan install:crudvel auxiliar
+  -php artisan fix-cv-ext
+  -add Benomas\Crudvel\CrudvelServiceProvider::class into config.app.providers
+  -add Customs\Crudvel\Providers\CrudvelServiceProvider::class, into config.app.providers
+  -php artisan config:cache
