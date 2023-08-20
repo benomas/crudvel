@@ -1,7 +1,7 @@
 <?php
 namespace Crudvel\Libraries\Helpers;
 
-use Illuminate\Support\Str;
+use \Crudvel\Libraries\Helpers\StaticResourceTrait;
 
 trait ResourceTrait
 {
@@ -51,27 +51,32 @@ trait ResourceTrait
     return $this->setControllers($controllers)->getControllers();
   }
 
-  public function cvSeeds() {
+  public function cvSeeds(String $subPath=''){
     if (is_callable($this,'getSeeds') && $this->getSeeds())
       return $this->getSeeds();
-
-    return [];
-    $seedFiles = scandir(database_path('seeders'));
-    $seeders     = [];
-    $testSeeds = [];
-
+/*
+    $seedFiles = $this->scanFilesOnDir(database_path('seeders'));
+    $seeders   = [];
     foreach ($seedFiles as $seedKey => $seed) {
-      if($seed==='.' || $seed==='..' || $seed==='DatabaseSeeder.php')
+      if($seed===database_path('DatabaseSeeder.php'))
         continue;
 
-      $currentResource = $this->cvCaseFixer('singular|studly',str_replace('TableSeeder.php','',$seed));
-      $currentSeed     = "Database\Seeders\\{$this->cvStudlyCase($currentResource)}TableSeeder";
+      $seederPatter   = str_replace('.php','',str_replace(base_path(),'',$seed));
+      $indexSeed      = str_replace('/','-',str_replace('database/seeders/','',$seederPatter));
+      $classSeparator = '';
+      $seederClass = array_reduce(explode('/',$seederPatter),function($sClass,$segment) use(&$classSeparator){
+        if ($segment ==='')
+          return $sClass;
 
-      if(class_exists($currentSeed))
-        $seeders[$this->cvCaseFixer('plural|slug',$currentResource)] = $currentSeed;
-    }
+        $fix = "{$sClass}{$classSeparator}{$this->cvUcfirstCase($segment)}";
+        $classSeparator = '\\';
+        return $fix;
+      },'');
 
-    return $this->setSeeds($seeders)->getSeeds();
+      if(class_exists($seederClass))
+        $seeders[$this->cvSlugCase($indexSeed)] = $seederClass;
+    }*/
+    return $this->setSeeds(StaticResourceTrait::cvSeeds($subPath))->getSeeds();
   }
 
   public function cvResources() {
@@ -105,6 +110,32 @@ trait ResourceTrait
     }
 
     return $resources;
+  }
+
+  public function scanFilesOnDir($source_dir){
+    return StaticResourceTrait::staticScanFilesOnDir($source_dir);
+    /*
+    $files    = [];
+    $segments = scandir($source_dir);
+    $skipes = [
+      '.' => true,
+      '..' => true,
+    ];
+
+    foreach ($segments as $position => $segment) {
+      if(($skipes[$segment]??false))
+        continue;
+
+      if (!is_dir("{$source_dir}".DIRECTORY_SEPARATOR."{$segment}")){
+        $files[]="{$source_dir}".DIRECTORY_SEPARATOR."{$segment}";
+
+        continue;
+      }
+
+      $files = array_merge($files,$this->scanFilesOnDir("{$source_dir}".DIRECTORY_SEPARATOR."{$segment}"));
+    }
+
+    return $files;*/
   }
 // [Getters]
   protected function getControllers(){

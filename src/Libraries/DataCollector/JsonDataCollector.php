@@ -13,7 +13,7 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
   public function __construct(JsonDataCallerInterface $dataCallerInstace){
     $this->setDataCallerInstace($dataCallerInstace);
   }
-  
+
   public function loadContextData($contextData=null){
     return $this->setJsonPath($contextData);
   }
@@ -59,7 +59,7 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
 
   protected function increseCurrentJsonPosition(){
     $this->currentJsonPosition++;
-    
+
     return $this;
   }
 

@@ -6,54 +6,50 @@ use Illuminate\Support\Str;
 trait CasesTrait
 {
   public function cvCamelCase($text) {
-    return Str::camel($text);
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvCamelCase($text);
   }
 
   public function cvSlugCase($text) {
-    return Str::slug(Str::kebab($text));
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvSlugCase($text);
   }
 
   public function cvSnakeCase($text) {
-    return Str::snake(Str::camel($text));
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvSnakeCase($text);
   }
 
   public function cvKebabCase($text) {
-    return Str::kebab($text);
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvKebabCase($text);
   }
 
   public function cvStudlyCase($text) {
-    return Str::studly($text);
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvStudlyCase($text);
   }
 
   public function cvSingularCase($text) {
-    return config("packages.benomas.crudvel.words.pluralToSingular.$text") ?? Str::singular($text);
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvSingularCase($text);
   }
 
   public function cvPluralCase($text) {
-    return config("packages.benomas.crudvel.words.singularToPlural.$text") ?? Str::plural($text);
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvPluralCase($text);
   }
 
   public function cvLowerCase($text) {
-    return strtolower($text);
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvLowerCase($text);
   }
 
   public function cvUpperCase($text) {
-    return strtoupper($text);
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvUpperCase($text);
   }
 
   public function cvUcfirstCase($text) {
-    return ucfirst($text);
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvUcfirstCase($text);
   }
 
   public function cvTitleCase($text) {
-    return Str::title($text);
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvTitleCase($text);
   }
 
   public function cvCaseFixer($path,$text) {
-    foreach(explode('|',$path) as $case)
-      if(method_exists($this,$this->cvCamelCase("cv $case Case")))
-        $text = $this->{$this->cvCamelCase("cv $case Case")}($text);
-
-    return $text;
+    return \Crudvel\Libraries\Helpers\StaticCasesTrait::cvCaseFixer($path,$text);
   }
 }

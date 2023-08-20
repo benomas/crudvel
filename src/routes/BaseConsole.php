@@ -504,27 +504,11 @@ class BaseConsole{
 
   public function loadSingleSeeds($callBack=null){
     //Autoload individual seeders and testSeeds
-    foreach ($this->cvSeeds() as $seedResource => $seedClass) {
-      $resourceName   = trans('crudvel/'.$seedResource.'.rows_label');
-      $studlyResource = $this->cvCaseFixer('singular|studly',$seedResource);
-
-      if(class_exists("Database\\Seeders\\{$studlyResource}TableSeeder"))
-        Artisan::command("single-$seedResource-seed", function () use($studlyResource){
-          $seedClass    = "Database\Seeders\\{$studlyResource}TableSeeder";
-          $seedInstance = $seedClass::cvIam();
-          $seedInstance->run();
-        })->describe("seed $resourceName");
-
-      if(class_exists("Database\\Seeders\\Test\\{$studlyResource}TableSeeder"))
-        Artisan::command("single-$seedResource-test-seed {howMany?}", function ($howMany=null) use($studlyResource){
-          $seedClass= "Database\Seeders\Test\\{$studlyResource}TableSeeder";
-          $seedInstance = $seedClass::cvIam();
-
-          if($howMany || $howMany > 0)
-            $seedInstance->setSeedsToInsert($howMany);
-
-          $seedInstance->run();
-        })->describe("test seed $resourceName");
+    foreach ($this->cvSeeds() as $seed => $seedClass) {
+      Artisan::command("single-seeder[{$seed}]", function () use($seedClass){
+        $seedInstance = $seedClass::cvIam();
+        $seedInstance->run();
+      })->describe("seed $seed");
     }
 
     return $this;
