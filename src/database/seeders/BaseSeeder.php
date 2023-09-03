@@ -93,7 +93,7 @@ class BaseSeeder extends Seeder implements DataCallerInterface,ArrayDataCallerIn
     return $this;
   }
 
-  public function dataTransform(Array $arraySegment):Array{
+  public function dataTransform(Array $arraySegment):array{
     return $arraySegment;
   }
 
