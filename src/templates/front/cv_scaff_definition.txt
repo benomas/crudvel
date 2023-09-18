@@ -6,6 +6,7 @@ let resourceName = '<##[plural|slug](resource)##>'
 
 export default function (store) {
   let resource = new CvResourceMap({
+    store,
     name             : resourceName,
     icon             : 'fas fa-list',
     path             : resourceName,
