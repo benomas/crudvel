@@ -2,131 +2,153 @@
 
 $cvValidations = [
 
-	/*
-	|--------------------------------------------------------------------------
-	| Validation Language Lines
-	|--------------------------------------------------------------------------
-	|
-	| The following language lines contain the default error messages used by
-	| the validator class. Some of these rules have multiple versions such
-	| as the size rules. Feel free to tweak each of these messages here.
-	|
-	*/
+  /*
+  |--------------------------------------------------------------------------
+  | Validation Language Lines
+  |--------------------------------------------------------------------------
+  |
+  | The following language lines contain the default error messages used by
+  | the validator class. Some of these rules have multiple versions such
+  | as the size rules. Feel free to tweak each of these messages here.
+  |
+  */
 
-	'accepted'                          => '[:attribute] debe ser aceptado.',
-	'active_url'                        => '[:attribute] no es una URL válida.',
-	'after'                             => '[:attribute] debe ser una fecha posterior a :date.',
-	'alpha'                             => '[:attribute] solo debe contener letras.',
-	'alpha_dash'                        => '[:attribute] solo debe contener letras, números y guiones.',
-	'alpha_num'                         => '[:attribute] solo debe contener letras y números.',
-	'alpha_spaces'                      => '[:attribute] solo debe contener letras y espacios.',
-	'array'                             => '[:attribute] debe ser un conjunto.',
-	'before'                            => '[:attribute] debe ser una fecha anterior a :date.',
-	'between'                           => [
-		'numeric' => '[:attribute] tiene que estar entre :min - :max.',
-		'file'    => '[:attribute] debe pesar entre :min - :max kilobytes.',
-		'string'  => '[:attribute] tiene que tener entre :min - :max caracteres.',
-		'array'   => '[:attribute] tiene que tener entre :min - :max ítems.',
-	],
-	'boolean'                           => 'El campo [:attribute] debe tener un valor verdadero o falso.',
-	'confirmed'                         => 'La confirmación de [:attribute] no coincide.',
-	'date'                              => '[:attribute] no es una fecha válida.',
-	'date_format'                       => '[:attribute] no corresponde al formato :format.',
-	'different'                         => '[:attribute] y :other deben ser diferentes.',
-	'digits'                            => '[:attribute] debe tener :digits dígitos.',
-	'digits_between'                    => '[:attribute] debe tener entre :min y :max dígitos.',
-	'email'                             => '[:attribute] no es un correo válido',
-	'exists'                            => '[:attribute] es inválido.',
-	'filled'                            => 'El campo [:attribute] es obligatorio.',
-	'hex_color'                         => 'El campo [:attribute] debe ser un valor hexadecimal válido.',
-	'image'                             => 'El campo [:attribute] debe ser un archivo de tipo imagen.',
-	'in'                                => '[:attribute] es inválido.',
-	'integer'                           => '[:attribute] debe ser un número entero.',
-	'ip'                                => '[:attribute] debe ser una dirección IP válida.',
-	'max'                               => [
-		'numeric' => '[:attribute] no debe ser mayor a :max.',
-		'file'    => '[:attribute] no debe ser mayor que :max kilobytes.',
-		'string'  => '[:attribute] no debe ser mayor que :max caracteres.',
-		'array'   => '[:attribute] no debe tener más de :max elementos.',
-	],
-	'mimes'                             => 'El campo[:attribute] debe ser un archivo con formato: :values.',
-	'min'                               => [
-		'numeric' => 'El tamaño de [:attribute] debe ser de al menos :min.',
-		'file'    => 'El tamaño de [:attribute] debe ser de al menos :min kilobytes.',
-		'string'  => '[:attribute] debe contener al menos :min caracteres.',
-		'array'   => '[:attribute] debe tener al menos :min elementos.',
-	],
-	'not_in'                            => '[:attribute] es inválido.',
-	'not_only_digits'                   => '[:attribute] no debe contener solo números.',
-	'not_special'                       => '[:attribute] no debe contener caracteres especiales.',
-	'numeric'                           => '[:attribute] debe ser numérico.',
-	'regex'                             => 'El formato de [:attribute] es inválido.',
-	'required'                          => 'El campo [:attribute] es obligatorio.',
-	'required_if'                       => 'El campo [:attribute] es obligatorio cuando :other es :value.',
-	'required_with'                     => 'El campo [:attribute] es obligatorio cuando :values está presente.',
-	'required_with_all'                 => 'El campo [:attribute] es obligatorio cuando :values está presente.',
-	'required_without'                  => 'El campo [:attribute] es obligatorio cuando :values no está presente.',
-	'required_without_all'              => 'El campo [:attribute] es obligatorio cuando ninguno de :values estén presentes.',
-	'same'                              => '[:attribute] y :other deben coincidir.',
-	'size'                              => [
-		'numeric' => 'El tamaño de [:attribute] debe ser :size.',
-		'file'    => 'El tamaño de [:attribute] debe ser :size kilobytes.',
-		'string'  => '[:attribute] debe contener :size caracteres.',
-		'array'   => '[:attribute] debe contener :size elementos.',
-	],
-	'timezone'            => 'El [:attribute] debe ser una zona válida.',
-	'unique'              => '[:attribute] ya ha sido registrado.',
-	'unique_with'         => '[:attribute] ya ha sido registrado en :fields.',
-	'url'                 => 'El formato [:attribute] es inválido.',
-	'youtube'             => '[:attribute] debe ser un video de YouTube válido.',
-	'compositives'        => 'Ya existe una referencia a [:attribute] .',
-	'list_exist'          => 'Algun valor de la lista [:attribute], no pertenece al catalogo',
-	'no_duplicate_values' => 'Hay algunos valores duplicados en [:attribute]',
-	'user_name'           => 'El campo [:attribute] solo acepta \'letras\', \'numeros\', y los siguientes caracteres: . - _ @ ',
-	'color'               => 'Color invalido',
-	'rfc'                 => 'El campo rfc no tiene un formato valido (3 letras, 6 digitos, 2 o 3 letras)',
-	'key_exist'           => 'El valor no corresponde con el catalogo',
-	'in_list'             => 'El valor [:attribute] no corresponde con los valores validos',
-	'no_simultaneus'      => 'Los valores [:list1] en el campo [:attribute] no pueden coexistir con [:list2]',
-	'file_already_exist'  => 'Ya existe el archivo',
-	'file_resource'       => 'No tienes permisos para asociar este tipo de archivo',
-	'key_exist_v2'        => 'El valor no corresponde con el recurso [:resource]',
-	'cv_greater_than'     => 'El campo [:attribute] debe tener un valor mayor que [:limit]',
-	'cv_less_than'        => 'El campo [:attribute] debe tener un valor menor que [:limit]',
+  'accepted'                   => 'The [:attribute] field must be accepted.',
+  'active_url'                 => 'The [:attribute] field is not a valid URL.',
+  'after'                      => 'The [:attribute] field must be a date after :date.',
+  'alpha'                      => 'The [:attribute] field may only contain letters.',
+  'alpha_dash'                 => 'The [:attribute] field may only contain letters, numbers, and dashes.',
+  'alpha_num'                  => 'The [:attribute] field may only contain letters and numbers.',
+  'alpha_spaces'               => 'The [:attribute] field may only contain letters and spaces.',
+  'array'                      => 'The [:attribute] field must be an array.',
+  'before'                     => 'The [:attribute] field must be a date before :date.',
+  'between'                    => [
+    'numeric' => 'The [:attribute] must be between :min and :max.',
+    'file'    => 'The [:attribute] must be between :min and :max kilobytes.',
+    'string'  => 'The [:attribute] must be between :min and :max characters.',
+    'array'   => 'The [:attribute] must have between :min and :max items.',
+  ],
+  'boolean'                    => 'The [:attribute] field must be true or false.',
+  'confirmed'                  => 'The [:attribute] confirmation does not match.',
+  'date'                       => 'The [:attribute] field is not a valid date.',
+  'date_format'                => 'The [:attribute] field does not match the format :format.',
+  'different'                  => 'The [:attribute] and :other must be different.',
+  'digits'                     => 'The [:attribute] must be :digits digits.',
+  'digits_between'             => 'The [:attribute] must be between :min and :max digits.',
+  'email'                      => 'The [:attribute] field is not a valid email address.',
+  'exists'                     => 'The selected [:attribute] is invalid.',
+  'filled'                     => 'The [:attribute] field is required.',
+  'hex_color'                  => 'The [:attribute] must be a valid hexadecimal value.',
+  'image'                      => 'The [:attribute] must be an image.',
+  'in'                         => 'The selected [:attribute] is invalid.',
+  'integer'                    => 'The [:attribute] must be an integer.',
+  'ip'                         => 'The [:attribute] must be a valid IP address.',
+  'max'                        => [
+    'numeric' => 'The [:attribute] may not be greater than :max.',
+    'file'    => 'The [:attribute] may not be greater than :max kilobytes.',
+    'string'  => 'The [:attribute] may not be greater than :max characters.',
+    'array'   => 'The [:attribute] may not have more than :max items.',
+  ],
+  'mimes'                      => 'The [:attribute] must be a file of type: :values.',
+  'min'                        => [
+    'numeric' => 'The [:attribute] must be at least :min.',
+    'file'    => 'The [:attribute] must be at least :min kilobytes.',
+    'string'  => 'The [:attribute] must be at least :min characters.',
+    'array'   => 'The [:attribute] must have at least :min items.',
+  ],
+  'not_in'                     => 'The selected [:attribute] is invalid.',
+  'not_only_digits'            => 'The [:attribute] may not contain only digits.',
+  'not_special'                => 'The [:attribute] may not contain special characters.',
+  'numeric'                    => 'The [:attribute] must be a number.',
+  'regex'                      => 'The format of [:attribute] is invalid.',
+  'required'                   => 'The [:attribute] field is required.',
+  'required_if'                => 'The [:attribute] field is required when :other is :value.',
+  'required_with'              => 'The [:attribute] field is required when :values is present.',
+  'required_with_all'          => 'The [:attribute] field is required when :values are present.',
+  'required_without'           => 'The [:attribute] field is required when :values is not present.',
+  'required_without_all'       => 'The [:attribute] field is required when none of :values are present.',
+  'same'                       => 'The [:attribute] and :other must match.',
+  'size'                       => [
+    'numeric' => 'The [:attribute] must be :size.',
+    'file'    => 'The [:attribute] must be :size kilobytes.',
+    'string'  => 'The [:attribute] must be :size characters.',
+    'array'   => 'The [:attribute] must contain :size items.',
+  ],
+  'timezone'                   => 'The [:attribute] must be a valid zone.',
+  'unique'                     => 'The [:attribute] has already been taken.',
+  'unique_with'                => 'The [:attribute] has already been taken with :fields.',
+  'url'                        => 'The [:attribute] format is invalid.',
+  'youtube'                    => 'The [:attribute] must be a valid YouTube video.',
+  'compositives'               => 'A reference to [:attribute] already exists.',
+  'list_exist'                 => 'Some values in the [:attribute] list do not belong to the catalog.',
+  'no_duplicate_values'        => 'There are some duplicate values in [:attribute].',
+  'user_name'                  => 'The [:attribute] field only accepts letters, numbers, and the following characters: . - _ @ ',
+  'color'                      => 'Invalid color.',
+  'rfc'                        => 'The rfc field does not have a valid format (3 letters, 6 digits, 2 or 3 letters).',
+  'key_exist'                  => 'The value does not correspond to the catalog.',
+  'in_list'                    => 'The value [:attribute] does not correspond to valid values.',
+  'no_simultaneous'            => 'The values [:list1] in the [:attribute] field cannot coexist with [:list2].',
+  'file_already_exist'         => 'The file already exists.',
+  'file_resource'              => 'You do not have permission to associate this type of file.',
+  'unique_combination'         => 'The [:attribute] field in combination with :fields must be unique.',
+  'cv_true'                    => 'The [:attribute] field must have a true value.',
+  'cv_false'                   => 'The [:attribute] field must have a false value.',
+  'cv_boolean_inverse'         => 'The [:attribute] field must be [:boolean1] when the [:other] field is [:boolean2].',
+  'cv_boolean_equal'           => 'The [:attribute] field must be [:boolean1] when the [:other] field is [:boolean2].',
+  'cv_true_when_true'          => 'The [:attribute] field must be true when the [:other] field is true.',
+  'cv_true_when_false'         => 'The [:attribute] field must be true when the [:other] field is false.',
+  'cv_false_when_true'         => 'The [:attribute] field must be false when the [:other] field is true.',
+  'cv_false_when_false'        => 'The [:attribute] field must be false when the [:other] field is false.',
+  'cv_true_when_greater_than'  => 'The [:attribute] field must be true when the [:other] field is greater than [:limit].',
+  'cv_false_when_greater_than' => 'The [:attribute] field must be false when the [:other] field is greater than [:limit].',
+  'cv_true_when_less_than'     => 'The [:attribute] field must be true when the [:other] field is less than [:limit].',
+  'cv_false_when_less_than'    => 'The [:attribute] field must be false when the [:other] field is less than [:limit].',
+  'cv_greater_than_when_true'  => 'The [:attribute] field must have a value greater than [:limit] when the [:other] field is true.',
+  'cv_greater_than_when_false' => 'The [:attribute] field must have a value greater than [:limit] when the [:other] field is false.',
+  'cv_less_than_when_true'     => 'The [:attribute] field must have a value less than [:limit] when the [:other] field is true.',
+  'cv_less_than_when_false'    => 'The [:attribute] field must have a value less than [:limit] when the [:other] field is false.',
+  'cv_greater_than_with'       => 'The [:attribute] field must have a value greater than [:limit] when the [:other] field exists.',
+  'cv_less_than_with'          => 'The [:attribute] field must have a value less than [:limit] when the [:other] field exists.',
+  'cv_greater_than'            => 'The [:attribute] field must have a value greater than [:limit].',
+  'cv_less_than'               => 'The [:attribute] field must have a value less than [:limit].',
+  'cv_slugged'                 => 'The [:attribute] field must have a slug format.',
+  'key_exist_v2'               => 'The value does not correspond to the [:resource] resource.',
   //crudvel acopled validations
-	'cv_key_exist'       => 'El valor no corresponde con el catalogo',
+  'cv_key_exist'               => 'The value does not correspond to the catalog.',
 
-	/*
-	|--------------------------------------------------------------------------
-	| Custom Validation Language Lines
-	|--------------------------------------------------------------------------
-	|
-	| Here you may specify custom validation messages for attributes using the
-	| convention 'attribute.rule' to name the lines. This makes it quick to
-	| specify a specific custom language line for a given attribute rule.
-	|
-	*/
+  /*
+  |--------------------------------------------------------------------------
+  | Custom Validation Language Lines
+  |--------------------------------------------------------------------------
+  |
+  | Here you may specify custom validation messages for attributes using the
+  | convention 'attribute.rule' to name the lines. This makes it quick to
+  | specify a specific custom language line for a given attribute rule.
+  |
+  */
 
-	'custom'                   => [
-		'attribute-name'           => [
-			'rule-name'                => 'custom-message',
-		],
-	],
+  'custom' => [
+    "There was an error on row :row. :message" => "There was an error on row :row. :message",
+    'attribute-name'                           => [
+      "There was an error on row :row. :message" => "There was an error on row :row. :message",
+      'rule-name'                                => 'custom-message',
+    ],
+  ],
 
-	/*
-	|--------------------------------------------------------------------------
-	| Custom Validation Attributes
-	|--------------------------------------------------------------------------
-	|
-	| The following language lines are used to swap attribute place-holders
-	| with something more reader friendly such as E-Mail Address instead
-	| of 'email'. This simply helps us make messages a little cleaner.
-	|
-	*/
+  /*
+  |--------------------------------------------------------------------------
+  | Custom Validation Attributes
+  |--------------------------------------------------------------------------
+  |
+  | The following language lines are used to swap attribute place-holders
+  | with something more reader friendly such as E-Mail Address instead
+  | of 'email'. This simply helps us make messages a little cleaner.
+  |
+  */
 
-	'attributes'               => [
-	],
-	'message'=>'Se han encontrado errores en la información enviada',
+  'attributes'                               => [],
+  'message'                                  => 'Errors were found in the submitted information.',
+  "There was an error on row :row. :message" => "There was an error on row :row. :message",
 ];
 
 return $cvValidations;
