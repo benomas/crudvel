@@ -49,6 +49,12 @@ class CvScaffBackCreateResource extends \Crudvel\Commands\BaseCommand
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'creator',
+      'target'   => 'pt-lang',
+      'resource' => $resource,
+    ]);
+    $this->call('cv-scaff',[
+      'context'  => 'back',
+      'mode'     => 'creator',
       'target'   => 'model',
       'resource' => $resource,
     ]);

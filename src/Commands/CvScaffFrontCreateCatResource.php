@@ -48,6 +48,12 @@ class CvScaffFrontCreateCatResource extends \Crudvel\Commands\BaseCommand
     ]);
     $this->call('cv-scaff',[
       'context'  => 'front',
+      'mode'     => 'creator',
+      'target'   => 'cat-pt-lang',
+      'resource' => $resource,
+    ]);
+    $this->call('cv-scaff',[
+      'context'  => 'front',
       'mode'     => 'adder',
       'target'   => 'crudvuel-cat-en-lang',
       'resource' => $resource,

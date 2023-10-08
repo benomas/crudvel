@@ -1,0 +1,106 @@
+import cvCatalog from './templates/cv-catalog'
+
+export default {
+  rowsLabel: '<##[plural|ucfirst|human](resource)##>',
+  rowLabel: '<##[singular|ucfirst|human](resource)##>',
+
+  fields: {
+    ...cvCatalog
+  },
+
+  actions: {
+    index: {
+      label: '<##[plural|ucfirst|human](resource)##>'
+    },
+
+    create: {
+      label: 'Criar <##[singular|lower|human](resource)##>',
+      set: {
+        success: '<##[singular|ucfirst|human](resource)##> criado',
+        error: 'Erro ao tentar criar <##[singular|lower|human](resource)##>',
+        cancel: 'A criação de <##[singular|lower|human](resource)##> foi cancelada'
+      }
+    },
+
+    show: {
+      label: '<##[singular|ucfirst|human](resource)##>',
+      backLabel: 'Voltar',
+      nextLabel: null,
+      set: {
+        success: null,
+        error: 'Erro ao tentar acessar:<##[singular|lower|human](resource)##>',
+        cancel: null
+      }
+    },
+
+    edit: {
+      label: 'Editar <##[singular|lower|human](resource)##>',
+      set: {
+        success: 'Se editou com sucesso <##[singular|lower|human](resource)##>',
+        error: 'Erro ao tentar editar <##[singular|lower|human](resource)##>',
+        cancel: 'A edição de <##[singular|lower|human](resource)##> foi cancelada'
+      }
+    },
+
+    delete: {
+      label: 'Eliminar <##[singular|lower|human](resource)##>',
+      nextLabel: 'Continuar',
+      set: {
+        success: '<##[singular|ucfirst|human](resource)##> eliminado',
+        error: 'Erro ao tentar eliminar <##[singular|lower|human](resource)##>',
+        cancel: 'A exclusão de <##[singular|lower|human](resource)##> foi cancelada'
+      }
+    },
+
+    activate: {
+      label: 'Ativar <##[singular|lower|human](resource)##>',
+      set: {
+        success: 'Ativou com sucesso <##[singular|lower|human](resource)##>',
+        error: 'Erro ao tentar ativar <##[singular|lower|human](resource)##>',
+        cancel: 'A ativação de <##[singular|lower|human](resource)##> foi cancelada'
+      }
+    },
+
+    deactivate: {
+      label: 'Desativar <##[singular|lower|human](resource)##>',
+      set: {
+        success: 'Desativou com sucesso <##[singular|lower|human](resource)##>',
+        error: 'Erro ao tentar desativar <##[singular|lower|human](resource)##>',
+        cancel: 'A desativação de <##[singular|lower|human](resource)##> foi cancelada'
+      }
+    },
+
+    exportings: {
+      label: 'Exportar',
+      backLabel: null,
+      nextLabel: 'Exportar',
+      set: {
+        success: 'Arquivo gerado',
+        error: 'Erro ao tentar gerar arquivo',
+        cancel: 'A obtenção do arquivo foi cancelada'
+      }
+    },
+
+    import: {
+      label: 'Importar <##[plural|lower|human](resource)##>',
+      nextLabel: null,
+      backLabel: 'Voltar',
+      set: {
+        success: 'Arquivo importado',
+        error: 'Erro ao tentar importar arquivo',
+        cancel: 'A importação do arquivo foi cancelada'
+      }
+    },
+
+    importing: {
+      label: 'Importando <##[plural|lower|human](resource)##>',
+      nextLabel: null,
+      backLabel: 'Voltar',
+      set: {
+        success: 'Arquivo importado',
+        error: 'Erro ao tentar importar arquivo',
+        cancel: 'A importação do arquivo foi cancelada'
+      }
+    }
+  }
+}

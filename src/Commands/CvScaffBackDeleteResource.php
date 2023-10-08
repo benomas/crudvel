@@ -49,6 +49,12 @@ class CvScaffBackDeleteResource extends \Crudvel\Commands\BaseCommand
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'deleter',
+      'target'   => 'pt-lang',
+      'resource' => $resource,
+    ]);
+    $this->call('cv-scaff',[
+      'context'  => 'back',
+      'mode'     => 'deleter',
       'target'   => 'model',
       'resource' => $resource,
     ]);

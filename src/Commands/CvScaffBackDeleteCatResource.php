@@ -49,6 +49,12 @@ class CvScaffBackDeleteCatResource extends \Crudvel\Commands\BaseCommand
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'deleter',
+      'target'   => 'cat-pt-lang',
+      'resource' => $resource,
+    ]);
+    $this->call('cv-scaff',[
+      'context'  => 'back',
+      'mode'     => 'deleter',
       'target'   => 'cat-model',
       'resource' => $resource,
     ]);

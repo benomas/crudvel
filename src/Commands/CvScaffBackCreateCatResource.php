@@ -49,6 +49,12 @@ class CvScaffBackCreateCatResource extends \Crudvel\Commands\BaseCommand
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'creator',
+      'target'   => 'cat-pt-lang',
+      'resource' => $resource,
+    ]);
+    $this->call('cv-scaff',[
+      'context'  => 'back',
+      'mode'     => 'creator',
       'target'   => 'cat-model',
       'resource' => $resource,
     ]);
