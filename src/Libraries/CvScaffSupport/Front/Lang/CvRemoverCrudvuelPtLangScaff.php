@@ -5,7 +5,7 @@ namespace Crudvel\Libraries\CvScaffSupport\Front\Lang;
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvRemoverPtLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseRemoverScaff implements CvScaffInterface
+class CvRemoverCrudvuelPtLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front\CvBaseRemoverScaff implements CvScaffInterface
 {
   protected $relatedFilePath   = 'src/i18n/pt/crudvuel.js';
   public function __construct(){

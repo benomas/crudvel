@@ -29,27 +29,27 @@ class CvRemoverCrudvuelCatPtLangScaff extends \Crudvel\Libraries\CvScaffSupport\
 
   private function fixImportSection(){
     return $this->
-      setLeftRegexElementRemover('(import(?>\s|\S)*?)(\s+)(,?)(\s*)')->
-      setRightRegexElementRemover('(\s*)(,?)((?>\s|\S)*?)')->
-      globalFileRegexRemover(
-        $this->scapedRegexMaker(
-          'import\s+<slot>\s+from\s+\'\.\/crudvuel\/<slot>\'',
-          Str::camel(Str::plural($this->getResource())),
-          cvSlugCase(Str::plural($this->getResource()))
-        )
-      );
+    setLeftRegexElementRemover('(import(?>\s|\S)*?)(\s+)(,?)(\s*)')->
+    setRightRegexElementRemover('(\s*)(,?)((?>\s|\S)*?)')->
+    globalFileRegexRemover(
+      $this->scapedRegexMaker(
+        'import\s+<slot>\s+from\s+\'\.\/crudvuel\/<slot>\'',
+        Str::camel(Str::plural($this->getResource())),
+        cvSlugCase(Str::plural($this->getResource()))
+      )
+    );
   }
 
   private function fixCrudvuelLangsSection(){
     return $this->
-      setLeftRegexElementRemover('(crudvuelLangs.resources = {(?>\s|\S)*?)(\s+)(,?)(\s*)')->
-      setRightRegexElementRemover('(\s*)(,?)((?>\s|\S)*?)')->
-      globalFileRegexRemover(
-        $this->scapedRegexMaker(
-          '\'<slot>\'\s*:\s*resourceMixer\(<slot>\)',
-          cvSlugCase(Str::plural($this->getResource())),
-          Str::camel(Str::plural($this->getResource()))
-        )
-      );
+    setLeftRegexElementRemover('(crudvuelLangs.resources = {(?>\s|\S)*?)(\s+)(,?)(\s*)')->
+    setRightRegexElementRemover('(\s*)(,?)((?>\s|\S)*?)')->
+    globalFileRegexRemover(
+      $this->scapedRegexMaker(
+        '\'<slot>\'\s*:\s*resourceMixer\(<slot>\)',
+        cvSlugCase(Str::plural($this->getResource())),
+        Str::camel(Str::plural($this->getResource()))
+      )
+    );
   }
 }

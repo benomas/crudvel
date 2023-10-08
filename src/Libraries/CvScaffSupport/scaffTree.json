@@ -276,6 +276,12 @@
             },
             "cat-layout": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Dashboard\\CvAdderCatLayoutScaff"
+            },
+            "crudvuel-cat-pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelCatPtLangScaff"
+            },
+            "crudvuel-pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvAdderCrudvuelPtLangScaff"
             }
         },
         "remover": {
@@ -308,6 +314,12 @@
             },
             "cat-layout": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Dashboard\\CvRemoverCatLayoutScaff"
+            },
+            "crudvuel-cat-pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvuelCatPtLangScaff"
+            },
+            "crudvuel-pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvRemoverCrudvuelPtLangScaff"
             }
         },
         "deleter": {

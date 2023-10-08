@@ -55,7 +55,7 @@ class BaseCommand extends Command
       while ($tries--){
         try{
           customExec('php artisan custom-light-refresh');
-        break;
+          break;
         }catch(\Exception $e) {
           cvConsoler(cvRedTC('custom-light-refresh cant be launched jet trigin agan')."$tries '/' $limit \n");
         }

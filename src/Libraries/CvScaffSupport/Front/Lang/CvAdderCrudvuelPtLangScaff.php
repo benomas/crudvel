@@ -33,13 +33,13 @@ class CvAdderCrudvuelPtLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front
     $camelResource    = Str::camel(Str::plural($this->getResource()));
 
     return $this->
-      setLeftRegexElementAdder('(import(?>\s|\S)*?)(\s+)(,?)(\s*)')->
-      setRightRegexElementAdder('(\s*)(,?)((?>\s|\S)*?)')->
-      globalFileRegexAdder(
-        $this->regexMaker($basePatern,'[^\s,]+','[^\s,]+'),
-        $this->scapedRegexMaker($basePatern,$camelResource,$slugResource),
-        'import '.$camelResource.' from '.'\'./crudvuel/'.$slugResource.'\''
-      );
+    setLeftRegexElementAdder('(import(?>\s|\S)*?)(\s+)(,?)(\s*)')->
+    setRightRegexElementAdder('(\s*)(,?)((?>\s|\S)*?)')->
+    globalFileRegexAdder(
+      $this->regexMaker($basePatern,'[^\s,]+','[^\s,]+'),
+      $this->scapedRegexMaker($basePatern,$camelResource,$slugResource),
+      'import '.$camelResource.' from '.'\'./crudvuel/'.$slugResource.'\''
+    );
   }
 
   private function fixCrudvuelLangsSection(){
@@ -48,12 +48,12 @@ class CvAdderCrudvuelPtLangScaff extends \Crudvel\Libraries\CvScaffSupport\Front
     $camelResource    = Str::camel(Str::plural($this->getResource()));
 
     return $this->
-      setLeftRegexElementAdder('(crudvuelLangs.resources = {(?>\s|\S)*?)(\s+)(,?)(\s*)')->
-      setRightRegexElementAdder('(\s*)(,?)((?>\s|\S)*?)')->
-      globalFileRegexAdder(
-        $this->regexMaker($basePatern,'[^\s,]+','[^\s,]+'),
-        $this->scapedRegexMaker($basePatern,$slugResource,$camelResource),
-        '\''.$slugResource.'\' : resourceMixer('.$camelResource.')'
-      );
+    setLeftRegexElementAdder('(crudvuelLangs.resources = {(?>\s|\S)*?)(\s+)(,?)(\s*)')->
+    setRightRegexElementAdder('(\s*)(,?)((?>\s|\S)*?)')->
+    globalFileRegexAdder(
+      $this->regexMaker($basePatern,'[^\s,]+','[^\s,]+'),
+      $this->scapedRegexMaker($basePatern,$slugResource,$camelResource),
+      '\''.$slugResource.'\' : resourceMixer('.$camelResource.')'
+    );
   }
 }

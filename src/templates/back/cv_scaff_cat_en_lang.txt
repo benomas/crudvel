@@ -5,7 +5,7 @@ include 'templates/cv-catalog.php';
 $resourceLangs = [
 	'row_label'  => '<##[singular|ucfirst|human](resource)##>',
 	'rows_label' => '<##[plural|ucfirst|human](resource)##>',
-	'fields'     => array_merge($cvCatalog,[/* Add here local field langs*/]),
+	'fields'     => array_merge($cvCatalog ?? [],[/* Add here local field langs*/]),
   'exceptions'=>[
   ]
 ];
