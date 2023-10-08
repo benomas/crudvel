@@ -8,9 +8,12 @@ use Illuminate\Support\Str;
 class CvCreatorCatEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCatTrait;
+
   protected $relatedTargetPath   = 'resources/lang/en/crudvel/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_en_lang.txt';
-  public function __construct(){
+
+  public function __construct()
+  {
     parent::__construct();
   }
 //[Getters]
@@ -20,11 +23,14 @@ class CvCreatorCatEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
 //[End Setters]
 
 //[Stablishers]
-  public function stablishResource($resource=null){
+  public function stablishResource($resource = null)
+  {
     return $this->setResource($this->unCat($resource));
   }
+
 //[End Stablishers]
-  protected function selfRepresentation(){
+  protected function selfRepresentation()
+  {
     return cvSlugCase(Str::plural($this->reCat($this->getResource())));
   }
 }

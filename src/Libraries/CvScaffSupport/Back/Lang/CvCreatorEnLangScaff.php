@@ -9,7 +9,8 @@ class CvCreatorEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
 {
   protected $relatedTargetPath   = 'resources/lang/en/crudvel/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_en_lang.txt';
-  public function __construct(){
+  public function __construct()
+  {
     parent::__construct();
   }
 //[Getters]
@@ -21,7 +22,8 @@ class CvCreatorEnLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBase
 //[Stablishers]
 //[End Stablishers]
 
-  protected function selfRepresentation(){
+  protected function selfRepresentation()
+  {
     return cvSlugCase(Str::plural($this->getResource()));
   }
 }

@@ -9,10 +9,13 @@ use Stichoza\GoogleTranslate\GoogleTranslate;
 class CvCreatorCatPtLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCatTrait;
+
   protected $relatedTargetPath   = 'resources/lang/pt/crudvel/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_pt_lang.txt';
   protected $trans;
-  public function __construct(){
+
+  public function __construct()
+  {
     parent::__construct();
     $this->trans = new GoogleTranslate('pt');
   }
@@ -23,21 +26,25 @@ class CvCreatorCatPtLangScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
 //[End Setters]
 
 //[Stablishers]
-  public function stablishResource($resource=null){
+  public function stablishResource($resource = null)
+  {
     return $this->setResource($this->unCat($resource));
   }
+
 //[End Stablishers]
 
-  public function caseFixer($case=null,$value=null){
-    try{
+  public function caseFixer($case = null, $value = null)
+  {
+    try {
       $value = $this->trans->translate($value);
-    }catch(\Exception $e){
+    } catch (\Exception $e) {
 
     }
-    return parent::caseFixer($case,$value);
+    return parent::caseFixer($case, $value);
   }
 
-  protected function selfRepresentation(){
+  protected function selfRepresentation()
+  {
     return cvSlugCase(Str::plural($this->reCat($this->getResource())));
   }
 }

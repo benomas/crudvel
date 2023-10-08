@@ -54,6 +54,12 @@
             },
             "cat-factory": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Factory\\CvCreatorCatFactoryScaff"
+            },
+            "cat-pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorCatPtLangScaff"
+            },
+            "pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvCreatorPtLangScaff"
             }
         },
         "adder": {
@@ -150,6 +156,12 @@
             },
             "cat-test-seeder": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Seed\\CvDeleterCatTestSeedScaff"
+            },
+            "pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterPtLangScaff"
+            },
+            "cat-pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Back\\Lang\\CvDeleterCatPtLangScaff"
             }
         }
     },
@@ -226,6 +238,12 @@
             },
             "cat-import-skeleton": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvCreatorCatImportSkeletonScaff"
+            },
+            "cat-pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorCatPtLangScaff"
+            },
+            "pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvCreatorPtLangScaff"
             }
         },
         "adder": {
@@ -364,6 +382,12 @@
             },
             "cat-import-skeleton": {
                 "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Crud\\CvDeleterCatImportSkeletonScaff"
+            },
+            "cat-pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvDeleterCatPtLangScaff"
+            },
+            "pt-lang": {
+                "class": "Crudvel\\Libraries\\CvScaffSupport\\Front\\Lang\\CvDeleterPtLangScaff"
             }
         }
     },
