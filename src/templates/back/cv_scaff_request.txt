@@ -24,7 +24,7 @@ class <##[singular|studly](resource)##>Request extends \Customs\Crudvel\Requests
   }
 
   public function putUpdate(){
-    $this->rules = self::externalPutUpdateRules()
+    $this->rules = self::externalPutUpdateRules($this->getFields(),$this)
       ->setParam('<##[singular|camel](resource)##>Key',$this->getCurrentActionKey())
       ->fixRules();
   }
