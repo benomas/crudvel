@@ -35,7 +35,6 @@ class User extends \Crudvel\Models\BaseModel{
   public function domineeringRoles () {
     return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->domineeringRoles())->disableRestricction();
   }
-
   public function dominedRoles(){
     return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->dominedRoles())->disableRestricction();
   }
