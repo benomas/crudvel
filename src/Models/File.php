@@ -114,7 +114,7 @@ class File extends \Crudvel\Models\BaseModel{
     if($this->catFileIdValue === null || $this->resourceIdValue === null)
       return ;
 
-    if(!$catFileInstance = \App\Models\CatFile::disableRestricction()->key($this->catFileIdValue)->solveSearches()->first())
+    if(!$catFileInstance = \App\Models\CatFile::disableRestriction()->key($this->catFileIdValue)->solveSearches()->first())
       return ;
 
     $resourceModel = 'App\Models\\'.cvCaseFixer('studly|singular',$catFileInstance->resource);

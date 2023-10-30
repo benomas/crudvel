@@ -264,7 +264,7 @@ trait CvBaseMethodsTrait
     }
 
     if(!$userInstace || $userInstace->getKeyValue() !== $userKey)
-      if(!($userInstace = \App\Models\User::disableRestricction()->key($userKey)->first()))
+      if(!($userInstace = \App\Models\User::disableRestriction()->key($userKey)->first()))
         return null;
 
     return $userInstace;
@@ -314,12 +314,12 @@ trait CvBaseMethodsTrait
     });
 
     self::updated(function($model){
-      if(($relatedFiles = $model->relatedFiles()->disableRestricction())){
+      if(($relatedFiles = $model->relatedFiles()->disableRestriction())){
 
         $relatedFiles = $relatedFiles->solveSearches()->get();
 
         foreach($relatedFiles as $relatedFile){
-          $catFile = $relatedFile->catFile()->disableRestricction()->first();
+          $catFile = $relatedFile->catFile()->disableRestriction()->first();
           $catFile->resource = $relatedFile->catFile->resource;
           $catFile->save();
           $relatedFile->cat_file_id = $relatedFile->catFile->id;

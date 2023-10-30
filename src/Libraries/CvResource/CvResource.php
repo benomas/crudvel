@@ -511,7 +511,7 @@ class CvResource
     if(!($user = \Auth::user()))
       return $this;
 
-    $this->setUserModelBuilderInstance($this->getUserModelClass()::disableRestricction()->key($user->id));
+    $this->setUserModelBuilderInstance($this->getUserModelClass()::disableRestriction()->key($user->id));
 
     $this->setUserModelCollectionInstance($this->getUserModelBuilderInstance()->first());
 
@@ -531,7 +531,7 @@ class CvResource
     if($this->getUserModelCollectionInstance()->isRoot())
       return true;
 
-    if(!$this->getPermissionModelClass()::disableRestricction()->special($special)->count())
+    if(!$this->getPermissionModelClass()::disableRestriction()->special($special)->count())
       return true;
 
     return kageBunshinNoJutsu($this->getUserModelBuilderInstance())->specialPermission($special)->count() > 0;
@@ -554,11 +554,11 @@ class CvResource
     if($this->getUserModelCollectionInstance()->isRoot())
       return $this->actionsAccess[$actionResource] = true;
 
-    if(!$this->getPermissionModelClass()::disableRestricction()->action($actionResource)->count()){
+    if(!$this->getPermissionModelClass()::disableRestriction()->action($actionResource)->count()){
       $segments = explode('.', $actionResource);
       $resource = $segments[0]??'###';
       $action   = cvCamelCase($segments[1]??'###');
-      if(!$this->getPermissionModelClass()::disableRestricction()->action("{$resource}.{$action}")->count()){
+      if(!$this->getPermissionModelClass()::disableRestriction()->action("{$resource}.{$action}")->count()){
         return $this->actionsAccess[$actionResource] = true;
       }
       $actionResource = "{$resource}.{$action}";

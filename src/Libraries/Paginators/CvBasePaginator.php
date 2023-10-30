@@ -144,7 +144,7 @@ class CvBasePaginator implements CvCrudInterface
       ->setQuery(
         \DB::table(\DB::raw("($querySql) as {$this->getModelClass()::cvIam()->getTable()}"))
         ->setBindings($bindings)
-    )->disableRestricction();
+    )->disableRestriction();
 
     return $this;
   }

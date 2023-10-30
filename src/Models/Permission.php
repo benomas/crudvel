@@ -159,7 +159,7 @@ class Permission extends \Crudvel\Models\BaseModel{
     if($this->permissionTypeIdValue === null || $this->slugValue === null)
       return ;
 
-    if(!$catFileInstance = \App\Models\CatPermissionType::disableRestricction()->key($this->permissionTypeIdValue)->solveSearches()->first())
+    if(!$catFileInstance = \App\Models\CatPermissionType::disableRestriction()->key($this->permissionTypeIdValue)->solveSearches()->first())
       return ;
 
     if($catFileInstance->slug==='resource'){
