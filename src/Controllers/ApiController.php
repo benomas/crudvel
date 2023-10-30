@@ -271,7 +271,7 @@ class ApiController extends CustomController implements ExcelFromQueryInterface 
     $cTable .= $this->getModelClass()::cvIam()->alias();
 
     return $this->selfPreBuilder($cTable)
-      ->leftJoinSub(\App\Models\User::select('*')->disableRestricction()->cvSearch(), 'u',function ($join) use($cTable,$foreinKey){
+      ->leftJoinSub(\App\Models\User::select('*')->disableRestriction()->cvSearch(), 'u',function ($join) use($cTable,$foreinKey){
         $join->on('u.id', '=', "{$cTable}.{$foreinKey}");
       })->selectRaw($userCvSearch);
   }

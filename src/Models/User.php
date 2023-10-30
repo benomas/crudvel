@@ -25,18 +25,18 @@ class User extends \Crudvel\Models\BaseModel{
 
 // [Relationships]
   public function roles(){
-    return $this->belongsToMany("App\Models\Role")->disableRestricction();
+    return $this->belongsToMany("App\Models\Role")->disableRestriction();
   }
 
   public function permissions(){
-    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->permissions())->disableRestricction();
+    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->permissions())->disableRestriction();
   }
 
   public function domineeringRoles () {
-    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->domineeringRoles())->disableRestricction();
+    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->domineeringRoles())->disableRestriction();
   }
   public function dominedRoles(){
-    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->dominedRoles())->disableRestricction();
+    return $this->hasManyDeepFromRelations($this->roles(),(new \App\Models\Role)->setAlias('r2')->dominedRoles())->disableRestriction();
   }
 // [End Relationships]
 
@@ -204,23 +204,23 @@ class User extends \Crudvel\Models\BaseModel{
     return $loginTest;
   }
   public function isRoot(){
-    return $this->roles()->disableRestricction()->withRoot()->count();
+    return $this->roles()->disableRestriction()->withRoot()->count();
   }
 
   public function isAdmin(){
-    return $this->roles()->disableRestricction()->withAdmin()->count();
+    return $this->roles()->disableRestriction()->withAdmin()->count();
   }
 
   public function inRoles(...$roles){
-    return $this->roles()->disableRestricction()->inRoles($roles)->count();
+    return $this->roles()->disableRestriction()->inRoles($roles)->count();
   }
 
   public function hasInternalRole(){
-    return $this->roles()->disableRestricction()->internal()->count() > 0;
+    return $this->roles()->disableRestriction()->internal()->count() > 0;
   }
 
   public function hasExternalRole(){
-    return $this->roles()->disableRestricction()->external()->count() > 0;
+    return $this->roles()->disableRestriction()->external()->count() > 0;
   }
 
   public function disabledUser(){
