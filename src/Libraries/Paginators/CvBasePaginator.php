@@ -308,6 +308,8 @@ class CvBasePaginator implements CvCrudInterface
       $this->getModelBuilderInstance()->key($this->getModelCollectionInstance()->getKeyValue(),false);
 
     $this->getModelBuilderInstance()->select($this->getSelectQuery());
+
+    return $this;
   }
 
   public function solveSpecialFilters(){
@@ -328,14 +330,10 @@ class CvBasePaginator implements CvCrudInterface
     return $this;
   }
 
-  public function paginateResponder(){
-    // TODO: include this validation || !$this->getModelBuilderInstance()->count()
+
+  public function paginateResponderPrepare(){
     if(!$this->getModelBuilderInstance())
-      return $this->getRootInstance()->apiSuccessResponse([
-        "data"   =>[],
-        "count"  =>0,
-        "message" =>trans("crudvel.api.success")
-      ]);
+      throw new \Crudvel\Exceptions\EmptyCollection();
 
     if(
       ($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->getKeyValue())) ||
@@ -354,7 +352,11 @@ class CvBasePaginator implements CvCrudInterface
       $this->setPaginateData($keyed->all());
     }
 
-    return $this->getRootInstance()->apiSuccessResponse([
+    return $this;
+  }
+
+  public function paginateResponder(){
+    return $this->paginateResponderPrepare()->getRootInstance()->apiSuccessResponse([
       "data"    => $this->getPaginateData(),
       "count"   => $this->getPaginateCount(),
       "message" => trans("crudvel.api.success")
@@ -365,9 +367,7 @@ class CvBasePaginator implements CvCrudInterface
    * respond http request with a paginate set of data, accorded to the given parameters
    */
   public function paginatedResponse() {
-    $this->processPaginatedResponse();
-
-    return $this->paginateResponder();
+    return $this->processPaginatedResponse()->paginateResponder();
   }
 
   public function noPaginatedResponse(){

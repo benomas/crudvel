@@ -107,6 +107,8 @@ class CvCombinatoryPaginator extends CvBasePaginator implements CvPaginate
       $this->getModelBuilderInstance()->key($this->getModelCollectionInstance()->getKeyValue(),false);
 
     $this->getModelBuilderInstance()->select($this->getSelectQuery());
+
+    return $this;
   }
 
   public function filter() {
