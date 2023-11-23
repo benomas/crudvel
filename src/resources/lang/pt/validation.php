@@ -42,6 +42,7 @@ $cvValidations = [
   'image'                      => 'O campo [:attribute] deve ser um arquivo de imagem.',
   'in'                         => 'O campo [:attribute] é inválido.',
   'integer'                    => 'O campo [:attribute] deve ser um número inteiro.',
+  'string'                     => 'O campo [:attribute] deve ser uma string.',
   'ip'                         => 'O campo [:attribute] deve ser um endereço IP válido.',
   'max'                        => [
     'numeric' => 'O campo [:attribute] não deve ser maior que :max.',
