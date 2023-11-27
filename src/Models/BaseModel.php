@@ -45,13 +45,13 @@ class BaseModel extends Model implements CvCrudInterface
 // [End Relationships]
 
 // [Transformers]
-  public function getCvHasFilesAttribute(){
+  public function getCvHasFilesAttribute() : bool {
     $resource = cvCaseFixer('slug|plural',class_basename($this));
 
     return \App\Models\CatFile::resource($resource)->count();
   }
 
-  public function getCvHasCodeHookAttribute(){
+  public function getCvHasCodeHookAttribute() : bool {
     return $this->codeHook;
   }
 
