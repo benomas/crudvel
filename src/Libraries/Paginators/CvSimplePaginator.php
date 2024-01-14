@@ -30,6 +30,8 @@ class CvSimplePaginator extends CvBasePaginator implements CvPaginate
     if(!empty($this->getFilterQuery()))
       $this->getModelBuilderInstance()->where(function($query){
         foreach ($this->getFilterQuery() as $field=>$filter){
+          if ($this->getSearchObject() === '')
+              continue;
           $method=!isset($method)?"where":"orWhere";
           $query->{$method}($field,$this->getComparator(),"%{$this->getSearchObject()}%");
         }
