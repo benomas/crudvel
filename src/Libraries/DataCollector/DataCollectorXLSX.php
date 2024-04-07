@@ -6,29 +6,37 @@ use Crudvel\Interfaces\DataCollector\{DataCollectorInterface,XlsxDataCollectorIn
 use Crudvel\Interfaces\DataCaller\XlsxDataCallerInterface;
 use Crudvel\Imports\ModelImporterInterceptor;
 Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterface,XlsxDataCollectorInterface {
-  protected $xlsxPath               = '';
-  protected $xlsxFilePath           = null;
-  protected $importerInterceptor;
+  protected string $xlsxPath     = '';
+  protected mixed  $xlsxFilePath = null;
+  protected        $importerInterceptor;
+  /**
+   * @var mixed|null
+   */
+  private mixed $currentXlsxContent;
+  /**
+   * @var int|mixed
+   */
+  private mixed $currentXlsxPosition;
 
-  public function __construct(XlsxDataCallerInterface $dataCallerInstace){
-    $this->setDataCallerInstace($dataCallerInstace);
+  public function __construct(XlsxDataCallerInterface $dataCallerInstance){
+    $this->setDataCallerInstance($dataCallerInstance);
   }
-  
+
   public function loadContextData($contextData=null){
     return $this->setXlsxPath($contextData)
       ->setImporterInterceptor(new ModelImporterInterceptor('App\Models\CatInegiState'));
   }
 // [Specific Logic]
-  public function init(){
-    $this->getDataCallerInstace()->loadXlsxPath();
+  public function init(): void {
+    $this->getDataCallerInstance()->loadXlsxPath();
     $this->loadXlsxFile()->setCount($this->counter());
   }
 
-  public function loadXlsxFile(){
+  public function loadXlsxFile(): DataCollectorXLSX|static {
     return $this->setXlsxFilePath("{$this->getXlsxPath()}data.xlsx");
   }
 
-  public function counter(){
+  public function counter(): int {
     $count = 0;
 
     if(!file_exists($this->getXlsxFilePath()))
@@ -45,9 +53,9 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
     return $count;
   }
 
-  protected function increseCurrentXlsxPosition(){
+  protected function increseCurrentXlsxPosition(): static {
     $this->currentXlsxPosition++;
-    
+
     return $this;
   }
 
@@ -65,7 +73,7 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
     return $nextFile;
   }
 
-  protected function requestXlsxPortion(){
+  protected function requestXlsxPortion(): array {
     $newXlsxPortion   = [];
     $xlsxPortionCount = 0;
 
@@ -107,6 +115,9 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
     return [];
   }
 
+  /**
+   * @throws \Exception
+   */
   public function getNextChunk($next=null):array {
     if ($this->getOffSet() >= $this->getCount())
       return [];
@@ -117,11 +128,11 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
       if(!$next($arraySegment))
         throw new \Exception('next callback fail');
 
-    return $this->responseAndAdvace($this->getDataCallerInstace()->dataTransform($arraySegment));
+    return $this->responseAndAdvance($this->getDataCallerInstance()->dataTransform($arraySegment));
   }
 
-  public function getDataCallerInstace():XlsxDataCallerInterface{
-    return $this->dataCallerInstace??null;
+  public function getDataCallerInstance():XlsxDataCallerInterface{
+    return $this->dataCallerInstance;
   }
 
   public function getXlsxPath(){
@@ -132,7 +143,7 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
     return $this->xlsxFilePath??null;
   }
 
-  public function getXlsxsCount(){
+  public function getXlsxsCount(): int {
     return count($this->xlsxFilePath);
   }
 
@@ -150,8 +161,8 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
 // [End Getters]
 
 // [Setters]
-  public function setDataCallerInstace(XlsxDataCallerInterface $dataCallerInstace){
-    $this->dataCallerInstace = $dataCallerInstace??null;
+  public function setDataCallerInstance(XlsxDataCallerInterface $dataCallerInstance): static {
+    $this->dataCallerInstance = $dataCallerInstance??null;
     return $this;
   }
 
@@ -161,25 +172,25 @@ Class DataCollectorXLSX extends BaseDataCollector implements DataCollectorInterf
     return $this;
   }
 
-  public function setXlsxFilePath($xlsxFilePath=null){
+  public function setXlsxFilePath($xlsxFilePath=null): static {
     $this->xlsxFilePath = $xlsxFilePath??null;
 
     return $this;
   }
 
-  public function setCurrentXlsxPosition($currentXlsxPosition=0){
+  public function setCurrentXlsxPosition($currentXlsxPosition=0): static {
     $this->currentXlsxPosition = $currentXlsxPosition??0;
 
     return $this;
   }
 
-  public function setCurrentXlsxContent($currentXlsxContent=null){
+  public function setCurrentXlsxContent($currentXlsxContent=null): static {
     $this->currentXlsxContent = $currentXlsxContent??null;
 
     return $this;
   }
 
-  public function setImporterInterceptor($importerInterceptor=null){
+  public function setImporterInterceptor($importerInterceptor=null): static {
     $this->importerInterceptor = $importerInterceptor??null;
 
     return $this;

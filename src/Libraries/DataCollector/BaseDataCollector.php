@@ -2,13 +2,13 @@
 namespace Crudvel\Libraries\DataCollector;
 
 Class BaseDataCollector{
-  protected $page              = 0;
-  protected $chuckSize         = 100;
-  protected $count             = 0;
-  protected $dataCallerInstace = null;
+  protected int $page      = 0;
+  protected int $chuckSize         = 100;
+  protected int $count             = 0;
+  protected     $dataCallerInstance = null;
 
 // [Specific Logic]
-  protected function responseAndAdvace(Array $arraySegment):Array{
+  protected function responseAndAdvance(Array $arraySegment): array {
     $this->incresePage();
     return $arraySegment;
   }
@@ -48,19 +48,19 @@ Class BaseDataCollector{
 // [End Getters]
 
 // [Setters]
-  public function setPage($page=0){
+  public function setPage($page=0): static {
     $this->page = $page??0;
 
     return $this;
   }
 
-  public function setCount($count=0){
+  public function setCount($count=0): static {
     $this->count = $count??0;
 
     return $this;
   }
 
-  public function setChuckSize($chuckSize=100){
+  public function setChuckSize($chuckSize=100): static {
     $this->chuckSize = $chuckSize??100;
 
     return $this;

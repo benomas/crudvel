@@ -348,7 +348,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function persist($callBack=null, $passLastSave = false){
     return $this->resetTransaction()->startTranstaction()->testTransaction(function() use($callBack, $passLastSave){
-      $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
+      $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstantiator(true));
       $fields = $this->getFields();
 
       //code hook protection
@@ -379,7 +379,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
       return false;
 
     return $this->resetTransaction()->startTranstaction()->testTransaction(function() use($callBack, $passLastSave, $noFillables){
-      $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstanciator(true));
+      $this->setModelCollectionInstance($this->getModelCollectionInstance() ?? $this->modelInstantiator(true));
       $fields = $this->getFields();
       $this->getModelCollectionInstance()->fill($fields);
 
@@ -428,7 +428,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
   public function export(){
     $data = [];
-    $this->getRequestInstance()->langsToImport($this->modelInstanciator(true)->getFillable());
+    $this->getRequestInstance()->langsToImport($this->modelInstantiator(true)->getFillable());
 
     if(($rows = $this->getModelBuilderInstance()->get()))
       foreach($rows as $key=>$row)
@@ -469,7 +469,7 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
 
       $this->getRequestInstance()->file('importation_file')->move(public_path() . "/upload/importing/", $filename);
       $reader = Excel::load($path)->get();
-      $this->getRequestInstance()->inicializeImporter($this->modelInstanciator(true)->getFillable());
+      $this->getRequestInstance()->inicializeImporter($this->modelInstantiator(true)->getFillable());
 
       $reader->each(function ($row){
         $this->resetTransaction();
@@ -491,8 +491,8 @@ class CustomController extends \Illuminate\Routing\Controller implements CvCrudI
           $this->getRequestInstance()->changeImporter();
 
           if(($model = (  $this->getRequestInstance()->currentAction==="store"?
-                            $this->modelInstanciator(true):
-                            $this->modelInstanciator()->key($row->{$this->getRequestInstance()->slugedImporterRowIdentifier()})->first()
+                            $this->modelInstantiator(true):
+                            $this->modelInstantiator()->key($row->{$this->getRequestInstance()->slugedImporterRowIdentifier()})->first()
                       )
               )
           ){

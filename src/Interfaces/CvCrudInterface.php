@@ -59,7 +59,7 @@ interface CvCrudInterface
   public function setCvResource($cvResourceInstance);
   public function injectCvResource();
   public function autoSetPropertys(...$propertyRewriter);
-  public function modelInstanciator($new=false);
+  public function modelInstantiator($new=false);
   //public function setModelInstance();
   public function loadFields();
   public function setPaginateFields();

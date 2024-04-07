@@ -5,30 +5,30 @@ use Crudvel\Interfaces\DataCollector\{DataCollectorInterface,ArrayDataCollectorI
 use Crudvel\Interfaces\DataCaller\ArrayDataCallerInterface;
 
 Class ArrayDataCollector extends BaseDataCollector implements DataCollectorInterface,ArrayDataCollectorInterface {
-  protected $arrayData = [];
+  protected array $arrayData = [];
 
-  public function __construct(ArrayDataCallerInterface $dataCallerInstace){
-    $this->setDataCallerInstace($dataCallerInstace);
+  public function __construct(ArrayDataCallerInterface $dataCallerInstance){
+    $this->setDataCallerInstance($dataCallerInstance);
   }
 
 // [Specific Logic]
   //Open source and count total data
-  public function init(){
-    $this->getDataCallerInstace()->loadArrayData();
+  public function init(): void {
+    $this->getDataCallerInstance()->loadArrayData();
     $this->setCount($this->counter());
   }
 
-  public function counter(){
+  public function counter(): int {
     return count($this->getArrayData());
   }
-  
-  public function loadContextData($contextData=null){
+
+  public function loadContextData($contextData=null): ArrayDataCollector|static {
     return $this->setArrayData($contextData);
   }
 // [End Specific Logic]
 
 // [Getters]
-  public function getChunkedCollection($chuckSize = 100, $pageNumber = 0):Array {
+  public function getChunkedCollection($chuckSize = 100, $pageNumber = 0): array {
     $offset = $pageNumber * $chuckSize;
 
     if ($offset >= $this->getCount())
@@ -37,7 +37,7 @@ Class ArrayDataCollector extends BaseDataCollector implements DataCollectorInter
     return array_slice($this->getArrayData(), $offset, $this->nextSegment());
   }
 
-  public function getNextChunk($next=null):Array {
+  public function getNextChunk($next=null): array {
     if ($this->getOffSet() >= $this->getCount())
       return [];
 
@@ -47,29 +47,29 @@ Class ArrayDataCollector extends BaseDataCollector implements DataCollectorInter
       if(!$next($arraySegment))
         throw new \Exception('next callback fail');
 
-    return $this->responseAndAdvace($this->getDataCallerInstace()->dataTransform($arraySegment));
+    return $this->responseAndAdvance($this->getDataCallerInstance()->dataTransform($arraySegment));
   }
 
   public function getArrayData(){
     return $this->arrayData??[];
   }
 
-  public function getDataCallerInstace():ArrayDataCallerInterface{
-    return $this->dataCallerInstace??null;
+  public function getDataCallerInstance():ArrayDataCallerInterface{
+    return $this->dataCallerInstance;
   }
 
 // [End Getters]
 
 // [Setters]
 
-  public function setArrayData($arrayData=[]){
+  public function setArrayData($arrayData=[]): static {
     $this->arrayData = $arrayData??[];
 
     return $this;
   }
 
-  public function setDataCallerInstace(ArrayDataCallerInterface $dataCallerInstace){
-    $this->dataCallerInstace = $dataCallerInstace??null;
+  public function setDataCallerInstance(ArrayDataCallerInterface $dataCallerInstance): static {
+    $this->dataCallerInstance = $dataCallerInstance??null;
 
     return $this;
   }

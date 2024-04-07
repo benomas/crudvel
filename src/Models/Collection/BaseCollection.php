@@ -1,8 +1,9 @@
 <?php
 
 namespace Crudvel\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
-class BaseCollection extends \Illuminate\Database\Eloquent\Collection {
+class BaseCollection extends Collection {
 
   public function makeVisibleOnly(...$visibleAttributes){
     if(!count($this->items))

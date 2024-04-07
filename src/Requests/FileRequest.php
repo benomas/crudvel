@@ -54,7 +54,7 @@ class FileRequest extends \Customs\Crudvel\Requests\CrudRequest{
     if($this->catFile){
       $this->rules[$this->fileName] .= '|min:'.$this->catFile->min_size.'|max:'.$this->catFile->max_size.'|mimes:'.$this->catFile->types;
       if(!$this->catFile->multiple && $fields['resource_id']){
-        if($this->modelInstanciator()->catFileId($fields["cat_file_id"])->resourceId($fields["resource_id"])->count())
+        if($this->modelInstantiator()->catFileId($fields["cat_file_id"])->resourceId($fields["resource_id"])->count())
           $this->rules[$this->fileName] = 'file_already_exist';
       }
 /*

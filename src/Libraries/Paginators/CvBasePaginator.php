@@ -200,7 +200,7 @@ class CvBasePaginator implements CvCrudInterface
 
   public function fixables($property){
     if($this->$property && count($this->$property)){
-      $columns = array_flip($this->getRootInstance()->modelInstanciator(true)->getTableColumns());
+      $columns = array_flip($this->getRootInstance()->modelInstantiator(true)->getTableColumns());
       foreach(array_filter($this->$property,function($column) use($columns) {
         return !isset($columns[$column]);
       }) as $unsolved)

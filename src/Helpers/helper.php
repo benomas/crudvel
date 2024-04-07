@@ -495,8 +495,8 @@ if(!function_exists('specialAccess')){
 	 * @date   2017-05-08
 	 * @return array
 	 */
-	function specialAccess($userInstace,$special){
-		if(empty($userInstace) || !($user = $userInstace->first()))
+	function specialAccess($userInstance,$special){
+		if(empty($userInstance) || !($user = $userInstance->first()))
       return false;
 
 		if($user->isRoot())
@@ -505,7 +505,7 @@ if(!function_exists('specialAccess')){
 		if(!\App\Models\Permission::special($special)->disableRestriction()->count())
       throw new Crudvel\Exceptions\PermissionDoesntExist($special);
 
-		return kageBunshinNoJutsu($userInstace)->specialPermission($special)->count()>0;
+		return kageBunshinNoJutsu($userInstance)->specialPermission($special)->count()>0;
 	}
 }
 

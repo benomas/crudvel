@@ -5,25 +5,25 @@ use Crudvel\Interfaces\DataCollector\{DataCollectorInterface,JsonDataCollectorIn
 use Crudvel\Interfaces\DataCaller\JsonDataCallerInterface;
 
 Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterface,JsonDataCollectorInterface {
-  protected $jsonPath               = '';
-  protected $jsonFilePaths          = [];
-  protected $currentJsonPosition    = 0;
-  protected $currentJsonContent     = [];
+  protected string $jsonPath            = '';
+  protected array $jsonFilePaths       = [];
+  protected int   $currentJsonPosition = 0;
+  protected array $currentJsonContent  = [];
 
-  public function __construct(JsonDataCallerInterface $dataCallerInstace){
-    $this->setDataCallerInstace($dataCallerInstace);
+  public function __construct(JsonDataCallerInterface $dataCallerInstance){
+    $this->setDataCallerInstance($dataCallerInstance);
   }
-  
-  public function loadContextData($contextData=null){
+
+  public function loadContextData($contextData=null): JsonDataCollectorInterface {
     return $this->setJsonPath($contextData);
   }
 // [Specific Logic]
-  public function init(){
-    $this->getDataCallerInstace()->loadJsonPath();
+  public function init(): void {
+    $this->getDataCallerInstance()->loadJsonPath();
     $this->loadJsonFiles()->setCount($this->counter());
   }
 
-  public function loadJsonFiles(){
+  public function loadJsonFiles(): JsonDataCollector|static {
     if(!file_exists($this->getJsonPath()))
       return $this->setJsonFilePaths([]);
 
@@ -57,9 +57,9 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
     return $count;
   }
 
-  protected function increseCurrentJsonPosition(){
+  protected function increseCurrentJsonPosition(): static {
     $this->currentJsonPosition++;
-    
+
     return $this;
   }
 
@@ -77,7 +77,7 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
     return $nextFile;
   }
 
-  protected function requestJsonPortion(){
+  protected function requestJsonPortion(): array {
     $newJsonPortion   = [];
     $jsonPortionCount = 0;
 
@@ -129,11 +129,11 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
       if(!$next($arraySegment))
         throw new \Exception('next callback fail');
 
-    return $this->responseAndAdvace($this->getDataCallerInstace()->dataTransform($arraySegment));
+    return $this->responseAndAdvance($this->getDataCallerInstance()->dataTransform($arraySegment));
   }
 
-  public function getDataCallerInstace():JsonDataCallerInterface{
-    return $this->dataCallerInstace??null;
+  public function getDataCallerInstance():JsonDataCallerInterface{
+    return $this->dataCallerInstance;
   }
 
   public function getJsonPath(){
@@ -144,7 +144,7 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
     return $this->jsonFilePaths??null;
   }
 
-  public function getJsonsCount(){
+  public function getJsonsCount(): int {
     return count($this->jsonFilePaths);
   }
 
@@ -158,8 +158,8 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
 // [End Getters]
 
 // [Setters]
-  public function setDataCallerInstace(JsonDataCallerInterface $dataCallerInstace){
-    $this->dataCallerInstace = $dataCallerInstace??null;
+  public function setDataCallerInstance(JsonDataCallerInterface $dataCallerInstance): static {
+    $this->dataCallerInstance = $dataCallerInstance??null;
     return $this;
   }
 
@@ -169,19 +169,19 @@ Class JsonDataCollector extends BaseDataCollector implements DataCollectorInterf
     return $this;
   }
 
-  public function setJsonFilePaths($jsonFilePaths=null){
+  public function setJsonFilePaths($jsonFilePaths=null): static {
     $this->jsonFilePaths = $jsonFilePaths??null;
 
     return $this;
   }
 
-  public function setCurrentJsonPosition($currentJsonPosition=0){
+  public function setCurrentJsonPosition($currentJsonPosition=0): static {
     $this->currentJsonPosition = $currentJsonPosition??0;
 
     return $this;
   }
 
-  public function setCurrentJsonContent($currentJsonContent=null){
+  public function setCurrentJsonContent($currentJsonContent=null): static {
     $this->currentJsonContent = $currentJsonContent??null;
 
     return $this;
