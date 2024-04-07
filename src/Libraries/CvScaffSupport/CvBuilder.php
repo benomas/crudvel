@@ -24,8 +24,8 @@ class CvBuilder extends \Crudvel\Libraries\CvBuilder
     return $this;
   }
 
-  public function setProcessorInstance(CvScaffInterface $processorInstace=null){
-    $this->getCvBuildedInstance()->setProcessorInstance($processorInstace??null);
+  public function setProcessorInstance(CvScaffInterface $processorInstance=null){
+    $this->getCvBuildedInstance()->setProcessorInstance($processorInstance??null);
     return $this;
   }
 //[End Setters]

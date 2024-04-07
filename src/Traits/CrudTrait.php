@@ -468,7 +468,7 @@ trait CrudTrait {
             $this->{$key} = $value;
   }
 
-  public function modelInstanciator($new=false){
+  public function modelInstantiator($new=false){
     $model = $this->getModelClass();
 
     if(!class_exists($model))

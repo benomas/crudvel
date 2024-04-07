@@ -30,14 +30,14 @@ trait CvBaseMethodsTrait
     if (!method_exists($this, $firstLevelRelation))
       return null;
 
-    $firstLevelRelationInstace = $this->{$firstLevelRelation}()->get();
+    $firstLevelRelationInstance = $this->{$firstLevelRelation}()->get();
 
-    if (!$firstLevelRelationInstace)
+    if (!$firstLevelRelationInstance)
       return $secondLevelModel::nullFilter();
 
     $secondLevelRelationArray = [];
 
-    foreach ($firstLevelRelationInstace as $firstLevelRelationItem) {
+    foreach ($firstLevelRelationInstance as $firstLevelRelationItem) {
       if (method_exists($firstLevelRelationItem, $secondLevelRelation) && $firstLevelRelationItem->{$secondLevelRelation}()->count())
         $secondLevelRelationArray = array_unique(array_merge($secondLevelRelationArray, $firstLevelRelationItem->{$secondLevelRelation}()->get()->pluck("id")->toArray()));
     }
@@ -47,10 +47,10 @@ trait CvBaseMethodsTrait
 
   public function shadow()
   {
-    $clonedInstace = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
-    $clonedInstace->setModel($this->getModel());
+    $clonedInstance = new \Illuminate\Database\Eloquent\Builder(clone $this->getQuery());
+    $clonedInstance->setModel($this->getModel());
 
-    return $clonedInstace;
+    return $clonedInstance;
   }
 
   public function getConnectionName()
@@ -253,21 +253,21 @@ trait CvBaseMethodsTrait
 
     $userKey = $user;
 
-    $userInstace = null;
-    $userInstace = \CvResource::assignUser()->getUserModelCollectionInstance();
+    $userInstance = null;
+    $userInstance = \CvResource::assignUser()->getUserModelCollectionInstance();
 
     if(!$userKey){
-      if(!$userInstace)
+      if(!$userInstance)
         return null;
 
-      return $userInstace;
+      return $userInstance;
     }
 
-    if(!$userInstace || $userInstace->getKeyValue() !== $userKey)
-      if(!($userInstace = \App\Models\User::disableRestriction()->key($userKey)->first()))
+    if(!$userInstance || $userInstance->getKeyValue() !== $userKey)
+      if(!($userInstance = \App\Models\User::disableRestriction()->key($userKey)->first()))
         return null;
 
-    return $userInstace;
+    return $userInstance;
   }
 
   public function resourceCatalogs($userId =  null){

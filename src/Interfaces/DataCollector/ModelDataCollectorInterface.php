@@ -4,10 +4,10 @@ use Crudvel\Interfaces\DataCaller\ModelDataCallerInterface;
 
 interface ModelDataCollectorInterface{
   // init import , open file, open source and set totalRecords
-  public function __construct(ModelDataCallerInterface $dataCallerInstace);
-  public function setModelBuilderInstance($modelBuilderInstance=null);
+  public function __construct(ModelDataCallerInterface $dataCallerInstance);
+  public function setModelBuilderInstance($modelBuilderInstance);
   public function getModelBuilderInstance();
-  public function getDataCallerInstace():ModelDataCallerInterface;
-  public function setDataCallerInstace(ModelDataCallerInterface $dataCallerInstace);
-  public function loadContextData($contextData=null);
+  public function getDataCallerInstance():ModelDataCallerInterface;
+  public function setDataCallerInstance(ModelDataCallerInterface $dataCallerInstance);
+  public function loadContextData($contextData);
 }

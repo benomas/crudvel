@@ -1,14 +1,14 @@
-<?php namespace Crudvel\Database\Seeders;
+<?php namespace Crudvel\Database\Seeds;
 
 use Illuminate\Database\Seeder;
 use DB;
 use Illuminate\Support\Facades\Schema;
 
-class BaseTestSeeder extends \Crudvel\Database\Seeders\BaseSeeder {
-  protected $deleteBeforeInsert = false;
+class BaseTestSeeder extends BaseSeeder {
+  protected bool $deleteBeforeInsert = false;
 
 // [Specific Logic]
-	public function run(){
+	public function run(): bool {
     $this->prepareSeeder();
     DB::transaction(function() {
       $modelFactory = $this->getModelClass()::factory()->count($this->getSeedsToInsert())->create();

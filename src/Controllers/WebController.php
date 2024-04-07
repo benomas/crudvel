@@ -142,7 +142,7 @@ class WebController extends CustomController
   }
 
   public function store(){
-    $this->modelInstance = $this->modelInstanciator(true);
+    $this->modelInstance = $this->modelInstantiator(true);
     return $this->persist()?$this->webSuccessResponse([
       "redirector"=>Redirect::to($this->requestInstance->fullUrl())
     ]):$this->webFailResponse();

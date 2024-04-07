@@ -118,7 +118,7 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     $this->testTransaction(function() use($catFile){
       $fields   = $this->setStamps()->addField('path','')->addField('disk',$this->getDisk())->getFields();
 
-      if(!$this->setModelCollectionInstance($this->modelInstanciator(true))->getModelCollectionInstance()->fill($fields)->save())
+      if(!$this->setModelCollectionInstance($this->modelInstantiator(true))->getModelCollectionInstance()->fill($fields)->save())
         return false;
 
       [$filePath, $fileInput, $fileName] = $this->paths();
@@ -221,10 +221,10 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
       }*/
 
       if($this->getCurrentAction()==='store')
-        $this->modelInstanciator(true);
+        $this->modelInstantiator(true);
 
       $this->setModelCollectionInstance(
-        $this->getModelCollectionInstance()->first()??$this->modelInstanciator(true)
+        $this->getModelCollectionInstance()->first()??$this->modelInstantiator(true)
       );
 
       $this->setStamps();
