@@ -762,7 +762,7 @@ if(!function_exists('deletePathContent')){
 }
 
 if(!function_exists('pushCrudvuelActions')){
-  function pushCrudvuelActions($resource=null,&$targetArray,$actions=null,$excludes=[]) {
+  function pushCrudvuelActions(&$targetArray,$resource=null,$actions=null,$excludes=[]): void {
     if(!$resource)
       return;
 
@@ -847,7 +847,7 @@ if(!function_exists('enableForeignKeyConstraints')){
 }
 
 if(!function_exists('columnList')){
-	function columnList($connectionName='sqlsrv',$table) {
+	function columnList($table,$connectionName='sqlsrv'): ?array {
     //return 'database.connections.sqlsrv.driver';
     if(!$connection = config('database.connections.'.$connectionName))
       return null;
@@ -855,22 +855,15 @@ if(!function_exists('columnList')){
     switch($connection['driver']){
       case 'sqlite':
         return sqliteColumnList($connectionName,$table);
-        break;
 
       case 'mysql':
         return mysqlColumnList($connectionName,$table);
-        break;
 
       case 'pgsql':
         return pgsqlColumnList($connectionName,$table);
-        break;
 
       case 'sqlsrv':
         return sqlsrvColumnList($connectionName,$table);
-        break;
-
-      default:
-        return null;
     }
 
     return null;
