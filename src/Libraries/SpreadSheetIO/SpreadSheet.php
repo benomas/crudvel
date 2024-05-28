@@ -44,7 +44,7 @@ class SpreadSheet
     Excel::store($ExporterInterceptor, $this->constructorInstance->getRelatedPath().DIRECTORY_SEPARATOR.$this->constructorInstance->getFileNameAttr(), 'seed');
   }
 
-  public function synchronize(){
+  public function synchronize(bool $syncFromDb = false) {
     // import existing data xlsx file
     $importData = $this->importSpreadSheet(true);
     if(empty($importData)) {
@@ -60,7 +60,7 @@ class SpreadSheet
         return $newRow;
     });
     $this->constructorInstance->data =$importData;
-    $this->constructorInstance->synchronize();
+    $this->constructorInstance->synchronize($syncFromDb);
     $this->storeSpreadSheet(true);
   }
 }

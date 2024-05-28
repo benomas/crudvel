@@ -10,7 +10,7 @@ class CvRolePermissionLayout extends \Crudvel\Commands\BaseCommand
    *
    * @var string
    */
-  protected $signature = 'cv-make-role-permissions-layout';
+  protected $signature = 'cv-make-role-permissions-layout {reloadFromDb?}';
 
   /**
    * The console command description.
@@ -36,17 +36,18 @@ class CvRolePermissionLayout extends \Crudvel\Commands\BaseCommand
    */
   public function handle()
   {
-    $dbRoles = Role::withoutRoot()->get();
+    $reloadFromDb = (bool) $this->propertyReload('reloadFromDb') ?? false;
+    $dbRoles = Role::withoutRoot()->orderBy('id','ASC')->get();
     foreach($dbRoles AS $role){
       $spreadSheetConstructor = new \Crudvel\Libraries\SpreadSheetIO\Constructors\PermissionResourceSection($role->slug);
       $excel = new \Crudvel\Libraries\SpreadSheetIO\SpreadSheet($spreadSheetConstructor);
-      $excel->synchronize();
+      $excel->synchronize($reloadFromDb);
       $spreadSheetConstructor = new \Crudvel\Libraries\SpreadSheetIO\Constructors\PermissionResourceAction($role->slug);
       $excel = new \Crudvel\Libraries\SpreadSheetIO\SpreadSheet($spreadSheetConstructor);
-      $excel->synchronize();
+      $excel->synchronize($reloadFromDb);
       $spreadSheetConstructor = new \Crudvel\Libraries\SpreadSheetIO\Constructors\PermissionGlobalSpecials($role->slug);
       $excel = new \Crudvel\Libraries\SpreadSheetIO\SpreadSheet($spreadSheetConstructor);
-      $excel->synchronize();
+      $excel->synchronize($reloadFromDb);
     }
   }
 }

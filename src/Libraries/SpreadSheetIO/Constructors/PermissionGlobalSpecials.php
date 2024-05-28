@@ -39,8 +39,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     return $a;
   }
 
-  public function synchronize()
-  {
+  public function synchronize(bool $syncFromDb = false) :void {
     // syncData to return
     $syncData = [];
     // set headers
@@ -49,6 +48,27 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     $newGlobal = $this->getSysLangArrayByKeyName('globalSpecials');
     // get collection for old data
     $oldDataCollection = $this->data;
+
+    if ($syncFromDb) {
+      try {
+        $role               = \App\Models\Role::slug($this->getRole())->first();
+        $specialPermissions = $role->specialPermissions->keyBy('slug');
+
+        $oldDataCollection->transform(function ($item) use($specialPermissions) {
+          if ($item[$this->spreadSheetTitle] === $this->spreadSheetTitle){
+            return $item;
+          }
+
+          $item[$this->lastActionName] = isset($specialPermissions["{$item[$this->spreadSheetTitle]}"]) ? 1 : 0;
+
+          return $item;
+        });
+
+      }catch(\Exception $e){
+        customLog("unable to load role, {$e->getMessage()}");
+      }
+    }
+
     $nRow = 2;
     foreach ($newGlobal as $global) {
       $data = [];

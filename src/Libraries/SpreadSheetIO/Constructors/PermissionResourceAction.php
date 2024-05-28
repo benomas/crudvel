@@ -82,8 +82,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     return $this->spreadSheetTitle;
   }
 
-  public function synchronize()
-  {
+  public function synchronize(bool $syncFromDb = false) :void {
     // get new actions from system
     $newActions = cvActions();
     // add special actions
@@ -96,6 +95,46 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     }
     // get collection from data
     $oldDataCollection = $this->data;
+
+    if ($syncFromDb) {
+      try {
+        $role                     = \App\Models\Role::slug($this->getRole())->first();
+        $actionPermissions        = $role->actionPermissions->keyBy('slug') ?? collect([]);
+        $specialActionPermissions = $role->specialPermissions->keyBy('slug') ?? collect([]);
+        $resourcePermissions      = $role->resourcePermissions->keyBy('slug') ?? collect([]);
+        $headerIgnored            = false;
+
+        $actionPermissions = array_merge($actionPermissions->toArray(),$specialActionPermissions->toArray());
+
+        $oldDataCollection->transform(function ($item) use($actionPermissions,&$headerIgnored,$resourcePermissions) {
+          if (!$headerIgnored){
+            $headerIgnored = true;
+            return $item;
+          }
+
+          $resource = $item[$this->spreadSheetTitle];
+          $header2Ignored = false;
+          foreach ($item as $action=>$indexAction){
+            if (!$header2Ignored){
+              $header2Ignored = true;
+              continue;
+            }
+
+            if ($action === $this->lastActionName){
+              $item[$action] = isset($resourcePermissions[$item[$this->spreadSheetTitle]]) ? 1 : 0;
+              continue;
+            }
+
+            $item[$action] = isset($actionPermissions["{$resource}.$action"]) ? 1 : 0;
+
+          }
+          return $item;
+        });
+
+      }catch(\Exception $e){
+        customLog("unable to load role, {$e->getMessage()}");
+      }
+    }
     // counters for row and col
     $nRow = 1;
     $nCol = 1;

@@ -39,8 +39,7 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     return $a;
   }
 
-  public function synchronize()
-  {
+  public function synchronize(bool $syncFromDb = false) :void {
     // syncData to return
     $syncData = [];
     // set headers
@@ -49,6 +48,28 @@ implements \Crudvel\Interfaces\SpreadSheetIO\ConstructorInterface
     $newSections = $this->getSysLangArrayByKeyName('sections');
     // get collection for old data
     $oldDataCollection = $this->data;
+
+    if ($syncFromDb) {
+      try {
+        $role               = \App\Models\Role::slug($this->getRole())->first();
+        $sectionPermissions = $role->sectionPermissions->keyBy('slug');
+        $sectionPermissions = $role->sectionPermissions->keyBy('slug');
+
+        $oldDataCollection->transform(function ($item) use($sectionPermissions) {
+          if ($item[$this->spreadSheetTitle] === $this->spreadSheetTitle){
+            return $item;
+          }
+
+          $item[$this->lastActionName] = isset($sectionPermissions["{$item[$this->spreadSheetTitle]}-section"]) ? 1 : 0;
+
+          return $item;
+        });
+
+      }catch(\Exception $e){
+        customLog("unable to load role, {$e->getMessage()}");
+      }
+    }
+
     $nRow = 2;
     foreach ($newSections as $section) {
       $data = [];
