@@ -1,6 +1,6 @@
 <?php
 
-namespace Crudvel\Libraries\CvScaffSupport\Back\Seed;
+namespace Crudvel\Libraries\CvScaffSupport\Back\Seeds;
 
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class CvRemoverCatTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseRemoverScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCatTrait;
-  protected $relatedFilePath   = 'database/seeders/test/DatabaseSeeder.php';
+  protected $relatedFilePath   = 'database/seeds/test/DatabaseSeeder.php';
   public function __construct(){
     parent::__construct();
   }

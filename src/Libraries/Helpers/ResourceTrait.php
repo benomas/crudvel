@@ -62,7 +62,7 @@ trait ResourceTrait
         continue;
 
       $seederPatter   = str_replace('.php','',str_replace(base_path(),'',$seed));
-      $indexSeed      = str_replace('/','-',str_replace('database/seeders/','',$seederPatter));
+      $indexSeed      = str_replace('/','-',str_replace('database/seeds/','',$seederPatter));
       $classSeparator = '';
       $seederClass = array_reduce(explode('/',$seederPatter),function($sClass,$segment) use(&$classSeparator){
         if ($segment ==='')

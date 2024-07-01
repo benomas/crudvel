@@ -1,14 +1,13 @@
 <?php
 
-namespace Crudvel\Libraries\CvScaffSupport\Back\Seed;
+namespace Crudvel\Libraries\CvScaffSupport\Back\Seeds;
 
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvAdderCatTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseAdderScaff implements CvScaffInterface
+class CvAdderTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseAdderScaff implements CvScaffInterface
 {
-  use \Crudvel\Traits\CvScaffCatTrait;
-  protected $relatedFilePath   = 'database/seeders/test/DatabaseSeeder.php';
+  protected $relatedFilePath   = 'database/seeds/test/DatabaseSeeder.php';
   protected $leftRegexGlobalRequiriment = 'run\(\)\{';
   public function __construct(){
     parent::__construct();

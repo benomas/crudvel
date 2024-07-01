@@ -1,15 +1,15 @@
 <?php
 
-namespace Crudvel\Libraries\CvScaffSupport\Back\Seed;
+namespace Crudvel\Libraries\CvScaffSupport\Back\Seeds;
 
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
-class CvCreatorCatTestSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
+class CvCreatorCatSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
   use \Crudvel\Traits\CvScaffCatTrait;
-  protected $relatedTargetPath   = 'database/seeders/test/';
-  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_test_seeder.txt';
+  protected $relatedTargetPath   = 'database/seeds/';
+  protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_cat_seeder.txt';
   public function __construct(){
     parent::__construct();
   }

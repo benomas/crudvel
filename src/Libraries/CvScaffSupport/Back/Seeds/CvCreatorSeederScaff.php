@@ -1,13 +1,13 @@
 <?php
 
-namespace Crudvel\Libraries\CvScaffSupport\Back\Seed;
+namespace Crudvel\Libraries\CvScaffSupport\Back\Seeds;
 
 use \Crudvel\Interfaces\CvScaffInterface;
 use Illuminate\Support\Str;
 
 class CvCreatorSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvBaseCreatorScaff implements CvScaffInterface
 {
-  protected $relatedTargetPath   = 'database/seeders/';
+  protected $relatedTargetPath   = 'database/seeds/';
   protected $relatedTemplatePath = 'vendor/benomas/crudvel/src/templates/back/cv_scaff_seeder.txt';
   public function __construct(){
     parent::__construct();
