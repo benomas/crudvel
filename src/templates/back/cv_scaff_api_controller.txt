@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers\Api;
 
-class <##[singular|studly](resource)##>Controller extends \Customs\Crudvel\Controllers\ApiController{
+use Customs\Crudvel\Controllers\ApiController;
+
+class <##[singular|studly](resource)##>Controller extends ApiController {
 
   protected $selectables = [
     'id',
@@ -10,7 +12,7 @@ class <##[singular|studly](resource)##>Controller extends \Customs\Crudvel\Contr
     'cv_search'
   ];
 
-  public function __construct(){
+  public function __construct() {
     parent::__construct();
   }
 

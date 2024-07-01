@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
-class <##[singular|studly](resource)##> extends \Customs\Crudvel\Models\BaseModel{
+use Customs\Crudvel\Models\BaseModel;
+class <##[singular|studly](resource)##> extends BaseModel {
   protected $fillable = [
     'name',
     'description',
@@ -13,7 +14,7 @@ class <##[singular|studly](resource)##> extends \Customs\Crudvel\Models\BaseMode
 // [End Transformers]
 
 // [Scopes]
-  public function scopeSelectCvSearch($query,$alias=null){
+  public function scopeSelectCvSearch($query,$alias=null) {
     $alias = $this->alias($alias);
 
     return $query->selectRaw("CONCAT(

@@ -1,6 +1,8 @@
 <?php namespace  App\Http\Requests;
 
-class <##[singular|studly](resource)##>Request extends \Customs\Crudvel\Requests\CrudRequest{
+use Customs\Crudvel\Requests\CrudRequest;
+
+class <##[singular|studly](resource)##>Request extends CrudRequest {
 
 // [Authorization]
 // [End Authorization]
@@ -10,20 +12,20 @@ class <##[singular|studly](resource)##>Request extends \Customs\Crudvel\Requests
     $this->rules = self::externalPostStoreRules()->fixRules();
   }
 
-  public static function externalPostStoreRules($fields=null,$request=null){
+  public static function externalPostStoreRules($fields=null,$request=null) {
     return self::externalize([
       'name'   => 'required|unique:<##[plural|snake](resource)##>,name',
       'active' => 'boolean',
     ]);
   }
 
-  public static function externalPutUpdateRules($fields=null,$request=null){
+  public static function externalPutUpdateRules($fields=null,$request=null) {
     return self::externalize(self::externalPostStoreRules()->fixRules())->setExtraRules([
       'name' => 'required|unique:<##[plural|snake](resource)##>,name,@<##[singular|camel](resource)##>Key@',
     ])->setMethod(__FUNCTION__);
   }
 
-  public function putUpdate(){
+  public function putUpdate() {
     $this->rules = self::externalPutUpdateRules($this->getFields(),$this)
       ->setParam('<##[singular|camel](resource)##>Key',$this->getCurrentActionKey())
       ->fixRules();

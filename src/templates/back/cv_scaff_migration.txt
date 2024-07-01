@@ -1,13 +1,15 @@
 <?php
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Customs\Crudvel\Database\Migrations\BaseMigration;
 
-class Create<##[plural|studly](resource)##>Table extends \Customs\Crudvel\Database\Migrations\BaseMigration{
+class Create<##[plural|studly](resource)##>Table extends BaseMigration {
   /**
    * Run the migrations.
    */
-  public function up(){
-    if(!Schema::hasTable($this->mainTable)){
+  public function up() {
+    if (!Schema::hasTable($this->mainTable)) {
       Schema::create($this->mainTable, function (Blueprint $table) {
         Schema::disableForeignKeyConstraints();
         $table->bigIncrements('id');

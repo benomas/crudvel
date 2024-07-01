@@ -1,8 +1,10 @@
 <?php namespace App\Http\Controllers\Api;
 
-class <##[singular|studly](resource)##>Controller extends \Customs\Crudvel\Controllers\ApiCatalog1Controller{
+use Customs\Crudvel\Controllers\ApiCatalog1Controller;
 
-  public function __construct(){
+class <##[singular|studly](resource)##>Controller extends ApiCatalog1Controller {
+
+  public function __construct() {
     parent::__construct();
   }
 

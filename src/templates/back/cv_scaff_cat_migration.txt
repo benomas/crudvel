@@ -1,5 +1,8 @@
 <?php
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-class Create<##[plural|studly](resource)##>Table extends \Customs\Crudvel\Database\Migrations\Catalog1Migration{
+use \Customs\Crudvel\Database\Migrations\Catalog1Migration;
+
+class Create<##[plural|studly](resource)##>Table extends Catalog1Migration {
 }

@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers\Web;
 
-class <##[singular|studly](resource)##>Controller extends \Customs\Crudvel\Controllers\WebController{
+use Customs\Crudvel\Controllers\WebController;
+
+class <##[singular|studly](resource)##>Controller extends WebController {
 
   protected $selectables = [
   ];

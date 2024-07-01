@@ -1,6 +1,8 @@
 <?php namespace App\Models;
 
-class <##[singular|studly](resource)##> extends \Customs\Crudvel\Models\Catalog1{
+use Customs\Crudvel\Models\Catalog1;
+
+class <##[singular|studly](resource)##> extends Catalog1 {
 
 // [Relationships]
 // [End Relationships]
@@ -9,7 +11,7 @@ class <##[singular|studly](resource)##> extends \Customs\Crudvel\Models\Catalog1
 // [End Transformers]
 
 // [Scopes]
-  public function scopeSelectCvSearch($query,$alias=null){
+  public function scopeSelectCvSearch($query,$alias=null) {
     $alias = $this->alias($alias);
 
     return $query->selectRaw("CONCAT(
