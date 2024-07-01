@@ -118,6 +118,6 @@ class CvScaffBackCreateCatResource extends BaseCommand
     $this->prepareApiEnv();
     customExec('php artisan migrate');
     $seederParam = cvCaseFixer('singular|studly',$resource);
-    customExec("php artisan single-seeder[{$seederParam}-table-seeder]");
+    customExec("php artisan single-seeder[cat-{$seederParam}-table-seeder]");
   }
 }

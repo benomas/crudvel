@@ -33,12 +33,18 @@ class CvScaffBackDeleteCatResource extends BaseCommand
    */
   public function handle(): void {
     $resource = $this->propertyReload('resource');
+
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'deleter',
       'target'   => 'cat-en-lang',
       'resource' => $resource,
     ]);
+
+    if ($this->confirm("Should be migration:rollback called?")){
+      customExec('php artisan migrate:rollback');
+    }
+
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'deleter',
@@ -113,8 +119,5 @@ class CvScaffBackDeleteCatResource extends BaseCommand
     ]);
 
     $this->prepareApiEnv();
-
-    if ($this->confirm("Should be migration:rollback called?"))
-      customExec('php artisan migrate:rollback');
   }
 }
