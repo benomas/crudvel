@@ -33,10 +33,9 @@ class CvScaff extends BaseCommand
   /**
    * Execute the console command.
    *
-   * @return mixed
+   * @return void
    */
-  public function handle()
-  {
+  public function handle(): void {
     $cvScaffBuilder = (new CvBuilder($this))
       ->stablishContext($this->propertyReload('context'))
       ->stablishMode($this->propertyReload('mode'))

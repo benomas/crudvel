@@ -29,10 +29,9 @@ class CvScaffCreateCatResource extends BaseCommand
   /**
    * Execute the console command.
    *
-   * @return mixed
+   * @return void
    */
-  public function handle()
-  {
+  public function handle(): void {
     $resource = $this->propertyReload('resource');
     $this->call('scaff-back-cat-resource',['resource' => $resource]);
     $this->call('scaff-front-cat-resource',['resource' => $resource]);

@@ -29,17 +29,18 @@ class CvScaffBackCreateCatResource extends BaseCommand
   /**
    * Execute the console command.
    *
-   * @return mixed
+   * @return void
    */
-  public function handle()
-  {
+  public function handle(): void {
     $resource = $this->propertyReload('resource');
+
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'creator',
       'target'   => 'cat-en-lang',
       'resource' => $resource,
     ]);
+    $resource = $this->propertyReload('resource');
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'creator',
@@ -113,8 +114,10 @@ class CvScaffBackCreateCatResource extends BaseCommand
       'resource' => $resource,
     ]);
 
+    $resource = $this->propertyReload('resource');
     $this->prepareApiEnv();
-
     customExec('php artisan migrate');
+    $seederParam = cvCaseFixer('singular|studly',$resource);
+    customExec("php artisan single-seeder[{$seederParam}-table-seeder]");
   }
 }

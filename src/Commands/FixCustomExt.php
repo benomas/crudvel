@@ -29,10 +29,9 @@ class FixCustomExt extends BaseCommand
   /**
    * Execute the console command.
    *
-   * @return mixed
+   * @return void
    */
-  public function handle()
-  {
+  public function handle(): void {
     $this->changeext(base_path('customs/crudvel/'),'txt','php');
   }
 

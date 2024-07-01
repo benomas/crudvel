@@ -35,9 +35,9 @@ class CvRolePermissionLayout extends BaseCommand
   /**
    * Execute the console command.
    *
-   * @return mixed
+   * @return void
    */
-  public function handle(): mixed {
+  public function handle(): void {
     $reloadFromDb = (bool) $this->propertyReload('reloadFromDb') ?? false;
     $dbRoles = Role::withoutRoot()->orderBy('id','ASC')->get();
     foreach($dbRoles AS $role){

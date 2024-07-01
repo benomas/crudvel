@@ -29,10 +29,9 @@ class CvScaffBackDeleteCatResource extends BaseCommand
   /**
    * Execute the console command.
    *
-   * @return mixed
+   * @return void
    */
-  public function handle()
-  {
+  public function handle(): void {
     $resource = $this->propertyReload('resource');
     $this->call('cv-scaff',[
       'context'  => 'back',
@@ -112,6 +111,10 @@ class CvScaffBackDeleteCatResource extends BaseCommand
       'target'   => 'cat-test-seeder',
       'resource' => $resource,
     ]);
+
     $this->prepareApiEnv();
+
+    if ($this->confirm("Should be migration:rollback called?"))
+      customExec('php artisan migrate:rollback');
   }
 }

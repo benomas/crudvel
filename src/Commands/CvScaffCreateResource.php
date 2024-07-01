@@ -29,10 +29,9 @@ class CvScaffCreateResource extends BaseCommand
   /**
    * Execute the console command.
    *
-   * @return mixed
+   * @return void
    */
-  public function handle()
-  {
+  public function handle(): void {
     $resource = $this->propertyReload('resource');
     $this->call('scaff-back-resource',['resource' => $resource]);
     $this->call('scaff-front-resource',['resource' => $resource]);

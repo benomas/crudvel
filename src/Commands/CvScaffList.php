@@ -32,10 +32,9 @@ class CvScaffList extends BaseCommand
   /**
    * Execute the console command.
    *
-   * @return mixed
+   * @return void
    */
-  public function handle()
-  {
+  public function handle(): void {
     (new CvBuilder($this,'Crudvel\Libraries\CvScaffSupport\CvScaffHelper'))
       ->build()
       ->cvScaffList()

@@ -29,10 +29,9 @@ class CvScaffDeleteCatResource extends BaseCommand
   /**
    * Execute the console command.
    *
-   * @return mixed
+   * @return void
    */
-  public function handle()
-  {
+  public function handle(): void {
     $resource = $this->propertyReload('resource');
     $this->call('unscaff-back-cat-resource',['resource' => $resource]);
     $this->call('unscaff-front-cat-resource',['resource' => $resource]);

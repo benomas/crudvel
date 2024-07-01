@@ -100,8 +100,6 @@ class InstallCommand extends Command {
     $this->cvConsoler("\n".$this->greenTC($this->customExec('composer dump-autoload')));
     $this->cvConsoler("\n".$this->greenTC('Crudvel Installation Process Completed')."\n");
     $this->cvConsoler("\n".$this->greenTC('Dont forget to include Customs\\Crudvel\\Providers\\CrudvelServiceProvider in you app.serviceProviders for rewrite crudvel provider binding/singletons')."\n");
-
-
   }
 
   protected function getArguments()
