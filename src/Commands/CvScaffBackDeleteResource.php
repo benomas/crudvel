@@ -39,6 +39,11 @@ class CvScaffBackDeleteResource extends BaseCommand
       'target'   => 'en-lang',
       'resource' => $resource,
     ]);
+
+    if ($this->confirm("Should be migration:rollback called?")){
+      customExec('php artisan migrate:rollback');
+    }
+
     $this->call('cv-scaff',[
       'context'  => 'back',
       'mode'     => 'deleter',
