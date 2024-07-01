@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Commands;
 
-class FixCustomExt extends \Crudvel\Commands\BaseCommand
+class FixCustomExt extends BaseCommand
 {
   /**
    * The name and signature of the console command.

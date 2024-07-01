@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Commands;
 
-class CvScaffFrontDeleteCatResource extends \Crudvel\Commands\BaseCommand
+class CvScaffFrontDeleteCatResource extends BaseCommand
 {
   /**
    * The name and signature of the console command.

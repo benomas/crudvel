@@ -1,8 +1,11 @@
 <?php namespace Crudvel\Commands;
 
-class CvScaff extends \Crudvel\Commands\BaseCommand
+use Crudvel\Libraries\CvScaffSupport\CvBuilder;
+use Crudvel\Traits\CacheTrait;
+
+class CvScaff extends BaseCommand
 {
-  use \Crudvel\Traits\CacheTrait;
+  use CacheTrait;
   /**
    * The name and signature of the console command.
    *
@@ -34,7 +37,7 @@ class CvScaff extends \Crudvel\Commands\BaseCommand
    */
   public function handle()
   {
-    $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder($this))
+    $cvScaffBuilder = (new CvBuilder($this))
       ->stablishContext($this->propertyReload('context'))
       ->stablishMode($this->propertyReload('mode'))
       ->stablishTarget($this->propertyReload('target'))

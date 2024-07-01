@@ -1193,7 +1193,7 @@ if(!function_exists('assetsMap')){
 }
 
 if(!function_exists('customExec')){
-  function customExec(...$params){CvHelper::customExec(...$params);}
+  function customExec(...$params){return CvHelper::customExec(...$params);}
 }
 
 if(!function_exists('facader')){

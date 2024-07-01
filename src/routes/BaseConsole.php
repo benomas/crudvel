@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use \Crudvel\Traits\{CacheTrait,CvPatronTrait};
 use \Crudvel\Libraries\Helpers\{ResourceTrait,CasesTrait};
 
-class BaseConsole{
+class BaseConsole {
   use CacheTrait;
   use CvPatronTrait;
   use ResourceTrait;

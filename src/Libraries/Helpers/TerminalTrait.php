@@ -122,7 +122,7 @@ trait TerminalTrait
       );
   }
 
-  function customExec($command){
+  function customExec($command) : mixed {
     return exec('cd '.base_path().' && '.$command);
   }
 }

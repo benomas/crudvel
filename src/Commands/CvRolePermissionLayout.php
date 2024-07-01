@@ -1,10 +1,13 @@
 <?php namespace Crudvel\Commands;
 
 use App\Models\Role;
+use Crudvel\Libraries\SpreadSheetIO\Constructors\{PermissionGlobalSpecials,PermissionResourceAction,PermissionResourceSection};
+use Crudvel\Libraries\SpreadSheetIO\SpreadSheet;
+use Crudvel\Traits\CacheTrait;
 
-class CvRolePermissionLayout extends \Crudvel\Commands\BaseCommand
+class CvRolePermissionLayout extends BaseCommand
 {
-  use \Crudvel\Traits\CacheTrait;
+  use CacheTrait;
   /**
    * The name and signature of the console command.
    *
@@ -34,19 +37,18 @@ class CvRolePermissionLayout extends \Crudvel\Commands\BaseCommand
    *
    * @return mixed
    */
-  public function handle()
-  {
+  public function handle(): mixed {
     $reloadFromDb = (bool) $this->propertyReload('reloadFromDb') ?? false;
     $dbRoles = Role::withoutRoot()->orderBy('id','ASC')->get();
     foreach($dbRoles AS $role){
-      $spreadSheetConstructor = new \Crudvel\Libraries\SpreadSheetIO\Constructors\PermissionResourceSection($role->slug);
-      $excel = new \Crudvel\Libraries\SpreadSheetIO\SpreadSheet($spreadSheetConstructor);
+      $spreadSheetConstructor = new PermissionResourceSection($role->slug);
+      $excel = new SpreadSheet($spreadSheetConstructor);
       $excel->synchronize($reloadFromDb);
-      $spreadSheetConstructor = new \Crudvel\Libraries\SpreadSheetIO\Constructors\PermissionResourceAction($role->slug);
-      $excel = new \Crudvel\Libraries\SpreadSheetIO\SpreadSheet($spreadSheetConstructor);
+      $spreadSheetConstructor = new PermissionResourceAction($role->slug);
+      $excel = new SpreadSheet($spreadSheetConstructor);
       $excel->synchronize($reloadFromDb);
-      $spreadSheetConstructor = new \Crudvel\Libraries\SpreadSheetIO\Constructors\PermissionGlobalSpecials($role->slug);
-      $excel = new \Crudvel\Libraries\SpreadSheetIO\SpreadSheet($spreadSheetConstructor);
+      $spreadSheetConstructor = new PermissionGlobalSpecials($role->slug);
+      $excel = new SpreadSheet($spreadSheetConstructor);
       $excel->synchronize($reloadFromDb);
     }
   }

@@ -1,10 +1,11 @@
 <?php namespace Crudvel\Commands;
 
+use Crudvel\Traits\CacheTrait;
 use Illuminate\Console\Command;
 
 class BaseCommand extends Command
 {
-  use \Crudvel\Traits\CacheTrait;
+  use CacheTrait;
   /**
    * The name and signature of the console command.
    *
@@ -54,7 +55,14 @@ class BaseCommand extends Command
       $limit = $tries = 10;
       while ($tries--){
         try{
-          customExec('php artisan custom-light-refresh');
+
+          customExec('php artisan config:cache');
+          customExec('php artisan cache:clear');
+          cvConsoler(cvBrownTC(customExec('composer dump-autoload'))."\n");
+          cvConsoler(cvBrownTC('composer dump-autoload procesado ')."\n");
+          customExec('php artisan config:cache');
+
+          // customExec('php artisan custom-light-refresh');
           break;
         }catch(\Exception $e) {
           cvConsoler(cvRedTC('custom-light-refresh cant be launched jet trigin agan')."$tries '/' $limit \n");

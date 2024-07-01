@@ -1,14 +1,13 @@
 <?php namespace Crudvel\Commands;
 
+use Crudvel\Libraries\Helpers\TerminalTrait;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\{Artisan,Schema};
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Illuminate\Support\Facades\Schema;
+use Symfony\Component\Console\Input\{InputOption,InputArgument};
 
 class InstallCommand extends Command {
-  use \Crudvel\Libraries\Helpers\TerminalTrait;
+  use TerminalTrait;
   protected $signature   = 'install:crudvel {mode?}';
   protected $description = 'Instalar paquete modo main default u opcional, en modo opcional no se tocaran modelos, migracions y seeds del projecto';
   protected $name    = "install:crudvel";

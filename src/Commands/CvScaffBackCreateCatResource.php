@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Commands;
 
-class CvScaffBackCreateCatResource extends \Crudvel\Commands\BaseCommand
+class CvScaffBackCreateCatResource extends BaseCommand
 {
   /**
    * The name and signature of the console command.
@@ -112,6 +112,9 @@ class CvScaffBackCreateCatResource extends \Crudvel\Commands\BaseCommand
       'target'   => 'cat-test-seeder',
       'resource' => $resource,
     ]);
+
     $this->prepareApiEnv();
+
+    customExec('php artisan migrate');
   }
 }

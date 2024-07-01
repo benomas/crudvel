@@ -1,8 +1,11 @@
 <?php namespace Crudvel\Commands;
 
-class CvScaffFixTrees extends \Crudvel\Commands\BaseCommand
+use Crudvel\Libraries\CvScaffSupport\CvBuilder;
+use Crudvel\Traits\CacheTrait;
+
+class CvScaffFixTrees extends BaseCommand
 {
-  use \Crudvel\Traits\CacheTrait;
+  use CacheTrait;
   /**
    * The name and signature of the console command.
    *
@@ -34,7 +37,7 @@ class CvScaffFixTrees extends \Crudvel\Commands\BaseCommand
    */
   public function handle()
   {
-    $cvScaffBuilder = (new \Crudvel\Libraries\CvScaffSupport\CvBuilder($this));
+    $cvScaffBuilder = (new CvBuilder($this));
     $cvScaffBuilder->build()->fixScaffTrees();
   }
 }

@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Commands;
 
-class CvScaffCreateCatResource extends \Crudvel\Commands\BaseCommand
+class CvScaffCreateCatResource extends BaseCommand
 {
   /**
    * The name and signature of the console command.

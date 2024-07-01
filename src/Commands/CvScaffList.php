@@ -1,6 +1,8 @@
 <?php namespace Crudvel\Commands;
 
-class CvScaffList extends \Crudvel\Commands\BaseCommand
+use Crudvel\Libraries\CvScaffSupport\CvBuilder;
+
+class CvScaffList extends BaseCommand
 {
   use \Crudvel\Traits\CacheTrait;
   /**
@@ -34,7 +36,7 @@ class CvScaffList extends \Crudvel\Commands\BaseCommand
    */
   public function handle()
   {
-    (new \Crudvel\Libraries\CvScaffSupport\CvBuilder($this,'Crudvel\Libraries\CvScaffSupport\CvScaffHelper'))
+    (new CvBuilder($this,'Crudvel\Libraries\CvScaffSupport\CvScaffHelper'))
       ->build()
       ->cvScaffList()
       ->composerDump();
