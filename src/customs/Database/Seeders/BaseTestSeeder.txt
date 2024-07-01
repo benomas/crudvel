@@ -1,6 +1,8 @@
 <?php namespace Customs\Crudvel\Database\Seeds;
+
 /**
  * modificable BaseTestSeeder
  */
 class BaseTestSeeder extends \Crudvel\Database\Seeds\BaseTestSeeder{
+  protected int $seedsToInsert = 10;
 }
