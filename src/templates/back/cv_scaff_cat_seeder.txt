@@ -1,6 +1,6 @@
 <?php namespace Database\Seeds;
 
-class <##[singular|studly](resource)##>TableSeeder extends \Customs\Crudvel\Database\Seeders\BaseSeeder{
+class <##[singular|studly](resource)##>TableSeeder extends \Customs\Crudvel\Database\Seeds\BaseSeeder{
   protected $data =[
     [
       'name'        => '<##[singular|title](resource)##>1',

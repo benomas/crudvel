@@ -188,10 +188,10 @@ class BaseConsole{
 
   public function loadTestSeed($callBack=null){
     $callBack = $callBack ?? function (){
-      \Crudvel\Routes\BaseConsole::cvIam()->caller(['command'=>'db:seed','params'=>['--class'=>'Database\Seeders\Test\DatabaseSeeder']]);
+      \Crudvel\Routes\BaseConsole::cvIam()->caller(['command'=>'db:seed','params'=>['--class'=>'Database\Seeds\Test\DatabaseSeeder']]);
     };
 
-    Artisan::command('test:seed',$callBack)->describe('Run test seeders');
+    Artisan::command('test:seed',$callBack)->describe('Run test seeds');
 
     return $this;
   }
@@ -503,7 +503,7 @@ class BaseConsole{
   }
 
   public function loadSingleSeeds($callBack=null){
-    //Autoload individual seeders and testSeeds
+    //Autoload individual seeds and testSeeds
     foreach ($this->cvSeeds() as $seed => $seedClass) {
       Artisan::command("single-seeder[{$seed}]", function () use($seedClass){
         $seedInstance = $seedClass::cvIam();

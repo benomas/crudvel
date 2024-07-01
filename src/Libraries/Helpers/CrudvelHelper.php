@@ -8,7 +8,7 @@ class CvHelper{
   protected $debuggScriptStamp = null;
   protected $uCprop            = null;
   protected $controllers       = null;
-  protected $seeders             = null;
+  protected $seeds             = null;
   protected $actions           = null;
   use DebuggTrait;
   use ObjectTrait;

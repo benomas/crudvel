@@ -55,8 +55,8 @@ trait ResourceTrait
     if (is_callable($this,'getSeeds') && $this->getSeeds())
       return $this->getSeeds();
 /*
-    $seedFiles = $this->scanFilesOnDir(database_path('seeders'));
-    $seeders   = [];
+    $seedFiles = $this->scanFilesOnDir(database_path('seeds'));
+    $seeds   = [];
     foreach ($seedFiles as $seedKey => $seed) {
       if($seed===database_path('DatabaseSeeder.php'))
         continue;
@@ -74,7 +74,7 @@ trait ResourceTrait
       },'');
 
       if(class_exists($seederClass))
-        $seeders[$this->cvSlugCase($indexSeed)] = $seederClass;
+        $seeds[$this->cvSlugCase($indexSeed)] = $seederClass;
     }*/
     return $this->setSeeds(StaticResourceTrait::cvSeeds($subPath))->getSeeds();
   }
@@ -143,7 +143,7 @@ trait ResourceTrait
   }
 
   protected function getSeeds(){
-    return $this->seeders;
+    return $this->seeds;
   }
 
   protected function getActions(){
@@ -161,8 +161,8 @@ trait ResourceTrait
     return $this;
   }
 
-  protected function setSeeds($seeders){
-    $this->seeders = $seeders;
+  protected function setSeeds($seeds){
+    $this->seeds = $seeds;
 
     return $this;
   }

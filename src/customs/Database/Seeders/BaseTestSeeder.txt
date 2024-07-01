@@ -2,5 +2,5 @@
 /**
  * modificable BaseTestSeeder
  */
-class BaseTestSeeder extends \Crudvel\Database\Seeders\BaseTestSeeder{
+class BaseTestSeeder extends \Crudvel\Database\Seeds\BaseTestSeeder{
 }

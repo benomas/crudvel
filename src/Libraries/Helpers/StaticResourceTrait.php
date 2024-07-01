@@ -7,8 +7,8 @@ trait StaticResourceTrait
   public static function cvSeeds(String $subPath='') {
     $conditionalSegment = !empty($subPath) ? '/' : '';
 
-    $seedFiles = static::scanFilesOnDir(database_path("seeders{$conditionalSegment}{$subPath}"));
-    $seeders   = [];
+    $seedFiles = static::scanFilesOnDir(database_path("seeds{$conditionalSegment}{$subPath}"));
+    $seeds   = [];
 
     foreach ($seedFiles as $seed) {
       if($seed===database_path('DatabaseSeeder.php'))
@@ -27,10 +27,10 @@ trait StaticResourceTrait
       },'');
 
       if(class_exists($seederClass))
-        $seeders[StaticCasesTrait::cvSlugCase($indexSeed)] = $seederClass;
+        $seeds[StaticCasesTrait::cvSlugCase($indexSeed)] = $seederClass;
     }
 
-    return $seeders;
+    return $seeds;
   }
 
   public static function scanFilesOnDir($source_dir){

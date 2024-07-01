@@ -24,7 +24,7 @@ class CvRemoverCatSeederScaff extends \Crudvel\Libraries\CvScaffSupport\Back\CvB
     return $this->globalFileRegexRemover(
       $this->scapedRegexMaker(
         '<slot>TableSeeder::class',
-        'Database\Seeders\\'.Str::studly(Str::singular($this->getResource()))
+        'Database\Seeds\\'.Str::studly(Str::singular($this->getResource()))
       )
     );
   }

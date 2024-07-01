@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 class InstallCommand extends Command {
   use \Crudvel\Libraries\Helpers\TerminalTrait;
   protected $signature   = 'install:crudvel {mode?}';
-  protected $description = 'Instalar paquete modo main default u opcional, en modo opcional no se tocaran modelos, migracions y seeders del projecto';
+  protected $description = 'Instalar paquete modo main default u opcional, en modo opcional no se tocaran modelos, migracions y seeds del projecto';
   protected $name    = "install:crudvel";
   protected $migrationPath;
 

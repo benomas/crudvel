@@ -1,6 +1,6 @@
 <?php namespace Crudvel\Database\Seeds;
 
-use Crudvel\Database\Seeders\BaseSeeder;
+use Crudvel\Database\Seeds\BaseSeeder;
 use DB;
 
 class CatPermissionTypeTableSeeder extends BaseSeeder
