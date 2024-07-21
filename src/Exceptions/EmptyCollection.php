@@ -1,9 +1,8 @@
 <?php namespace Crudvel\Exceptions;
 
 use Exception;
-use Illuminate\Support\Facades\Cache;
 
-class EmptyCollection extends Exception{
+class EmptyCollection extends Exception {
   public function report(){
   }
 

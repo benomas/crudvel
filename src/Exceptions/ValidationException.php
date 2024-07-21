@@ -1,10 +1,12 @@
 <?php namespace Crudvel\Exceptions;
 
+use Crudvel\Controllers\ApiController;
+use Crudvel\Libraries\Helpers\CasesTrait;
 use Exception;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\JsonResponse;
 
 abstract class ValidationException extends Exception {
-  use \Crudvel\Libraries\Helpers\CasesTrait;
+  use CasesTrait;
   protected mixed $exceptionData;
 
   abstract protected function getResourceLang():string;
@@ -22,8 +24,8 @@ abstract class ValidationException extends Exception {
       " {$this->getMessage()} ");
   }
 
-  public function render($request): \Illuminate\Http\JsonResponse {
-    return \Crudvel\Controllers\ApiController::sApiFailResponse([
+  public function render($request): JsonResponse {
+    return ApiController::sApiFailResponse([
       "message"       => $this->getLangMessage(),
       "errorType"     => $this->getErrorType(),
       "exceptionData" => $this->getExceptionData()

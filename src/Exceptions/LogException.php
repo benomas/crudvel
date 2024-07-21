@@ -1,7 +1,6 @@
 <?php namespace Crudvel\Exceptions;
 
 use Exception;
-use Illuminate\Support\Facades\Cache;
 use \Crudvel\Interfaces\LogExceptionInterface;
 
 abstract class LogException extends Exception implements LogExceptionInterface{

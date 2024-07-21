@@ -1,7 +1,6 @@
 <?php namespace Crudvel\Exceptions;
 
 use Exception;
-use Illuminate\Support\Facades\Cache;
 
 class PreactionResponse extends Exception{
   protected $prematureResponse;
@@ -17,7 +16,7 @@ class PreactionResponse extends Exception{
     return $this->prematureResponse??null;
   }
 
-  public function setPrematureResponse($prematureResponse=null){
+  public function setPrematureResponse($prematureResponse=null): static {
     $this->prematureResponse = $prematureResponse??null;
 
     return $this;
