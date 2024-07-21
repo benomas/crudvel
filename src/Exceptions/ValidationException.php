@@ -11,6 +11,13 @@ abstract class ValidationException extends Exception {
 
   abstract protected function getResourceLang():string;
 
+  public function __construct($message = null, $code = 0, \Exception $previous = null){
+    $message = $message ? " - $message":'';
+    $message = "{$this->message}{$message}";
+    parent::__construct($message, $code, $previous);
+    $this->message = "Error found at line {$this->getLine()} in {$this->getFile()}: <b>{$this->getMessage()}</b>";
+  }
+
 // [Specific Logic]
   public function report(){
   }
