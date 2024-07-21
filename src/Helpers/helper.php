@@ -1220,11 +1220,43 @@ if(!function_exists('jdd')){
 }
 
 if(!function_exists('customLog')){
-  function customLog(...$params){CvHelper::customLog(...$params);}
+  function customLog(...$params): void {CvHelper::customLog(...$params);}
+}
+
+if(!function_exists('customEmergencyLog')){
+  function customEmergencyLog(...$params): void {CvHelper::customEmergencyLog(...$params);}
+}
+
+if(!function_exists('customAlertLog')){
+  function customAlertLog(...$params): void {CvHelper::customAlertLog(...$params);}
+}
+
+if(!function_exists('customCriticalLog')){
+  function customCriticalLog(...$params): void {CvHelper::customCriticalLog(...$params);}
+}
+
+if(!function_exists('customErrorLog')){
+  function customErrorLog(...$params): void {CvHelper::customErrorLog(...$params);}
+}
+
+if(!function_exists('customWarningLog')){
+  function customWarningLog(...$params): void {CvHelper::customWarningLog(...$params);}
+}
+
+if(!function_exists('customNoticeLog')){
+  function customNoticeLog(...$params): void {CvHelper::customNoticeLog(...$params);}
+}
+
+if(!function_exists('customInfoLog')){
+  function customInfoLog(...$params): void {CvHelper::customInfoLog(...$params);}
+}
+
+if(!function_exists('customDebugLog')){
+  function customDebugLog(...$params): void {CvHelper::customDebugLog(...$params);}
 }
 
 if(!function_exists('cvTest')){
-  function cvTest($expresion=null){return CvHelper::cvTest($expresion);}
+  function cvTest($expression=null){return CvHelper::cvTest($expression);}
 }
 
 if(!function_exists('caller')){
