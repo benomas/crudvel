@@ -274,7 +274,8 @@ $cvActionsExtra = [
 ];
 
 $cvCrudvel = [
-  'context_permission'=>'অনুমতি প্রয়োগ করে',
+  'context_permission' => 'অনুমতি প্রয়োগ করে',
+  'exceptions'         => [],
 ];
 
 $cvWeb = [

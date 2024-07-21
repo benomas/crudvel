@@ -46,11 +46,11 @@ class BaseCommand extends Command
     return $propertyValue;
   }
 
-  public function propertyDefiner($property,$value){
+  public function propertyDefiner($property,$value): void {
     $this->cvCacheSetProperty($property,$value);
   }
 
-  public function prepareApiEnv (){
+  public function prepareApiEnv (): void {
     if (composerDump()){
       $limit = $tries = 10;
       while ($tries--){

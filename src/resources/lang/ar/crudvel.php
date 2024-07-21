@@ -274,7 +274,8 @@ $cvActionsExtra = [
 ];
 
 $cvCrudvel = [
-  'context_permission'=>'الإذن ينطبق على',
+  'context_permission' => 'الإذن ينطبق على',
+  'exceptions'         => [],
 ];
 
 $cvWeb = [

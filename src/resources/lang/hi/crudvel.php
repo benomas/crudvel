@@ -275,6 +275,7 @@ $cvActionsExtra = [
 
 $cvCrudvel = [
   'context_permission' => 'अनुमति किस पर लागू होती है',
+  'exceptions'         => [],
 ];
 
 $cvWeb = [

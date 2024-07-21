@@ -276,6 +276,7 @@ $cvActionsExtra = [
 $cvCrudvel = [
   'context_permission' => 'Permission applies to',
   'now'                => 'Now',
+  'exceptions'         => [],
 ];
 
 $cvWeb = [
