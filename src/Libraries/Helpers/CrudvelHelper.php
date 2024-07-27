@@ -1,7 +1,9 @@
 <?php
 
 namespace Crudvel\Libraries\Helpers;
-
+/*
+ * @method static dynamicFallBack()
+ */
 class CvHelper{
   protected $debuggExpresion   = null;
   protected $debuggScriptTime  = null;

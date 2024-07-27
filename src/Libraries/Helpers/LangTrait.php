@@ -18,4 +18,14 @@ trait LangTrait{
 
     return $resourceLang['fields'][$field] ?? $field;
   }
+
+  public function dynamicFallBack () : string {
+    $locale = app()->getLocale();
+    $fallBackLocale = config('app.fallback_locale');
+
+    if ($locale === $fallBackLocale)
+      return 'en';
+
+    return $fallBackLocale;
+  }
 }

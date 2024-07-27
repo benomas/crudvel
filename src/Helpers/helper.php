@@ -1569,3 +1569,7 @@ if(!function_exists('fkP')){
 if(!function_exists('extraSpaceCleaner')){
   function extraSpaceCleaner(...$params){return CvHelper::extraSpaceCleaner(...$params);}
 }
+
+if(!function_exists('dynamicFallBack')){
+  function dynamicFallBack(...$params){return CvHelper::dynamicFallBack(...$params);}
+}
