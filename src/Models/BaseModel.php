@@ -3,20 +3,25 @@
 namespace Crudvel\Models;
 
 use Crudvel\Interfaces\CvCrudInterface;
+use Crudvel\Libraries\Helpers\CasesTrait;
+use Crudvel\Models\Traits\{CvBaseMethodsTrait,CvBaseScopeTrait};
+use Crudvel\Traits\{CacheTrait,CrudTrait,CvPatronTrait};
 use DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class BaseModel extends Model implements CvCrudInterface
 {
-  use \Crudvel\Traits\CrudTrait;
-  use \Crudvel\Traits\CacheTrait;
-  use \Crudvel\Traits\CvPatronTrait;
-  use \Crudvel\Libraries\Helpers\CasesTrait;
-  use \Crudvel\Models\Traits\CvBaseScopeTrait;
-  use \Crudvel\Models\Traits\CvBaseMethodsTrait;
-  use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
-  use \Illuminate\Database\Eloquent\Factories\HasFactory;
+  use CrudTrait;
+  use CacheTrait;
+  use CvPatronTrait;
+  use CasesTrait;
+  use CvBaseScopeTrait;
+  use CvBaseMethodsTrait;
+  use HasRelationships;
+  use HasFactory;
 
   protected $slugSingularName;
   protected $cvResourceInstance;
