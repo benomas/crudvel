@@ -75,7 +75,7 @@ trait DebuggTrait
     if(!$this->debuggScriptStamp)
       $this->debuggScriptStamp  = $rightNow;
     $params                   = json_encode($params);
-    $sourcePosition           = 3;
+    $sourcePosition           = 4;
 
     if (!$target || !isset(static::getLoginChannles()["daily_{$target}"])){
       Log::info(
