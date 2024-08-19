@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Crudvel\Database\Migrations\BaseMigration;
 
-class ForeingMaker{
+class ForeingMaker {
   protected $migration   = null;
   protected $table       = null;
   protected $to          = null;
@@ -38,9 +38,33 @@ class ForeingMaker{
     return $this->setForeign(null)->setForeingName(null);
   }
 
-  public function userStampForeings () {
-    return $this->setForeign('created_by')->build('users')
+  public function callbackUpdate (Callable $callback) : static {
+
+    if ($callback) {
+      try{
+        Schema::table($this->getTable(), fn ($table) => $callback($table));
+      }
+      catch(\Exception $e){
+        cvConsoler(cvNegative("error when try to alter {$this->getTable()} table").cvWarning(' '.$e->getMessage())."\n");
+      }
+    }
+
+    return $this;
+  }
+
+  public function userStampForeings ($mode=null) {
+    return $this->setOnDelete($mode)
+      ->setForeign('created_by')->build('users')
       ->setForeign('updated_by')->build('users');
+  }
+
+  public function deleteUserStampForeigns (): static {
+    $this->setOnDelete(null)->callbackUpdate(function ($table) {
+      $table->dropForeign("{$this->getTable()}_created_by_foreign");
+      $table->dropForeign("{$this->getTable()}_updated_by_foreign");
+    });
+
+    return $this;
   }
 // [End Specific Logic]
 // [Getters]
