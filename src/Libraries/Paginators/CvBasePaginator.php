@@ -335,6 +335,10 @@ class CvBasePaginator implements CvCrudInterface
     if(!$this->getModelBuilderInstance())
       throw new \Crudvel\Exceptions\EmptyCollection();
 
+    //if it is not a select query defined
+    if(noEmptyArray($this->getSelectQuery()))
+      $this->fixSelectables();
+
     if(
       ($this->getModelCollectionInstance() && !empty($this->getModelCollectionInstance()->getKeyValue())) ||
       $this->getRootInstance()->getForceSingleItemPagination()
