@@ -20,7 +20,7 @@ class CvRolePermissionLayout extends BaseCommand
    *
    * @var string
    */
-  protected $description = 'Generate excel to be source of role-permissions seeder';
+  protected $description = 'Generate excel to be source of role-permissions seeder, optional reloadFromDb flag (default is false)';
 
   /**
    * Create a new command instance.
