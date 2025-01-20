@@ -4,6 +4,7 @@ namespace Crudvel\CvFile;
 
 use Crudvel\Models\CatFile;
 use Crudvel\Models\File;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -22,7 +23,7 @@ class CvFile {
     $fileModel = $this->getCvFileBridge()->getFileModelInstance();
 
     if ($catFile->multiple)
-      return $this->storeASingle();
+      return $this->storeASingle($fileModel);
 
     if (
       $fileModel->catFileId($this->getCvFileBridge()->getFields()["cat_file_id"] ?? null)
@@ -39,9 +40,6 @@ class CvFile {
 
   /**
    * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return JsonResponse
    */
   public function destroy(): bool {
     $fileModel = $this->getCvFileBridge()->getFileModelInstance();
@@ -66,20 +64,16 @@ class CvFile {
     }
 
     $fileModel->absolute_path = $this->filePath();
-    $fileModel->resourcer->touch();
+    $fileModel->resourcer?->touch();
 
     return $fileModel->save();
   }
 
 
   protected function updateASingle(): bool {
-    $fields = $this->getCvFileBridge()->setStamps()->addField('path', '')->addField('disk', $this->getDisk())->getFields();
     $fileModel = $this->getCvFileBridge()->getFileModelInstance();
 
     if (!$this->deleteFile($fileModel))
-      return false;
-
-    if (!$fileModel->fill($fields)->save())
       return false;
 
     return $this->storeASingle($fileModel);
@@ -97,7 +91,7 @@ class CvFile {
     $filePath  = "uploads/{$fileModel->catFile->resource}/{$fileModel->resource_id}";
     $fileInput = $fileModel->catFile->resource;
     $uuid      = (string)Str::uuid();
-    $fileName  = "{$uuid}.{$this->getCvFileBridge()->getFileName()}";
+    $fileName  = "{$uuid}.{$this->getCvFileBridge()->getFileNameExtension()}";
 
     return [
       $filePath,

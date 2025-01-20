@@ -2,6 +2,7 @@
 
 use Crudvel\Traits\Related;
 use Customs\Crudvel\Models\BaseModel;
+use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property ?string path
  * @property string disk
  * @property string absolute_path
+ * @property HigherOrderBuilderProxy|mixed $id
  */
 class File extends BaseModel {
   use Related;

@@ -157,7 +157,7 @@ class FileController extends ApiController implements CvFileBridge {
     return $this->setModelCollectionInstance($this->modelInstantiator(true))->getModelCollectionInstance();
   }
 
-  public function getFileName(): string {
+  public function getFileNameExtension(): string {
     return $this->getRequestInstance()->{$this->getModelCollectionInstance()->catFile->resource}->extension();
   }
 
