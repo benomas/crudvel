@@ -1,10 +1,12 @@
 <?php namespace Crudvel\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-use DB;
+use Crudvel\Models\Traits\CvCodeHookTrait;
 
-class CatFile extends \Crudvel\Models\BaseModel{
-  use \Crudvel\Models\Traits\CvCodeHookTrait;
+/**
+ * @property bool multiple
+ */
+class CatFile extends BaseModel {
+  use CvCodeHookTrait;
 
   protected $fillable = [
     'name',

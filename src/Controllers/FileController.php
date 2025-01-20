@@ -1,9 +1,16 @@
 <?php namespace Crudvel\Controllers;
 
+use Crudvel\CvFile\CvFileBridge;
+use Crudvel\CvFile\CvFile;
+use Illuminate\Http\File as HttpFile;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use App\Models\{File,CatFile};
+use App\Models\{File, CatFile};
+use Customs\Crudvel\Controllers\ApiController;
 
-class FileController extends \Customs\Crudvel\Controllers\ApiController{
+class FileController extends ApiController implements CvFileBridge {
   protected $slugField   = 'slug';
   protected $selectables = [
     'absolute_path',
@@ -23,78 +30,88 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
     'disk',
     'cv_search',
   ];
-  protected $disk = "public";
 
-  public function __construct(){
+  public function __construct() {
     parent::__construct();
-    $this->addAction('storeUpdate');
   }
 
-  public function beforeFlowControl(){
+  public function beforeFlowControl(): void {
     $this->getModelBuilderInstance()->aditionalParticularOwner();
     //pendent to be implementent, doest work well with laravel 6, but does with laravel 7, wait to upgrade before enable it
     //$this->getModelBuilderInstance()->with('resourcer')->solveSearches();
   }
 
   // [Actions]
-  public function show($id){
+  public function show($id) {
     $this->getModelBuilderInstance()->with('catFile');
 
     return $this->actionResponse();
   }
 
-  public function store(){
-    $catFile  = CatFile::id($this->getFields()["cat_file_id"])->first();
+  public function store(): Response|JsonResponse {
+    $this->resetTransaction();
+    $this->startTranstaction();
+    $this->testTransaction(function () {
+      $cvFile = new CvFile($this);
+      return $cvFile->store();
+    });
 
-    if ($catFile->multiple)
-      return $this->storeAMultiple($catFile);
+    $this->transactionComplete();
 
-    if ($this->getModelBuilderInstance()->catFileId($this->getFields()["cat_file_id"])->resourceId($this->getFields()["resource_id"])->count())
-      return $this->updateASingle($catFile);
+    if (!$this->isTransactionCompleted())
+      return $this->apiFailResponse();
 
-    return $this->storeASingle($catFile);
+    return $this->apiSuccessResponse([
+      "data"    => $this->getModelCollectionInstance(),
+      "count"   => 1,
+      "message" => trans("crudvel.api.success")
+    ]);
   }
 
-  public function update($id){
-    $catFile  = CatFile::id($this->getFields()["cat_file_id"])->first();
+  public function update($id): Response|JsonResponse {
+    $this->resetTransaction();
+    $this->startTranstaction();
+    $this->testTransaction(function () {
+      $cvFile = new CvFile($this);
+      return $cvFile->update();
+    });
 
-    if ($catFile->multiple)
-      return $this->updateAMultiple($catFile);
+    $this->transactionComplete();
 
-    return $this->updateASingle($catFile);
-  }
+    if (!$this->isTransactionCompleted())
+      return $this->apiFailResponse();
 
-  public function storeUpdate(){
-    $fields =  $this->getFields();
-    $this->setModelCollectionInstance(
-      $this->getModelBuilderInstance()->catFileId($fields["cat_file_id"])->resourceId($fields["resource_id"])->get()
-    );
-    return $this->saveFile(true);
+    return $this->apiSuccessResponse([
+      "data"    => $this->getModelCollectionInstance(),
+      "count"   => 1,
+      "message" => trans("crudvel.api.success")
+    ]);
   }
 
   /**
    * Remove the specified resource from storage.
    *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
+   * @param int $id
+   * @return JsonResponse
    */
-  public function destroy($id)
-  {
-    return $this->deleteFile() && $this->getModelCollectionInstance()->delete()?
-      $this->apiSuccessResponse():
+  public function destroy($id): JsonResponse {
+    $cvFile = new CvFile($this);
+
+    return $cvFile->destroy() ?
+      $this->apiSuccessResponse() :
       $this->apiFailResponse();
   }
 
-  public function activate($id){
-    $this->addField('active',1);
-    $this->addField('id',$id);
+  public function activate($id): Response|JsonResponse {
+    $this->addField('active', 1);
+    $this->addField('id', $id);
     $this->setStamps();
     return parent::update($id);
   }
 
-  public function deactivate($id){
-    $this->addField('active',0);
-    $this->addField('id',$id);
+  public function deactivate($id): Response|JsonResponse {
+    $this->addField('active', 0);
+    $this->addField('id', $id);
     $this->setStamps();
     return parent::update($id);
   }
@@ -103,213 +120,49 @@ class FileController extends \Customs\Crudvel\Controllers\ApiController{
   // [Methods]
 
   //Refactoring
-
-  protected function storeAMultiple ($catFile) {
-    return $this->storeASingle($catFile);
+  public function addedCatFileMultiple() {
+    return CatFile::invokePosfix($this->getModelClass(), 'multiple');
   }
 
-  protected function updateAMultiple ($catFile) {
-    return $this->updateASingle($catFile);
+  public function addedCatFileName() {
+    return CatFile::invokePosfix($this->getModelClass(), 'name');
   }
 
-  protected function storeASingle ($catFile) {
-    $this->resetTransaction();
-    $this->startTranstaction();
-    $this->testTransaction(function() use($catFile){
-      $fields   = $this->setStamps()->addField('path','')->addField('disk',$this->getDisk())->getFields();
-
-      if(!$this->setModelCollectionInstance($this->modelInstantiator(true))->getModelCollectionInstance()->fill($fields)->save())
-        return false;
-
-      [$filePath, $fileInput, $fileName] = $this->paths();
-
-      if(!$this->getModelCollectionInstance()->path = Storage::disk($this->getModelCollectionInstance()->disk)->putFileAs($filePath, $this->getRequestInstance()->{$fileInput},$fileName))
-        return false;
-
-      $this->getModelCollectionInstance()->absolute_path = $this->filePath();
-
-      $this->getModelCollectionInstance()->resourcer->touch();
-
-      return $this->getModelCollectionInstance()->save();
-    });
-
-    $this->transactionComplete();
-
-    if(!$this->isTransactionCompleted())
-      return $this->apiFailResponse();
-
-    return $this->apiSuccessResponse([
-      "data"    => $this->getModelCollectionInstance(),
-      "count"   => 1,
-      "message" => trans("crudvel.api.success")
-    ]);
+  public function addedCatFileSlug() {
+    return CatFile::invokePosfix($this->getModelClass(), 'slug');
   }
 
-  protected function updateASingle ($catFile) {
-    $this->resetTransaction();
-    $this->startTranstaction();
-    $this->testTransaction(function() use($catFile){
-      $fields   = $this->setStamps()->addField('path','')->addField('disk',$this->getDisk())->getFields();
-
-      if(!$this->deleteFile($this->getModelCollectionInstance()))
-        return false;
-
-      if(!$this->getModelCollectionInstance()->fill($fields)->save())
-        return false;
-
-      [$filePath, $fileInput, $fileName] = $this->paths();
-
-      if(!$this->getModelCollectionInstance()->path = Storage::disk($this->getModelCollectionInstance()->disk)->putFileAs($filePath, $this->getRequestInstance()->{$fileInput},$fileName))
-        return false;
-
-      $this->getModelCollectionInstance()->absolute_path = $this->filePath();
-
-      $this->getModelCollectionInstance()->resourcer->touch();
-
-      return $this->getModelCollectionInstance()->save();
-    });
-
-    $this->transactionComplete();
-
-    if(!$this->isTransactionCompleted())
-      return $this->apiFailResponse();
-
-    return $this->apiSuccessResponse([
-      "data"    => $this->getModelCollectionInstance(),
-      "count"   => 1,
-      "message" => trans("crudvel.api.success")
-    ]);
+  public function addedCatFileResource() {
+    return CatFile::invokePosfix($this->getModelClass(), 'resource');
   }
 
-  protected function destroyASingle ($catFile) {
-
+  protected function resourcesBeforeFlowControl(): void {
+    $this->setSelectables(['label', 'value']);
   }
 
-  public function addedCatFileMultiple(){
-    return CatFile::invokePosfix($this->getModelClass(),'multiple');
-  }
-
-  public function addedCatFileName(){
-    return CatFile::invokePosfix($this->getModelClass(),'name');
-  }
-
-  public function addedCatFileSlug(){
-    return CatFile::invokePosfix($this->getModelClass(),'slug');
-  }
-
-  public function addedCatFileResource(){
-    return CatFile::invokePosfix($this->getModelClass(),'resource');
-  }
-
-  public function saveFile($clean=false){
-    $fields =  $this->getFields();
-    $this->resetTransaction();
-    $this->startTranstaction();
-    $this->testTransaction(function() use($clean,$fields){
-      $catFile  = CatFile::id($fields["cat_file_id"]??$this->getModelCollectionInstance()->cat_file_id)->first();
-
-      if($clean){
-        $this->deleteFile($this->getModelCollectionInstance());
-      }
-      /*
-      if(!$catFile->multiple || $clean){
-        foreach ($this->getModelCollectionInstance() as $file) {
-          $this->deleteFile($file);
-          if($catFile->multiple)
-            $file->delete();
-        }
-      }*/
-
-      if($this->getCurrentAction()==='store')
-        $this->modelInstantiator(true);
-
-      $this->setModelCollectionInstance(
-        $this->getModelCollectionInstance()->first()??$this->modelInstantiator(true)
-      );
-
-      $this->setStamps();
-      $fields["path"]="";
-      $fields["disk"]=$this->disk;
-      $this->getModelCollectionInstance()->fill($fields);
-
-      $this->dirtyPropertys = $this->getModelCollectionInstance()->getDirty();
-      if(!$this->getModelCollectionInstance()->save())
-        return false;
-
-      $filePath  = 'uploads'.DIRECTORY_SEPARATOR.$this->getModelCollectionInstance()->catFile->resource.DIRECTORY_SEPARATOR.$this->getModelCollectionInstance()->resource_id;
-      $fileInput = $this->getModelCollectionInstance()->catFile->resource;
-      $fileName  = cvSlugCase($this->getModelCollectionInstance()->catFile()->first()->name)."-".$this->getModelCollectionInstance()->id.".".$this->getRequestInstance()->{$fileInput}->extension();
-
-      if(!$this->getModelCollectionInstance()->path = Storage::disk($this->getModelCollectionInstance()->disk)->putFileAs($filePath, $this->getRequestInstance()->{$fileInput},$fileName))
-        return false;
-
-      $this->getModelCollectionInstance()->absolute_path = $this->filePath();
-
-      return $this->getModelCollectionInstance()->save();
-    });
-    //$this->getModelCollectionInstance()->relatedFiles()->first()->touch();
-    $this->transactionComplete();
-    if(!$this->isTransactionCompleted())
-      return $this->apiFailResponse();
-
-    return $this->apiSuccessResponse([
-      "data"    => $this->getModelCollectionInstance(),
-      "count"   => 1,
-      "message" => trans("crudvel.api.success")
-    ]);
-  }
-
-  public function filePath(){
-    return $this->getModelCollectionInstance()? asset("storage/".$this->getModelCollectionInstance()->path):"";
-  }
-
-  public function deleteFile($file = null){
-    if(!($file = $file??$this->getModelCollectionInstance()))
-      return true;
-
-    if(!Storage::disk($file->disk)->exists($file->path))
-      return true;
-
-    return Storage::disk($file->disk)->delete($file->path);
-  }
-
-  protected function resourcesBeforeFlowControl(){
-    $this->setSelectables(['label','value']);
-  }
-
-  public function syncCvSearch(){
+  public function syncCvSearch(): void {
     \DB::transaction(function () {
-      foreach(\App\Models\File::all() as $file){
+      foreach (File::all() as $file) {
         $file->resource_id = $file->resource_id;
         $file->cat_file_id = $file->cat_file_id;
         $file->save();
       }
     });
   }
-  // [End Methods]
 
-  public function getDisk(){
-      return $this->disk??null;
+  public function getFileModelInstance(): File {
+    if ($this->getModelCollectionInstance())
+      return $this->getModelCollectionInstance();
+
+    return $this->setModelCollectionInstance($this->modelInstantiator(true))->getModelCollectionInstance();
   }
 
-  public function setDisk($disk=null){
-    $this->disk = $disk??null;
-
-    return $this;
+  public function getFileName(): string {
+    return $this->getRequestInstance()->{$this->getModelCollectionInstance()->catFile->resource}->extension();
   }
 
-  protected function paths(){
-    $filePath            = "uploads/{$this->getModelCollectionInstance()->catFile->resource}/{$this->getModelCollectionInstance()->resource_id}";
-    $fileInput           = $this->getModelCollectionInstance()->catFile->resource;
-    $uuid                = (string) \Illuminate\Support\Str::uuid();
-    $slugedMixedCvSearch = cvSlugCase($this->getModelCollectionInstance()->mixed_cv_search);
-    //$fileName  = "{$slugedMixedCvSearch}-{$uuid}.{$this->getRequestInstance()->{$fileInput}->extension()}";
-    $fileName  = "{$uuid}.{$this->getRequestInstance()->{$fileInput}->extension()}";
-
-    return [
-      $filePath,
-      $fileInput,
-      $fileName,
-    ];
+  public function getFileReference(?string $fileInput): HttpFile|UploadedFile|string {
+    return $this->getRequestInstance()->{$this->getModelCollectionInstance()->catFile->resource};
   }
+// [End Methods]
 }

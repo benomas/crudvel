@@ -1,13 +1,24 @@
 <?php namespace Crudvel\Models;
 
+use Crudvel\Traits\Related;
 use Customs\Crudvel\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class File extends \Crudvel\Models\BaseModel{
-  use \Crudvel\Traits\Related;
+
+/**
+ * @property int resource_id
+ * @property ?string path
+ * @property string disk
+ * @property string absolute_path
+ */
+class File extends BaseModel {
+  use Related;
+
   protected $hidden = ['resource'];
 
-  protected $catFileIdValue  = null;
-  protected $resourceIdValue = null;
+  protected ?string $catFileIdValue  = null;
+  protected ?string $resourceIdValue = null;
 
   protected $fillable = [
     'disk',
@@ -22,117 +33,115 @@ class File extends \Crudvel\Models\BaseModel{
   ];
 
 // [Relationships]
-  public function catFile(){
+  public function catFile(): BelongsTo {
     return $this->belongsTo("\App\Models\CatFile");
   }
 
-  public function resourcer(){
-    return $this->morphTo(null,'resource','resource_id','id');
+  public function resourcer(): MorphTo {
+    return $this->morphTo(null, 'resource', 'resource_id', 'id');
   }
 // [End Relationships]
 
 // [Transformers]
-  public function setCatFileIdAttribute($value)
-  {
-    $this->catFileIdValue             = $value;
-    $this->attributes['cat_file_id']  = $value;
+  public function setCatFileIdAttribute($value): void {
+    $this->catFileIdValue            = $value;
+    $this->attributes['cat_file_id'] = $value;
     $this->fixMixedCvSearch();
   }
 
-  public function setResourceIdAttribute($value)
-  {
-    $this->resourceIdValue            = $value;
-    $this->attributes['resource_id']  = $value;
+  public function setResourceIdAttribute($value): void {
+    $this->resourceIdValue           = $value;
+    $this->attributes['resource_id'] = $value;
     $this->fixMixedCvSearch();
   }
 // [End Transformers]
 
 // [End Scopes]
-  public function scopeCatFileId($query,$catFileId){
-    return $query->where($this->preFixed('cat_file_id'),$catFileId);
+  public function scopeCatFileId($query, $catFileId) {
+    return $query->where($this->preFixed('cat_file_id'), $catFileId);
   }
 
-  public function scopeCatFileSlug($query,$catFileSlug){
-    return $query->whereHas('catFile',function($query) use($catFileSlug) {
-      $query->where('cat_files.slug',$catFileSlug);
+  public function scopeCatFileSlug($query, $catFileSlug) {
+    return $query->whereHas('catFile', function ($query) use ($catFileSlug) {
+      $query->where('cat_files.slug', $catFileSlug);
     });
   }
 
-  public function scopeCatFileSlugs($query,$catFileSlugs){
-    return $query->whereHas('catFile',function($query) use($catFileSlugs) {
-      $query->whereIn('cat_files.slug',$catFileSlugs);
+  public function scopeCatFileSlugs($query, $catFileSlugs) {
+    return $query->whereHas('catFile', function ($query) use ($catFileSlugs) {
+      $query->whereIn('cat_files.slug', $catFileSlugs);
     });
   }
 
-  public function scopeResourceId($query,$resourceId){
-    return $query->where($this->preFixed('resource_id'),$resourceId);
+  public function scopeResourceId($query, $resourceId) {
+    return $query->where($this->preFixed('resource_id'), $resourceId);
   }
 
-  public function scopeResourceKey($query,$resourceKey){
-    return $query->where($this->preFixed('resource_id'),$resourceKey);
+  public function scopeResourceKey($query, $resourceKey) {
+    return $query->where($this->preFixed('resource_id'), $resourceKey);
   }
 
-  public function scopeParticularOwner($query, $user=null){
-    if(!$user)
+  public function scopeParticularOwner($query, $user = null) {
+    if (!$user)
       return $query->noFilters();
 
-    return $query->morphedDefParticularOwner($user,'resourcer');
+    return $query->morphedDefParticularOwner($user, 'resourcer');
   }
 
-  public function scopeAditionalParticularOwner($query, $userId=null){
-    if(!($user = $this->fixUser($userId)))
+  public function scopeAditionalParticularOwner($query, $userId = null) {
+    if (!($user = $this->fixUser($userId)))
       return $query->noFilters();
 
-    return $query->whereHasMorph('resourcer','*');
+    return $query->whereHasMorph('resourcer', '*');
   }
 
-  public function scopeFromResource($query,$resource){
-    return $query->whereHas('catFile',function($query) use($resource){
-      $query->where('resource',$resource);
+  public function scopeFromResource($query, $resource) {
+    return $query->whereHas('catFile', function ($query) use ($resource) {
+      $query->where('resource', $resource);
     });
   }
 
-  public function scopeSelectCvSearch($query,$alias=null){
+  public function scopeSelectCvSearch($query, $alias = null) {
     $alias = $this->alias($alias);
 
     return $query->select("$alias.mixed_cv_search");
   }
 
-  public function scopeGroup($query,$group){
-    return $query->whereHas('catFile',function($query) use($group){
+  public function scopeGroup($query, $group) {
+    return $query->whereHas('catFile', function ($query) use ($group) {
       $query->group($group);
     });
   }
 // [End Scopes]
 
 // [Others]
-  public function fixMixedCvSearch(){
+  public function fixMixedCvSearch() {
     $this->attributes['mixed_cv_search']    = '';
     $this->attributes['resource_cv_search'] = '';
     $this->attributes['resource']           = '';
 
-    if($this->catFileIdValue === null || $this->resourceIdValue === null)
-      return ;
+    if ($this->catFileIdValue === null || $this->resourceIdValue === null)
+      return;
 
-    if(!$catFileInstance = \App\Models\CatFile::disableRestriction()->key($this->catFileIdValue)->solveSearches()->first())
-      return ;
+    if (!$catFileInstance = \App\Models\CatFile::disableRestriction()->key($this->catFileIdValue)->solveSearches()->first())
+      return;
 
-    $resourceModel = 'App\Models\\'.cvCaseFixer('studly|singular',$catFileInstance->resource);
+    $resourceModel = 'App\Models\\' . cvCaseFixer('studly|singular', $catFileInstance->resource);
 
-    if(!class_exists($resourceModel))
-      return ;
+    if (!class_exists($resourceModel))
+      return;
 
-    if(!$resourceModelInstance = $resourceModel::key($this->resourceIdValue)->solveSearches()->first())
-      return ;
+    if (!$resourceModelInstance = $resourceModel::key($this->resourceIdValue)->solveSearches()->first())
+      return;
 
     $this->attributes['resource_cv_search'] = $resourceModelInstance->cv_search;
-    $this->attributes['mixed_cv_search']    = $catFileInstance->cv_search . ' - '.$resourceModelInstance->cv_search;
+    $this->attributes['mixed_cv_search']    = $catFileInstance->cv_search . ' - ' . $resourceModelInstance->cv_search;
     $this->attributes['resource']           = $resourceModel;
   }
 
-  public static function safeCollection ($filesCollection){
-    if(($filesCollection = $filesCollection??null)){
-      $filesCollection = $filesCollection->map(function($row){
+  public static function safeCollection($filesCollection) {
+    if (($filesCollection = $filesCollection ?? null)) {
+      $filesCollection = $filesCollection->map(function ($row) {
         \App\Models\CatFile::safeCollection($row->catFile);
 
         return $row;
