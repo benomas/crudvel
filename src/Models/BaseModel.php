@@ -6,12 +6,19 @@ use Crudvel\Interfaces\CvCrudInterface;
 use Crudvel\Libraries\Helpers\CasesTrait;
 use Crudvel\Models\Traits\{CvBaseMethodsTrait,CvBaseScopeTrait};
 use Crudvel\Traits\{CacheTrait,CrudTrait,CvPatronTrait};
-use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
+use Illuminate\Database\Eloquent\Builder;
+
+/**
+ * Class BaseModel
+ *
+ * /**
+ * @mixin Builder
+ */
 class BaseModel extends Model implements CvCrudInterface
 {
   use CrudTrait;
@@ -44,7 +51,7 @@ class BaseModel extends Model implements CvCrudInterface
   }
 
 // [Relationships]
-  public function relatedFiles(){
+  public function relatedFiles(): MorphMany {
     return $this->morphMany('App\Models\File', 'resourcer', 'resource', 'resource_id');
   }
 // [End Relationships]

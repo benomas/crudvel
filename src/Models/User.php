@@ -1,8 +1,6 @@
 <?php namespace Crudvel\Models;
 
-use Carbon\Carbon;
-
-class User extends \Crudvel\Models\BaseModel{
+class User extends BaseModel {
 
   protected $fillable = [
     "active",
